@@ -1,32 +1,48 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { neon } from "@neondatabase/serverless";
 import type { Appliance, Category } from "@/lib/appliance-types";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const DATA_FILE = path.join(DATA_DIR, "appliances.json");
+const sql = neon(process.env.DATABASE_URL!);
 
-async function readAppliances(): Promise<Appliance[]> {
-  try {
-    const raw = await fs.readFile(DATA_FILE, "utf-8");
-    return JSON.parse(raw) as Appliance[];
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return [];
-    }
-    throw error;
+type ApplianceRow = {
+  id: string;
+  name: string;
+  brand: string;
+  model: string;
+  category: string;
+  purchase_date: string | Date;
+  created_at: string | Date;
+};
+
+function toDateOnlyString(value: string | Date): string {
+  if (typeof value === "string") {
+    return value;
   }
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
-async function writeAppliances(appliances: Appliance[]): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.writeFile(DATA_FILE, JSON.stringify(appliances, null, 2), "utf-8");
+function toAppliance(row: ApplianceRow): Appliance {
+  return {
+    id: row.id,
+    name: row.name,
+    brand: row.brand,
+    model: row.model,
+    category: row.category as Category,
+    purchaseDate: toDateOnlyString(row.purchase_date),
+    createdAt:
+      typeof row.created_at === "string" ? row.created_at : row.created_at.toISOString(),
+  };
 }
 
 export async function getAppliances(): Promise<Appliance[]> {
-  const appliances = await readAppliances();
-  return appliances.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
+  const rows = (await sql`
+    SELECT id, name, brand, model, category, purchase_date, created_at
+    FROM appliances
+    ORDER BY created_at DESC
+  `) as ApplianceRow[];
+  return rows.map(toAppliance);
 }
 
 export async function addAppliance(input: {
@@ -36,22 +52,14 @@ export async function addAppliance(input: {
   category: Category;
   purchaseDate: string;
 }): Promise<Appliance> {
-  const appliances = await readAppliances();
-  const appliance: Appliance = {
-    id: crypto.randomUUID(),
-    name: input.name,
-    brand: input.brand,
-    model: input.model,
-    category: input.category,
-    purchaseDate: input.purchaseDate,
-    createdAt: new Date().toISOString(),
-  };
-  appliances.push(appliance);
-  await writeAppliances(appliances);
-  return appliance;
+  const rows = (await sql`
+    INSERT INTO appliances (name, brand, model, category, purchase_date)
+    VALUES (${input.name}, ${input.brand}, ${input.model}, ${input.category}, ${input.purchaseDate})
+    RETURNING id, name, brand, model, category, purchase_date, created_at
+  `) as ApplianceRow[];
+  return toAppliance(rows[0]);
 }
 
 export async function deleteAppliance(id: string): Promise<void> {
-  const appliances = await readAppliances();
-  await writeAppliances(appliances.filter((a) => a.id !== id));
+  await sql`DELETE FROM appliances WHERE id = ${id}`;
 }
