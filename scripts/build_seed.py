@@ -1,0 +1,241 @@
+#!/usr/bin/env python3
+"""Regenerate seed/*.json from docs/referentiel_entretien_france.xlsx.
+
+Usage (from the repo root):
+    pip install openpyxl
+    python scripts/build_seed.py
+
+The workbook is the human-maintained source for domain data; the enums below
+are the code contract. Edit the workbook (or ENUMS here), rerun this script and
+commit both. Never edit seed/*.json by hand.
+Sheets are read by header name, so reordering columns is safe.
+"""
+import json
+import re
+from pathlib import Path
+
+from openpyxl import load_workbook
+
+ROOT = Path(__file__).resolve().parent.parent
+WORKBOOK = ROOT / "docs" / "referentiel_entretien_france.xlsx"
+OUT = ROOT / "seed"
+HEADER_ROW = 5
+
+CATEGORIES = [  # (workbook label, code key, UI label); display order = list order
+    ("Chauffage", "heating", "Chauffage"), ("Eau chaude", "hot_water", "Eau chaude"),
+    ("Climatisation", "cooling", "Climatisation"), ("Ventilation", "ventilation", "Ventilation"),
+    ("Froid", "refrigeration", "Froid"), ("Lavage", "washing", "Lavage"),
+    ("Cuisson", "cooking", "Cuisson"), ("Petit electromenager", "small_appliances", "Petit électroménager"),
+    ("Eau", "water", "Eau"), ("Assainissement", "wastewater", "Assainissement"),
+    ("Energie", "energy", "Énergie"), ("Securite", "safety", "Sécurité"),
+    ("Ouvrants", "doors_gates", "Ouvrants"), ("Piscine", "pool", "Piscine"),
+    ("Jardin", "garden", "Jardin"), ("Bati", "building", "Bâti"),
+]
+CAT_KEY = {wb_label: key for wb_label, key, _ in CATEGORIES}
+
+# Code contract: keys are stable identifiers, labels are the French UI text.
+ENUMS = {
+    "property_type": [("main_home", "Résidence principale"), ("second_home", "Résidence secondaire"),
+                      ("long_term_rental", "Location longue durée"), ("short_term_rental", "Location courte durée")],
+    "field_source": [("invoice", "Facture"), ("nameplate", "Plaque signalétique"), ("manual", "Saisie manuelle")],
+    "document_type": [("invoice", "Facture"), ("manual", "Notice"), ("warranty_form", "Garantie"),
+                      ("maintenance_certificate", "Attestation d'entretien"),
+                      ("sweeping_certificate", "Certificat de ramonage"),
+                      ("inspection_report", "Rapport de contrôle"), ("diagnostic", "Diagnostic"), ("other", "Autre")],
+    "performer": [("diy", "À faire soi-même"), ("pro", "Professionnel")],
+    "frequency_rule": [("every_n_months", "Tous les N mois"), ("season_anchor", "Ancrée sur une saison"),
+                       ("per_use", "À chaque utilisation"), ("threshold", "Sur seuil")],
+    "task_status": [("upcoming", "À venir"), ("due", "À faire"), ("overdue", "En retard"), ("done", "Fait"),
+                    ("snoozed", "Reporté"), ("not_applicable", "Non concerné")],
+    "legal_status": [("yes", "Obligatoire"), ("conditional", "Selon le cas"), ("no", "Recommandé")],
+    "photo_target": [("nameplate", "Plaque signalétique"), ("dated_label", "Étiquette datée"), ("dial", "Cadran"),
+                     ("document", "Document"), ("none", "Aucune")],
+    "source_status": [("verified", "Vérifié"), ("partial", "Partiellement vérifié"),
+                      ("secondary", "Source secondaire"), ("to_document", "À documenter")],
+    "plan": [("free", "Gratuit"), ("paid", "Abonnement")],
+    "mvp_priority": [(1, "Indispensable au lancement"), (2, "Deuxième vague"), (3, "Confort")],
+}
+
+PHOTO_TARGET = {"Plaque signaletique": "nameplate", "Etiquette datee": "dated_label",
+                "Cadran": "dial", "Document": "document", "Aucune": "none"}
+
+SOURCE_STATUS = [("Verifie", "verified"), ("Partiellement", "partial"),
+                 ("Source secondaire", "secondary"), ("A documenter", "to_document")]
+
+# Tasks whose trigger is a measured threshold, not a calendar interval.
+THRESHOLD_TASKS = {
+    "T-015": "Wood > 6 m3 or pellets > 2.5 t burned in the year",
+    "T-060": "Expiry date printed on the gas hose",
+    "T-071": "Sludge reaches 50% of the tank's useful volume",
+}
+
+# Indicative identifier patterns. Only groups with status "verified" may drive
+# validation in production; the others are kept for testing until confirmed.
+BRAND_PATTERNS = {
+    "BSH": {"e_nr": r"^[A-Z0-9]{5,15}/[0-9]{1,2}$", "fd": r"^FD ?[0-9]{4}"},
+    "Whirlpool (fabrication Whirlpool)": {"service_code_12nc": r"^85[0-9]{10}$"},
+    "Ex-Indesit Company": {"article_code": r"^F[0-9]{6}$|^[0-9]{12}$"},
+}
+
+MONTH_WORDS = ("janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout",
+               "septembre", "octobre", "novembre", "decembre",
+               "printemps", "ete", "automne", "hiver", "chauffe")
+
+
+def clean(v):
+    if v is None:
+        return None
+    if isinstance(v, str):
+        v = v.strip()
+        return None if v in ("", "-", "?") else v
+    return v
+
+
+def rows(ws):
+    headers = [clean(c.value) for c in ws[HEADER_ROW]]
+    for r in ws.iter_rows(min_row=HEADER_ROW + 1, values_only=True):
+        if not r or r[0] is None:
+            continue
+        yield {h: clean(v) for h, v in zip(headers, r) if h}
+
+
+def legal_status(text):
+    t = (text or "").strip()
+    if t.startswith("Oui si") or t.startswith("Selon") or t.startswith("Partiel") or "/ Oui" in t:
+        return "conditional"
+    if t.startswith("Oui"):
+        return "yes"
+    return "no"
+
+
+def frequency(task_id, months, season):
+    if task_id in THRESHOLD_TASKS:
+        return "threshold"
+    if months is not None and months < 0.1:
+        return "per_use"
+    s = (season or "").lower()
+    if months == 12 and any(w in s for w in MONTH_WORDS):
+        return "season_anchor"
+    return "every_n_months"
+
+
+def expand_ids(text):
+    """'CH-01 a CH-03, ECS-03' -> ['CH-01', 'CH-02', 'CH-03', 'ECS-03']."""
+    text = text or ""
+    ids = []
+    for pre, a, b in re.findall(r"\b([A-Z]{2,5})-(\d{2}) a \1-(\d{2})\b", text):
+        ids += [f"{pre}-{n:02d}" for n in range(int(a), int(b) + 1)]
+    ids += re.findall(r"\b[A-Z]{2,5}-\d{2}\b", text)
+    return sorted(set(ids), key=ids.index)
+
+
+def status_key(text):
+    for prefix, key in SOURCE_STATUS:
+        if (text or "").startswith(prefix):
+            return key
+    return "to_document"
+
+
+def split(text, sep):
+    return [p.strip() for p in (text or "").split(sep) if p.strip()]
+
+
+def main():
+    wb = load_workbook(WORKBOOK, data_only=True)
+    OUT.mkdir(exist_ok=True)
+
+    categories = [{"key": k, "label": ui, "order": i + 1} for i, (_, k, ui) in enumerate(CATEGORIES)]
+    enums = {name: [{"key": k, "label": lbl} for k, lbl in values] for name, values in ENUMS.items()}
+
+    equipment = []
+    for r in rows(wb["Equipements"]):
+        equipment.append({
+            "id": r["ID"],
+            "category": CAT_KEY[r["Categorie"]],
+            "label": r["Equipement"],
+            "lifespan": r["Duree de vie"],
+            "legal": {"status": legal_status(r["Obligation legale"]), "note": r["Obligation legale"],
+                      "reference": r["Reference reglementaire"]},
+            "reference_frequency": r["Frequence de reference"],
+            "provider": r["Intervenant"],
+            "proof_document": r["Justificatif a conserver"],
+            "indicative_pro_cost": r["Cout pro indicatif"],
+            "risk_if_neglected": r["Enjeu si neglige"],
+            "mvp_priority": r["Priorite MVP"],
+            "nameplate": {"photo_target": PHOTO_TARGET[r["Cible photo"]],
+                          "location": r["Ou trouver la plaque (generique)"],
+                          "fields": r["Champs a lire"], "tip": r["Astuce / alternative"]},
+        })
+    equipment_ids = {e["id"] for e in equipment}
+
+    tasks = []
+    for r in rows(wb["Taches"]):
+        months = r["Frequence (mois)"]
+        task = {
+            "id": r["ID tache"],
+            "equipment_type_id": r["ID equip."],
+            "title": r["Tache"],
+            "performer": r["DIY / Pro"].lower(),
+            "frequency": {"rule": frequency(r["ID tache"], months, r["Periode recommandee"]),
+                          "months": months, "label": r["Frequence (texte)"]},
+            "season": r["Periode recommandee"],
+            "duration_min": r["Duree (min)"],
+            "tools": r["Outils et consommables"],
+            "procedure": r["Mode operatoire"],
+            "if_skipped": r["Si la tache n'est pas faite"],
+            "legal": legal_status(r["Obligation legale"]),
+        }
+        if task["id"] in THRESHOLD_TASKS:
+            task["frequency"]["threshold"] = THRESHOLD_TASKS[task["id"]]
+        tasks.append(task)
+
+    obligations = []
+    for r in rows(wb["Obligations legales"]):
+        obligations.append({
+            "id": r["ID"],
+            "obligation": r["Obligation"],
+            "applies_to": r["Equipements concernes"],
+            "equipment_type_ids": expand_ids(r["Equipements concernes"]),
+            "legal_text": r["Texte de reference"],
+            "frequency": r["Frequence"],
+            "liable_party": r["Qui est redevable"],
+            "proof": r["Justificatif"],
+            "sanction": r["Sanction ou risque"],
+            "sources": split(r["Source"], " ; "),
+        })
+
+    brands = []
+    for r in rows(wb["Plaques par marque"]):
+        brands.append({
+            "group": r["Groupe"],
+            "brands": split(r["Marques couvertes"], ", "),
+            "categories": r["Categories"],
+            "identifiers": r["Identifiants a lire"],
+            "validation_rule": r["Regle de validation (indicative)"],
+            "patterns": BRAND_PATTERNS.get(r["Groupe"]),
+            "date_decoding": r["Decodage date de fabrication"],
+            "locations": r["Emplacements specifiques"],
+            "notes": r["Particularites"],
+            "sources": split(r["Source"], " ; "),
+            "status": status_key(r["Statut"]),
+        })
+
+    # Integrity checks: fail loudly rather than ship a broken seed.
+    task_eq = {t["equipment_type_id"] for t in tasks}
+    missing = sorted(task_eq - equipment_ids)
+    orphans = sorted(equipment_ids - task_eq)
+    bad_links = sorted({i for o in obligations for i in o["equipment_type_ids"]} - equipment_ids)
+    assert not missing, f"Tasks point to unknown equipment types: {missing}"
+    assert not orphans, f"Equipment types without any task: {orphans}"
+    assert not bad_links, f"Obligations point to unknown equipment types: {bad_links}"
+
+    files = {"categories.json": categories, "equipment_types.json": equipment,
+             "maintenance_tasks.json": tasks, "legal_obligations.json": obligations,
+             "brand_nameplates.json": brands, "enums.json": enums}
+    for name, data in files.items():
+        (OUT / name).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"seed/{name}: {len(data)} records")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,337 @@
+[
+  {
+    "id": "L-01",
+    "obligation": "Entretien annuel des chaudieres 4-400 kW",
+    "applies_to": "Chaudiere gaz, fioul, bois, charbon, multicombustible (CH-01, CH-02, CH-03, ECS-03)",
+    "equipment_type_ids": [
+      "CH-01",
+      "CH-02",
+      "CH-03",
+      "ECS-03"
+    ],
+    "legal_text": "Decret n. 2009-649 du 09/06/2009 + arrete du 15/09/2009 ; C. env. art. R224-41-4 a R224-41-9",
+    "frequency": "Tous les 12 mois",
+    "liable_party": "Occupant pour les chaudieres individuelles ; proprietaire ou syndicat pour les collectives (sauf clause contraire du bail)",
+    "proof": "Attestation d'entretien remise par le professionnel sous 15 jours, a conserver au moins 2 ans",
+    "sanction": "Pas d'amende directe, mais retenue possible sur le depot de garantie et reduction ou refus d'indemnisation par l'assureur en cas de sinistre",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F20760"
+    ]
+  },
+  {
+    "id": "L-02",
+    "obligation": "Ramonage des conduits de fumee",
+    "applies_to": "Tout conduit raccorde a un appareil a combustion (CH-07, CH-04, CH-05, CH-06, CH-01 a CH-03)",
+    "equipment_type_ids": [
+      "CH-01",
+      "CH-02",
+      "CH-03",
+      "CH-07",
+      "CH-04",
+      "CH-05",
+      "CH-06"
+    ],
+    "legal_text": "Decret n. 2023-641 du 20/07/2023 + arrete du 20/07/2023, en vigueur au 01/10/2023 ; Code de la sante publique",
+    "frequency": "1 ramonage mecanique tous les 12 mois minimum. 2e ramonage requis au-dela de 6 m3 de bois ou 2,5 t de granules consommes dans l'annee. Appareils collectifs : tous les 6 mois",
+    "liable_party": "Occupant (decret n. 87-712 sur les reparations locatives) ; syndic pour les conduits collectifs",
+    "proof": "Certificat de ramonage delivre par un professionnel qualifie, a conserver 5 ans",
+    "sanction": "Amende de 3e classe jusqu'a 450 EUR ; refus d'indemnisation en cas de feu de cheminee. Le ramonage chimique (buche) n'a aucune valeur juridique",
+    "sources": [
+      "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000047867286"
+    ]
+  },
+  {
+    "id": "L-03",
+    "obligation": "Entretien des appareils a combustible solide",
+    "applies_to": "Poele a granules, poele a bois, insert, foyer ferme, cuisiniere (CH-04, CH-05)",
+    "equipment_type_ids": [
+      "CH-04",
+      "CH-05"
+    ],
+    "legal_text": "Decret n. 2023-641 du 20/07/2023",
+    "frequency": "Tous les 12 mois pour les appareils individuels",
+    "liable_party": "Occupant",
+    "proof": "Attestation d'entretien",
+    "sanction": "Non-conformite, difficultes avec l'assureur. Les foyers ouverts sont exemptes d'entretien mais restent soumis au ramonage",
+    "sources": [
+      "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000047867286"
+    ]
+  },
+  {
+    "id": "L-04",
+    "obligation": "Entretien des systemes thermodynamiques 4-70 kW",
+    "applies_to": "PAC air/eau, air/air, geothermique, chauffe-eau thermodynamique, climatiseur, PAC de piscine (CH-08 a CH-10, ECS-02, CLIM-01, PIS-05)",
+    "equipment_type_ids": [
+      "CH-08",
+      "CH-09",
+      "CH-10",
+      "ECS-02",
+      "CLIM-01",
+      "PIS-05"
+    ],
+    "legal_text": "Decret n. 2020-912 du 28/07/2020 + arrete du 24/07/2020 ; C. env. art. R224-44 a R224-44-5",
+    "frequency": "Au moins tous les 2 ans",
+    "liable_party": "Proprietaire ou occupant selon le bail",
+    "proof": "Attestation d'entretien",
+    "sanction": "Non-conformite ; perte de garantie constructeur frequente en l'absence d'entretien",
+    "sources": [
+      "https://www.ecologie.gouv.fr/politiques-publiques/entretien-inspection-systemes-chauffage-climatisation"
+    ]
+  },
+  {
+    "id": "L-05",
+    "obligation": "Inspection periodique des systemes > 70 kW",
+    "applies_to": "Systemes thermodynamiques et de ventilation combines a un chauffage par effet joule > 70 kW",
+    "equipment_type_ids": [],
+    "legal_text": "Decret n. 2020-912 ; C. env. art. R224-45 a R224-45-9",
+    "frequency": "Au moins tous les 5 ans",
+    "liable_party": "Proprietaire ou syndicat de copropriete",
+    "proof": "Rapport d'inspection",
+    "sanction": "Non-conformite. Concerne surtout le collectif et le tertiaire",
+    "sources": [
+      "https://www.ecologie.gouv.fr/politiques-publiques/entretien-inspection-systemes-chauffage-climatisation"
+    ]
+  },
+  {
+    "id": "L-06",
+    "obligation": "Controle d'etancheite des fluides frigorigenes",
+    "applies_to": "Tout equipement dont la charge atteint 5 tonnes equivalent CO2 (CLIM-03)",
+    "equipment_type_ids": [
+      "CLIM-03"
+    ],
+    "legal_text": "Reglement (UE) 2024/573 du 07/02/2024 dit F-Gas, applicable depuis le 11/03/2024 (abroge le reglement 517/2014)",
+    "frequency": "Tous les 12 mois pour 5 a 50 t CO2 eq (frequence resserree au-dela). En residentiel, exemption pour un equipement etiquete hermetiquement scelle contenant moins de 3 kg",
+    "liable_party": "Exploitant / proprietaire de l'equipement",
+    "proof": "Fiche d'intervention CERFA 15497, operateur titulaire d'une attestation de capacite",
+    "sanction": "Sanction administrative ; impact climatique (le R410A a un pouvoir de rechauffement environ 2000 fois celui du CO2)",
+    "sources": [
+      "http://data.europa.eu/eli/reg/2024/573/oj"
+    ]
+  },
+  {
+    "id": "L-07",
+    "obligation": "Detecteur autonome avertisseur de fumee (DAAF)",
+    "applies_to": "Tout logement (SEC-01)",
+    "equipment_type_ids": [
+      "SEC-01"
+    ],
+    "legal_text": "Loi n. 2010-238 du 09/03/2010 ; CCH art. R129-12 a R129-15",
+    "frequency": "Installation par le proprietaire ; entretien, test et remplacement des piles par l'occupant ; appareil a remplacer au bout de 10 ans",
+    "liable_party": "Proprietaire pour la fourniture et l'installation, occupant pour l'entretien",
+    "proof": "Attestation a transmettre a l'assureur",
+    "sanction": "Pas d'amende prevue, mais l'assureur peut opposer le defaut d'installation",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F19871"
+    ]
+  },
+  {
+    "id": "L-08",
+    "obligation": "Securite des piscines privatives enterrees",
+    "applies_to": "Piscine enterree ou semi-enterree non close, a usage individuel ou collectif (PIS-01, PIS-07)",
+    "equipment_type_ids": [
+      "PIS-01",
+      "PIS-07"
+    ],
+    "legal_text": "Loi n. 2003-9 du 03/01/2003 ; CCH art. L128-1 et R128-1",
+    "frequency": "Dispositif normalise en place en permanence : barriere NF P90-306, alarme NF P90-307, couverture NF P90-308 ou abri NF P90-309",
+    "liable_party": "Proprietaire",
+    "proof": "Attestation de conformite du dispositif, note technique du constructeur",
+    "sanction": "Amende jusqu'a 45 000 EUR ; responsabilite penale en cas de noyade",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F2062"
+    ]
+  },
+  {
+    "id": "L-09",
+    "obligation": "Controle de l'assainissement non collectif",
+    "applies_to": "Fosse toutes eaux, fosse septique, micro-station (ASS-01, ASS-02)",
+    "equipment_type_ids": [
+      "ASS-01",
+      "ASS-02"
+    ],
+    "legal_text": "Code de la sante publique art. L1331-1-1 ; arretes du 27/04/2012 et du 07/09/2009",
+    "frequency": "Controle periodique du SPANC au moins tous les 10 ans (la commune peut imposer un intervalle plus court, souvent 4 a 8 ans). Vidange des que les boues atteignent 50% du volume utile",
+    "liable_party": "Proprietaire",
+    "proof": "Rapport de visite du SPANC ; bordereau de suivi des matieres de vidange par un vidangeur agree",
+    "sanction": "Mise en demeure, travaux imposes sous 4 ans, majoration de la redevance jusqu'a 100%. A la vente, rapport de moins de 3 ans obligatoire",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F1400"
+    ]
+  },
+  {
+    "id": "L-10",
+    "obligation": "Declaration des puits et forages domestiques",
+    "applies_to": "Puits, forage, captage prive (EAU-05)",
+    "equipment_type_ids": [
+      "EAU-05"
+    ],
+    "legal_text": "CGCT art. L2224-9 ; decret n. 2008-652 du 02/07/2008",
+    "frequency": "Declaration en mairie avant travaux et a l'achevement ; controle si l'ouvrage est relie au reseau interieur",
+    "liable_party": "Proprietaire",
+    "proof": "Recepisse de declaration (CERFA 13837)",
+    "sanction": "Amende ; obligation de deconnexion du reseau",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F31864"
+    ]
+  },
+  {
+    "id": "L-11",
+    "obligation": "Diagnostic de l'installation interieure de gaz",
+    "applies_to": "Installation interieure de gaz de plus de 15 ans (ENE-06)",
+    "equipment_type_ids": [
+      "ENE-06"
+    ],
+    "legal_text": "CCH art. L271-4 ; arrete du 06/04/2007",
+    "frequency": "A la vente : validite 3 ans. En location : validite 6 ans",
+    "liable_party": "Vendeur ou bailleur",
+    "proof": "Diagnostic realise par un diagnostiqueur certifie",
+    "sanction": "Responsabilite du vendeur pour vice cache si le diagnostic est absent ou errone",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F16158"
+    ]
+  },
+  {
+    "id": "L-12",
+    "obligation": "Diagnostic de l'installation interieure d'electricite",
+    "applies_to": "Installation electrique de plus de 15 ans (ENE-05)",
+    "equipment_type_ids": [
+      "ENE-05"
+    ],
+    "legal_text": "CCH art. L271-4 ; decret n. 2008-384",
+    "frequency": "A la vente : validite 3 ans. En location : validite 6 ans",
+    "liable_party": "Vendeur ou bailleur",
+    "proof": "Diagnostic realise par un diagnostiqueur certifie",
+    "sanction": "Responsabilite du vendeur pour vice cache",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F16158"
+    ]
+  },
+  {
+    "id": "L-13",
+    "obligation": "Entretien et controle technique des ascenseurs",
+    "applies_to": "Ascenseur privatif, ascenseur d'immeuble, monte-charge accessible (SEC-07)",
+    "equipment_type_ids": [
+      "SEC-07"
+    ],
+    "legal_text": "CCH art. L125-2-2 et R125-2 ; decret n. 2004-964 du 09/09/2004",
+    "frequency": "Contrat d'entretien obligatoire ; visite au moins toutes les 6 semaines ; controle technique quinquennal par un organisme agree",
+    "liable_party": "Proprietaire ou syndicat de copropriete",
+    "proof": "Carnet d'entretien tenu a jour + rapport de controle technique",
+    "sanction": "Responsabilite civile et penale en cas d'accident ; mise a l'arret possible",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F2058"
+    ]
+  },
+  {
+    "id": "L-14",
+    "obligation": "Tuyau flexible de raccordement gaz",
+    "applies_to": "Flexible d'appareil de cuisson ou de chauffage au gaz (CUIS-04, JAR-06)",
+    "equipment_type_ids": [
+      "CUIS-04",
+      "JAR-06"
+    ],
+    "legal_text": "Arrete du 02/08/1977 modifie ; normes NF D 36-100 / 36-103",
+    "frequency": "Remplacement imperatif a la date de peremption imprimee sur le flexible (5 a 10 ans selon le type)",
+    "liable_party": "Occupant",
+    "proof": "Date lisible sur la bague du flexible",
+    "sanction": "Fuite de gaz ; l'assureur peut opposer le defaut d'entretien apres un sinistre",
+    "sources": [
+      "https://www.grdf.fr/particuliers/securite-gaz"
+    ]
+  },
+  {
+    "id": "L-15",
+    "obligation": "Portails et portes automatiques en collectif",
+    "applies_to": "Portail ou porte de garage motorise desservant des parties communes (OUV-01, OUV-02)",
+    "equipment_type_ids": [
+      "OUV-01",
+      "OUV-02"
+    ],
+    "legal_text": "Arrete du 21/12/1993 relatif aux portes automatiques de garage des batiments d'habitation",
+    "frequency": "Visite d'entretien au moins tous les 6 mois par un professionnel",
+    "liable_party": "Proprietaire ou syndicat de copropriete",
+    "proof": "Livret d'entretien",
+    "sanction": "Responsabilite en cas d'accident ; les installations individuelles ne sont pas soumises a cette obligation",
+    "sources": [
+      "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000366318"
+    ]
+  },
+  {
+    "id": "L-16",
+    "obligation": "Ravalement de facade",
+    "applies_to": "Facade sur voie publique (BAT-03)",
+    "equipment_type_ids": [
+      "BAT-03"
+    ],
+    "legal_text": "CCH art. L132-1 a L132-5 : obligation applicable dans les communes ayant pris un arrete",
+    "frequency": "Generalement tous les 10 ans lorsque la commune a etabli une liste",
+    "liable_party": "Proprietaire",
+    "proof": "Facture de ravalement",
+    "sanction": "Injonction municipale, puis execution d'office aux frais du proprietaire",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F2076"
+    ]
+  },
+  {
+    "id": "L-17",
+    "obligation": "Usage domestique de l'eau de pluie",
+    "applies_to": "Recuperateur alimentant des usages interieurs, WC ou lave-linge (EAU-06)",
+    "equipment_type_ids": [
+      "EAU-06"
+    ],
+    "legal_text": "Arrete du 21/08/2008 relatif a la recuperation des eaux de pluie",
+    "frequency": "Entretien semestriel du filtre, controle annuel de la cuve, carnet sanitaire tenu a jour, declaration en mairie si rejet au reseau collectif",
+    "liable_party": "Proprietaire",
+    "proof": "Carnet sanitaire + declaration d'usage",
+    "sanction": "Non-conformite en cas de controle ; risque de contamination du reseau d'eau potable",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F31699"
+    ]
+  },
+  {
+    "id": "L-18",
+    "obligation": "Protection du reseau d'eau potable (disconnecteur)",
+    "applies_to": "Arrosage, recuperateur ou piscine raccordes au reseau public (EAU-03)",
+    "equipment_type_ids": [
+      "EAU-03"
+    ],
+    "legal_text": "Arrete du 17/03/2004 ; reglement du service des eaux",
+    "frequency": "Controle annuel du dispositif de protection",
+    "liable_party": "Proprietaire / abonne",
+    "proof": "Rapport de controle",
+    "sanction": "Responsabilite civile et penale en cas de contamination du reseau public",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F31699"
+    ]
+  },
+  {
+    "id": "L-19",
+    "obligation": "Cuve a fioul enterree ou aerienne",
+    "applies_to": "Stockage de produits petroliers a usage domestique (CH-15)",
+    "equipment_type_ids": [
+      "CH-15"
+    ],
+    "legal_text": "Arrete du 01/07/2004 relatif au stockage de produits petroliers",
+    "frequency": "Controle d'etancheite periodique selon le type de cuve ; nettoyage recommande tous les 5 a 10 ans",
+    "liable_party": "Proprietaire",
+    "proof": "Rapport de controle d'etancheite",
+    "sanction": "Depollution des sols a la charge integrale du proprietaire en cas de fuite",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F31865"
+    ]
+  },
+  {
+    "id": "L-20",
+    "obligation": "Controle technique des vehicules",
+    "applies_to": "Vehicule particulier de plus de 4 ans",
+    "equipment_type_ids": [],
+    "legal_text": "Code de la route art. R323-1 et suivants",
+    "frequency": "Tous les 2 ans a partir de la 4e annee",
+    "liable_party": "Proprietaire du vehicule",
+    "proof": "Proces-verbal de controle technique",
+    "sanction": "Amende de 135 EUR, immobilisation possible du vehicule",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/vosdroits/F2878"
+    ]
+  }
+]
