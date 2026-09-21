@@ -44,7 +44,7 @@ export function ApplianceList({ appliances }: { appliances: Appliance[] }) {
               {appliance.brand} · {appliance.model}
             </p>
             <span
-              className={`mt-1.5 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${CATEGORY_STYLES[appliance.category]}`}
+              className={`mt-1.5 inline-block rounded-md px-2 py-0.5 text-xs font-medium ${CATEGORY_STYLES[appliance.category]}`}
             >
               {appliance.category}
             </span>
