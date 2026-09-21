@@ -1,0 +1,200 @@
+{
+  "property_type": [
+    {
+      "key": "main_home",
+      "label": "Résidence principale"
+    },
+    {
+      "key": "second_home",
+      "label": "Résidence secondaire"
+    },
+    {
+      "key": "long_term_rental",
+      "label": "Location longue durée"
+    },
+    {
+      "key": "short_term_rental",
+      "label": "Location courte durée"
+    }
+  ],
+  "field_source": [
+    {
+      "key": "invoice",
+      "label": "Facture"
+    },
+    {
+      "key": "nameplate",
+      "label": "Plaque signalétique"
+    },
+    {
+      "key": "manual",
+      "label": "Saisie manuelle"
+    }
+  ],
+  "document_type": [
+    {
+      "key": "invoice",
+      "label": "Facture"
+    },
+    {
+      "key": "manual",
+      "label": "Notice"
+    },
+    {
+      "key": "warranty_form",
+      "label": "Garantie"
+    },
+    {
+      "key": "maintenance_certificate",
+      "label": "Attestation d'entretien"
+    },
+    {
+      "key": "sweeping_certificate",
+      "label": "Certificat de ramonage"
+    },
+    {
+      "key": "inspection_report",
+      "label": "Rapport de contrôle"
+    },
+    {
+      "key": "diagnostic",
+      "label": "Diagnostic"
+    },
+    {
+      "key": "other",
+      "label": "Autre"
+    }
+  ],
+  "performer": [
+    {
+      "key": "diy",
+      "label": "À faire soi-même"
+    },
+    {
+      "key": "pro",
+      "label": "Professionnel"
+    }
+  ],
+  "frequency_rule": [
+    {
+      "key": "every_n_months",
+      "label": "Tous les N mois"
+    },
+    {
+      "key": "season_anchor",
+      "label": "Ancrée sur une saison"
+    },
+    {
+      "key": "per_use",
+      "label": "À chaque utilisation"
+    },
+    {
+      "key": "threshold",
+      "label": "Sur seuil"
+    }
+  ],
+  "task_status": [
+    {
+      "key": "upcoming",
+      "label": "À venir"
+    },
+    {
+      "key": "due",
+      "label": "À faire"
+    },
+    {
+      "key": "overdue",
+      "label": "En retard"
+    },
+    {
+      "key": "done",
+      "label": "Fait"
+    },
+    {
+      "key": "snoozed",
+      "label": "Reporté"
+    },
+    {
+      "key": "not_applicable",
+      "label": "Non concerné"
+    }
+  ],
+  "legal_status": [
+    {
+      "key": "yes",
+      "label": "Obligatoire"
+    },
+    {
+      "key": "conditional",
+      "label": "Selon le cas"
+    },
+    {
+      "key": "no",
+      "label": "Recommandé"
+    }
+  ],
+  "photo_target": [
+    {
+      "key": "nameplate",
+      "label": "Plaque signalétique"
+    },
+    {
+      "key": "dated_label",
+      "label": "Étiquette datée"
+    },
+    {
+      "key": "dial",
+      "label": "Cadran"
+    },
+    {
+      "key": "document",
+      "label": "Document"
+    },
+    {
+      "key": "none",
+      "label": "Aucune"
+    }
+  ],
+  "source_status": [
+    {
+      "key": "verified",
+      "label": "Vérifié"
+    },
+    {
+      "key": "partial",
+      "label": "Partiellement vérifié"
+    },
+    {
+      "key": "secondary",
+      "label": "Source secondaire"
+    },
+    {
+      "key": "to_document",
+      "label": "À documenter"
+    }
+  ],
+  "plan": [
+    {
+      "key": "free",
+      "label": "Gratuit"
+    },
+    {
+      "key": "paid",
+      "label": "Abonnement"
+    }
+  ],
+  "mvp_priority": [
+    {
+      "key": 1,
+      "label": "Indispensable au lancement"
+    },
+    {
+      "key": 2,
+      "label": "Deuxième vague"
+    },
+    {
+      "key": 3,
+      "label": "Confort"
+    }
+  ]
+}

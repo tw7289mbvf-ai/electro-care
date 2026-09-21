@@ -1,0 +1,82 @@
+[
+  {
+    "key": "heating",
+    "label": "Chauffage",
+    "order": 1
+  },
+  {
+    "key": "hot_water",
+    "label": "Eau chaude",
+    "order": 2
+  },
+  {
+    "key": "cooling",
+    "label": "Climatisation",
+    "order": 3
+  },
+  {
+    "key": "ventilation",
+    "label": "Ventilation",
+    "order": 4
+  },
+  {
+    "key": "refrigeration",
+    "label": "Froid",
+    "order": 5
+  },
+  {
+    "key": "washing",
+    "label": "Lavage",
+    "order": 6
+  },
+  {
+    "key": "cooking",
+    "label": "Cuisson",
+    "order": 7
+  },
+  {
+    "key": "small_appliances",
+    "label": "Petit électroménager",
+    "order": 8
+  },
+  {
+    "key": "water",
+    "label": "Eau",
+    "order": 9
+  },
+  {
+    "key": "wastewater",
+    "label": "Assainissement",
+    "order": 10
+  },
+  {
+    "key": "energy",
+    "label": "Énergie",
+    "order": 11
+  },
+  {
+    "key": "safety",
+    "label": "Sécurité",
+    "order": 12
+  },
+  {
+    "key": "doors_gates",
+    "label": "Ouvrants",
+    "order": 13
+  },
+  {
+    "key": "pool",
+    "label": "Piscine",
+    "order": 14
+  },
+  {
+    "key": "garden",
+    "label": "Jardin",
+    "order": 15
+  },
+  {
+    "key": "building",
+    "label": "Bâti",
+    "order": 16
+  }
+]

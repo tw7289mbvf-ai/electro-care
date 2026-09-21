@@ -1,0 +1,2394 @@
+[
+  {
+    "id": "CH-01",
+    "category": "heating",
+    "label": "Chaudiere gaz individuelle (4-400 kW)",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2009-649 + arrete 15/09/2009 (C. env. R224-41-4 s.)"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie (PG)",
+    "proof_document": "Attestation d'entretien (remise sous 15 j)",
+    "indicative_pro_cost": "100-180 EUR",
+    "risk_if_neglected": "Intoxication au CO, refus de prise en charge assurance, surconsommation 10-15%",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous l'appareil ou derriere le capot avant ; parfois sur le flanc",
+      "fields": "Marque, modele, n. de serie, puissance nominale (kW), type de gaz, annee",
+      "tip": "Ne jamais deposer le capot d'un appareil gaz. Alternative : attestation d'entretien ou facture de l'installateur"
+    }
+  },
+  {
+    "id": "CH-02",
+    "category": "heating",
+    "label": "Chaudiere fioul",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2009-649 + arrete 15/09/2009"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "130-220 EUR",
+    "risk_if_neglected": "Encrassement du bruleur, pannes hivernales, refus assurance",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Flanc ou porte de facade de la chaudiere ; plaque distincte sur le bruleur",
+      "fields": "Marque, modele, n. de serie, puissance (kW) ; modele du bruleur",
+      "tip": "Deux plaques a photographier : chaudiere et bruleur"
+    }
+  },
+  {
+    "id": "CH-03",
+    "category": "heating",
+    "label": "Chaudiere bois / granules",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2009-649 ; decret 2023-641 (entretien + ramonage)"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien + certificat de ramonage",
+    "indicative_pro_cost": "150-280 EUR",
+    "risk_if_neglected": "Feu de conduit, emissions de particules, perte de rendement",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Flanc ou arriere de l'appareil, parfois sous le capot du silo",
+      "fields": "Marque, modele, n. de serie, puissance (kW), combustible",
+      "tip": "Alternative : attestation d'entretien"
+    }
+  },
+  {
+    "id": "CH-04",
+    "category": "heating",
+    "label": "Poele a granules",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2023-641 (entretien 12 mois) + ramonage"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien + certificat de ramonage",
+    "indicative_pro_cost": "120-200 EUR",
+    "risk_if_neglected": "Encrassement du creuset, arret en pleine saison, feu de conduit",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos de l'appareil ; parfois sous le couvercle du reservoir a granules",
+      "fields": "Marque, modele, n. de serie, puissance (kW), norme EN 14785",
+      "tip": "Ne pas deplacer un poele raccorde : utiliser la notice ou la facture"
+    }
+  },
+  {
+    "id": "CH-05",
+    "category": "heating",
+    "label": "Poele a bois / insert / foyer ferme",
+    "lifespan": "20-30 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2023-641"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien + certificat de ramonage",
+    "indicative_pro_cost": "80-150 EUR",
+    "risk_if_neglected": "Feu de cheminee, intoxication au CO",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos ou sous l'appareil ; pour un insert, plaque souvent fixee dans l'habillage",
+      "fields": "Marque, modele, puissance (kW), norme EN 13240 ou EN 13229",
+      "tip": "Insert encastre : plaque souvent inaccessible, utiliser la notice ou la facture"
+    }
+  },
+  {
+    "id": "CH-06",
+    "category": "heating",
+    "label": "Cheminee a foyer ouvert",
+    "lifespan": "30 ans et +",
+    "legal": {
+      "status": "conditional",
+      "note": "Partiel",
+      "reference": "Decret 2023-641 : exempte d'entretien, ramonage obligatoire"
+    },
+    "reference_frequency": "Ramonage annuel min.",
+    "provider": "Pro qualifie",
+    "proof_document": "Certificat de ramonage",
+    "indicative_pro_cost": "60-120 EUR",
+    "risk_if_neglected": "Feu de conduit, propagation a la charpente",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Photographier le dernier certificat de ramonage"
+    }
+  },
+  {
+    "id": "CH-07",
+    "category": "heating",
+    "label": "Conduit de fumee",
+    "lifespan": "30-50 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2023-641 du 20/07/2023 (en vigueur 01/10/2023)"
+    },
+    "reference_frequency": "1/an min. ; 2/an si > 6 m3 de bois ou > 2,5 t de granules par an",
+    "provider": "Pro qualifie (ramonage mecanique)",
+    "proof_document": "Certificat de ramonage (conserver 5 ans)",
+    "indicative_pro_cost": "60-120 EUR",
+    "risk_if_neglected": "Amende 3e classe jusqu'a 450 EUR, refus assurance apres sinistre",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Conduits recents : plaque du conduit pres du raccordement ou dans les combles",
+      "fields": "Classe du conduit (temperature, resistance au feu), diametre",
+      "tip": "A defaut : certificat de ramonage"
+    }
+  },
+  {
+    "id": "CH-08",
+    "category": "heating",
+    "label": "Pompe a chaleur air/eau (4-70 kW)",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2020-912 + arrete 24/07/2020"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "150-250 EUR",
+    "risk_if_neglected": "Perte de COP, fuite de fluide frigorigene, casse compresseur",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Unite exterieure : flanc ou dos. Module interieur : sous le capot avant ou sur le cote",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "CH-09",
+    "category": "heating",
+    "label": "Pompe a chaleur air/air reversible",
+    "lifespan": "12-15 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2020-912 (des 4 kW)"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "120-200 EUR",
+    "risk_if_neglected": "Qualite d'air degradee, surconsommation, fuite de fluide",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Unite exterieure : flanc ou dos. Unite interieure : sous le capot frontal ou sur le cote",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "CH-10",
+    "category": "heating",
+    "label": "PAC geothermique",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2020-912"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "200-350 EUR",
+    "risk_if_neglected": "Deperdition du champ de captage, casse compresseur",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Flanc ou derriere le capot avant du module interieur",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "CH-11",
+    "category": "heating",
+    "label": "Radiateurs a eau chaude",
+    "lifespan": "25-40 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Purge annuelle recommandee",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Radiateurs froids en haut, surconsommation, bruits de circuit",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque exploitable",
+      "fields": null,
+      "tip": "Pas d'identification necessaire"
+    }
+  },
+  {
+    "id": "CH-12",
+    "category": "heating",
+    "label": "Circuit de chauffage (desembouage)",
+    "lifespan": null,
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Tous les 8-10 ans recommande",
+    "provider": "Pro",
+    "proof_document": "Facture / rapport",
+    "indicative_pro_cost": "600-1200 EUR",
+    "risk_if_neglected": "Boues = perte de rendement jusqu'a 15%, casse du circulateur",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Photographier la facture du dernier desembouage"
+    }
+  },
+  {
+    "id": "CH-13",
+    "category": "heating",
+    "label": "Plancher chauffant hydraulique",
+    "lifespan": "40-50 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle collecteur annuel ; desembouage 10 ans",
+    "provider": "Particulier + Pro",
+    "proof_document": null,
+    "indicative_pro_cost": null,
+    "risk_if_neglected": "Zones froides, colmatage des boucles",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette sur le collecteur (pas systematique)",
+      "fields": "Fabricant du collecteur, nombre de boucles",
+      "tip": "Plan de pose si disponible"
+    }
+  },
+  {
+    "id": "CH-14",
+    "category": "heating",
+    "label": "Radiateur electrique / convecteur",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Depoussierage annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Surconsommation, odeurs de brule, risque incendie sur poussiere",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos ou sur le flanc de l'appareil",
+      "fields": "Marque, modele, puissance (W)",
+      "tip": null
+    }
+  },
+  {
+    "id": "CH-15",
+    "category": "heating",
+    "label": "Cuve a fioul",
+    "lifespan": "25-30 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Arrete du 01/07/2004 (stockage produits petroliers)"
+    },
+    "reference_frequency": "Controle d'etancheite et nettoyage tous les 5-10 ans",
+    "provider": "Pro",
+    "proof_document": "Rapport de controle",
+    "indicative_pro_cost": "300-600 EUR",
+    "risk_if_neglected": "Pollution des sols, depollution a la charge du proprietaire",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le trou d'homme ou le flanc de la cuve",
+      "fields": "Fabricant, capacite (L), annee, simple ou double paroi",
+      "tip": null
+    }
+  },
+  {
+    "id": "CH-16",
+    "category": "heating",
+    "label": "Citerne GPL / propane",
+    "lifespan": null,
+    "legal": {
+      "status": "yes",
+      "note": "Oui (via contrat)",
+      "reference": "Arrete du 30/07/1979 modifie"
+    },
+    "reference_frequency": "Controle periodique par le distributeur (voir contrat)",
+    "provider": "Distributeur agree",
+    "proof_document": "Rapport du distributeur",
+    "indicative_pro_cost": "Inclus au contrat",
+    "risk_if_neglected": "Risque d'explosion, resiliation du contrat de fourniture",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur la citerne, pres du capot",
+      "fields": "N. de citerne, capacite, distributeur, date d'epreuve",
+      "tip": "Contrat du distributeur"
+    }
+  },
+  {
+    "id": "CH-17",
+    "category": "heating",
+    "label": "Thermostat / regulation connectee",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Piles annuelles, mise a jour firmware",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Derive de temperature, surconsommation",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos, en le declipsant de son socle",
+      "fields": "Marque, modele, reference",
+      "tip": "Application connectee si disponible"
+    }
+  },
+  {
+    "id": "ECS-01",
+    "category": "hot_water",
+    "label": "Chauffe-eau electrique (cumulus)",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Groupe de securite mensuel ; detartrage + anode tous les 2 ans",
+    "provider": "Particulier + Pro",
+    "proof_document": "Facture de detartrage",
+    "indicative_pro_cost": "150-250 EUR",
+    "risk_if_neglected": "Tartre = +30% de conso ; anode usee = percement de la cuve",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur l'enveloppe du ballon, souvent pres du capot electrique en partie basse",
+      "fields": "Marque, modele, capacite (L), puissance (W), n. de serie, date de fabrication",
+      "tip": null
+    }
+  },
+  {
+    "id": "ECS-02",
+    "category": "hot_water",
+    "label": "Chauffe-eau thermodynamique",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Oui si >= 4 kW",
+      "reference": "Decret 2020-912"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "150-250 EUR",
+    "risk_if_neglected": "Encrassement de l'evaporateur, bascule permanente sur resistance",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Flanc ou arriere de l'appareil",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "ECS-03",
+    "category": "hot_water",
+    "label": "Chauffe-eau gaz / chauffe-bain",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret 2009-649"
+    },
+    "reference_frequency": "Annuel",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "100-160 EUR",
+    "risk_if_neglected": "Intoxication au CO",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous l'appareil ou derriere le capot avant",
+      "fields": "Marque, modele, n. de serie, puissance (kW), type de gaz",
+      "tip": "Ne jamais deposer le capot d'un appareil gaz. Alternative : attestation d'entretien ou facture de l'installateur"
+    }
+  },
+  {
+    "id": "ECS-04",
+    "category": "hot_water",
+    "label": "Chauffe-eau solaire (CESI)",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel (glycol, pression, sonde)",
+    "provider": "Pro",
+    "proof_document": "Rapport d'intervention",
+    "indicative_pro_cost": "150-250 EUR",
+    "risk_if_neglected": "Glycol degrade = corrosion du capteur, surchauffe estivale",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Ballon : sur l'enveloppe. Capteurs : etiquette au dos, inaccessible une fois poses",
+      "fields": "Fabricant, capacite du ballon, surface de capteurs",
+      "tip": "Dossier d'installation"
+    }
+  },
+  {
+    "id": "ECS-05",
+    "category": "hot_water",
+    "label": "Groupe de securite",
+    "lifespan": "5-7 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Manoeuvre mensuelle ; remplacement 5 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "80-150 EUR pose",
+    "risk_if_neglected": "Blocage = surpression et eclatement du ballon",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Marquage grave sur le corps",
+      "fields": "Marque, pression de tarage",
+      "tip": "Suffisant pour commander le remplacement"
+    }
+  },
+  {
+    "id": "ECS-06",
+    "category": "hot_water",
+    "label": "Adoucisseur d'eau",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Sel mensuel ; desinfection annuelle ; controle pro tous les 2 ans",
+    "provider": "Particulier + Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "100-180 EUR",
+    "risk_if_neglected": "Bac a sel colmate, eau non adoucie, proliferation bacterienne",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos de la tete de commande ou sur le bac",
+      "fields": "Marque, modele, volume de resine, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "CLIM-01",
+    "category": "cooling",
+    "label": "Climatiseur split / multisplit",
+    "lifespan": "12-15 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Oui si >= 4 kW",
+      "reference": "Decret 2020-912 + arrete 24/07/2020"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro avec attestation de capacite fluides",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "120-200 EUR",
+    "risk_if_neglected": "Developpement bacterien, perte de froid, fuite de fluide (fort PRG)",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Unite exterieure : flanc ou dos. Unite interieure : sous le capot frontal ou sur le cote",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "CLIM-02",
+    "category": "cooling",
+    "label": "Climatiseur mobile",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage des filtres mensuel en saison",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Debit d'air reduit, odeurs, surconsommation",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos de l'appareil",
+      "fields": "Marque, modele, puissance, type de fluide",
+      "tip": null
+    }
+  },
+  {
+    "id": "CLIM-03",
+    "category": "cooling",
+    "label": "Circuit frigorifique >= 5 t CO2 eq",
+    "lifespan": null,
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Reglement (UE) 2024/573 (F-Gas), applicable depuis le 11/03/2024"
+    },
+    "reference_frequency": "Controle d'etancheite tous les 12 mois (5 a 50 t CO2 eq)",
+    "provider": "Operateur certifie (attestation de capacite)",
+    "proof_document": "Fiche d'intervention CERFA 15497",
+    "indicative_pro_cost": "150-300 EUR",
+    "risk_if_neglected": "Sanction administrative, impact climatique majeur",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette fluide sur l'unite exterieure (etiquetage impose par la reglementation F-Gas)",
+      "fields": "Type de fluide, charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "VENT-01",
+    "category": "ventilation",
+    "label": "VMC simple flux",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non (individuel)",
+      "reference": null
+    },
+    "reference_frequency": "Bouches tous les 6 mois ; caisson annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-120 EUR",
+    "risk_if_neglected": "Condensation, moisissures, degradation du bati",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le caisson moteur, generalement dans les combles",
+      "fields": "Marque, modele, type (autoreglable ou hygroreglable)",
+      "tip": "Le type conditionne les bouches de remplacement"
+    }
+  },
+  {
+    "id": "VENT-02",
+    "category": "ventilation",
+    "label": "VMC double flux",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non (individuel)",
+      "reference": null
+    },
+    "reference_frequency": "Filtres tous les 3-6 mois ; echangeur annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "40-80 EUR de filtres/an",
+    "risk_if_neglected": "Filtres satures = debit nul, perte du rendement de recuperation",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur la centrale, souvent pres de la trappe d'acces aux filtres",
+      "fields": "Marque, modele, references des filtres",
+      "tip": "Photographier aussi l'etiquette du filtre en place"
+    }
+  },
+  {
+    "id": "VENT-03",
+    "category": "ventilation",
+    "label": "Hotte aspirante",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre a graisse mensuel ; filtre charbon tous les 6 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "20-40 EUR",
+    "risk_if_neglected": "Risque d'incendie par accumulation de graisse, aspiration nulle",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "A l'interieur de la hotte, derriere les filtres a graisse",
+      "fields": "Marque, modele, n. de serie, references des filtres",
+      "tip": null
+    }
+  },
+  {
+    "id": "VENT-04",
+    "category": "ventilation",
+    "label": "Grilles et entrees d'air",
+    "lifespan": "30 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage semestriel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Deficit d'air neuf, mauvais tirage des appareils a combustion",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "VENT-05",
+    "category": "ventilation",
+    "label": "Puits canadien / provencal",
+    "lifespan": "30 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel du siphon et du filtre",
+    "provider": "Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "100-200 EUR",
+    "risk_if_neglected": "Stagnation d'eau, qualite d'air degradee",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque standard",
+      "fields": null,
+      "tip": "Dossier d'installation"
+    }
+  },
+  {
+    "id": "FROID-01",
+    "category": "refrigeration",
+    "label": "Refrigerateur",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Grille/condenseur tous les 6 mois ; joints ; degivrage",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Condenseur empoussiere = +25% de conso, compresseur en surchauffe",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Paroi interieure du compartiment refrigerateur, sur le cote ou derriere le bac a legumes",
+      "fields": "Marque, modele, n. de serie, classe energetique, fluide",
+      "tip": "Une etiquette exterieure peut porter un numero de controle usine et non le n. de serie"
+    }
+  },
+  {
+    "id": "FROID-02",
+    "category": "refrigeration",
+    "label": "Congelateur",
+    "lifespan": "12-18 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Degivrage annuel ; joints",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "3 mm de givre = +30% de conso",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Paroi interieure ; coffre : au dos ou sous le couvercle",
+      "fields": "Marque, modele, n. de serie, classe energetique",
+      "tip": null
+    }
+  },
+  {
+    "id": "FROID-03",
+    "category": "refrigeration",
+    "label": "Refrigerateur americain (distributeur eau/glace)",
+    "lifespan": "10-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre a eau tous les 6 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "30-60 EUR le filtre",
+    "risk_if_neglected": "Gout desagreable, contamination bacterienne du circuit",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Paroi interieure du compartiment refrigerateur, en haut ou sur le cote",
+      "fields": "Marque, modele, n. de serie, reference du filtre a eau",
+      "tip": null
+    }
+  },
+  {
+    "id": "FROID-04",
+    "category": "refrigeration",
+    "label": "Cave a vin",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre a charbon annuel ; nettoyage du bac",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "15-30 EUR",
+    "risk_if_neglected": "Hygrometrie instable, bouchons desseches",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Paroi interieure, en partie basse",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "LAV-01",
+    "category": "washing",
+    "label": "Lave-linge",
+    "lifespan": "10-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre de vidange trimestriel ; joint mensuel ; detartrage semestriel ; tuyau tous les 5 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-30 EUR",
+    "risk_if_neglected": "Degat des eaux (1re cause de sinistre domestique), moisissures, panne de pompe",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Frontal : cadre du hublot, visible porte ouverte (souvent en haut) ; sinon trappe du filtre ou dos. Top : sous le couvercle ou au dos",
+      "fields": "Marque, modele, n. de serie, code service ou PNC selon la marque, date de fabrication",
+      "tip": "Emplacement et identifiant adaptes a la marque : voir onglet Plaques par marque"
+    }
+  },
+  {
+    "id": "LAV-02",
+    "category": "washing",
+    "label": "Seche-linge (condensation ou PAC)",
+    "lifespan": "10-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre a chaque cycle ; condenseur mensuel ; filtre PAC trimestriel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Risque d'incendie par peluches, temps de sechage double",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Cadre de la porte, visible porte ouverte",
+      "fields": "Marque, modele, n. de serie, type (condensation ou PAC), fluide si PAC",
+      "tip": null
+    }
+  },
+  {
+    "id": "LAV-03",
+    "category": "washing",
+    "label": "Lave-vaisselle",
+    "lifespan": "10-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre mensuel ; bras de lavage trimestriel ; sel et liquide de rincage ; detartrage semestriel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-20 EUR",
+    "risk_if_neglected": "Mauvaises odeurs, vaisselle mal lavee, pompe bloquee",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Chant de la porte (cote ou dessus), visible porte ouverte",
+      "fields": "Marque, modele, n. de serie, code service selon la marque",
+      "tip": null
+    }
+  },
+  {
+    "id": "LAV-04",
+    "category": "washing",
+    "label": "Lave-linge sechant",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Cumul des entretiens lave-linge et seche-linge",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Usure acceleree, condenseur colmate",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Cadre du hublot, visible porte ouverte",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "CUIS-01",
+    "category": "cooking",
+    "label": "Four (pyrolyse / catalyse)",
+    "lifespan": "12-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Pyrolyse trimestrielle ; joint de porte controle annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Joint use = perte de chaleur, cuissons irregulieres",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Cadre du four, visible porte ouverte ; sinon derriere le tiroir inferieur",
+      "fields": "Marque, modele, n. de serie, puissance",
+      "tip": null
+    }
+  },
+  {
+    "id": "CUIS-02",
+    "category": "cooking",
+    "label": "Plaque a induction",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage apres usage ; grille de ventilation tous les 6 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Surchauffe de l'electronique, coupures en cours de cuisson",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous la table, inaccessible une fois encastree",
+      "fields": "Marque, modele, n. de serie, puissance",
+      "tip": "Chercher la 2e etiquette fournie avec la notice, ou photographier la facture"
+    }
+  },
+  {
+    "id": "CUIS-03",
+    "category": "cooking",
+    "label": "Plaque / cuisiniere gaz",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage des injecteurs annuel ; controle du flexible",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Flamme jaune = mauvaise combustion et CO",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous la table",
+      "fields": "Marque, modele, type de gaz",
+      "tip": "Notice ou facture"
+    }
+  },
+  {
+    "id": "CUIS-04",
+    "category": "cooking",
+    "label": "Tuyau flexible gaz",
+    "lifespan": "5-10 ans (date imprimee)",
+    "legal": {
+      "status": "yes",
+      "note": "Oui (implicite)",
+      "reference": "Arrete du 02/08/1977 modifie ; NF D 36-100 / 36-103"
+    },
+    "reference_frequency": "Remplacement imperatif a la date de peremption imprimee",
+    "provider": "Particulier",
+    "proof_document": "Date visible sur le flexible",
+    "indicative_pro_cost": "15-40 EUR",
+    "risk_if_neglected": "Fuite de gaz, explosion, non-couverture assurance",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "dated_label",
+      "location": "Marquage imprime sur la bague ou le tuyau",
+      "fields": "Date limite d'utilisation, norme NF D 36-100 / 36-103",
+      "tip": "La photo lit la date de peremption : rappel cree automatiquement"
+    }
+  },
+  {
+    "id": "CUIS-05",
+    "category": "cooking",
+    "label": "Four a micro-ondes",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage hebdomadaire ; controle du joint de porte annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Fuite de micro-ondes si le joint est abime",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Cadre de la porte ou au dos",
+      "fields": "Marque, modele, n. de serie, puissance",
+      "tip": null
+    }
+  },
+  {
+    "id": "CUIS-06",
+    "category": "cooking",
+    "label": "Machine a cafe / expresso",
+    "lifespan": "5-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Detartrage tous les 1-3 mois selon durete de l'eau",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "10-20 EUR",
+    "risk_if_neglected": "Entartrage = panne de pompe, cause n.1 de mise au rebut",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous l'appareil ou derriere le reservoir d'eau",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "PEM-01",
+    "category": "small_appliances",
+    "label": "Aspirateur traineau / balai",
+    "lifespan": "6-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Bac apres usage ; filtre HEPA tous les 6 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "15-40 EUR",
+    "risk_if_neglected": "Perte d'aspiration, surchauffe du moteur",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous l'appareil ou dans le compartiment a poussiere",
+      "fields": "Marque, modele, reference du filtre",
+      "tip": null
+    }
+  },
+  {
+    "id": "PEM-02",
+    "category": "small_appliances",
+    "label": "Robot aspirateur",
+    "lifespan": "4-6 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Brosses et capteurs mensuels ; filtre trimestriel ; batterie 2-3 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "20-50 EUR",
+    "risk_if_neglected": "Cheveux enroules = moteur force, navigation erratique",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous le robot, souvent pres de la batterie",
+      "fields": "Marque, modele, n. de serie",
+      "tip": "Aussi visible dans l'application du fabricant"
+    }
+  },
+  {
+    "id": "PEM-03",
+    "category": "small_appliances",
+    "label": "Purificateur d'air",
+    "lifespan": "7-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtres tous les 6-12 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "40-90 EUR",
+    "risk_if_neglected": "Filtre sature = rejet de particules accumulees",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos ou sous l'appareil",
+      "fields": "Marque, modele, reference des filtres",
+      "tip": null
+    }
+  },
+  {
+    "id": "PEM-04",
+    "category": "small_appliances",
+    "label": "Deshumidificateur",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Reservoir et filtre mensuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Developpement bacterien dans le bac",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos de l'appareil",
+      "fields": "Marque, modele, type de fluide",
+      "tip": null
+    }
+  },
+  {
+    "id": "PEM-05",
+    "category": "small_appliances",
+    "label": "Fer / centrale vapeur",
+    "lifespan": "5-8 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Detartrage tous les 1-3 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "5-15 EUR",
+    "risk_if_neglected": "Projection de calcaire sur le linge, panne de chaudiere",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous la base ou la station",
+      "fields": "Marque, modele",
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-01",
+    "category": "water",
+    "label": "Reseau de plomberie et robinetterie",
+    "lifespan": "30-50 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Mousseurs tous les 6 mois ; recherche de fuite annuelle",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Une fuite de chasse d'eau = jusqu'a 200 m3/an perdus",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-02",
+    "category": "water",
+    "label": "Compteur d'eau",
+    "lifespan": "15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Releve mensuel pour detecter les fuites",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Fuite invisible facturee au plein tarif",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "dial",
+      "location": "Cadran du compteur",
+      "fields": "N. du compteur, index",
+      "tip": "La photo releve l'index : suivi mensuel de consommation"
+    }
+  },
+  {
+    "id": "EAU-03",
+    "category": "water",
+    "label": "Disconnecteur / clapet anti-retour",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Arrete du 17/03/2004 (protection des reseaux d'eau potable)"
+    },
+    "reference_frequency": "Controle annuel si arrosage ou recuperateur relie au reseau",
+    "provider": "Pro",
+    "proof_document": "Rapport de controle",
+    "indicative_pro_cost": "80-150 EUR",
+    "risk_if_neglected": "Retour d'eau polluee dans le reseau public, responsabilite engagee",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Marquage sur le corps",
+      "fields": "Marque, type (BA, CA, EA)",
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-04",
+    "category": "water",
+    "label": "Pompe de relevage",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel du flotteur et du clapet",
+    "provider": "Particulier ou Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "100-180 EUR",
+    "risk_if_neglected": "Inondation du sous-sol",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le corps ou le moteur de la pompe",
+      "fields": "Marque, modele, puissance",
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-05",
+    "category": "water",
+    "label": "Puits / forage domestique",
+    "lifespan": null,
+    "legal": {
+      "status": "yes",
+      "note": "Oui (declaration)",
+      "reference": "Art. L2224-9 CGCT ; decret 2008-652"
+    },
+    "reference_frequency": "Declaration obligatoire en mairie ; controle si relie au reseau",
+    "provider": "Mairie / service des eaux",
+    "proof_document": "Recepisse de declaration",
+    "indicative_pro_cost": "Gratuit",
+    "risk_if_neglected": "Amende, mise en demeure de deconnexion",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Photographier le recepisse de declaration en mairie"
+    }
+  },
+  {
+    "id": "EAU-06",
+    "category": "water",
+    "label": "Recuperateur d'eau de pluie",
+    "lifespan": "20-30 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Arrete du 21/08/2008 (usages interieurs)"
+    },
+    "reference_frequency": "Filtre tous les 6 mois ; cuve annuelle ; carnet sanitaire si usage interieur",
+    "provider": "Particulier",
+    "proof_document": "Carnet sanitaire",
+    "indicative_pro_cost": "0-100 EUR",
+    "risk_if_neglected": "Contamination du reseau, non-conformite en cas de controle",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette sur la cuve, souvent pres du trou d'homme",
+      "fields": "Fabricant, capacite (L)",
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-07",
+    "category": "water",
+    "label": "Surpresseur",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle de la pression du vase annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Cycles courts = usure rapide de la pompe",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le moteur de la pompe",
+      "fields": "Marque, modele, puissance, capacite du vase",
+      "tip": null
+    }
+  },
+  {
+    "id": "EAU-08",
+    "category": "water",
+    "label": "Ballon tampon / hydroaccumulation",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle de la pression et de l'anode tous les 2 ans",
+    "provider": "Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "100-150 EUR",
+    "risk_if_neglected": "Corrosion interne, perte de stratification",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur l'enveloppe du ballon",
+      "fields": "Fabricant, capacite (L), pression maximale",
+      "tip": null
+    }
+  },
+  {
+    "id": "ASS-01",
+    "category": "wastewater",
+    "label": "Fosse toutes eaux / fosse septique",
+    "lifespan": "30-40 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "CSP art. L1331-1-1 ; arrete du 27/04/2012"
+    },
+    "reference_frequency": "Controle SPANC au moins tous les 10 ans ; vidange a 50% de boues (environ 4 ans)",
+    "provider": "Vidangeur agree + SPANC",
+    "proof_document": "Bordereau de suivi de vidange + rapport SPANC",
+    "indicative_pro_cost": "250-400 EUR",
+    "risk_if_neglected": "Non-conformite, travaux imposes, majoration de redevance, blocage a la vente",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque exploitable",
+      "fields": null,
+      "tip": "Photographier le rapport SPANC et le dernier bordereau de vidange"
+    }
+  },
+  {
+    "id": "ASS-02",
+    "category": "wastewater",
+    "label": "Micro-station d'epuration",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "CSP art. L1331-1-1 ; arrete du 27/04/2012"
+    },
+    "reference_frequency": "Contrat de maintenance annuel ; vidange selon taux de boues (6-12 mois de controle)",
+    "provider": "Pro agree",
+    "proof_document": "Contrat + bordereau de vidange",
+    "indicative_pro_cost": "150-300 EUR/an",
+    "risk_if_neglected": "Arret de la biomasse epuratoire, rejets non conformes",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette sur la cuve ou sur le surpresseur",
+      "fields": "Fabricant, modele, capacite (EH), n. d'agrement",
+      "tip": "Le n. d'agrement ministeriel est demande par le SPANC"
+    }
+  },
+  {
+    "id": "ASS-03",
+    "category": "wastewater",
+    "label": "Bac a graisse",
+    "lifespan": null,
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage tous les 6 mois",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Colmatage de l'epandage, odeurs",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "ASS-04",
+    "category": "wastewater",
+    "label": "Prefiltre / filtre a sable",
+    "lifespan": null,
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage tous les 6 mois ; controle du sable tous les 10 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Colmatage, remontees d'eaux usees",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "ASS-05",
+    "category": "wastewater",
+    "label": "Canalisations EU / EV",
+    "lifespan": "50 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Curage preventif tous les 2-3 ans",
+    "provider": "Pro",
+    "proof_document": "Facture",
+    "indicative_pro_cost": "150-300 EUR",
+    "risk_if_neglected": "Bouchon, refoulement, degat des eaux",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "ENE-01",
+    "category": "energy",
+    "label": "Panneaux photovoltaiques",
+    "lifespan": "25-30 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle visuel tous les 6 mois ; nettoyage tous les 1-2 ans ; controle pro tous les 2-4 ans",
+    "provider": "Particulier + Pro",
+    "proof_document": "Rapport de controle",
+    "indicative_pro_cost": "150-300 EUR",
+    "risk_if_neglected": "Salissures = -5 a -15% de production ; point chaud non detecte = risque incendie",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Etiquette au dos de chaque module, inaccessible une fois pose",
+      "fields": "Marque, modele, puissance crete (Wc)",
+      "tip": "Dossier d'installation ou attestation Consuel"
+    }
+  },
+  {
+    "id": "ENE-02",
+    "category": "energy",
+    "label": "Onduleur photovoltaique",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Suivi de production mensuel ; depoussierage annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Sous-production non detectee pendant des mois",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le flanc du boitier",
+      "fields": "Marque, modele, n. de serie, puissance",
+      "tip": "Aussi visible dans l'application de monitoring"
+    }
+  },
+  {
+    "id": "ENE-03",
+    "category": "energy",
+    "label": "Batterie de stockage",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel (etat de sante, ventilation)",
+    "provider": "Pro",
+    "proof_document": "Rapport",
+    "indicative_pro_cost": "100-200 EUR",
+    "risk_if_neglected": "Perte de capacite, risque thermique",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le boitier",
+      "fields": "Marque, modele, n. de serie, capacite (kWh)",
+      "tip": null
+    }
+  },
+  {
+    "id": "ENE-04",
+    "category": "energy",
+    "label": "Borne de recharge VE (IRVE)",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel : cable, prise, differentiel, serrage",
+    "provider": "Pro IRVE",
+    "proof_document": "Rapport d'intervention",
+    "indicative_pro_cost": "120-200 EUR",
+    "risk_if_neglected": "Echauffement des contacts, declenchements, risque incendie",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous le capot ou sur le flanc",
+      "fields": "Marque, modele, n. de serie, puissance (kW)",
+      "tip": null
+    }
+  },
+  {
+    "id": "ENE-05",
+    "category": "energy",
+    "label": "Tableau electrique et differentiels",
+    "lifespan": "25-30 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Diagnostic electrique : art. L271-4 CCH (vente si > 15 ans) ; location : validite 6 ans"
+    },
+    "reference_frequency": "Test des differentiels mensuel ; diagnostic a la vente ou a la mise en location",
+    "provider": "Particulier + diagnostiqueur certifie",
+    "proof_document": "Diagnostic electrique",
+    "indicative_pro_cost": "110-160 EUR le diagnostic",
+    "risk_if_neglected": "Differentiel bloque = protection nulle contre l'electrocution",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Pas de plaque unique : calibre et sensibilite graves sur chaque differentiel",
+      "fields": "Calibre, sensibilite (30 mA), type (AC, A, F)",
+      "tip": null
+    }
+  },
+  {
+    "id": "ENE-06",
+    "category": "energy",
+    "label": "Installation interieure de gaz",
+    "lifespan": null,
+    "legal": {
+      "status": "yes",
+      "note": "Oui (diagnostic)",
+      "reference": "Art. L271-4 CCH"
+    },
+    "reference_frequency": "Diagnostic a la vente si installation > 15 ans (validite 3 ans) ; 6 ans en location",
+    "provider": "Diagnostiqueur certifie",
+    "proof_document": "Diagnostic gaz",
+    "indicative_pro_cost": "110-150 EUR",
+    "risk_if_neglected": "Vente bloquee, responsabilite en cas de sinistre",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Photographier le dernier diagnostic gaz"
+    }
+  },
+  {
+    "id": "ENE-07",
+    "category": "energy",
+    "label": "Groupe electrogene",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Demarrage mensuel ; vidange annuelle ; carburant stabilise",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-100 EUR",
+    "risk_if_neglected": "Refus de demarrage le jour de la coupure",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le chassis ou le moteur",
+      "fields": "Marque, modele, puissance (kVA), n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "SEC-01",
+    "category": "safety",
+    "label": "Detecteur de fumee (DAAF)",
+    "lifespan": "10 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Loi 2010-238 ; art. R129-12 a R129-15 CCH"
+    },
+    "reference_frequency": "Installe par le proprietaire ; test mensuel et pile annuelle par l'occupant",
+    "provider": "Particulier",
+    "proof_document": "Attestation a transmettre a l'assureur",
+    "indicative_pro_cost": "20-40 EUR",
+    "risk_if_neglected": "Detecteur muet = risque vital ; difficulte d'indemnisation",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "dated_label",
+      "location": "Au dos du detecteur",
+      "fields": "Date de fabrication ou de fin de vie, norme NF EN 14604",
+      "tip": "La photo lit la date : rappel de remplacement a 10 ans cree automatiquement"
+    }
+  },
+  {
+    "id": "SEC-02",
+    "category": "safety",
+    "label": "Detecteur de monoxyde de carbone",
+    "lifespan": "7-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non (fortement recommande)",
+      "reference": null
+    },
+    "reference_frequency": "Test mensuel ; remplacement tous les 5-7 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "25-50 EUR",
+    "risk_if_neglected": "Intoxication au CO : environ 100 deces par an en France",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "dated_label",
+      "location": "Au dos du detecteur",
+      "fields": "Date de fin de vie, norme NF EN 50291",
+      "tip": "Rappel de fin de vie cree automatiquement"
+    }
+  },
+  {
+    "id": "SEC-03",
+    "category": "safety",
+    "label": "Extincteur",
+    "lifespan": "20 ans (avec controle)",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Obligatoire en parties communes et ERP ; facultatif en maison individuelle"
+    },
+    "reference_frequency": "Verification annuelle ; requalification tous les 10 ans",
+    "provider": "Pro certifie",
+    "proof_document": "Etiquette de controle",
+    "indicative_pro_cost": "25-50 EUR/an",
+    "risk_if_neglected": "Extincteur inoperant au moment critique",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "dated_label",
+      "location": "Etiquette sur le corps",
+      "fields": "Date de fabrication, date du dernier controle, type d'agent",
+      "tip": null
+    }
+  },
+  {
+    "id": "SEC-04",
+    "category": "safety",
+    "label": "Alarme / systeme anti-intrusion",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Test mensuel ; piles des detecteurs annuelles",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-30 EUR",
+    "risk_if_neglected": "Fausses alarmes ou absence de declenchement",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous le capot de la centrale",
+      "fields": "Marque, modele",
+      "tip": "Application du fabricant"
+    }
+  },
+  {
+    "id": "SEC-05",
+    "category": "safety",
+    "label": "Videosurveillance",
+    "lifespan": "5-8 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "RGPD ; art. 226-1 Code penal si captation de la voie publique ou du voisinage"
+    },
+    "reference_frequency": "Nettoyage des optiques tous les 6 mois ; purge des enregistrements",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Images inexploitables ; plainte pour atteinte a la vie privee",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous ou au dos de la camera",
+      "fields": "Marque, modele, n. de serie",
+      "tip": "Application du fabricant"
+    }
+  },
+  {
+    "id": "SEC-06",
+    "category": "safety",
+    "label": "Interphone / visiophone",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage et test annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Platine de rue corrodee par les intemperies",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Au dos du poste interieur",
+      "fields": "Marque, modele",
+      "tip": null
+    }
+  },
+  {
+    "id": "SEC-07",
+    "category": "safety",
+    "label": "Ascenseur privatif / monte-escalier",
+    "lifespan": "20-25 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Art. L125-2-2 et R125-2 CCH ; decret 2004-964"
+    },
+    "reference_frequency": "Contrat d'entretien obligatoire ; visite au moins toutes les 6 semaines ; controle technique tous les 5 ans",
+    "provider": "Ascensoriste",
+    "proof_document": "Carnet d'entretien + rapport quinquennal",
+    "indicative_pro_cost": "1500-3000 EUR/an",
+    "risk_if_neglected": "Responsabilite civile et penale du proprietaire en cas d'accident",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Plaque dans la cabine",
+      "fields": "Constructeur, charge nominale, n. d'installation",
+      "tip": "Contrat d'entretien"
+    }
+  },
+  {
+    "id": "OUV-01",
+    "category": "doors_gates",
+    "label": "Portail motorise",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Non (individuel) / Oui (collectif)",
+      "reference": "Arrete du 21/12/1993 : visite semestrielle pour les portails collectifs"
+    },
+    "reference_frequency": "Graissage et test des securites tous les 6 mois",
+    "provider": "Particulier (individuel) / Pro (collectif)",
+    "proof_document": "Livret d'entretien (collectif)",
+    "indicative_pro_cost": "0-150 EUR",
+    "risk_if_neglected": "Securite anti-ecrasement defaillante, moteur force",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le moteur ou le boitier de commande",
+      "fields": "Marque, modele du moteur",
+      "tip": null
+    }
+  },
+  {
+    "id": "OUV-02",
+    "category": "doors_gates",
+    "label": "Porte de garage motorisee",
+    "lifespan": "15-20 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Non (individuel) / Oui (collectif)",
+      "reference": "Arrete du 21/12/1993 (collectif)"
+    },
+    "reference_frequency": "Tous les 6 mois",
+    "provider": "Particulier / Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "0-150 EUR",
+    "risk_if_neglected": "Rupture de ressort, chute du tablier",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le moteur (au plafond) ou le montant de la porte",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "OUV-03",
+    "category": "doors_gates",
+    "label": "Volets roulants",
+    "lifespan": "15-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage des coulisses et lubrification annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Lames coincees, moteur grille",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Sur le moteur, dans le coffre : inaccessible",
+      "fields": "Marque du moteur",
+      "tip": "Facture de l'installateur"
+    }
+  },
+  {
+    "id": "OUV-04",
+    "category": "doors_gates",
+    "label": "Fenetres et menuiseries",
+    "lifespan": "25-40 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Joints, quincaillerie et reglage annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Infiltrations, deperdition thermique, ferrage desaxe",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Marquage dans la feuillure du dormant (pas systematique)",
+      "fields": "Fabricant, certification",
+      "tip": null
+    }
+  },
+  {
+    "id": "OUV-05",
+    "category": "doors_gates",
+    "label": "Store banne / pergola",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage de la toile et graissage annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-80 EUR",
+    "risk_if_neglected": "Toile moisie, bras bloques, casse au premier coup de vent",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette sous le coffre ou sur la barre de charge",
+      "fields": "Fabricant, modele, dimensions",
+      "tip": null
+    }
+  },
+  {
+    "id": "PIS-01",
+    "category": "pool",
+    "label": "Bassin de piscine enterree",
+    "lifespan": "20-30 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui (securite)",
+      "reference": "Loi 2003-9 ; art. L128-1 et R128-1 CCH"
+    },
+    "reference_frequency": "Dispositif de securite normalise obligatoire en permanence (barriere, alarme, couverture ou abri)",
+    "provider": "Particulier",
+    "proof_document": "Attestation de conformite du dispositif",
+    "indicative_pro_cost": "45 000 EUR d'amende si absence",
+    "risk_if_neglected": "Noyade d'enfant ; amende jusqu'a 45 000 EUR",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Photographier l'attestation de conformite du dispositif de securite"
+    }
+  },
+  {
+    "id": "PIS-02",
+    "category": "pool",
+    "label": "Filtre a sable",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Contre-lavage hebdomadaire en saison ; remplacement du sable tous les 5-7 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "150-300 EUR le sable",
+    "risk_if_neglected": "Sable colmate = eau trouble, surconsommation de produits",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Etiquette sur la cuve du filtre",
+      "fields": "Marque, modele, diametre, debit, volume de sable",
+      "tip": "Le volume de sable conditionne la commande de recharge"
+    }
+  },
+  {
+    "id": "PIS-03",
+    "category": "pool",
+    "label": "Pompe de filtration",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Prefiltre hebdomadaire ; hivernage annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Pompe desamorcee ou gelee = remplacement complet",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le moteur",
+      "fields": "Marque, modele, puissance, debit",
+      "tip": null
+    }
+  },
+  {
+    "id": "PIS-04",
+    "category": "pool",
+    "label": "Electrolyseur au sel",
+    "lifespan": "5-8 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle de la cellule mensuel ; detartrage annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-40 EUR",
+    "risk_if_neglected": "Cellule entartree = production de chlore nulle",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le coffret de commande",
+      "fields": "Marque, modele, capacite (m3)",
+      "tip": null
+    }
+  },
+  {
+    "id": "PIS-05",
+    "category": "pool",
+    "label": "Pompe a chaleur de piscine",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Oui si >= 4 kW",
+      "reference": "Decret 2020-912"
+    },
+    "reference_frequency": "Tous les 2 ans",
+    "provider": "Pro qualifie",
+    "proof_document": "Attestation d'entretien",
+    "indicative_pro_cost": "120-200 EUR",
+    "risk_if_neglected": "Echangeur entartre, fuite de fluide frigorigene",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Flanc de l'appareil",
+      "fields": "Modele, n. de serie, puissance (kW), type de fluide (R32, R410A...), charge en kg et en t eq. CO2, mention hermetiquement scelle",
+      "tip": "Fluide + charge + mention scelle determinent le controle d'etancheite : c'est ici que la photo calcule le statut legal"
+    }
+  },
+  {
+    "id": "PIS-06",
+    "category": "pool",
+    "label": "Robot de piscine",
+    "lifespan": "5-8 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Rincage et filtre apres chaque usage ; brosses annuelles",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "30-80 EUR",
+    "risk_if_neglected": "Moteur encrasse, courroies rompues",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous le robot ou sur le boitier d'alimentation",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "PIS-07",
+    "category": "pool",
+    "label": "Alarme de piscine",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Oui si dispositif retenu",
+      "reference": "Norme NF P90-307"
+    },
+    "reference_frequency": "Test mensuel ; pile annuelle",
+    "provider": "Particulier",
+    "proof_document": "Attestation de conformite",
+    "indicative_pro_cost": "0-40 EUR",
+    "risk_if_neglected": "Dispositif reglementaire inoperant = responsabilite penale",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le boitier",
+      "fields": "Marque, modele, norme NF P90-307",
+      "tip": "La mention de la norme prouve la conformite du dispositif"
+    }
+  },
+  {
+    "id": "PIS-08",
+    "category": "pool",
+    "label": "Spa / jacuzzi",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtres mensuels ; vidange tous les 3 mois ; detartrage annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "50-150 EUR",
+    "risk_if_neglected": "Legionelle, biofilm dans les canalisations",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le coffret electrique ou le flanc de la cuve",
+      "fields": "Marque, modele, n. de serie",
+      "tip": null
+    }
+  },
+  {
+    "id": "JAR-01",
+    "category": "garden",
+    "label": "Tondeuse thermique",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Vidange, bougie, filtre a air et affutage annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "30-60 EUR",
+    "risk_if_neglected": "Moteur grippe, coupe qui arrache l'herbe",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le carter ou le moteur",
+      "fields": "Marque, modele, n. de serie, cylindree",
+      "tip": "Le modele de moteur donne les references de bougie et de filtre"
+    }
+  },
+  {
+    "id": "JAR-02",
+    "category": "garden",
+    "label": "Robot tondeuse",
+    "lifespan": "8-10 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Lames tous les 2-3 mois ; hivernage ; batterie tous les 3-5 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "20-40 EUR",
+    "risk_if_neglected": "Lames emoussees = surconsommation et pelouse abimee",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous le robot",
+      "fields": "Marque, modele, n. de serie",
+      "tip": "Application du fabricant"
+    }
+  },
+  {
+    "id": "JAR-03",
+    "category": "garden",
+    "label": "Taille-haie / debroussailleuse",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Affutage, filtre a air et graissage annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "20-40 EUR",
+    "risk_if_neglected": "Lames grippees, moteur noye au redemarrage",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le corps de l'appareil",
+      "fields": "Marque, modele",
+      "tip": null
+    }
+  },
+  {
+    "id": "JAR-04",
+    "category": "garden",
+    "label": "Nettoyeur haute pression",
+    "lifespan": "5-8 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Filtre apres usage ; hivernage avec antigel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "10-20 EUR",
+    "risk_if_neglected": "Pompe fendue par le gel : appareil perdu",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le flanc",
+      "fields": "Marque, modele, pression, debit",
+      "tip": null
+    }
+  },
+  {
+    "id": "JAR-05",
+    "category": "garden",
+    "label": "Arrosage automatique",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle des goutteurs au printemps ; purge hivernale",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Canalisations eclatees par le gel",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sur le programmateur",
+      "fields": "Marque, modele",
+      "tip": null
+    }
+  },
+  {
+    "id": "JAR-06",
+    "category": "garden",
+    "label": "Barbecue / plancha gaz",
+    "lifespan": "8-12 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Bruleurs annuels ; controle du flexible (date de peremption)",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0-40 EUR",
+    "risk_if_neglected": "Fuite de gaz, retour de flamme",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Sous la cuve ou sur le chariot",
+      "fields": "Marque, modele, type de gaz",
+      "tip": "Photographier aussi la date imprimee sur le flexible"
+    }
+  },
+  {
+    "id": "JAR-07",
+    "category": "garden",
+    "label": "Abri / cabane de jardin",
+    "lifespan": "15-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Traitement du bois tous les 2-3 ans",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "40-80 EUR",
+    "risk_if_neglected": "Pourrissement des lisses basses, toiture percee",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "BAT-01",
+    "category": "building",
+    "label": "Toiture",
+    "lifespan": "40-70 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle visuel annuel ; demoussage tous les 5-10 ans",
+    "provider": "Pro",
+    "proof_document": "Facture",
+    "indicative_pro_cost": "400-1200 EUR",
+    "risk_if_neglected": "Infiltration = charpente et isolation a reprendre",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Facture du dernier demoussage ou de la derniere reparation"
+    }
+  },
+  {
+    "id": "BAT-02",
+    "category": "building",
+    "label": "Gouttieres et descentes",
+    "lifespan": "25-40 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage 2 fois par an (automne et printemps)",
+    "provider": "Particulier ou Pro",
+    "proof_document": null,
+    "indicative_pro_cost": "0-200 EUR",
+    "risk_if_neglected": "Debordement, infiltration en pied de mur, humidite ascensionnelle",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "BAT-03",
+    "category": "building",
+    "label": "Facade / enduit",
+    "lifespan": "20-30 ans",
+    "legal": {
+      "status": "conditional",
+      "note": "Selon cas",
+      "reference": "Art. L132-1 CCH : ravalement imposable par arrete municipal (souvent tous les 10 ans)"
+    },
+    "reference_frequency": "Controle annuel ; ravalement tous les 10-15 ans",
+    "provider": "Pro",
+    "proof_document": "Facture de ravalement",
+    "indicative_pro_cost": null,
+    "risk_if_neglected": "Injonction municipale, execution d'office aux frais du proprietaire",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Facture du dernier ravalement"
+    }
+  },
+  {
+    "id": "BAT-04",
+    "category": "building",
+    "label": "Terrasse bois",
+    "lifespan": "15-25 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Nettoyage et saturateur annuels",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "40-100 EUR",
+    "risk_if_neglected": "Grisaillement, echardes, lames fendues",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "BAT-05",
+    "category": "building",
+    "label": "Charpente",
+    "lifespan": "80-100 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle termites et insectes xylophages tous les 3-5 ans",
+    "provider": "Pro",
+    "proof_document": "Diagnostic",
+    "indicative_pro_cost": "150-300 EUR",
+    "risk_if_neglected": "Attaque non detectee = reprise structurelle tres lourde",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": "Dernier diagnostic termites ou traitement"
+    }
+  },
+  {
+    "id": "BAT-06",
+    "category": "building",
+    "label": "Combles et isolation",
+    "lifespan": "20-30 ans",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle annuel : humidite, tassement, nuisibles",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Isolant tasse ou humide = performance divisee par deux",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  },
+  {
+    "id": "BAT-07",
+    "category": "building",
+    "label": "Vide sanitaire / cave",
+    "lifespan": null,
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Controle de l'humidite et de la ventilation annuel",
+    "provider": "Particulier",
+    "proof_document": null,
+    "indicative_pro_cost": "0 EUR",
+    "risk_if_neglected": "Remontees capillaires, salpetre, planchers degrades",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "none",
+      "location": "Pas de plaque",
+      "fields": null,
+      "tip": null
+    }
+  }
+]
