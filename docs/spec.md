@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-21 (doc rev 13). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 14). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -28,6 +28,12 @@ The app is organized by place first, then by category, then by appliance. A plac
 - **Property type**: main home, second home or rental. It sets who is liable for upkeep and which seasonal tasks apply, such as winterizing a second home.
 - **Sharing scope**: a place is the natural unit for inviting a tenant or a technician later, without exposing the other places.
 - **Room**: optional tag, not a navigation level. Mainly used to tell two identical units apart, such as two splits in two bedrooms.
+
+Categories are the level users see. There are ten, labeled in French in the interface: Cuisine, Buanderie, Chauffage & climatisation, Petit électroménager, Électronique, Jardin & piscine, Maison & sécurité, Énergie, Véhicules, Autre.
+
+- **Equipment types drive the plan**: each equipment type in the reference data belongs to one category, and the type, not the category, carries maintenance tasks and legal obligations. Users rarely pick a category by hand: the photo, the invoice or a search by name finds the type.
+- **No maintenance plan**: Électronique and Autre have none, but warranty tracking and documents work there.
+- **Vehicles in v1**: warranty, documents and the mandatory technical inspection (contrôle technique). Mileage-based servicing comes later.
 
 ## Adding Appliances
 

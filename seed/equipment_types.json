@@ -1,7 +1,8 @@
 [
   {
     "id": "CH-01",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Chaudiere gaz individuelle (4-400 kW)",
     "lifespan": "15-20 ans",
     "legal": {
@@ -24,7 +25,8 @@
   },
   {
     "id": "CH-02",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Chaudiere fioul",
     "lifespan": "20-25 ans",
     "legal": {
@@ -47,7 +49,8 @@
   },
   {
     "id": "CH-03",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Chaudiere bois / granules",
     "lifespan": "15-20 ans",
     "legal": {
@@ -70,7 +73,8 @@
   },
   {
     "id": "CH-04",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Poele a granules",
     "lifespan": "15-20 ans",
     "legal": {
@@ -93,7 +97,8 @@
   },
   {
     "id": "CH-05",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Poele a bois / insert / foyer ferme",
     "lifespan": "20-30 ans",
     "legal": {
@@ -116,7 +121,8 @@
   },
   {
     "id": "CH-06",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Cheminee a foyer ouvert",
     "lifespan": "30 ans et +",
     "legal": {
@@ -139,7 +145,8 @@
   },
   {
     "id": "CH-07",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Conduit de fumee",
     "lifespan": "30-50 ans",
     "legal": {
@@ -162,7 +169,8 @@
   },
   {
     "id": "CH-08",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Pompe a chaleur air/eau (4-70 kW)",
     "lifespan": "15-20 ans",
     "legal": {
@@ -185,7 +193,8 @@
   },
   {
     "id": "CH-09",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Pompe a chaleur air/air reversible",
     "lifespan": "12-15 ans",
     "legal": {
@@ -208,7 +217,8 @@
   },
   {
     "id": "CH-10",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "PAC geothermique",
     "lifespan": "20-25 ans",
     "legal": {
@@ -231,7 +241,8 @@
   },
   {
     "id": "CH-11",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Radiateurs a eau chaude",
     "lifespan": "25-40 ans",
     "legal": {
@@ -254,7 +265,8 @@
   },
   {
     "id": "CH-12",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Circuit de chauffage (desembouage)",
     "lifespan": null,
     "legal": {
@@ -277,7 +289,8 @@
   },
   {
     "id": "CH-13",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Plancher chauffant hydraulique",
     "lifespan": "40-50 ans",
     "legal": {
@@ -300,7 +313,8 @@
   },
   {
     "id": "CH-14",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Radiateur electrique / convecteur",
     "lifespan": "15-20 ans",
     "legal": {
@@ -323,7 +337,8 @@
   },
   {
     "id": "CH-15",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Cuve a fioul",
     "lifespan": "25-30 ans",
     "legal": {
@@ -346,7 +361,8 @@
   },
   {
     "id": "CH-16",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Citerne GPL / propane",
     "lifespan": null,
     "legal": {
@@ -369,7 +385,8 @@
   },
   {
     "id": "CH-17",
-    "category": "heating",
+    "category": "heating_cooling",
+    "technical_group": "Chauffage",
     "label": "Thermostat / regulation connectee",
     "lifespan": "10-15 ans",
     "legal": {
@@ -392,7 +409,8 @@
   },
   {
     "id": "ECS-01",
-    "category": "hot_water",
+    "category": "heating_cooling",
+    "technical_group": "Eau chaude",
     "label": "Chauffe-eau electrique (cumulus)",
     "lifespan": "10-15 ans",
     "legal": {
@@ -415,7 +433,8 @@
   },
   {
     "id": "ECS-02",
-    "category": "hot_water",
+    "category": "heating_cooling",
+    "technical_group": "Eau chaude",
     "label": "Chauffe-eau thermodynamique",
     "lifespan": "15-20 ans",
     "legal": {
@@ -438,7 +457,8 @@
   },
   {
     "id": "ECS-03",
-    "category": "hot_water",
+    "category": "heating_cooling",
+    "technical_group": "Eau chaude",
     "label": "Chauffe-eau gaz / chauffe-bain",
     "lifespan": "10-15 ans",
     "legal": {
@@ -461,7 +481,8 @@
   },
   {
     "id": "ECS-04",
-    "category": "hot_water",
+    "category": "heating_cooling",
+    "technical_group": "Eau chaude",
     "label": "Chauffe-eau solaire (CESI)",
     "lifespan": "20-25 ans",
     "legal": {
@@ -484,7 +505,8 @@
   },
   {
     "id": "ECS-05",
-    "category": "hot_water",
+    "category": "heating_cooling",
+    "technical_group": "Eau chaude",
     "label": "Groupe de securite",
     "lifespan": "5-7 ans",
     "legal": {
@@ -507,7 +529,8 @@
   },
   {
     "id": "ECS-06",
-    "category": "hot_water",
+    "category": "home_safety",
+    "technical_group": "Eau chaude",
     "label": "Adoucisseur d'eau",
     "lifespan": "15-20 ans",
     "legal": {
@@ -530,7 +553,8 @@
   },
   {
     "id": "CLIM-01",
-    "category": "cooling",
+    "category": "heating_cooling",
+    "technical_group": "Climatisation",
     "label": "Climatiseur split / multisplit",
     "lifespan": "12-15 ans",
     "legal": {
@@ -553,7 +577,8 @@
   },
   {
     "id": "CLIM-02",
-    "category": "cooling",
+    "category": "heating_cooling",
+    "technical_group": "Climatisation",
     "label": "Climatiseur mobile",
     "lifespan": "8-10 ans",
     "legal": {
@@ -576,7 +601,8 @@
   },
   {
     "id": "CLIM-03",
-    "category": "cooling",
+    "category": "heating_cooling",
+    "technical_group": "Climatisation",
     "label": "Circuit frigorifique >= 5 t CO2 eq",
     "lifespan": null,
     "legal": {
@@ -599,7 +625,8 @@
   },
   {
     "id": "VENT-01",
-    "category": "ventilation",
+    "category": "heating_cooling",
+    "technical_group": "Ventilation",
     "label": "VMC simple flux",
     "lifespan": "20-25 ans",
     "legal": {
@@ -622,7 +649,8 @@
   },
   {
     "id": "VENT-02",
-    "category": "ventilation",
+    "category": "heating_cooling",
+    "technical_group": "Ventilation",
     "label": "VMC double flux",
     "lifespan": "15-20 ans",
     "legal": {
@@ -645,7 +673,8 @@
   },
   {
     "id": "VENT-03",
-    "category": "ventilation",
+    "category": "kitchen",
+    "technical_group": "Ventilation",
     "label": "Hotte aspirante",
     "lifespan": "10-15 ans",
     "legal": {
@@ -668,7 +697,8 @@
   },
   {
     "id": "VENT-04",
-    "category": "ventilation",
+    "category": "heating_cooling",
+    "technical_group": "Ventilation",
     "label": "Grilles et entrees d'air",
     "lifespan": "30 ans",
     "legal": {
@@ -691,7 +721,8 @@
   },
   {
     "id": "VENT-05",
-    "category": "ventilation",
+    "category": "heating_cooling",
+    "technical_group": "Ventilation",
     "label": "Puits canadien / provencal",
     "lifespan": "30 ans",
     "legal": {
@@ -714,7 +745,8 @@
   },
   {
     "id": "FROID-01",
-    "category": "refrigeration",
+    "category": "kitchen",
+    "technical_group": "Froid",
     "label": "Refrigerateur",
     "lifespan": "10-15 ans",
     "legal": {
@@ -737,7 +769,8 @@
   },
   {
     "id": "FROID-02",
-    "category": "refrigeration",
+    "category": "kitchen",
+    "technical_group": "Froid",
     "label": "Congelateur",
     "lifespan": "12-18 ans",
     "legal": {
@@ -760,7 +793,8 @@
   },
   {
     "id": "FROID-03",
-    "category": "refrigeration",
+    "category": "kitchen",
+    "technical_group": "Froid",
     "label": "Refrigerateur americain (distributeur eau/glace)",
     "lifespan": "10-12 ans",
     "legal": {
@@ -783,7 +817,8 @@
   },
   {
     "id": "FROID-04",
-    "category": "refrigeration",
+    "category": "kitchen",
+    "technical_group": "Froid",
     "label": "Cave a vin",
     "lifespan": "10-15 ans",
     "legal": {
@@ -806,7 +841,8 @@
   },
   {
     "id": "LAV-01",
-    "category": "washing",
+    "category": "laundry",
+    "technical_group": "Lavage",
     "label": "Lave-linge",
     "lifespan": "10-12 ans",
     "legal": {
@@ -829,7 +865,8 @@
   },
   {
     "id": "LAV-02",
-    "category": "washing",
+    "category": "laundry",
+    "technical_group": "Lavage",
     "label": "Seche-linge (condensation ou PAC)",
     "lifespan": "10-12 ans",
     "legal": {
@@ -852,7 +889,8 @@
   },
   {
     "id": "LAV-03",
-    "category": "washing",
+    "category": "kitchen",
+    "technical_group": "Lavage",
     "label": "Lave-vaisselle",
     "lifespan": "10-12 ans",
     "legal": {
@@ -875,7 +913,8 @@
   },
   {
     "id": "LAV-04",
-    "category": "washing",
+    "category": "laundry",
+    "technical_group": "Lavage",
     "label": "Lave-linge sechant",
     "lifespan": "8-10 ans",
     "legal": {
@@ -898,7 +937,8 @@
   },
   {
     "id": "CUIS-01",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Four (pyrolyse / catalyse)",
     "lifespan": "12-15 ans",
     "legal": {
@@ -921,7 +961,8 @@
   },
   {
     "id": "CUIS-02",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Plaque a induction",
     "lifespan": "10-15 ans",
     "legal": {
@@ -944,7 +985,8 @@
   },
   {
     "id": "CUIS-03",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Plaque / cuisiniere gaz",
     "lifespan": "15-20 ans",
     "legal": {
@@ -967,7 +1009,8 @@
   },
   {
     "id": "CUIS-04",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Tuyau flexible gaz",
     "lifespan": "5-10 ans (date imprimee)",
     "legal": {
@@ -990,7 +1033,8 @@
   },
   {
     "id": "CUIS-05",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Four a micro-ondes",
     "lifespan": "8-10 ans",
     "legal": {
@@ -1013,7 +1057,8 @@
   },
   {
     "id": "CUIS-06",
-    "category": "cooking",
+    "category": "kitchen",
+    "technical_group": "Cuisson",
     "label": "Machine a cafe / expresso",
     "lifespan": "5-10 ans",
     "legal": {
@@ -1037,6 +1082,7 @@
   {
     "id": "PEM-01",
     "category": "small_appliances",
+    "technical_group": "Petit electromenager",
     "label": "Aspirateur traineau / balai",
     "lifespan": "6-10 ans",
     "legal": {
@@ -1060,6 +1106,7 @@
   {
     "id": "PEM-02",
     "category": "small_appliances",
+    "technical_group": "Petit electromenager",
     "label": "Robot aspirateur",
     "lifespan": "4-6 ans",
     "legal": {
@@ -1083,6 +1130,7 @@
   {
     "id": "PEM-03",
     "category": "small_appliances",
+    "technical_group": "Petit electromenager",
     "label": "Purificateur d'air",
     "lifespan": "7-10 ans",
     "legal": {
@@ -1106,6 +1154,7 @@
   {
     "id": "PEM-04",
     "category": "small_appliances",
+    "technical_group": "Petit electromenager",
     "label": "Deshumidificateur",
     "lifespan": "8-10 ans",
     "legal": {
@@ -1128,7 +1177,8 @@
   },
   {
     "id": "PEM-05",
-    "category": "small_appliances",
+    "category": "laundry",
+    "technical_group": "Petit electromenager",
     "label": "Fer / centrale vapeur",
     "lifespan": "5-8 ans",
     "legal": {
@@ -1151,7 +1201,8 @@
   },
   {
     "id": "EAU-01",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Reseau de plomberie et robinetterie",
     "lifespan": "30-50 ans",
     "legal": {
@@ -1174,7 +1225,8 @@
   },
   {
     "id": "EAU-02",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Compteur d'eau",
     "lifespan": "15 ans",
     "legal": {
@@ -1197,7 +1249,8 @@
   },
   {
     "id": "EAU-03",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Disconnecteur / clapet anti-retour",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1220,7 +1273,8 @@
   },
   {
     "id": "EAU-04",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Pompe de relevage",
     "lifespan": "8-12 ans",
     "legal": {
@@ -1243,7 +1297,8 @@
   },
   {
     "id": "EAU-05",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Puits / forage domestique",
     "lifespan": null,
     "legal": {
@@ -1266,7 +1321,8 @@
   },
   {
     "id": "EAU-06",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Recuperateur d'eau de pluie",
     "lifespan": "20-30 ans",
     "legal": {
@@ -1289,7 +1345,8 @@
   },
   {
     "id": "EAU-07",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Surpresseur",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1312,7 +1369,8 @@
   },
   {
     "id": "EAU-08",
-    "category": "water",
+    "category": "home_safety",
+    "technical_group": "Eau",
     "label": "Ballon tampon / hydroaccumulation",
     "lifespan": "20-25 ans",
     "legal": {
@@ -1335,7 +1393,8 @@
   },
   {
     "id": "ASS-01",
-    "category": "wastewater",
+    "category": "home_safety",
+    "technical_group": "Assainissement",
     "label": "Fosse toutes eaux / fosse septique",
     "lifespan": "30-40 ans",
     "legal": {
@@ -1358,7 +1417,8 @@
   },
   {
     "id": "ASS-02",
-    "category": "wastewater",
+    "category": "home_safety",
+    "technical_group": "Assainissement",
     "label": "Micro-station d'epuration",
     "lifespan": "15-20 ans",
     "legal": {
@@ -1381,7 +1441,8 @@
   },
   {
     "id": "ASS-03",
-    "category": "wastewater",
+    "category": "home_safety",
+    "technical_group": "Assainissement",
     "label": "Bac a graisse",
     "lifespan": null,
     "legal": {
@@ -1404,7 +1465,8 @@
   },
   {
     "id": "ASS-04",
-    "category": "wastewater",
+    "category": "home_safety",
+    "technical_group": "Assainissement",
     "label": "Prefiltre / filtre a sable",
     "lifespan": null,
     "legal": {
@@ -1427,7 +1489,8 @@
   },
   {
     "id": "ASS-05",
-    "category": "wastewater",
+    "category": "home_safety",
+    "technical_group": "Assainissement",
     "label": "Canalisations EU / EV",
     "lifespan": "50 ans",
     "legal": {
@@ -1451,6 +1514,7 @@
   {
     "id": "ENE-01",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Panneaux photovoltaiques",
     "lifespan": "25-30 ans",
     "legal": {
@@ -1474,6 +1538,7 @@
   {
     "id": "ENE-02",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Onduleur photovoltaique",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1497,6 +1562,7 @@
   {
     "id": "ENE-03",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Batterie de stockage",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1520,6 +1586,7 @@
   {
     "id": "ENE-04",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Borne de recharge VE (IRVE)",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1543,6 +1610,7 @@
   {
     "id": "ENE-05",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Tableau electrique et differentiels",
     "lifespan": "25-30 ans",
     "legal": {
@@ -1566,6 +1634,7 @@
   {
     "id": "ENE-06",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Installation interieure de gaz",
     "lifespan": null,
     "legal": {
@@ -1589,6 +1658,7 @@
   {
     "id": "ENE-07",
     "category": "energy",
+    "technical_group": "Energie",
     "label": "Groupe electrogene",
     "lifespan": "15-20 ans",
     "legal": {
@@ -1611,7 +1681,8 @@
   },
   {
     "id": "SEC-01",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Detecteur de fumee (DAAF)",
     "lifespan": "10 ans",
     "legal": {
@@ -1634,7 +1705,8 @@
   },
   {
     "id": "SEC-02",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Detecteur de monoxyde de carbone",
     "lifespan": "7-10 ans",
     "legal": {
@@ -1657,7 +1729,8 @@
   },
   {
     "id": "SEC-03",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Extincteur",
     "lifespan": "20 ans (avec controle)",
     "legal": {
@@ -1680,7 +1753,8 @@
   },
   {
     "id": "SEC-04",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Alarme / systeme anti-intrusion",
     "lifespan": "8-12 ans",
     "legal": {
@@ -1703,7 +1777,8 @@
   },
   {
     "id": "SEC-05",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Videosurveillance",
     "lifespan": "5-8 ans",
     "legal": {
@@ -1726,7 +1801,8 @@
   },
   {
     "id": "SEC-06",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Interphone / visiophone",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1749,7 +1825,8 @@
   },
   {
     "id": "SEC-07",
-    "category": "safety",
+    "category": "home_safety",
+    "technical_group": "Securite",
     "label": "Ascenseur privatif / monte-escalier",
     "lifespan": "20-25 ans",
     "legal": {
@@ -1772,7 +1849,8 @@
   },
   {
     "id": "OUV-01",
-    "category": "doors_gates",
+    "category": "home_safety",
+    "technical_group": "Ouvrants",
     "label": "Portail motorise",
     "lifespan": "15-20 ans",
     "legal": {
@@ -1795,7 +1873,8 @@
   },
   {
     "id": "OUV-02",
-    "category": "doors_gates",
+    "category": "home_safety",
+    "technical_group": "Ouvrants",
     "label": "Porte de garage motorisee",
     "lifespan": "15-20 ans",
     "legal": {
@@ -1818,7 +1897,8 @@
   },
   {
     "id": "OUV-03",
-    "category": "doors_gates",
+    "category": "home_safety",
+    "technical_group": "Ouvrants",
     "label": "Volets roulants",
     "lifespan": "15-25 ans",
     "legal": {
@@ -1841,7 +1921,8 @@
   },
   {
     "id": "OUV-04",
-    "category": "doors_gates",
+    "category": "home_safety",
+    "technical_group": "Ouvrants",
     "label": "Fenetres et menuiseries",
     "lifespan": "25-40 ans",
     "legal": {
@@ -1864,7 +1945,8 @@
   },
   {
     "id": "OUV-05",
-    "category": "doors_gates",
+    "category": "home_safety",
+    "technical_group": "Ouvrants",
     "label": "Store banne / pergola",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1887,7 +1969,8 @@
   },
   {
     "id": "PIS-01",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Bassin de piscine enterree",
     "lifespan": "20-30 ans",
     "legal": {
@@ -1910,7 +1993,8 @@
   },
   {
     "id": "PIS-02",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Filtre a sable",
     "lifespan": "10-15 ans",
     "legal": {
@@ -1933,7 +2017,8 @@
   },
   {
     "id": "PIS-03",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Pompe de filtration",
     "lifespan": "8-12 ans",
     "legal": {
@@ -1956,7 +2041,8 @@
   },
   {
     "id": "PIS-04",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Electrolyseur au sel",
     "lifespan": "5-8 ans",
     "legal": {
@@ -1979,7 +2065,8 @@
   },
   {
     "id": "PIS-05",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Pompe a chaleur de piscine",
     "lifespan": "10-15 ans",
     "legal": {
@@ -2002,7 +2089,8 @@
   },
   {
     "id": "PIS-06",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Robot de piscine",
     "lifespan": "5-8 ans",
     "legal": {
@@ -2025,7 +2113,8 @@
   },
   {
     "id": "PIS-07",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Alarme de piscine",
     "lifespan": "8-10 ans",
     "legal": {
@@ -2048,7 +2137,8 @@
   },
   {
     "id": "PIS-08",
-    "category": "pool",
+    "category": "garden_pool",
+    "technical_group": "Piscine",
     "label": "Spa / jacuzzi",
     "lifespan": "10-15 ans",
     "legal": {
@@ -2071,7 +2161,8 @@
   },
   {
     "id": "JAR-01",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Tondeuse thermique",
     "lifespan": "8-12 ans",
     "legal": {
@@ -2094,7 +2185,8 @@
   },
   {
     "id": "JAR-02",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Robot tondeuse",
     "lifespan": "8-10 ans",
     "legal": {
@@ -2117,7 +2209,8 @@
   },
   {
     "id": "JAR-03",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Taille-haie / debroussailleuse",
     "lifespan": "8-12 ans",
     "legal": {
@@ -2140,7 +2233,8 @@
   },
   {
     "id": "JAR-04",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Nettoyeur haute pression",
     "lifespan": "5-8 ans",
     "legal": {
@@ -2163,7 +2257,8 @@
   },
   {
     "id": "JAR-05",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Arrosage automatique",
     "lifespan": "10-15 ans",
     "legal": {
@@ -2186,7 +2281,8 @@
   },
   {
     "id": "JAR-06",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Barbecue / plancha gaz",
     "lifespan": "8-12 ans",
     "legal": {
@@ -2209,7 +2305,8 @@
   },
   {
     "id": "JAR-07",
-    "category": "garden",
+    "category": "garden_pool",
+    "technical_group": "Jardin",
     "label": "Abri / cabane de jardin",
     "lifespan": "15-25 ans",
     "legal": {
@@ -2232,7 +2329,8 @@
   },
   {
     "id": "BAT-01",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Toiture",
     "lifespan": "40-70 ans",
     "legal": {
@@ -2255,7 +2353,8 @@
   },
   {
     "id": "BAT-02",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Gouttieres et descentes",
     "lifespan": "25-40 ans",
     "legal": {
@@ -2278,7 +2377,8 @@
   },
   {
     "id": "BAT-03",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Facade / enduit",
     "lifespan": "20-30 ans",
     "legal": {
@@ -2301,7 +2401,8 @@
   },
   {
     "id": "BAT-04",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Terrasse bois",
     "lifespan": "15-25 ans",
     "legal": {
@@ -2324,7 +2425,8 @@
   },
   {
     "id": "BAT-05",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Charpente",
     "lifespan": "80-100 ans",
     "legal": {
@@ -2347,7 +2449,8 @@
   },
   {
     "id": "BAT-06",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Combles et isolation",
     "lifespan": "20-30 ans",
     "legal": {
@@ -2370,7 +2473,8 @@
   },
   {
     "id": "BAT-07",
-    "category": "building",
+    "category": "home_safety",
+    "technical_group": "Bati",
     "label": "Vide sanitaire / cave",
     "lifespan": null,
     "legal": {
@@ -2389,6 +2493,78 @@
       "location": "Pas de plaque",
       "fields": null,
       "tip": null
+    }
+  },
+  {
+    "id": "VEH-01",
+    "category": "vehicles",
+    "technical_group": "Vehicules",
+    "label": "Voiture (thermique, hybride ou electrique)",
+    "lifespan": "12-15 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Code de la route art. R323-1 et suivants"
+    },
+    "reference_frequency": "1er controle dans les 6 mois precedant le 4e anniversaire, puis tous les 2 ans",
+    "provider": "Centre de controle agree",
+    "proof_document": "Proces-verbal de controle technique",
+    "indicative_pro_cost": "70-90 EUR",
+    "risk_if_neglected": "Amende de 135 EUR, immobilisation possible, difficultes avec l'assureur apres un sinistre",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Certificat d'immatriculation (carte grise)",
+      "fields": "Date de premiere immatriculation (champ B), marque, modele, immatriculation",
+      "tip": "La photo suffit a calculer l'echeance du controle technique. Ne conserver que ces champs : la carte grise porte nom et adresse"
+    }
+  },
+  {
+    "id": "VEH-02",
+    "category": "vehicles",
+    "technical_group": "Vehicules",
+    "label": "Deux-roues, trois-roues ou quadricycle motorise (moto, scooter)",
+    "lifespan": "10-15 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Decret n. 2023-974 et arrete du 23/10/2023"
+    },
+    "reference_frequency": "1er controle entre 4,5 et 5 ans apres la 1re immatriculation, puis tous les 3 ans (calendrier transitoire avant 2022)",
+    "provider": "Centre de controle agree categorie L",
+    "proof_document": "Proces-verbal de controle technique",
+    "indicative_pro_cost": "50-70 EUR",
+    "risk_if_neglected": "Amende de 135 EUR",
+    "mvp_priority": 2,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Certificat d'immatriculation (carte grise)",
+      "fields": "Date de premiere immatriculation (champ B), marque, modele, immatriculation",
+      "tip": "Idem voiture : l'echeance du controle technique se calcule depuis le champ B"
+    }
+  },
+  {
+    "id": "VEH-03",
+    "category": "vehicles",
+    "technical_group": "Vehicules",
+    "label": "Velo a assistance electrique",
+    "lifespan": "8-12 ans (batterie 4-6 ans)",
+    "legal": {
+      "status": "no",
+      "note": "Non",
+      "reference": null
+    },
+    "reference_frequency": "Revision annuelle recommandee",
+    "provider": "Particulier ou reparateur velo",
+    "proof_document": "Facture d'entretien",
+    "indicative_pro_cost": "60-100 EUR",
+    "risk_if_neglected": "Freinage degrade, transmission usee, batterie abimee par un stockage a plat ou a pleine charge",
+    "mvp_priority": 3,
+    "nameplate": {
+      "photo_target": "nameplate",
+      "location": "Numero de cadre grave sous le pedalier ; etiquette sur le boitier de la batterie",
+      "fields": "Marque, modele, numero de cadre, capacite de la batterie (Wh)",
+      "tip": "Le numero de cadre sert aussi en cas de vol"
     }
   }
 ]

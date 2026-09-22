@@ -12,10 +12,13 @@ export const CATEGORY_LABELS: Record<Category, string> = Object.fromEntries(
 
 export type Appliance = {
   id: string;
-  name: string;
-  brand: string;
-  model: string;
+  name: string | null;
+  brand: string | null;
+  model: string | null;
   category: Category;
-  purchaseDate: string;
+  purchaseDate: string | null;
   createdAt: string;
+  placeId: string;
+  room: string | null;
+  equipmentTypeId: string | null;
 };

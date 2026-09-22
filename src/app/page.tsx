@@ -1,9 +1,18 @@
 import { ApplianceForm } from "@/components/ApplianceForm";
-import { ApplianceList } from "@/components/ApplianceList";
+import { PlaceForm } from "@/components/PlaceForm";
+import { PlaceSection } from "@/components/PlaceSection";
 import { getAppliances } from "@/lib/appliances";
+import { getPlaces } from "@/lib/places";
+import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
+import { createPlace } from "@/app/actions";
+
+// Every page here reads user data straight from Postgres: it must never be served
+// from a static/ISR cache, or edits made outside the app (migrations, other users)
+// would stay invisible until the next build.
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const appliances = await getAppliances();
+  const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -17,13 +26,19 @@ export default async function Home() {
           </p>
         </header>
 
-        <ApplianceForm />
+        <ApplianceForm places={places} equipmentTypes={EQUIPMENT_TYPES} />
+
+        {places.map((place) => (
+          <PlaceSection
+            key={place.id}
+            place={place}
+            appliances={appliances.filter((a) => a.placeId === place.id)}
+          />
+        ))}
 
         <section className="flex flex-col gap-4">
-          <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
-            Vos appareils
-          </h2>
-          <ApplianceList appliances={appliances} />
+          <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Ajouter un lieu</h2>
+          <PlaceForm action={createPlace} submitLabel="Ajouter le lieu" pendingLabel="Ajout…" resetOnSuccess />
         </section>
       </main>
     </div>

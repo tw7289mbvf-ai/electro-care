@@ -22,14 +22,12 @@ OUT = ROOT / "seed"
 HEADER_ROW = 5
 
 CATEGORIES = [  # (workbook label, code key, UI label); display order = list order
-    ("Chauffage", "heating", "Chauffage"), ("Eau chaude", "hot_water", "Eau chaude"),
-    ("Climatisation", "cooling", "Climatisation"), ("Ventilation", "ventilation", "Ventilation"),
-    ("Froid", "refrigeration", "Froid"), ("Lavage", "washing", "Lavage"),
-    ("Cuisson", "cooking", "Cuisson"), ("Petit electromenager", "small_appliances", "Petit électroménager"),
-    ("Eau", "water", "Eau"), ("Assainissement", "wastewater", "Assainissement"),
-    ("Energie", "energy", "Énergie"), ("Securite", "safety", "Sécurité"),
-    ("Ouvrants", "doors_gates", "Ouvrants"), ("Piscine", "pool", "Piscine"),
-    ("Jardin", "garden", "Jardin"), ("Bati", "building", "Bâti"),
+    ("Cuisine", "kitchen", "Cuisine"), ("Buanderie", "laundry", "Buanderie"),
+    ("Chauffage & climatisation", "heating_cooling", "Chauffage & climatisation"),
+    ("Petit electromenager", "small_appliances", "Petit électroménager"),
+    ("Electronique", "electronics", "Électronique"), ("Jardin & piscine", "garden_pool", "Jardin & piscine"),
+    ("Maison & securite", "home_safety", "Maison & sécurité"), ("Energie", "energy", "Énergie"),
+    ("Vehicules", "vehicles", "Véhicules"), ("Autre", "other", "Autre"),
 ]
 CAT_KEY = {wb_label: key for wb_label, key, _ in CATEGORIES}
 
@@ -67,6 +65,10 @@ THRESHOLD_TASKS = {
     "T-015": "Wood > 6 m3 or pellets > 2.5 t burned in the year",
     "T-060": "Expiry date printed on the gas hose",
     "T-071": "Sludge reaches 50% of the tank's useful volume",
+    "T-152": "Due date computed from the first registration date (registration certificate, field B): "
+             "first check within 6 months before the 4th anniversary, then every 2 years",
+    "T-153": "Due date computed from the first registration date (registration certificate, field B): "
+             "first check 4.5 to 5 years after first registration, then every 3 years",
 }
 
 # Indicative identifier patterns. Only groups with status "verified" may drive
@@ -149,9 +151,11 @@ def main():
 
     equipment = []
     for r in rows(wb["Equipements"]):
+        assert r["Categorie"] in CAT_KEY, f"{r['ID']}: unknown category {r['Categorie']!r}"
         equipment.append({
             "id": r["ID"],
             "category": CAT_KEY[r["Categorie"]],
+            "technical_group": r["Groupe technique"],
             "label": r["Equipement"],
             "lifespan": r["Duree de vie"],
             "legal": {"status": legal_status(r["Obligation legale"]), "note": r["Obligation legale"],
@@ -167,6 +171,9 @@ def main():
                           "fields": r["Champs a lire"], "tip": r["Astuce / alternative"]},
         })
     equipment_ids = {e["id"] for e in equipment}
+    used = {e["category"] for e in equipment}
+    for c in categories:
+        c["maintenance_plan"] = c["key"] in used
 
     tasks = []
     for r in rows(wb["Taches"]):
