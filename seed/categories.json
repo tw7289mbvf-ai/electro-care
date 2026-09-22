@@ -1,82 +1,62 @@
 [
   {
-    "key": "heating",
-    "label": "Chauffage",
-    "order": 1
+    "key": "kitchen",
+    "label": "Cuisine",
+    "order": 1,
+    "maintenance_plan": true
   },
   {
-    "key": "hot_water",
-    "label": "Eau chaude",
-    "order": 2
+    "key": "laundry",
+    "label": "Buanderie",
+    "order": 2,
+    "maintenance_plan": true
   },
   {
-    "key": "cooling",
-    "label": "Climatisation",
-    "order": 3
-  },
-  {
-    "key": "ventilation",
-    "label": "Ventilation",
-    "order": 4
-  },
-  {
-    "key": "refrigeration",
-    "label": "Froid",
-    "order": 5
-  },
-  {
-    "key": "washing",
-    "label": "Lavage",
-    "order": 6
-  },
-  {
-    "key": "cooking",
-    "label": "Cuisson",
-    "order": 7
+    "key": "heating_cooling",
+    "label": "Chauffage & climatisation",
+    "order": 3,
+    "maintenance_plan": true
   },
   {
     "key": "small_appliances",
     "label": "Petit électroménager",
-    "order": 8
+    "order": 4,
+    "maintenance_plan": true
   },
   {
-    "key": "water",
-    "label": "Eau",
-    "order": 9
+    "key": "electronics",
+    "label": "Électronique",
+    "order": 5,
+    "maintenance_plan": false
   },
   {
-    "key": "wastewater",
-    "label": "Assainissement",
-    "order": 10
+    "key": "garden_pool",
+    "label": "Jardin & piscine",
+    "order": 6,
+    "maintenance_plan": true
+  },
+  {
+    "key": "home_safety",
+    "label": "Maison & sécurité",
+    "order": 7,
+    "maintenance_plan": true
   },
   {
     "key": "energy",
     "label": "Énergie",
-    "order": 11
+    "order": 8,
+    "maintenance_plan": true
   },
   {
-    "key": "safety",
-    "label": "Sécurité",
-    "order": 12
+    "key": "vehicles",
+    "label": "Véhicules",
+    "order": 9,
+    "maintenance_plan": true
   },
   {
-    "key": "doors_gates",
-    "label": "Ouvrants",
-    "order": 13
-  },
-  {
-    "key": "pool",
-    "label": "Piscine",
-    "order": 14
-  },
-  {
-    "key": "garden",
-    "label": "Jardin",
-    "order": 15
-  },
-  {
-    "key": "building",
-    "label": "Bâti",
-    "order": 16
+    "key": "other",
+    "label": "Autre",
+    "order": 10,
+    "maintenance_plan": false
   }
 ]

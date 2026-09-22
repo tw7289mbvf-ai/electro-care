@@ -2568,5 +2568,58 @@
     "procedure": "Chercher fissures, cloques d'enduit, joints degrades autour des menuiseries et traces de ruissellement sous les appuis de fenetre.",
     "if_skipped": "Infiltration par microfissure ; ravalement pouvant etre impose par arrete municipal",
     "legal": "conditional"
+  },
+  {
+    "id": "T-152",
+    "equipment_type_id": "VEH-01",
+    "title": "Controle technique de la voiture",
+    "performer": "pro",
+    "frequency": {
+      "rule": "threshold",
+      "months": 24,
+      "label": "Tous les 2 ans (1er dans les 6 mois avant le 4e anniversaire)",
+      "threshold": "Due date computed from the first registration date (registration certificate, field B): first check within 6 months before the 4th anniversary, then every 2 years"
+    },
+    "season": "Selon echeance",
+    "duration_min": 60,
+    "tools": "Centre de controle agree, carte grise",
+    "procedure": "La date de premiere immatriculation figure sur la carte grise (champ B) : l'echeance en decoule. Prendre rendez-vous dans le mois qui precede. En cas de contre-visite, les reparations doivent etre controlees dans les 2 mois.",
+    "if_skipped": "Amende de 135 EUR, immobilisation possible, difficultes avec l'assureur apres un sinistre",
+    "legal": "yes"
+  },
+  {
+    "id": "T-153",
+    "equipment_type_id": "VEH-02",
+    "title": "Controle technique du deux-roues",
+    "performer": "pro",
+    "frequency": {
+      "rule": "threshold",
+      "months": 36,
+      "label": "Tous les 3 ans (1er entre 4,5 et 5 ans apres la 1re immatriculation)",
+      "threshold": "Due date computed from the first registration date (registration certificate, field B): first check 4.5 to 5 years after first registration, then every 3 years"
+    },
+    "season": "Selon echeance",
+    "duration_min": 45,
+    "tools": "Centre de controle agree categorie L, carte grise",
+    "procedure": "L'echeance depend de la date de premiere immatriculation (carte grise, champ B). Les vehicules immatricules avant 2022 suivent un calendrier transitoire. Choisir un centre agree pour la categorie L.",
+    "if_skipped": "Amende de 135 EUR",
+    "legal": "yes"
+  },
+  {
+    "id": "T-154",
+    "equipment_type_id": "VEH-03",
+    "title": "Revision annuelle du velo electrique",
+    "performer": "pro",
+    "frequency": {
+      "rule": "season_anchor",
+      "months": 12,
+      "label": "Tous les ans"
+    },
+    "season": "Printemps",
+    "duration_min": 60,
+    "tools": "Reparateur velo",
+    "procedure": "Controle des freins, de la transmission et des pneus, mise a jour du moteur si le fabricant la propose. Entre deux periodes d'usage, stocker la batterie a mi-charge, au sec et a temperature ambiante.",
+    "if_skipped": "Freinage degrade, usure acceleree de la transmission, batterie qui perd de sa capacite",
+    "legal": "no"
   }
 ]

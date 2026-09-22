@@ -5,12 +5,15 @@ const sql = neon(process.env.DATABASE_URL!);
 
 type ApplianceRow = {
   id: string;
-  name: string;
-  brand: string;
-  model: string;
+  name: string | null;
+  brand: string | null;
+  model: string | null;
   category: string;
-  purchase_date: string | Date;
+  purchase_date: string | Date | null;
   created_at: string | Date;
+  place_id: string;
+  room: string | null;
+  equipment_type_id: string | null;
 };
 
 function toDateOnlyString(value: string | Date): string {
@@ -30,47 +33,50 @@ function toAppliance(row: ApplianceRow): Appliance {
     brand: row.brand,
     model: row.model,
     category: row.category as Category,
-    purchaseDate: toDateOnlyString(row.purchase_date),
+    purchaseDate: row.purchase_date === null ? null : toDateOnlyString(row.purchase_date),
     createdAt:
       typeof row.created_at === "string" ? row.created_at : row.created_at.toISOString(),
+    placeId: row.place_id,
+    room: row.room,
+    equipmentTypeId: row.equipment_type_id,
   };
 }
 
 export async function getAppliances(): Promise<Appliance[]> {
   const rows = (await sql`
-    SELECT id, name, brand, model, category, purchase_date, created_at
+    SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
     FROM appliances
     ORDER BY created_at DESC
   `) as ApplianceRow[];
   return rows.map(toAppliance);
 }
 
-async function getDefaultPlaceId(): Promise<string> {
-  const rows = (await sql`
-    SELECT id FROM places ORDER BY created_at ASC LIMIT 1
-  `) as { id: string }[];
-  if (!rows[0]) {
-    throw new Error("No place found: run the places migration before adding appliances.");
-  }
-  return rows[0].id;
-}
-
 export async function addAppliance(input: {
-  name: string;
-  brand: string;
-  model: string;
+  placeId: string;
   category: Category;
-  purchaseDate: string;
+  name?: string | null;
+  brand?: string | null;
+  model?: string | null;
+  purchaseDate?: string | null;
+  room?: string | null;
+  equipmentTypeId?: string | null;
 }): Promise<Appliance> {
-  const placeId = await getDefaultPlaceId();
-  const fieldSources = { brand: "manual", model: "manual", category: "manual", purchase_date: "manual" };
+  const fieldSources: Record<string, string> = {};
+  if (input.brand) fieldSources.brand = "manual";
+  if (input.model) fieldSources.model = "manual";
+  if (input.purchaseDate) fieldSources.purchase_date = "manual";
+  fieldSources.category = "manual";
+
   const rows = (await sql`
-    INSERT INTO appliances (name, brand, model, category, purchase_date, place_id, field_sources)
-    VALUES (
-      ${input.name}, ${input.brand}, ${input.model}, ${input.category}, ${input.purchaseDate},
-      ${placeId}, ${JSON.stringify(fieldSources)}
+    INSERT INTO appliances (
+      place_id, category, name, brand, model, purchase_date, room, equipment_type_id, field_sources
     )
-    RETURNING id, name, brand, model, category, purchase_date, created_at
+    VALUES (
+      ${input.placeId}, ${input.category}, ${input.name ?? null}, ${input.brand ?? null},
+      ${input.model ?? null}, ${input.purchaseDate ?? null}, ${input.room ?? null},
+      ${input.equipmentTypeId ?? null}, ${JSON.stringify(fieldSources)}
+    )
+    RETURNING id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
   `) as ApplianceRow[];
   return toAppliance(rows[0]);
 }

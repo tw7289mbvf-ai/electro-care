@@ -323,15 +323,34 @@
   {
     "id": "L-20",
     "obligation": "Controle technique des vehicules",
-    "applies_to": "Vehicule particulier de plus de 4 ans",
-    "equipment_type_ids": [],
+    "applies_to": "Voiture particuliere (VEH-01)",
+    "equipment_type_ids": [
+      "VEH-01"
+    ],
     "legal_text": "Code de la route art. R323-1 et suivants",
-    "frequency": "Tous les 2 ans a partir de la 4e annee",
+    "frequency": "Premier controle dans les 6 mois precedant le 4e anniversaire de la premiere immatriculation, puis tous les 2 ans",
     "liable_party": "Proprietaire du vehicule",
     "proof": "Proces-verbal de controle technique",
     "sanction": "Amende de 135 EUR, immobilisation possible du vehicule",
     "sources": [
       "https://www.service-public.gouv.fr/particuliers/vosdroits/F2878"
+    ]
+  },
+  {
+    "id": "L-21",
+    "obligation": "Controle technique des deux-roues, trois-roues et quadricycles motorises",
+    "applies_to": "Vehicules de categorie L : motos, scooters, cyclomoteurs, quadricycles (VEH-02). Les velos a assistance electrique ne sont pas concernes",
+    "equipment_type_ids": [
+      "VEH-02"
+    ],
+    "legal_text": "Decret n. 2023-974 du 23/10/2023 ; arrete du 23/10/2023",
+    "frequency": "Vehicules immatricules depuis 2022 : premier controle entre 4 ans et demi et 5 ans apres la mise en circulation, puis tous les 3 ans. Vehicules plus anciens : calendrier transitoire selon l'annee d'immatriculation",
+    "liable_party": "Proprietaire du vehicule",
+    "proof": "Proces-verbal de controle technique",
+    "sanction": "Amende de 135 EUR",
+    "sources": [
+      "https://www.service-public.gouv.fr/particuliers/actualites/A16861",
+      "https://www.info.gouv.fr/actualite/controle-technique-obligatoire-pour-les-deux-roues"
     ]
   }
 ]

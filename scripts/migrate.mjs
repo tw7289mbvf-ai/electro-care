@@ -10,29 +10,43 @@ if (!databaseUrl) {
 const seedPath = (name) => fileURLToPath(new URL(`../seed/${name}`, import.meta.url));
 const categories = JSON.parse(readFileSync(seedPath("categories.json"), "utf8"));
 const enums = JSON.parse(readFileSync(seedPath("enums.json"), "utf8"));
+const equipmentTypes = JSON.parse(readFileSync(seedPath("equipment_types.json"), "utf8"));
+const equipmentTypesById = new Map(equipmentTypes.map((t) => [t.id, t]));
 
 // Fixed id so the singleton default place is idempotent to (re)insert and to reference.
 const DEFAULT_PLACE_ID = "00000000-0000-0000-0000-000000000001";
 
-// Old free-text categories that map unambiguously to exactly one new category key.
+// 2026-09 categories update (16 -> 10 keys): old categories that fold into more than
+// one new category depending on the specific equipment (e.g. "washing" covers both
+// dishwashers, now "kitchen", and washing machines, now "laundry") are never resolved
+// by a plain lookup — only equipment_type_id can disambiguate them. "small_appliances"
+// is listed here too: it is also a valid *new* key, but the old "small_appliances"
+// technical group itself splits into new "small_appliances" and "laundry".
+const AMBIGUOUS_OLD_CATEGORIES = new Set(["hot_water", "ventilation", "washing", "small_appliances"]);
+
+// Old categories that translate to exactly one new category regardless of equipment type.
 const DIRECT_CATEGORY_MAP = {
-  Buanderie: "washing",
-  "Petit électroménager": "small_appliances",
+  heating: "heating_cooling",
+  cooling: "heating_cooling",
+  refrigeration: "kitchen",
+  cooking: "kitchen",
+  water: "home_safety",
+  wastewater: "home_safety",
+  safety: "home_safety",
+  doors_gates: "home_safety",
+  building: "home_safety",
+  pool: "garden_pool",
+  garden: "garden_pool",
+  energy: "energy",
 };
 
-// Hand-reclassified from the actual brand/model of records that predate the new
-// category taxonomy (see seed/equipment_types.json for the equipment type ids).
-const RECLASSIFICATIONS = [
-  { brand: "Daikin", model: "FTXA20A2V1BW", category: "heating", equipmentTypeId: "CH-09" },
-  { brand: "Samsung", model: "BRB26600FWW", category: "refrigeration", equipmentTypeId: "FROID-01" },
-  { brand: "Samsung", model: "WW11BGA046AE", category: "washing", equipmentTypeId: "LAV-01" },
-];
-
-function resolveCategory(row, categoryKeys) {
-  const fixture = RECLASSIFICATIONS.find((r) => r.brand === row.brand && r.model === row.model);
-  if (fixture) return fixture.category;
+function resolveCategory(row, categoryKeys, equipmentTypesById) {
+  if (row.equipment_type_id) {
+    const type = equipmentTypesById.get(row.equipment_type_id);
+    if (type) return type.category;
+  }
+  if (!AMBIGUOUS_OLD_CATEGORIES.has(row.category) && categoryKeys.has(row.category)) return row.category;
   if (DIRECT_CATEGORY_MAP[row.category]) return DIRECT_CATEGORY_MAP[row.category];
-  if (categoryKeys.has(row.category)) return row.category;
   return null;
 }
 
@@ -58,25 +72,31 @@ try {
     )
   `);
 
-  // Gate before any real change: every existing category must resolve via a fixture,
-  // the direct map, or already being a valid seed key. Otherwise abort and roll back.
+  // Gate before any real change: every existing category must resolve via its
+  // equipment_type_id, the direct map, or already being a valid seed key. Otherwise
+  // abort and roll back.
   const categoryKeys = new Set(categories.map((c) => c.key));
   const { rows: existing } = await client.query(
-    "SELECT id, name, brand, model, category FROM appliances"
+    "SELECT id, name, brand, model, category, equipment_type_id FROM appliances"
   );
-  const unresolved = existing.filter((row) => resolveCategory(row, categoryKeys) === null);
+  const unresolved = existing.filter(
+    (row) => resolveCategory(row, categoryKeys, equipmentTypesById) === null
+  );
   if (unresolved.length > 0) {
     const list = unresolved
       .map(
         (r) =>
-          `  - ${r.name} (${r.brand ?? "?"} ${r.model ?? "?"}, id=${r.id}) : catégorie "${r.category}" non reconnue`
+          `  - ${r.name ?? "(sans nom)"} (${r.brand ?? "?"} ${r.model ?? "?"}, id=${r.id}) : catégorie ` +
+          `"${r.category}"${r.equipment_type_id ? ` / type "${r.equipment_type_id}" inconnu` : " sans type d'appareil"}, non reconnue`
       )
       .join("\n");
     throw new Error(
       `Migration arrêtée avant toute modification : ${unresolved.length} fiche(s) ont une catégorie ` +
-        `qui ne correspond à aucune clé de seed/categories.json, ni au mapping direct (Buanderie, ` +
-        `Petit électroménager), ni à une reclassification connue :\n${list}\n` +
-        `Ajoutez une entrée dans DIRECT_CATEGORY_MAP ou RECLASSIFICATIONS dans scripts/migrate.mjs, puis relancez.`
+        `qui ne correspond à aucune clé de seed/categories.json et ne peuvent pas être reclassées ` +
+        `automatiquement (catégorie ambiguë sans equipment_type_id, ou type d'appareil introuvable ` +
+        `dans seed/equipment_types.json) :\n${list}\n` +
+        `Renseignez l'equipment_type_id de ces fiches, ou ajoutez une entrée dans DIRECT_CATEGORY_MAP ` +
+        `dans scripts/migrate.mjs, puis relancez.`
     );
   }
 
@@ -124,18 +144,23 @@ try {
       sort_order INT NOT NULL
     )
   `);
+  await client.query(
+    `ALTER TABLE categories ADD COLUMN IF NOT EXISTS maintenance_plan BOOLEAN NOT NULL DEFAULT true`
+  );
 
   for (const category of categories) {
     await client.query(
-      `INSERT INTO categories (key, label, sort_order) VALUES ($1, $2, $3)
-       ON CONFLICT (key) DO UPDATE SET label = EXCLUDED.label, sort_order = EXCLUDED.sort_order`,
-      [category.key, category.label, category.order]
+      `INSERT INTO categories (key, label, sort_order, maintenance_plan) VALUES ($1, $2, $3, $4)
+       ON CONFLICT (key) DO UPDATE SET
+         label = EXCLUDED.label, sort_order = EXCLUDED.sort_order, maintenance_plan = EXCLUDED.maintenance_plan`,
+      [category.key, category.label, category.order, category.maintenance_plan]
     );
   }
 
   // --- Appliance fields: nameplate data, equipment type, provenance -----------
   // (added before the reclassification updates below, which set equipment_type_id)
 
+  await client.query(`ALTER TABLE appliances ALTER COLUMN name DROP NOT NULL`);
   await client.query(`ALTER TABLE appliances ALTER COLUMN brand DROP NOT NULL`);
   await client.query(`ALTER TABLE appliances ALTER COLUMN model DROP NOT NULL`);
   await client.query(`ALTER TABLE appliances ALTER COLUMN purchase_date DROP NOT NULL`);
@@ -149,14 +174,11 @@ try {
   await client.query(`ALTER TABLE appliances ADD COLUMN IF NOT EXISTS manufacture_date DATE`);
   await client.query(`ALTER TABLE appliances ADD COLUMN IF NOT EXISTS equipment_type_id TEXT`);
 
-  for (const [oldLabel, newKey] of Object.entries(DIRECT_CATEGORY_MAP)) {
-    await client.query(`UPDATE appliances SET category = $1 WHERE category = $2`, [newKey, oldLabel]);
-  }
-  for (const r of RECLASSIFICATIONS) {
-    await client.query(
-      `UPDATE appliances SET category = $1, equipment_type_id = $2 WHERE brand = $3 AND model = $4`,
-      [r.category, r.equipmentTypeId, r.brand, r.model]
-    );
+  for (const row of existing) {
+    const target = resolveCategory(row, categoryKeys, equipmentTypesById);
+    if (target !== row.category) {
+      await client.query(`UPDATE appliances SET category = $1 WHERE id = $2`, [target, row.id]);
+    }
   }
 
   await client.query(`ALTER TABLE appliances DROP CONSTRAINT IF EXISTS appliances_category_fkey`);
@@ -164,6 +186,11 @@ try {
     ALTER TABLE appliances ADD CONSTRAINT appliances_category_fkey
       FOREIGN KEY (category) REFERENCES categories(key)
   `);
+
+  // Every appliance now points at a current category key; drop the categories that
+  // 2026-09's 16 -> 10 taxonomy update removed (keeping any key still in the new seed,
+  // e.g. "small_appliances" and "energy" which exist in both).
+  await client.query(`DELETE FROM categories WHERE key NOT IN (${sqlKeyList(categories)})`);
 
   // --- Field provenance --------------------------------------------------------
 

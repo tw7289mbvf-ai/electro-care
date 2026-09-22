@@ -19,7 +19,7 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 
 - Navigation: Place → Category → Appliance.
 - Place: name, commune and postcode, property type (`enums.property_type`). Legal reminders are computed per place, since local rules can differ from national ones.
-- Appliance: `place_id` and `category` are required; everything else is optional (brand, model, serial number, purchase date, room). Place + category is a valid record.
+- Appliance: `place_id` and `category` are required; everything else is optional (name, brand, model, serial number, purchase date, room, equipment type). Place + category is a valid record. When no name is given, the display falls back to the equipment type's label, then the category's, completed with brand and room when known.
 - Each appliance field records its source (`enums.field_source`: invoice, nameplate, manual) in `field_sources` (JSONB, one entry per tracked field). The nameplate is authoritative for identity (model, serial, power, refrigerant); the invoice for purchase date and price. When a field is cleared, delete its `field_sources` key — never set it to `null`.
 - A Document (`enums.document_type`) links to one or more appliances: one invoice can cover a whole kitchen.
 - Maintenance tasks are instantiated per appliance from `seed/maintenance_tasks.json`, matched on `equipment_type_id`.
@@ -31,6 +31,8 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - From a nameplate photo, keep only the cropped plate, never the full image: it shows the inside of someone's home (GDPR).
 - Seed texts from the workbook are unaccented ASCII. Proofread and accent them before they reach the UI.
 - Plans follow the spec: `free` (unlimited appliances, reminders, guides) and `paid` (technician booking). Tasks with `performer: "pro"` are the candidates for booking.
+- Aucune page affichant des données utilisateur n'est mise en cache statiquement.
+- La catégorie est le niveau d'affichage, le type d'équipement porte tâches et obligations.
 
 ## Commands
 
