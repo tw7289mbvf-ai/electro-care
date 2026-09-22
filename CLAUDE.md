@@ -20,7 +20,7 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - Navigation: Place → Category → Appliance.
 - Place: name, commune and postcode, property type (`enums.property_type`). Legal reminders are computed per place, since local rules can differ from national ones.
 - Appliance: `place_id` and `category` are required; everything else is optional (brand, model, serial number, purchase date, room). Place + category is a valid record.
-- Each appliance field records its source (`enums.field_source`: invoice, nameplate, manual). The nameplate is authoritative for identity (model, serial, power, refrigerant); the invoice for purchase date and price.
+- Each appliance field records its source (`enums.field_source`: invoice, nameplate, manual) in `field_sources` (JSONB, one entry per tracked field). The nameplate is authoritative for identity (model, serial, power, refrigerant); the invoice for purchase date and price. When a field is cleared, delete its `field_sources` key — never set it to `null`.
 - A Document (`enums.document_type`) links to one or more appliances: one invoice can cover a whole kitchen.
 - Maintenance tasks are instantiated per appliance from `seed/maintenance_tasks.json`, matched on `equipment_type_id`.
 

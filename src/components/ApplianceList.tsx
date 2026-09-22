@@ -1,15 +1,20 @@
-import type { Appliance, Category } from "@/lib/appliance-types";
+import { CATEGORIES, CATEGORY_LABELS, type Appliance, type Category } from "@/lib/appliance-types";
 import { DeleteApplianceButton } from "@/components/DeleteApplianceButton";
 
-const CATEGORY_STYLES: Record<Category, string> = {
-  Cuisine: "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300",
-  Buanderie: "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
-  "Chauffage & Climatisation": "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300",
-  Nettoyage: "bg-teal-100 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300",
-  "Petit électroménager": "bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300",
-  Électronique: "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
-  Autre: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-};
+const BADGE_COLORS = [
+  "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300",
+  "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
+  "bg-rose-100 text-rose-700 dark:bg-rose-950/50 dark:text-rose-300",
+  "bg-teal-100 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300",
+  "bg-violet-100 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300",
+  "bg-indigo-100 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300",
+  "bg-amber-100 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300",
+  "bg-lime-100 text-lime-700 dark:bg-lime-950/50 dark:text-lime-300",
+];
+
+const CATEGORY_STYLES: Record<Category, string> = Object.fromEntries(
+  CATEGORIES.map((category, i) => [category, BADGE_COLORS[i % BADGE_COLORS.length]])
+);
 
 function formatDate(isoDate: string): string {
   const [year, month, day] = isoDate.split("-").map(Number);
@@ -46,7 +51,7 @@ export function ApplianceList({ appliances }: { appliances: Appliance[] }) {
             <span
               className={`mt-1.5 inline-block rounded-md px-2 py-0.5 text-xs font-medium ${CATEGORY_STYLES[appliance.category]}`}
             >
-              {appliance.category}
+              {CATEGORY_LABELS[appliance.category]}
             </span>
             <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
               Acheté le {formatDate(appliance.purchaseDate)}

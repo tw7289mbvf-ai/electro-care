@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { createAppliance, type FormState } from "@/app/actions";
-import { CATEGORIES } from "@/lib/appliance-types";
+import { CATEGORIES, CATEGORY_LABELS } from "@/lib/appliance-types";
 
 const initialState: FormState = {};
 
@@ -94,7 +94,7 @@ export function ApplianceForm() {
           </option>
           {CATEGORIES.map((category) => (
             <option key={category} value={category}>
-              {category}
+              {CATEGORY_LABELS[category]}
             </option>
           ))}
         </select>

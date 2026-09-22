@@ -45,6 +45,16 @@ export async function getAppliances(): Promise<Appliance[]> {
   return rows.map(toAppliance);
 }
 
+async function getDefaultPlaceId(): Promise<string> {
+  const rows = (await sql`
+    SELECT id FROM places ORDER BY created_at ASC LIMIT 1
+  `) as { id: string }[];
+  if (!rows[0]) {
+    throw new Error("No place found: run the places migration before adding appliances.");
+  }
+  return rows[0].id;
+}
+
 export async function addAppliance(input: {
   name: string;
   brand: string;
@@ -52,9 +62,14 @@ export async function addAppliance(input: {
   category: Category;
   purchaseDate: string;
 }): Promise<Appliance> {
+  const placeId = await getDefaultPlaceId();
+  const fieldSources = { brand: "manual", model: "manual", category: "manual", purchase_date: "manual" };
   const rows = (await sql`
-    INSERT INTO appliances (name, brand, model, category, purchase_date)
-    VALUES (${input.name}, ${input.brand}, ${input.model}, ${input.category}, ${input.purchaseDate})
+    INSERT INTO appliances (name, brand, model, category, purchase_date, place_id, field_sources)
+    VALUES (
+      ${input.name}, ${input.brand}, ${input.model}, ${input.category}, ${input.purchaseDate},
+      ${placeId}, ${JSON.stringify(fieldSources)}
+    )
     RETURNING id, name, brand, model, category, purchase_date, created_at
   `) as ApplianceRow[];
   return toAppliance(rows[0]);
