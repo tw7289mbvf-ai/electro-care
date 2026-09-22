@@ -1,0 +1,872 @@
+{
+  "rules": [
+    {
+      "id": "REGLE-01",
+      "label": "Date du dernier passage",
+      "text": "Pour chaque obligation créée : date approximative du dernier entretien, ramonage, contrôle ou vidange (mois et année). « Je ne sais pas » la classe « à planifier »."
+    },
+    {
+      "id": "REGLE-02",
+      "label": "Réponse « Je ne sais pas »",
+      "text": "« Je ne sais pas » ne bloque jamais la progression : la réponse ajoute un point « à vérifier » sur l'écran d'accueil, avec l'aide associée pour trouver la réponse. Même règle pour les questions de suivi. À l'écran, c'est un choix discret, sous les autres."
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q01",
+      "block": "context",
+      "order": 1,
+      "question": "Ce logement est :",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Votre résidence principale",
+          "creates": [],
+          "help": "Type de bien : résidence principale.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": {
+            "property_type": "main_home"
+          }
+        },
+        {
+          "label": "Une résidence secondaire",
+          "creates": [],
+          "help": "Active les tâches d'hivernage et de remise en service.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": {
+            "property_type": "second_home"
+          }
+        },
+        {
+          "label": "Un logement loué à l'année",
+          "creates": [],
+          "help": "Les tâches à la charge de l'occupant (entretien de la chaudière, ramonage, entretien du détecteur) reviennent au locataire : elles sont affichées pour information.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": {
+            "property_type": "long_term_rental"
+          }
+        },
+        {
+          "label": "Un logement loué en courte durée",
+          "creates": [],
+          "help": "Toutes les obligations restent à votre charge.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": {
+            "property_type": "short_term_rental"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Q02",
+      "block": "legal",
+      "order": 2,
+      "question": "Comment le logement est-il principalement chauffé ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Chaudière au gaz de ville",
+          "creates": [
+            "CH-01"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Évacue-t-elle ses fumées par un conduit de cheminée, et non par une ventouse murale ?",
+            "creates_if_yes": [
+              "CH-07"
+            ]
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chaudière au propane (citerne)",
+          "creates": [
+            "CH-01",
+            "CH-16"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Évacue-t-elle ses fumées par un conduit de cheminée, et non par une ventouse murale ?",
+            "creates_if_yes": [
+              "CH-07"
+            ]
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chaudière au fioul",
+          "creates": [
+            "CH-02",
+            "CH-15",
+            "CH-07"
+          ],
+          "help": "Crée aussi la cuve et le conduit de fumée.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chaudière bois ou granulés",
+          "creates": [
+            "CH-03",
+            "CH-07"
+          ],
+          "help": "Crée aussi le conduit de fumée.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Poêle ou insert à bois",
+          "creates": [
+            "CH-05",
+            "CH-07"
+          ],
+          "help": "Crée aussi le conduit de fumée.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Poêle à granulés",
+          "creates": [
+            "CH-04",
+            "CH-07"
+          ],
+          "help": "Crée aussi le conduit de fumée.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Pompe à chaleur avec radiateurs ou plancher chauffant",
+          "creates": [
+            "CH-08"
+          ],
+          "help": "Pompe à chaleur air/eau.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Pompe à chaleur qui souffle de l'air (clim réversible)",
+          "creates": [
+            "CH-09"
+          ],
+          "help": "Obligation à confirmer selon la puissance, à partir de 4 kW.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Géothermie",
+          "creates": [
+            "CH-10"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Radiateurs électriques",
+          "creates": [
+            "CH-14"
+          ],
+          "help": "Pas d'obligation : entretien seulement.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": "Indice : une chaudière se trouve souvent dans la cuisine, la buanderie, le garage ou la cave ; une pompe à chaleur a une unité extérieure.",
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q03",
+      "block": "legal",
+      "order": 3,
+      "question": "Avez-vous aussi une cheminée, un insert ou un poêle ?",
+      "answer_type": "multiple",
+      "skip_if": [
+        {
+          "question": "Q02",
+          "answer": "Poêle ou insert à bois"
+        },
+        {
+          "question": "Q02",
+          "answer": "Poêle à granulés"
+        }
+      ],
+      "answers": [
+        {
+          "label": "Cheminée à foyer ouvert",
+          "creates": [
+            "CH-06"
+          ],
+          "help": "Un conduit de fumée est créé pour chaque appareil raccordé.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Insert ou poêle à bois",
+          "creates": [
+            "CH-05",
+            "CH-07"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Poêle à granulés",
+          "creates": [
+            "CH-04",
+            "CH-07"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q04",
+      "block": "legal",
+      "order": 4,
+      "question": "Comment l'eau chaude est-elle produite ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Par le chauffage (chaudière ou pompe à chaleur)",
+          "creates": [],
+          "help": "Déjà couvert par le chauffage.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Ballon électrique (cumulus)",
+          "creates": [
+            "ECS-01"
+          ],
+          "help": "Pas d'obligation : entretien seulement.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chauffe-eau thermodynamique",
+          "creates": [
+            "ECS-02"
+          ],
+          "help": "Obligation à confirmer selon la puissance.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chauffe-eau au gaz",
+          "creates": [
+            "ECS-03"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Chauffe-eau solaire",
+          "creates": [
+            "ECS-04"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": "Indice : un ballon électrique est un grand cylindre, souvent dans un placard, la buanderie ou le garage.",
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q05",
+      "block": "legal",
+      "order": 5,
+      "question": "Avez-vous la climatisation ?",
+      "answer_type": "single",
+      "skip_if": [
+        {
+          "question": "Q02",
+          "answer": "Pompe à chaleur qui souffle de l'air (clim réversible)"
+        }
+      ],
+      "answers": [
+        {
+          "label": "Oui, fixe (murale ou gainable)",
+          "creates": [
+            "CLIM-01"
+          ],
+          "help": "Obligation à confirmer selon la puissance, à partir de 4 kW.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Un climatiseur mobile seulement",
+          "creates": [
+            "CLIM-02"
+          ],
+          "help": "Pas d'obligation : entretien seulement.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q06",
+      "block": "legal",
+      "order": 6,
+      "question": "Cuisinez-vous au gaz ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Oui",
+          "creates": [
+            "CUIS-03",
+            "CUIS-04"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Date de péremption imprimée sur le tuyau flexible (une photo suffit).",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": "Indice : des brûleurs à flamme signalent une cuisson au gaz.",
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q07",
+      "block": "legal",
+      "order": 7,
+      "question": "Le logement est-il raccordé au tout-à-l'égout ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Oui",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non, fosse septique ou fosse toutes eaux",
+          "creates": [
+            "ASS-01"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Date du dernier contrôle du SPANC et de la dernière vidange.",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non, micro-station d'épuration",
+          "creates": [
+            "ASS-02"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Date du dernier contrôle du SPANC et de la dernière vidange.",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": "Indice : si votre facture d'eau comporte une ligne « assainissement collectif », le logement est raccordé.",
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q08",
+      "block": "legal",
+      "order": 8,
+      "question": "Avez-vous une piscine enterrée ou semi-enterrée ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Oui",
+          "creates": [
+            "PIS-01"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Le dispositif de sécurité est-il une alarme ? (Sinon : barrière, couverture ou abri.)",
+            "creates_if_yes": [
+              "PIS-07"
+            ]
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q09",
+      "block": "legal",
+      "order": 9,
+      "question": "Avez-vous un puits ou un forage ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Oui",
+          "creates": [
+            "EAU-05"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Est-il déclaré en mairie ?",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q10",
+      "block": "legal",
+      "order": 10,
+      "question": "Avez-vous un véhicule ?",
+      "answer_type": "multiple",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Voiture",
+          "creates": [
+            "VEH-01"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Date de première immatriculation et du dernier contrôle technique (photo de la carte grise possible).",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Moto, scooter ou quadricycle",
+          "creates": [
+            "VEH-02"
+          ],
+          "help": null,
+          "follow_up": {
+            "question": "Date de première immatriculation et du dernier contrôle technique (photo de la carte grise possible).",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Vélo électrique",
+          "creates": [
+            "VEH-03"
+          ],
+          "help": "Pas d'obligation : entretien seulement.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Aucun",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [],
+          "help": null,
+          "follow_up": null,
+          "unknown": true,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "AUTO-01",
+      "block": "legal",
+      "order": 11,
+      "question": "Détecteur de fumée",
+      "answer_type": "automatic",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Ajouté d'office",
+          "creates": [
+            "SEC-01"
+          ],
+          "help": "Obligatoire dans tout logement : il n'y a pas de question à poser.",
+          "follow_up": {
+            "question": "Est-il installé ? Photographiez la date imprimée au dos pour le rappel de remplacement à 10 ans.",
+            "creates_if_yes": []
+          },
+          "unknown": false,
+          "sets": null
+        }
+      ]
+    },
+    {
+      "id": "Q20",
+      "block": "maintenance",
+      "order": 20,
+      "question": "Quels appareils avez-vous ? (facultatif)",
+      "answer_type": "checklist",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Réfrigérateur",
+          "creates": [
+            "FROID-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Congélateur",
+          "creates": [
+            "FROID-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Lave-linge",
+          "creates": [
+            "LAV-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Sèche-linge",
+          "creates": [
+            "LAV-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Lave-vaisselle",
+          "creates": [
+            "LAV-03"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Four",
+          "creates": [
+            "CUIS-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Plaque à induction",
+          "creates": [
+            "CUIS-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Hotte",
+          "creates": [
+            "VENT-03"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Micro-ondes",
+          "creates": [
+            "CUIS-05"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Machine à café",
+          "creates": [
+            "CUIS-06"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Aspirateur",
+          "creates": [
+            "PEM-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Robot aspirateur",
+          "creates": [
+            "PEM-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "VMC",
+          "creates": [
+            "VENT-01"
+          ],
+          "help": "Simple flux par défaut ; double flux à préciser ensuite.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Adoucisseur d'eau",
+          "creates": [
+            "ECS-06"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Détecteur de monoxyde de carbone",
+          "creates": [
+            "SEC-02"
+          ],
+          "help": "Recommandé dès qu'un appareil à combustion est présent.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Volets roulants",
+          "creates": [
+            "OUV-03"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Portail motorisé",
+          "creates": [
+            "OUV-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Tondeuse",
+          "creates": [
+            "JAR-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Robot tondeuse",
+          "creates": [
+            "JAR-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Panneaux solaires",
+          "creates": [
+            "ENE-01",
+            "ENE-02"
+          ],
+          "help": "Crée aussi l'onduleur.",
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Borne de recharge",
+          "creates": [
+            "ENE-04"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        },
+        {
+          "label": "Gouttières",
+          "creates": [
+            "BAT-02"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "sets": null
+        }
+      ]
+    }
+  ]
+}

@@ -4,6 +4,8 @@ import { PlaceSection } from "@/components/PlaceSection";
 import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
 import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
+import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
+import { getPlaceChecks } from "@/lib/place-checks";
 import { createPlace } from "@/app/actions";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -11,8 +13,25 @@ import { createPlace } from "@/app/actions";
 // would stay invisible until the next build.
 export const dynamic = "force-dynamic";
 
+// ApplianceForm only needs id/category/label for its dropdowns: projected here rather
+// than passed the full EQUIPMENT_TYPES (which also carries legalStatus, used
+// server-side only by src/lib/obligations.ts) to keep that out of the client bundle.
+const APPLIANCE_FORM_EQUIPMENT_TYPES = EQUIPMENT_TYPES.map((t) => ({
+  id: t.id,
+  category: t.category,
+  label: t.label,
+}));
+
 export default async function Home() {
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
+  const placesData = await Promise.all(
+    places.map(async (place) => ({
+      place,
+      appliances: appliances.filter((a) => a.placeId === place.id),
+      obligationRecords: await getObligationRecordsForPlace(place.id),
+      placeChecks: await getPlaceChecks(place.id),
+    }))
+  );
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -26,13 +45,15 @@ export default async function Home() {
           </p>
         </header>
 
-        <ApplianceForm places={places} equipmentTypes={EQUIPMENT_TYPES} />
+        <ApplianceForm places={places} equipmentTypes={APPLIANCE_FORM_EQUIPMENT_TYPES} />
 
-        {places.map((place) => (
+        {placesData.map(({ place, appliances: placeAppliances, obligationRecords, placeChecks }) => (
           <PlaceSection
             key={place.id}
             place={place}
-            appliances={appliances.filter((a) => a.placeId === place.id)}
+            appliances={placeAppliances}
+            obligationRecords={obligationRecords}
+            placeChecks={placeChecks}
           />
         ))}
 

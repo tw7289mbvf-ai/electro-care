@@ -28,7 +28,7 @@ export function ApplianceForm({
   defaultPlaceId,
 }: {
   places: Place[];
-  equipmentTypes: EquipmentType[];
+  equipmentTypes: Pick<EquipmentType, "id" | "category" | "label">[];
   defaultPlaceId?: string;
 }) {
   const [state, formAction] = useActionState(createAppliance, initialState);

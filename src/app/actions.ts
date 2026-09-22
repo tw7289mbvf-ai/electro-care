@@ -3,10 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { addAppliance, deleteAppliance } from "@/lib/appliances";
-import { addPlace, getPlaces, updatePlace as updatePlaceRecord } from "@/lib/places";
+import { addPlace, getPlaces, markPlaceOnboarded, updatePlace as updatePlaceRecord } from "@/lib/places";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
+import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
 
 export type FormState = {
   error?: string;
@@ -78,9 +79,9 @@ export async function createPlace(_prevState: FormState, formData: FormData): Pr
     return { error: "Veuillez choisir un type de bien valide." };
   }
 
-  await addPlace({ name, commune, postcode, propertyType: propertyType as PropertyType | null });
+  const place = await addPlace({ name, commune, postcode, propertyType: propertyType as PropertyType | null });
   revalidatePath("/");
-  return {};
+  redirect(`/places/${place.id}/questionnaire`);
 }
 
 export async function updatePlace(
@@ -101,6 +102,16 @@ export async function updatePlace(
   }
 
   await updatePlaceRecord(id, { name, commune, postcode, propertyType: propertyType as PropertyType | null });
+  revalidatePath("/");
+  redirect("/");
+}
+
+export async function submitQuestionnaireStep(effects: QuestionnaireStepEffects): Promise<void> {
+  await applyQuestionnaireStepEffects(effects);
+}
+
+export async function completeQuestionnaire(placeId: string): Promise<void> {
+  await markPlaceOnboarded(placeId);
   revalidatePath("/");
   redirect("/");
 }
