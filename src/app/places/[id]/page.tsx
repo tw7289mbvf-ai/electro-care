@@ -6,8 +6,13 @@ import { updatePlace } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default async function EditPlacePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  if (!UUID_PATTERN.test(id)) {
+    notFound();
+  }
   const place = await getPlace(id);
   if (!place) {
     notFound();

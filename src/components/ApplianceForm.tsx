@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { createAppliance, type FormState } from "@/app/actions";
 import { CATEGORIES, CATEGORY_LABELS, type Category } from "@/lib/appliance-types";
-import { getEquipmentTypesForCategory } from "@/lib/equipment-types";
+import type { EquipmentType } from "@/lib/equipment-types";
 import type { Place } from "@/lib/place-types";
 
 const initialState: FormState = {};
@@ -22,11 +22,21 @@ function SubmitButton() {
   );
 }
 
-export function ApplianceForm({ places, defaultPlaceId }: { places: Place[]; defaultPlaceId?: string }) {
+export function ApplianceForm({
+  places,
+  equipmentTypes: allEquipmentTypes,
+  defaultPlaceId,
+}: {
+  places: Place[];
+  equipmentTypes: EquipmentType[];
+  defaultPlaceId?: string;
+}) {
   const [state, formAction] = useActionState(createAppliance, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const [category, setCategory] = useState<Category | "">("");
-  const equipmentTypes = category ? getEquipmentTypesForCategory(category) : [];
+  const equipmentTypes = category
+    ? allEquipmentTypes.filter((t) => t.category === category).sort((a, b) => a.label.localeCompare(b.label, "fr"))
+    : [];
 
   // Reset the dependent "type d'appareil" select when a submission just succeeded.
   // Adjusted during render (React's pattern for this), not in an effect, so it

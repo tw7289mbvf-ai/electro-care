@@ -3,6 +3,7 @@ import { PlaceForm } from "@/components/PlaceForm";
 import { PlaceSection } from "@/components/PlaceSection";
 import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
+import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
 import { createPlace } from "@/app/actions";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -25,7 +26,7 @@ export default async function Home() {
           </p>
         </header>
 
-        <ApplianceForm places={places} />
+        <ApplianceForm places={places} equipmentTypes={EQUIPMENT_TYPES} />
 
         {places.map((place) => (
           <PlaceSection
