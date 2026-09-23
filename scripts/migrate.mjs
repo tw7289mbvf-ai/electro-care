@@ -229,12 +229,17 @@ try {
   `);
   // A document has no account_id of its own — it is only ever reached through the
   // appliances it's linked to via document_appliances, so isolation for SELECT/UPDATE/
-  // DELETE follows that join. INSERT is deliberately left ungated here: nothing links
-  // a brand-new document to an account until the first document_appliances row exists,
-  // so a WITH CHECK on that join would reject the very insert that creates it. Neither
-  // the app nor a server action calls into `documents` yet (upload isn't built) — revisit
-  // this policy, most likely as a single transaction that inserts both rows together,
-  // before shipping uploads.
+  // DELETE follows that join. INSERT is deliberately left ungated (WITH CHECK true):
+  // nothing links a brand-new document to an account until the first
+  // document_appliances row exists, so a WITH CHECK on that join would reject the very
+  // insert that creates it. This is not just a gap for the missing WITH CHECK: Postgres
+  // also applies documents_select to any RETURNING clause on the INSERT (RETURNING
+  // reads the new row back), and that policy requires an existing document_appliances
+  // link — so `INSERT ... RETURNING id` fails RLS even for a legitimate owner, verified
+  // against this exact schema. Neither the app nor a server action calls into
+  // `documents` yet (upload isn't built); when it is, insert with an app-generated id
+  // (skip RETURNING) and insert the document_appliances row in the same transaction,
+  // most likely via a SECURITY DEFINER function so the pair is atomic under RLS.
   await client.query(`ALTER TABLE documents ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS documents_select ON documents`);
   await client.query(`
