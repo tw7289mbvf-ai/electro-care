@@ -206,9 +206,15 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON place_checks TO authenticated`);
 
+  // A document belongs to an account directly (not only through the appliances it's
+  // linked to): an earlier version isolated it purely via document_appliances, which
+  // meant linking *any* document id to one of your own appliances made it readable —
+  // account_id is what actually stops that, verified against this exact schema before
+  // this column existed.
   await client.query(`
     CREATE TABLE IF NOT EXISTS documents (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
       document_type TEXT NOT NULL,
       storage_path TEXT NOT NULL,
       original_filename TEXT,
@@ -220,6 +226,16 @@ try {
     ALTER TABLE documents ADD CONSTRAINT documents_document_type_check
       CHECK (document_type IN (${sqlKeyList(enums.document_type)}))
   `);
+  await client.query(`ALTER TABLE documents ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS documents_isolation ON documents`);
+  await client.query(`
+    CREATE POLICY documents_isolation ON documents
+      FOR ALL
+      USING (account_id = auth.uid())
+      WITH CHECK (account_id = auth.uid())
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON documents TO authenticated`);
+
   await client.query(`
     CREATE TABLE IF NOT EXISTS document_appliances (
       document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
@@ -227,59 +243,36 @@ try {
       PRIMARY KEY (document_id, appliance_id)
     )
   `);
-  // A document has no account_id of its own — it is only ever reached through the
-  // appliances it's linked to via document_appliances, so isolation for SELECT/UPDATE/
-  // DELETE follows that join. INSERT is deliberately left ungated (WITH CHECK true):
-  // nothing links a brand-new document to an account until the first
-  // document_appliances row exists, so a WITH CHECK on that join would reject the very
-  // insert that creates it. This is not just a gap for the missing WITH CHECK: Postgres
-  // also applies documents_select to any RETURNING clause on the INSERT (RETURNING
-  // reads the new row back), and that policy requires an existing document_appliances
-  // link — so `INSERT ... RETURNING id` fails RLS even for a legitimate owner, verified
-  // against this exact schema. Neither the app nor a server action calls into
-  // `documents` yet (upload isn't built); when it is, insert with an app-generated id
-  // (skip RETURNING) and insert the document_appliances row in the same transaction,
-  // most likely via a SECURITY DEFINER function so the pair is atomic under RLS.
-  await client.query(`ALTER TABLE documents ENABLE ROW LEVEL SECURITY`);
-  await client.query(`DROP POLICY IF EXISTS documents_select ON documents`);
-  await client.query(`
-    CREATE POLICY documents_select ON documents
-      FOR SELECT
-      USING (EXISTS (
-        SELECT 1 FROM document_appliances da
-        JOIN appliances a ON a.id = da.appliance_id
-        JOIN places p ON p.id = a.place_id
-        WHERE da.document_id = documents.id AND p.account_id = auth.uid()
-      ))
-  `);
-  await client.query(`DROP POLICY IF EXISTS documents_modify ON documents`);
-  await client.query(`
-    CREATE POLICY documents_modify ON documents
-      FOR DELETE
-      USING (EXISTS (
-        SELECT 1 FROM document_appliances da
-        JOIN appliances a ON a.id = da.appliance_id
-        JOIN places p ON p.id = a.place_id
-        WHERE da.document_id = documents.id AND p.account_id = auth.uid()
-      ))
-  `);
-  await client.query(`DROP POLICY IF EXISTS documents_insert ON documents`);
-  await client.query(`CREATE POLICY documents_insert ON documents FOR INSERT WITH CHECK (true)`);
-  await client.query(`GRANT SELECT, INSERT, DELETE ON documents TO authenticated`);
+  // Linking a document to an appliance must never be usable to reach into someone
+  // else's document: the check requires the account to already own *both* sides, not
+  // just the appliance side — owning an appliance is not consent to expose whatever
+  // document id someone else supplies.
 
   await client.query(`ALTER TABLE document_appliances ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS document_appliances_isolation ON document_appliances`);
   await client.query(`
     CREATE POLICY document_appliances_isolation ON document_appliances
       FOR ALL
-      USING (EXISTS (
-        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
-        WHERE a.id = document_appliances.appliance_id AND p.account_id = auth.uid()
-      ))
-      WITH CHECK (EXISTS (
-        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
-        WHERE a.id = document_appliances.appliance_id AND p.account_id = auth.uid()
-      ))
+      USING (
+        EXISTS (
+          SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+          WHERE a.id = document_appliances.appliance_id AND p.account_id = auth.uid()
+        )
+        AND EXISTS (
+          SELECT 1 FROM documents d
+          WHERE d.id = document_appliances.document_id AND d.account_id = auth.uid()
+        )
+      )
+      WITH CHECK (
+        EXISTS (
+          SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+          WHERE a.id = document_appliances.appliance_id AND p.account_id = auth.uid()
+        )
+        AND EXISTS (
+          SELECT 1 FROM documents d
+          WHERE d.id = document_appliances.document_id AND d.account_id = auth.uid()
+        )
+      )
   `);
   await client.query(`GRANT SELECT, INSERT, DELETE ON document_appliances TO authenticated`);
 
