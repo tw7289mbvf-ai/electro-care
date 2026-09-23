@@ -1,7 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import type { Appliance, Category } from "@/lib/appliance-types";
-
-const sql = neon(process.env.DATABASE_URL!);
+import { getAuthedContext } from "@/lib/db";
 
 type ApplianceRow = {
   id: string;
@@ -43,6 +41,7 @@ function toAppliance(row: ApplianceRow): Appliance {
 }
 
 export async function getAppliances(): Promise<Appliance[]> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
     FROM appliances
@@ -61,6 +60,7 @@ export async function addAppliance(input: {
   room?: string | null;
   equipmentTypeId?: string | null;
 }): Promise<Appliance> {
+  const { sql } = await getAuthedContext();
   const fieldSources: Record<string, string> = {};
   if (input.brand) fieldSources.brand = "manual";
   if (input.model) fieldSources.model = "manual";
@@ -82,6 +82,7 @@ export async function addAppliance(input: {
 }
 
 export async function deleteAppliance(id: string): Promise<void> {
+  const { sql } = await getAuthedContext();
   await sql`DELETE FROM appliances WHERE id = ${id}`;
 }
 
@@ -93,6 +94,7 @@ export async function findOrCreateApplianceByType(input: {
   equipmentTypeId: string;
   category: Category;
 }): Promise<{ appliance: Appliance; created: boolean }> {
+  const { sql } = await getAuthedContext();
   const existing = (await sql`
     SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
     FROM appliances
