@@ -79,6 +79,10 @@ BRAND_PATTERNS = {
     "Ex-Indesit Company": {"article_code": r"^F[0-9]{6}$|^[0-9]{12}$"},
 }
 
+QUESTION_BLOCKS = {"Contexte": "context", "Obligations": "legal", "Entretien": "maintenance"}
+ANSWER_TYPES = {"Choix unique": "single", "Choix multiple": "multiple", "Oui / non": "yes_no",
+                "Automatique": "automatic", "Cases a cocher": "checklist"}
+
 MONTH_WORDS = ("janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout",
                "septembre", "octobre", "novembre", "decembre",
                "printemps", "ete", "automne", "hiver", "chauffe")
@@ -209,7 +213,34 @@ def main():
             "proof": r["Justificatif"],
             "sanction": r["Sanction ou risque"],
             "sources": split(r["Source"], " ; "),
+            "risks": {"fine_max": r["Amende maximale"], "insurance": r["Assurance"],
+                      "liability": r["Responsabilite"], "danger": r["Danger"],
+                      "other": r["Autre consequence"]},
         })
+
+    questionnaire = {"rules": [], "questions": []}
+    by_id = {}
+    for r in rows(wb["Questionnaire"]):
+        if r["Type de reponse"] == "Regle":
+            questionnaire["rules"].append({"id": r["ID"], "label": r["Question"], "text": r["Question de suivi"]})
+            continue
+        if r["ID"] not in by_id:
+            skip = [{"question": part.split(" = ", 1)[0], "answer": part.split(" = ", 1)[1]}
+                    for part in split(r["Ne pas poser si"], " ; ")]
+            by_id[r["ID"]] = {"id": r["ID"], "block": QUESTION_BLOCKS[r["Bloc"]], "order": r["Ordre"],
+                              "question": r["Question"], "answer_type": ANSWER_TYPES[r["Type de reponse"]],
+                              "skip_if": skip or None, "answers": []}
+            questionnaire["questions"].append(by_id[r["ID"]])
+        follow_up = None
+        if r["Question de suivi"]:
+            follow_up = {"question": r["Question de suivi"],
+                         "creates_if_yes": split(r["Suivi : types crees si oui"], ", ")}
+        by_id[r["ID"]]["answers"].append({"label": r["Reponse"], "creates": split(r["Types crees"], ", "),
+                                          "help": r["Aide"], "follow_up": follow_up,
+                                          "unknown": r["Reponse"] == "Je ne sais pas",
+                                          "sets": ({k.strip(): v.strip() for k, v in
+                                                    [r["Renseigne"].split(" = ", 1)]}
+                                                   if r["Renseigne"] else None)})
 
     brands = []
     for r in rows(wb["Plaques par marque"]):
@@ -235,10 +266,23 @@ def main():
     assert not missing, f"Tasks point to unknown equipment types: {missing}"
     assert not orphans, f"Equipment types without any task: {orphans}"
     assert not bad_links, f"Obligations point to unknown equipment types: {bad_links}"
+    created = {i for q in questionnaire["questions"] for a in q["answers"]
+               for i in a["creates"] + (a["follow_up"]["creates_if_yes"] if a["follow_up"] else [])}
+    bad_q = sorted(created - equipment_ids)
+    assert not bad_q, f"Questionnaire creates unknown equipment types: {bad_q}"
+    labels = {(q["id"], a["label"]) for q in questionnaire["questions"] for a in q["answers"]}
+    bad_skip = [c for q in questionnaire["questions"] for c in (q["skip_if"] or [])
+                if (c["question"], c["answer"]) not in labels]
+    assert not bad_skip, f"skip_if points to unknown answers: {bad_skip}"
+    property_types = {k for k, _ in ENUMS["property_type"]}
+    bad_sets = [a["sets"] for q in questionnaire["questions"] for a in q["answers"]
+                if a["sets"] and a["sets"].get("property_type") not in property_types]
+    assert not bad_sets, f"Answers set an unknown property_type: {bad_sets}"
 
     files = {"categories.json": categories, "equipment_types.json": equipment,
              "maintenance_tasks.json": tasks, "legal_obligations.json": obligations,
-             "brand_nameplates.json": brands, "enums.json": enums}
+             "brand_nameplates.json": brands, "enums.json": enums,
+             "onboarding_questionnaire.json": questionnaire}
     for name, data in files.items():
         (OUT / name).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"seed/{name}: {len(data)} records")

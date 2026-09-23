@@ -160,6 +160,42 @@ try {
     )
   `);
 
+  // A place the onboarding questionnaire hasn't been run for yet has onboarded_at
+  // NULL — including every place that existed before this column was added.
+  await client.query(`ALTER TABLE places ADD COLUMN IF NOT EXISTS onboarded_at TIMESTAMPTZ`);
+
+  // One row per (appliance, legal maintenance task) actually tracked for that
+  // appliance's equipment type. No row means "à planifier": this applies equally to
+  // appliances created by the questionnaire and by manual/photo/invoice entry.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS appliance_obligations (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      last_service_date DATE,
+      known_due_date DATE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id)
+    )
+  `);
+
+  // A "to check" item from a "Je ne sais pas" answer (REGLE-02). question_label and
+  // help are snapshotted from the questionnaire at answer time, not looked up live,
+  // so a later edit to seed/onboarding_questionnaire.json can't change past answers.
+  // Same question answered "Je ne sais pas" again for the same place (e.g. a reload
+  // mid-questionnaire) touches this one row instead of adding a duplicate.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS place_checks (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      place_id UUID NOT NULL REFERENCES places(id) ON DELETE CASCADE,
+      question_id TEXT NOT NULL,
+      question_label TEXT NOT NULL,
+      help TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (place_id, question_id)
+    )
+  `);
+
   // --- One-time data conversions (each runs exactly once, ever) ---------------
 
   // A place without a commune is valid: legal reminders fall back to national rules

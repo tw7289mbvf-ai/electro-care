@@ -1,9 +1,22 @@
 import Link from "next/link";
 import { CATEGORIES, CATEGORY_LABELS, type Appliance } from "@/lib/appliance-types";
 import { PROPERTY_TYPE_LABELS, type Place } from "@/lib/place-types";
+import type { ApplianceObligationRecord } from "@/lib/obligations";
+import type { PlaceCheck } from "@/lib/place-checks";
 import { ApplianceList } from "@/components/ApplianceList";
+import { ObligationsBlock } from "@/components/ObligationsBlock";
 
-export function PlaceSection({ place, appliances }: { place: Place; appliances: Appliance[] }) {
+export function PlaceSection({
+  place,
+  appliances,
+  obligationRecords,
+  placeChecks,
+}: {
+  place: Place;
+  appliances: Appliance[];
+  obligationRecords: ApplianceObligationRecord[];
+  placeChecks: PlaceCheck[];
+}) {
   const byCategory = CATEGORIES.map((category) => ({
     category,
     appliances: appliances.filter((a) => a.category === category),
@@ -19,6 +32,14 @@ export function PlaceSection({ place, appliances }: { place: Place; appliances: 
               .filter(Boolean)
               .join(" · ") || "Aucune information complémentaire"}
           </p>
+          {!place.onboardedAt && (
+            <Link
+              href={`/places/${place.id}/questionnaire`}
+              className="mt-1 inline-block text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+            >
+              Compléter le questionnaire pour ce lieu
+            </Link>
+          )}
         </div>
         <Link
           href={`/places/${place.id}`}
@@ -27,6 +48,8 @@ export function PlaceSection({ place, appliances }: { place: Place; appliances: 
           Modifier
         </Link>
       </header>
+
+      <ObligationsBlock appliances={appliances} obligationRecords={obligationRecords} placeChecks={placeChecks} />
 
       {byCategory.length === 0 ? (
         <p className="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">

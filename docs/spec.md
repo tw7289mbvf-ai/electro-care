@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 14). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 19). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -13,7 +13,9 @@ Homeowners in France (v1 market: France only) who want to extend the life of the
 ## MVP Feature Set (v1)
 
 - Organize everything by place, then by category ([Places and Categories](#places-and-categories))
+- Onboarding questionnaire at first use and for each new place: plain-language questions create the equipment and its legal obligations ([Onboarding Questionnaire](#onboarding-questionnaire))
 - Add one or several appliances from an invoice (document), a nameplate photo or manual entry (photo and/or text) ([Adding Appliances](#adding-appliances))
+- Legal obligations and lifespan maintenance shown as two separate tracks, with the risks of non-compliance ([Obligations and Maintenance](#obligations-and-maintenance))
 - Warranty and documents: one space per appliance for manuals, invoices and warranty forms of new products
 - Automatic maintenance calendar: email reminders based on manufacturer or best-practice intervals
 - Step-by-step maintenance guide per appliance and task
@@ -46,11 +48,41 @@ Three entry points feed one appliance record. None fills it alone, so each is de
 | Manual (photo and/or text) | Category, brand, room | Maintenance plan right away |
 
 - **Minimum record**: place + category. Nothing else blocks creation.
-- **Complete, don't duplicate**: a new capture matching an incomplete record in the same place, category and brand is offered as a completion, not a second record.
+- **Complete, don't duplicate**: a new capture matching an incomplete record in the same place and category is offered as a completion, not a second record. The match uses the brand when both records have one, otherwise the equipment type: records created by the questionnaire have no brand.
 - **One invoice, several appliances**: the app lists the detected lines and the user ticks the appliances. Lines carrying a WEEE eco-fee (éco-participation DEEE) are a strong hint. Invoices received by email arrive through a dedicated forwarding address, with no mailbox access.
 - **Nameplate locator**: shows where the plate usually sits for the category, adapted to the brand once known (typed or detected from the logo). The brand's identifier format validates what the photo read.
 - **Benefit-led prompts**: each missing field is requested through what it unlocks ("Add the invoice to track the warranty"), not a completeness score.
 - **Capture in a web app**: v1 is a responsive web app, so capture uses the phone browser's camera, one shot at a time with framing guidance. No live scanner.
+
+## Obligations and Maintenance
+
+Legal obligations and lifespan maintenance are shown as two separate tracks, built on the same data. One appliance can carry both: a boiler's mandatory annual service and its monthly pressure check. In the reference data, 31 of 154 tasks are legal obligations, and 24 of them need a professional.
+
+| | Legal obligations | Maintenance (lifespan) |
+| --- | --- | --- |
+| Stake | Fine, insurance, liability | Savings, longevity |
+| Who | Mostly a professional | Mostly the user |
+| Rhythm | Yearly or less often | Monthly to seasonal |
+| To close | Proof attached | One tap |
+| Postponing | Always visible | Free |
+| Reminders | One by one, a month before the deadline | Grouped by season |
+
+- **Home screen**: obligations first, with a status per place (up to date, to schedule, overdue), then the season's maintenance checklist.
+- **Risks on every obligation**: fine, insurance consequences, liability and physical danger, taken from the reference data.
+- **To confirm**: an obligation that depends on a threshold, such as air conditioning from 4 kW, stays "to confirm" until the nameplate or a single question settles it.
+- **Bridge to the paid tier**: most obligations need a professional, so an obligation coming due offers to book a technician.
+
+## Onboarding Questionnaire
+
+Asked at first use and for each new place. Afterwards, appliances are added one by one, as described in Adding Appliances.
+
+- **Plain-language questions**: property type first, which decides who is liable, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, vehicles. Answers create the matching records and their obligations directly.
+- **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it.
+- **Never blocking**: every obligation question offers "Je ne sais pas", shown as a discreet choice. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
+- **Smoke detector added automatically**: it is mandatory in every home, so the app only asks whether it is installed.
+- **Last service date**: asked for every obligation created, as month and year. "I don't know" means "to schedule".
+- **Optional appliance checklist**: common appliances (fridge, washing machine, dishwasher…) seed the maintenance track the same way.
+- **Then improve**: brand, model and purchase date are added later through a photo or an invoice.
 
 ## Business Model
 

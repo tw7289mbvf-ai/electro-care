@@ -126,8 +126,8 @@
     "label": "Cheminee a foyer ouvert",
     "lifespan": "30 ans et +",
     "legal": {
-      "status": "conditional",
-      "note": "Partiel",
+      "status": "yes",
+      "note": "Oui",
       "reference": "Decret 2023-641 : exempte d'entretien, ramonage obligatoire"
     },
     "reference_frequency": "Ramonage annuel min.",
@@ -198,8 +198,8 @@
     "label": "Pompe a chaleur air/air reversible",
     "lifespan": "12-15 ans",
     "legal": {
-      "status": "yes",
-      "note": "Oui",
+      "status": "conditional",
+      "note": "Oui si >= 4 kW",
       "reference": "Decret 2020-912 (des 4 kW)"
     },
     "reference_frequency": "Tous les 2 ans",
@@ -2118,9 +2118,9 @@
     "label": "Alarme de piscine",
     "lifespan": "8-10 ans",
     "legal": {
-      "status": "conditional",
-      "note": "Oui si dispositif retenu",
-      "reference": "Norme NF P90-307"
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Norme NF P90-307 ; obligatoire des lors que l'alarme est le dispositif de securite retenu"
     },
     "reference_frequency": "Test mensuel ; pile annuelle",
     "provider": "Particulier",

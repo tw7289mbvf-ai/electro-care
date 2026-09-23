@@ -15,4 +15,5 @@ export type Place = {
   postcode: string | null;
   propertyType: PropertyType | null;
   createdAt: string;
+  onboardedAt: string | null;
 };
