@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getPlace } from "@/lib/places";
 import { getAppliances } from "@/lib/appliances";
 import { QuestionnaireWizard } from "@/components/QuestionnaireWizard";
@@ -15,6 +15,11 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
   const place = await getPlace(id);
   if (!place) {
     notFound();
+  }
+  // Already onboarded: no resume mechanism exists, so re-entering would restart at Q01
+  // and could duplicate effects. Send back to the place's own view instead.
+  if (place.onboardedAt) {
+    redirect("/");
   }
 
   const appliances = await getAppliances();

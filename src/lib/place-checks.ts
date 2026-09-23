@@ -50,5 +50,6 @@ export async function addPlaceCheck(input: {
   await sql`
     INSERT INTO place_checks (place_id, question_id, question_label, help)
     VALUES (${input.placeId}, ${input.questionId}, ${input.questionLabel}, ${input.help})
+    ON CONFLICT (place_id, question_id) DO NOTHING
   `;
 }

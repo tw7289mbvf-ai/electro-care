@@ -182,6 +182,8 @@ try {
   // A "to check" item from a "Je ne sais pas" answer (REGLE-02). question_label and
   // help are snapshotted from the questionnaire at answer time, not looked up live,
   // so a later edit to seed/onboarding_questionnaire.json can't change past answers.
+  // Same question answered "Je ne sais pas" again for the same place (e.g. a reload
+  // mid-questionnaire) touches this one row instead of adding a duplicate.
   await client.query(`
     CREATE TABLE IF NOT EXISTS place_checks (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -189,7 +191,8 @@ try {
       question_id TEXT NOT NULL,
       question_label TEXT NOT NULL,
       help TEXT,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (place_id, question_id)
     )
   `);
 

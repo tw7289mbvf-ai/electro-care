@@ -4,6 +4,7 @@ import { addPlaceCheck } from "@/lib/place-checks";
 import { setPlacePropertyType } from "@/lib/places";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { getTrackedLegalTasks } from "@/lib/maintenance-tasks";
+import { getTodayInFrance } from "@/lib/obligations";
 import type { PropertyType } from "@/lib/place-types";
 
 export type QuestionnaireStepEffects = {
@@ -12,6 +13,7 @@ export type QuestionnaireStepEffects = {
   createEquipmentTypeIds: string[];
   dateAnswers: {
     equipmentTypeId: string;
+    taskId: string;
     field: "last_service_date" | "known_due_date";
     date: string;
   }[];
@@ -20,9 +22,7 @@ export type QuestionnaireStepEffects = {
 
 // Applied per questionnaire step (one main question plus its follow-up, if any). Every
 // piece here is idempotent to re-run: find-or-create never duplicates an appliance,
-// setApplianceObligation upserts, addPlaceCheck is the only append-only part (a "Je ne
-// sais pas" answered twice would add two check items — the wizard only calls this once
-// per question actually reached, so that doesn't arise in normal use).
+// setApplianceObligation upserts, addPlaceCheck upserts on (place_id, question_id).
 export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEffects): Promise<void> {
   if (effects.setPropertyType) {
     await setPlacePropertyType(effects.placeId, effects.setPropertyType);
@@ -46,7 +46,7 @@ export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEf
           await setApplianceObligation({
             applianceId: appliance.id,
             maintenanceTaskId: task.id,
-            lastServiceDate: new Date().toISOString().slice(0, 10),
+            lastServiceDate: getTodayInFrance(),
           });
         }
       }
@@ -61,18 +61,16 @@ export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEf
       equipmentTypeId: dateAnswer.equipmentTypeId,
       category: type.category,
     });
-    const task = getTrackedLegalTasks(dateAnswer.equipmentTypeId)[0];
-    if (!task) continue;
     if (dateAnswer.field === "last_service_date") {
       await setApplianceObligation({
         applianceId: appliance.id,
-        maintenanceTaskId: task.id,
+        maintenanceTaskId: dateAnswer.taskId,
         lastServiceDate: dateAnswer.date,
       });
     } else {
       await setApplianceObligation({
         applianceId: appliance.id,
-        maintenanceTaskId: task.id,
+        maintenanceTaskId: dateAnswer.taskId,
         knownDueDate: dateAnswer.date,
       });
     }

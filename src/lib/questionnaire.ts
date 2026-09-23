@@ -39,25 +39,38 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
   }));
 
 // Follow-up questions with no creates_if_yes ask for a date rather than gating equipment
-// creation; the seed has no generic hook for which equipment type or which date field
-// that is (an answer can create several types, e.g. Q06 creates both CUIS-03 and
-// CUIS-04), so each is mapped explicitly here rather than guessed from its text. Keyed
-// by "questionId|answerLabel".
-export type FollowUpDateTarget = { equipmentTypeId: string; field: "last_service_date" | "known_due_date" };
+// creation; the seed has no generic hook for which equipment type, which task or which
+// date field that is (an answer can create several types, e.g. Q06 creates both CUIS-03
+// and CUIS-04, and a type can carry more than one tracked task, e.g. SEC-01), so each is
+// mapped explicitly here — including the exact task id, never inferred from array order
+// — rather than guessed from its text. Keyed by "questionId|answerLabel".
+export type FollowUpDateTarget = {
+  equipmentTypeId: string;
+  taskId: string;
+  field: "last_service_date" | "known_due_date";
+};
 
 export const FOLLOW_UP_DATE_TARGETS: Record<string, FollowUpDateTarget> = {
   // Q06 (cuisson au gaz): "Date de péremption imprimée sur le tuyau flexible" — a future
   // expiry date, so it primes the calculation (see src/lib/obligations.ts).
-  "Q06|Oui": { equipmentTypeId: "CUIS-04", field: "known_due_date" },
+  "Q06|Oui": { equipmentTypeId: "CUIS-04", taskId: "T-060", field: "known_due_date" },
   // Q07 (assainissement non collectif): "Date du dernier contrôle du SPANC et de la
   // dernière vidange" — this *is* the REGLE-01 last-service-date question, just asked
   // as this answer's follow-up instead of separately.
-  "Q07|Non, fosse septique ou fosse toutes eaux": { equipmentTypeId: "ASS-01", field: "last_service_date" },
-  "Q07|Non, micro-station d'épuration": { equipmentTypeId: "ASS-02", field: "last_service_date" },
+  "Q07|Non, fosse septique ou fosse toutes eaux": {
+    equipmentTypeId: "ASS-01",
+    taskId: "T-072",
+    field: "last_service_date",
+  },
+  "Q07|Non, micro-station d'épuration": {
+    equipmentTypeId: "ASS-02",
+    taskId: "T-075",
+    field: "last_service_date",
+  },
   // Q10 (véhicules): "Date de première immatriculation et du dernier contrôle
   // technique" — simplified to the last technical inspection date only; the first-
   // registration nuance for a car younger than its first inspection interval is a
   // known simplification for v1 (falls back to "à planifier" via "Je ne sais pas").
-  "Q10|Voiture": { equipmentTypeId: "VEH-01", field: "last_service_date" },
-  "Q10|Moto, scooter ou quadricycle": { equipmentTypeId: "VEH-02", field: "last_service_date" },
+  "Q10|Voiture": { equipmentTypeId: "VEH-01", taskId: "T-152", field: "last_service_date" },
+  "Q10|Moto, scooter ou quadricycle": { equipmentTypeId: "VEH-02", taskId: "T-153", field: "last_service_date" },
 };

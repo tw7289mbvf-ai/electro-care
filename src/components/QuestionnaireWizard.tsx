@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   QUESTIONS,
@@ -44,7 +44,11 @@ export function QuestionnaireWizard({
   existingEquipmentTypeIds: string[];
 }) {
   const router = useRouter();
-  const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  // A ref, not state: finishStepAndAdvance must see the answer just given in the same
+  // step (possibly after follow-up/date-ask sub-phases), and state set via setAnswers
+  // wouldn't be visible until the next render — a stale read here breaks skip_if for
+  // the very next question when this step has no sub-phase to force that render first.
+  const answersRef = useRef<Record<string, string[]>>({});
   const [currentQuestion, setCurrentQuestion] = useState<QuestionnaireQuestion | null>(
     QUESTIONS.find((q) => !isSkipped(q, {})) ?? null
   );
@@ -103,7 +107,7 @@ export function QuestionnaireWizard({
     await submitQuestionnaireStep(finalEffects);
     const updatedPlaceEquipmentTypeIds = new Set([...placeEquipmentTypeIds, ...finalEffects.createEquipmentTypeIds]);
     setPlaceEquipmentTypeIds(updatedPlaceEquipmentTypeIds);
-    const next = nextQuestion(answers, currentQuestion!.order);
+    const next = nextQuestion(answersRef.current, currentQuestion!.order);
     setCurrentQuestion(next);
     // A checklist shows what's already there as a starting point (never auto-removed
     // if unchecked: submitting only ever finds-or-creates the boxes left checked).
@@ -165,7 +169,7 @@ export function QuestionnaireWizard({
     const followUps = chosenAnswers
       .filter((a) => a.followUp)
       .map((a) => ({ question, answer: a }));
-    setAnswers((prev) => ({ ...prev, [question.id]: chosenAnswers.map((a) => a.label) }));
+    answersRef.current = { ...answersRef.current, [question.id]: chosenAnswers.map((a) => a.label) };
     if (followUps.length > 0) {
       setStepEffects(effects);
       setPendingFollowUps(followUps);
@@ -189,7 +193,10 @@ export function QuestionnaireWizard({
       // not a REGLE-02 "à vérifier" item. Either way, the generic date-ask pass must not
       // ask again for this type.
       if (dateValue) {
-        effects.dateAnswers = [...effects.dateAnswers, { equipmentTypeId: target.equipmentTypeId, field: target.field, date: dateValue }];
+        effects.dateAnswers = [
+          ...effects.dateAnswers,
+          { equipmentTypeId: target.equipmentTypeId, taskId: target.taskId, field: target.field, date: dateValue },
+        ];
       }
       updatedDateAskedViaFollowUp = new Set([...dateAskedViaFollowUp, target.equipmentTypeId]);
       setDateAskedViaFollowUp(updatedDateAskedViaFollowUp);
@@ -214,7 +221,7 @@ export function QuestionnaireWizard({
     if (dateValue) {
       effects.dateAnswers = [
         ...effects.dateAnswers,
-        { equipmentTypeId: ask.equipmentTypeId, field: "last_service_date", date: dateValue },
+        { equipmentTypeId: ask.equipmentTypeId, taskId: ask.taskId, field: "last_service_date", date: dateValue },
       ];
     }
     const remaining = pendingDateAsks.slice(1);

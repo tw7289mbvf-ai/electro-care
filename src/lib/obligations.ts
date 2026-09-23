@@ -26,6 +26,12 @@ export type ObligationView = {
   legalObligations: LegalObligation[];
 };
 
+// Due dates are calendar dates with no time component; comparing them against a UTC
+// "today" would be off by up to two hours around midnight for users in France.
+export function getTodayInFrance(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
+}
+
 function addMonths(isoDate: string, months: number): string {
   const [year, month, day] = isoDate.split("-").map(Number);
   const date = new Date(year, month - 1 + Math.round(months), day);
@@ -54,7 +60,7 @@ function computeStatusAndDueDate(
 export function getObligationsForAppliance(
   equipmentTypeId: string,
   records: ApplianceObligationRecord[],
-  today: string = new Date().toISOString().slice(0, 10)
+  today: string = getTodayInFrance()
 ): ObligationView[] {
   const tasks = getTrackedLegalTasks(equipmentTypeId);
   const equipmentType = getEquipmentType(equipmentTypeId);
