@@ -34,6 +34,24 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - Aucune page affichant des données utilisateur n'est mise en cache statiquement.
 - La catégorie est le niveau d'affichage, le type d'équipement porte tâches et obligations.
 
+## Production database operations
+
+- The Neon `neondb_owner` password rotates outside of Vercel's env-var history. Vercel's
+  `DATABASE_URL` / `DATABASE_URL_UNPOOLED` are stored as **Secret** (not Config) on
+  purpose — never downgrade them to Config, even to make `vercel env pull` work again.
+- To run `scripts/migrate.mjs` (or any one-off script) against production, fetch the
+  connection string at the moment you need it with `neonctl connection-string main`
+  (pooled and unpooled), export it inline for that single command, and let the shell
+  variable go out of scope. Never run `vercel env pull --environment=production`: it
+  writes the production password to a file on disk.
+- Never display a database password (or any connection string containing one) in
+  plaintext in any output — mask it (e.g. keep host/user, replace the password segment)
+  before printing, or redirect straight to a scratch file the same way.
+- Always test schema/data changes on a disposable Neon branch first (see the
+  `schema_migrations` journal pattern in `scripts/migrate.mjs`), and delete that branch
+  once it's served its purpose — a branch created before a password rotation still
+  answers to the old password after the rotation.
+
 ## Commands
 
 <!-- TODO: build, test and lint commands for this stack. Run /init: Claude Code proposes them and suggests improvements to this file. -->
