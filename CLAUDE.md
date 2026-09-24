@@ -76,6 +76,12 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   existing rows have no account to attach to, by design (see `docs/spec.md`, "Empty
   start") — it is being retired, not migrated in place.
 
+## Économie
+
+- Pas de sous-agents en parallèle, pas de `/code-review max`, pas d'ultrareview, sans mon accord explicite.
+- Ne lire que les fichiers nécessaires à la tâche en cours ; pas d'exploration large.
+- Réponses courtes ; pas de long récapitulatif si non demandé.
+
 ## Commands
 
 <!-- TODO: build, test and lint commands for this stack. Run /init: Claude Code proposes them and suggests improvements to this file. -->
