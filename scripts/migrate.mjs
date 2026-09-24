@@ -160,9 +160,21 @@ try {
       maintenance_task_id TEXT NOT NULL,
       last_service_date DATE,
       known_due_date DATE,
+      service_confidence TEXT,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       UNIQUE (appliance_id, maintenance_task_id)
     )
+  `);
+  // Graded answer to "date du dernier passage" (REGLE-01) when the user has no exact
+  // date: 'recent' (à confirmer, orange) or 'never' (jamais fait / je ne sais pas,
+  // en retard prioritaire) mirror last_service_date's absence — 'old' (plus ancien que
+  // le delai, en retard) does too. Column added separately for a database that already
+  // had this table before service_confidence existed.
+  await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS service_confidence TEXT`);
+  await client.query(`ALTER TABLE appliance_obligations DROP CONSTRAINT IF EXISTS appliance_obligations_service_confidence_check`);
+  await client.query(`
+    ALTER TABLE appliance_obligations ADD CONSTRAINT appliance_obligations_service_confidence_check
+      CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never'))
   `);
   await client.query(`ALTER TABLE appliance_obligations ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS appliance_obligations_isolation ON appliance_obligations`);

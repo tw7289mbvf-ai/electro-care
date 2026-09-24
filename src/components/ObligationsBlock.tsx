@@ -1,6 +1,12 @@
 import type { Appliance } from "@/lib/appliance-types";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
-import { getObligationsForAppliance, OBLIGATION_STATUS_LABELS, type ApplianceObligationRecord, type ObligationStatus } from "@/lib/obligations";
+import {
+  compareObligationsByUrgency,
+  getObligationsForAppliance,
+  OBLIGATION_STATUS_LABELS,
+  type ApplianceObligationRecord,
+  type ObligationStatus,
+} from "@/lib/obligations";
 import type { PlaceCheck } from "@/lib/place-checks";
 import { MarkDoneButton } from "@/components/MarkDoneButton";
 
@@ -25,14 +31,16 @@ export function ObligationsBlock({
   obligationRecords: ApplianceObligationRecord[];
   placeChecks: PlaceCheck[];
 }) {
-  const rows = appliances.flatMap((appliance) => {
-    if (!appliance.equipmentTypeId) return [];
-    const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
-    return getObligationsForAppliance(appliance.equipmentTypeId, records).map((obligation) => ({
-      appliance,
-      ...obligation,
-    }));
-  });
+  const rows = appliances
+    .flatMap((appliance) => {
+      if (!appliance.equipmentTypeId) return [];
+      const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
+      return getObligationsForAppliance(appliance.equipmentTypeId, records).map((obligation) => ({
+        appliance,
+        ...obligation,
+      }));
+    })
+    .sort(compareObligationsByUrgency);
 
   if (rows.length === 0 && placeChecks.length === 0) return null;
 

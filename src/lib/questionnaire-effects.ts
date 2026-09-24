@@ -15,7 +15,10 @@ export type QuestionnaireStepEffects = {
     equipmentTypeId: string;
     taskId: string;
     field: "last_service_date" | "known_due_date";
-    date: string;
+    // Exactly one of these is set: a precise date, or (last_service_date only,
+    // REGLE-01) a graded answer with no exact date.
+    date?: string;
+    confidence?: "recent" | "old" | "never";
   }[];
   unknownChecks: { questionId: string; questionLabel: string; help: string | null }[];
 };
@@ -65,7 +68,8 @@ export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEf
       await setApplianceObligation({
         applianceId: appliance.id,
         maintenanceTaskId: dateAnswer.taskId,
-        lastServiceDate: dateAnswer.date,
+        lastServiceDate: dateAnswer.date ?? null,
+        serviceConfidence: dateAnswer.confidence ?? null,
       });
     } else {
       await setApplianceObligation({
