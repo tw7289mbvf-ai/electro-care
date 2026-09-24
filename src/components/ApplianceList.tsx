@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CATEGORIES, CATEGORY_LABELS, type Appliance, type Category } from "@/lib/appliance-types";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { DeleteApplianceButton } from "@/components/DeleteApplianceButton";
@@ -46,8 +47,8 @@ export function ApplianceList({ appliances }: { appliances: Appliance[] }) {
             key={appliance.id}
             className="flex items-start justify-between gap-2 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
           >
-            <div className="min-w-0">
-              <p className="truncate font-medium text-zinc-900 dark:text-zinc-100">
+            <Link href={`/appliances/${appliance.id}`} className="min-w-0 flex-1">
+              <p className="truncate font-medium text-zinc-900 hover:underline dark:text-zinc-100">
                 {getApplianceDisplayName(appliance)}
               </p>
               {subtitle && (
@@ -63,7 +64,7 @@ export function ApplianceList({ appliances }: { appliances: Appliance[] }) {
                   Acheté le {formatDate(appliance.purchaseDate)}
                 </p>
               )}
-            </div>
+            </Link>
             <DeleteApplianceButton id={appliance.id} />
           </li>
         );

@@ -17,3 +17,11 @@ export type Place = {
   createdAt: string;
   onboardedAt: string | null;
 };
+
+// Dashboard order: main home, second home, long-term rental, short-term rental (the
+// order PROPERTY_TYPES is already declared in, from seed/enums.json), places without a
+// property type last. Sort is stable, so createdAt order survives within each group.
+export function comparePlacesByPropertyType(a: Place, b: Place): number {
+  const rank = (p: Place) => (p.propertyType ? PROPERTY_TYPES.indexOf(p.propertyType) : PROPERTY_TYPES.length);
+  return rank(a) - rank(b);
+}

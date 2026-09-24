@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlaceForm } from "@/components/PlaceForm";
+import { DeletePlaceButton } from "@/components/DeletePlaceButton";
 import { getPlace } from "@/lib/places";
+import { countAppliancesForPlace } from "@/lib/appliances";
 import { updatePlace } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +19,11 @@ export default async function EditPlacePage({ params }: { params: Promise<{ id: 
   if (!place) {
     notFound();
   }
+  const applianceCount = await countAppliancesForPlace(id);
+  const confirmMessage =
+    applianceCount > 0
+      ? `Supprimer « ${place.name} » supprime aussi ${applianceCount} appareil${applianceCount > 1 ? "s" : ""} et leurs rappels. Continuer ?`
+      : `Supprimer « ${place.name} » ? Cette action est définitive.`;
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -36,6 +43,13 @@ export default async function EditPlacePage({ params }: { params: Promise<{ id: 
           submitLabel="Enregistrer"
           pendingLabel="Enregistrement…"
         />
+
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Zone de danger
+          </h2>
+          <DeletePlaceButton id={place.id} confirmMessage={confirmMessage} />
+        </section>
       </main>
     </div>
   );

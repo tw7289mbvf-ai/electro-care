@@ -118,6 +118,24 @@ async function main() {
     ["INSERT place_checks on A's place", () => sqlB.query("INSERT INTO place_checks (place_id, question_id, question_label) VALUES ($1, 'x', 'x')", [place.id])],
     ["INSERT document_appliances linking A's document to B's appliance", () => sqlB.query("INSERT INTO document_appliances (document_id, appliance_id) VALUES ($1, $2)", [document.id, applianceB.id])],
     ["UPDATE B's own appliance to attach it to A's place", () => sqlB.query("UPDATE appliances SET place_id = $1 WHERE id = $2", [place.id, applianceB.id])],
+    // Dashboard actions (src/app/actions.ts): "Supprimer ce lieu" and "C'est fait",
+    // attempted by B against A's rows. DELETE places is already covered generically
+    // above (targets loop); this one mirrors deletePlace()'s exact statement. The
+    // "C'est fait" case exercises setApplianceObligation()'s upsert shape specifically
+    // — ON CONFLICT DO UPDATE evaluates the UPDATE's own USING/WITH CHECK on the
+    // conflicting row, a different path than a plain INSERT or a plain UPDATE.
+    ["DELETE A's place (deletePlace, B → A)", () => sqlB.query("DELETE FROM places WHERE id = $1", [place.id])],
+    [
+      "\"C'est fait\" upsert on A's appliance (markObligationDone, B → A)",
+      () =>
+        sqlB.query(
+          `INSERT INTO appliance_obligations (appliance_id, maintenance_task_id, last_service_date)
+           VALUES ($1, 'T-TEST', '2026-01-01')
+           ON CONFLICT (appliance_id, maintenance_task_id) DO UPDATE SET
+             last_service_date = EXCLUDED.last_service_date, known_due_date = NULL`,
+          [appliance.id]
+        ),
+    ],
   ];
   for (const [label, fn] of injections) {
     const res = await refused(fn);

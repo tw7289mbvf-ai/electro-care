@@ -2,8 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { addAppliance, deleteAppliance } from "@/lib/appliances";
-import { addPlace, getPlaces, markPlaceOnboarded, updatePlace as updatePlaceRecord } from "@/lib/places";
+import { addAppliance, deleteAppliance, updateAppliance as updateApplianceRecord } from "@/lib/appliances";
+import { addPlace, deletePlace, getPlaces, markPlaceOnboarded, updatePlace as updatePlaceRecord } from "@/lib/places";
+import { setApplianceObligation } from "@/lib/appliance-obligations";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
@@ -66,6 +67,34 @@ export async function removeAppliance(id: string): Promise<void> {
   revalidatePath("/");
 }
 
+export async function updateAppliance(
+  id: string,
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const brand = optionalTrimmed(formData, "brand");
+  const model = optionalTrimmed(formData, "model");
+  const room = optionalTrimmed(formData, "room");
+  const purchaseDate = optionalTrimmed(formData, "purchaseDate");
+  const powerKwRaw = optionalTrimmed(formData, "powerKw");
+
+  if (purchaseDate && Number.isNaN(Date.parse(purchaseDate))) {
+    return { error: "Veuillez saisir une date d'achat valide." };
+  }
+  let powerKw: number | null = null;
+  if (powerKwRaw) {
+    powerKw = Number(powerKwRaw);
+    if (Number.isNaN(powerKw) || powerKw <= 0) {
+      return { error: "Veuillez saisir une puissance valide." };
+    }
+  }
+
+  await updateApplianceRecord(id, { brand, model, powerKw, purchaseDate, room });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${id}`);
+  redirect(`/appliances/${id}`);
+}
+
 export async function createPlace(_prevState: FormState, formData: FormData): Promise<FormState> {
   const name = optionalTrimmed(formData, "name");
   const commune = optionalTrimmed(formData, "commune");
@@ -104,6 +133,31 @@ export async function updatePlace(
   await updatePlaceRecord(id, { name, commune, postcode, propertyType: propertyType as PropertyType | null });
   revalidatePath("/");
   redirect("/");
+}
+
+export async function removePlace(id: string): Promise<void> {
+  await deletePlace(id);
+  revalidatePath("/");
+  redirect("/");
+}
+
+const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+// "C'est fait": the user only gives a month (input type="month", MM/AAAA on screen),
+// stored as day 1 of that month. Clears any stale known_due_date so the status is
+// recomputed from this new last_service_date going forward (setApplianceObligation
+// overwrites known_due_date to null when it isn't passed).
+export async function markObligationDone(
+  applianceId: string,
+  maintenanceTaskId: string,
+  month: string
+): Promise<void> {
+  if (!MONTH_PATTERN.test(month)) {
+    throw new Error("Mois invalide");
+  }
+  await setApplianceObligation({ applianceId, maintenanceTaskId, lastServiceDate: `${month}-01` });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
 }
 
 export async function submitQuestionnaireStep(effects: QuestionnaireStepEffects): Promise<void> {

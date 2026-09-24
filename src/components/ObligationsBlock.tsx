@@ -2,6 +2,7 @@ import type { Appliance } from "@/lib/appliance-types";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { getObligationsForAppliance, OBLIGATION_STATUS_LABELS, type ApplianceObligationRecord, type ObligationStatus } from "@/lib/obligations";
 import type { PlaceCheck } from "@/lib/place-checks";
+import { MarkDoneButton } from "@/components/MarkDoneButton";
 
 const STATUS_STYLES: Record<ObligationStatus, string> = {
   up_to_date: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
@@ -58,6 +59,7 @@ export function ObligationsBlock({
                     ({row.status === "overdue" ? "depuis le" : "prochaine échéance :"} {formatDate(row.dueDate)})
                   </span>
                 )}
+                <MarkDoneButton applianceId={row.appliance.id} maintenanceTaskId={row.task.id} />
               </div>
               {row.legalObligations.map((obligation) =>
                 obligation.risks ? (

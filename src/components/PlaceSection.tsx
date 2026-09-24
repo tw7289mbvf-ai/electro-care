@@ -41,12 +41,20 @@ export function PlaceSection({
             </Link>
           )}
         </div>
-        <Link
-          href={`/places/${place.id}`}
-          className="shrink-0 text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-        >
-          Modifier
-        </Link>
+        <div className="flex shrink-0 items-center gap-3">
+          <Link
+            href={`/places/${place.id}/appliances/new`}
+            className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+          >
+            Ajouter un appareil
+          </Link>
+          <Link
+            href={`/places/${place.id}`}
+            className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+          >
+            Modifier
+          </Link>
+        </div>
       </header>
 
       <ObligationsBlock appliances={appliances} obligationRecords={obligationRecords} placeChecks={placeChecks} />

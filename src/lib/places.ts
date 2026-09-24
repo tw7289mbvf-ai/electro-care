@@ -94,3 +94,11 @@ export async function markPlaceOnboarded(id: string): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`UPDATE places SET onboarded_at = now() WHERE id = ${id}`;
 }
+
+// Appliances, their obligations, place checks and document links all cascade at the
+// database level (ON DELETE CASCADE, see scripts/migrate.mjs) — one statement here is
+// enough, no application-side fan-out delete needed.
+export async function deletePlace(id: string): Promise<void> {
+  const { sql } = await getAuthedContext();
+  await sql`DELETE FROM places WHERE id = ${id}`;
+}
