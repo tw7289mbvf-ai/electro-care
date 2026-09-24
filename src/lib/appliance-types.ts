@@ -21,4 +21,5 @@ export type Appliance = {
   placeId: string;
   room: string | null;
   equipmentTypeId: string | null;
+  powerKw: number | null;
 };

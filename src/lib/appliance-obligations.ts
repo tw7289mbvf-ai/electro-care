@@ -37,6 +37,16 @@ export async function getObligationRecordsForPlace(placeId: string): Promise<App
   return rows.map(toRecord);
 }
 
+export async function getObligationRecordsForAppliance(applianceId: string): Promise<ApplianceObligationRecord[]> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    SELECT appliance_id, maintenance_task_id, last_service_date, known_due_date
+    FROM appliance_obligations
+    WHERE appliance_id = ${applianceId}
+  `) as ObligationRow[];
+  return rows.map(toRecord);
+}
+
 export async function setApplianceObligation(input: {
   applianceId: string;
   maintenanceTaskId: string;

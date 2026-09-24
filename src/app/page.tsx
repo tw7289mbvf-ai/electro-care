@@ -1,30 +1,18 @@
 import Link from "next/link";
-import { ApplianceForm } from "@/components/ApplianceForm";
-import { PlaceForm } from "@/components/PlaceForm";
 import { PlaceSection } from "@/components/PlaceSection";
 import { DemoDashboard } from "@/components/DemoDashboard";
 import { SignOutButton } from "@/components/SignOutButton";
 import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
-import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
+import { comparePlacesByPropertyType } from "@/lib/place-types";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getPlaceChecks } from "@/lib/place-checks";
-import { createPlace } from "@/app/actions";
 import { auth } from "@/lib/auth/server";
 
 // Every page here reads user data straight from Postgres: it must never be served
 // from a static/ISR cache, or edits made outside the app (migrations, other users)
 // would stay invisible until the next build.
 export const dynamic = "force-dynamic";
-
-// ApplianceForm only needs id/category/label for its dropdowns: projected here rather
-// than passed the full EQUIPMENT_TYPES (which also carries legalStatus, used
-// server-side only by src/lib/obligations.ts) to keep that out of the client bundle.
-const APPLIANCE_FORM_EQUIPMENT_TYPES = EQUIPMENT_TYPES.map((t) => ({
-  id: t.id,
-  category: t.category,
-  label: t.label,
-}));
 
 export default async function Home() {
   // A signed-out visitor never triggers a database read on this page: the check below
@@ -68,8 +56,9 @@ export default async function Home() {
   }
 
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
+  const orderedPlaces = [...places].sort(comparePlacesByPropertyType);
   const placesData = await Promise.all(
-    places.map(async (place) => ({
+    orderedPlaces.map(async (place) => ({
       place,
       appliances: appliances.filter((a) => a.placeId === place.id),
       obligationRecords: await getObligationRecordsForPlace(place.id),
@@ -92,22 +81,38 @@ export default async function Home() {
           <SignOutButton />
         </header>
 
-        <ApplianceForm places={places} equipmentTypes={APPLIANCE_FORM_EQUIPMENT_TYPES} />
+        {places.length === 0 ? (
+          <section className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Aucun lieu pour l&apos;instant.</p>
+            <Link
+              href="/places/new"
+              className="rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700"
+            >
+              Ajouter votre premier lieu
+            </Link>
+          </section>
+        ) : (
+          <>
+            {placesData.map(({ place, appliances: placeAppliances, obligationRecords, placeChecks }) => (
+              <PlaceSection
+                key={place.id}
+                place={place}
+                appliances={placeAppliances}
+                obligationRecords={obligationRecords}
+                placeChecks={placeChecks}
+              />
+            ))}
 
-        {placesData.map(({ place, appliances: placeAppliances, obligationRecords, placeChecks }) => (
-          <PlaceSection
-            key={place.id}
-            place={place}
-            appliances={placeAppliances}
-            obligationRecords={obligationRecords}
-            placeChecks={placeChecks}
-          />
-        ))}
-
-        <section className="flex flex-col gap-4">
-          <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Ajouter un lieu</h2>
-          <PlaceForm action={createPlace} submitLabel="Ajouter le lieu" pendingLabel="Ajout…" resetOnSuccess />
-        </section>
+            <div>
+              <Link
+                href="/places/new"
+                className="inline-block rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              >
+                Ajouter un lieu
+              </Link>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );

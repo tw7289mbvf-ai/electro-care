@@ -12,6 +12,7 @@ type ApplianceRow = {
   place_id: string;
   room: string | null;
   equipment_type_id: string | null;
+  power_kw: string | number | null;
 };
 
 function toDateOnlyString(value: string | Date): string {
@@ -37,17 +38,38 @@ function toAppliance(row: ApplianceRow): Appliance {
     placeId: row.place_id,
     room: row.room,
     equipmentTypeId: row.equipment_type_id,
+    powerKw: row.power_kw === null ? null : Number(row.power_kw),
   };
 }
+
+const APPLIANCE_COLUMNS = `id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id, power_kw`;
 
 export async function getAppliances(): Promise<Appliance[]> {
   const { sql } = await getAuthedContext();
   const rows = (await sql`
-    SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+    SELECT ${sql.unsafe(APPLIANCE_COLUMNS)}
     FROM appliances
     ORDER BY created_at DESC
   `) as ApplianceRow[];
   return rows.map(toAppliance);
+}
+
+export async function getAppliance(id: string): Promise<Appliance | null> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    SELECT ${sql.unsafe(APPLIANCE_COLUMNS)}
+    FROM appliances
+    WHERE id = ${id}
+  `) as ApplianceRow[];
+  return rows[0] ? toAppliance(rows[0]) : null;
+}
+
+export async function countAppliancesForPlace(placeId: string): Promise<number> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    SELECT count(*)::int AS count FROM appliances WHERE place_id = ${placeId}
+  `) as { count: number }[];
+  return rows[0]?.count ?? 0;
 }
 
 export async function addAppliance(input: {
@@ -84,6 +106,48 @@ export async function addAppliance(input: {
 export async function deleteAppliance(id: string): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`DELETE FROM appliances WHERE id = ${id}`;
+}
+
+// Fiche appareil edit: brand, model, power and purchase date are nameplate/invoice
+// identity fields (see CLAUDE.md), each tracked in field_sources. A field left blank
+// here loses its field_sources key rather than being recorded as a "manual" empty
+// value — CLAUDE.md: "When a field is cleared, delete its field_sources key, never set
+// it to null."
+export async function updateAppliance(
+  id: string,
+  input: {
+    brand: string | null;
+    model: string | null;
+    powerKw: number | null;
+    purchaseDate: string | null;
+    room: string | null;
+  }
+): Promise<Appliance> {
+  const { sql } = await getAuthedContext();
+  const [existing] = (await sql`
+    SELECT field_sources FROM appliances WHERE id = ${id}
+  `) as { field_sources: Record<string, string> }[];
+  const fieldSources: Record<string, string> = { ...(existing?.field_sources ?? {}) };
+  const tracked: Array<[string, string | number | null]> = [
+    ["brand", input.brand],
+    ["model", input.model],
+    ["power_kw", input.powerKw],
+    ["purchase_date", input.purchaseDate],
+  ];
+  for (const [key, value] of tracked) {
+    if (value === null) delete fieldSources[key];
+    else fieldSources[key] = "manual";
+  }
+
+  const rows = (await sql`
+    UPDATE appliances
+    SET brand = ${input.brand}, model = ${input.model}, power_kw = ${input.powerKw},
+        purchase_date = ${input.purchaseDate}, room = ${input.room},
+        field_sources = ${JSON.stringify(fieldSources)}
+    WHERE id = ${id}
+    RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
+  `) as ApplianceRow[];
+  return toAppliance(rows[0]);
 }
 
 // The onboarding questionnaire never duplicates an appliance already in the place: if

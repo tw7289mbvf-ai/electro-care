@@ -68,6 +68,11 @@ async function main() {
   const suffix = Date.now();
   const a = await createAccountAndToken(`test-isolation-a-${suffix}@example.com`);
   const b = await createAccountAndToken(`test-isolation-b-${suffix}@example.com`);
+  // Printed unconditionally, before anything that could throw: cleanup below runs with
+  // stdio "ignore" (its own failure would otherwise pass silently), so these ids are
+  // what a caller uses to delete the two throwaway accounts by hand if the run dies
+  // before reaching cleanup, or if cleanup itself silently failed.
+  console.log(`Throwaway accounts — A: ${a.accountId}  B: ${b.accountId}`);
   const owner = neon(ownerUrl());
   const sqlA = sqlAs(a.token);
   const sqlB = sqlAs(b.token);
@@ -118,6 +123,24 @@ async function main() {
     ["INSERT place_checks on A's place", () => sqlB.query("INSERT INTO place_checks (place_id, question_id, question_label) VALUES ($1, 'x', 'x')", [place.id])],
     ["INSERT document_appliances linking A's document to B's appliance", () => sqlB.query("INSERT INTO document_appliances (document_id, appliance_id) VALUES ($1, $2)", [document.id, applianceB.id])],
     ["UPDATE B's own appliance to attach it to A's place", () => sqlB.query("UPDATE appliances SET place_id = $1 WHERE id = $2", [place.id, applianceB.id])],
+    // Dashboard actions (src/app/actions.ts): "Supprimer ce lieu" and "C'est fait",
+    // attempted by B against A's rows. DELETE places is already covered generically
+    // above (targets loop); this one mirrors deletePlace()'s exact statement. The
+    // "C'est fait" case exercises setApplianceObligation()'s upsert shape specifically
+    // — ON CONFLICT DO UPDATE evaluates the UPDATE's own USING/WITH CHECK on the
+    // conflicting row, a different path than a plain INSERT or a plain UPDATE.
+    ["DELETE A's place (deletePlace, B → A)", () => sqlB.query("DELETE FROM places WHERE id = $1", [place.id])],
+    [
+      "\"C'est fait\" upsert on A's appliance (markObligationDone, B → A)",
+      () =>
+        sqlB.query(
+          `INSERT INTO appliance_obligations (appliance_id, maintenance_task_id, last_service_date)
+           VALUES ($1, 'T-TEST', '2026-01-01')
+           ON CONFLICT (appliance_id, maintenance_task_id) DO UPDATE SET
+             last_service_date = EXCLUDED.last_service_date, known_due_date = NULL`,
+          [appliance.id]
+        ),
+    ],
   ];
   for (const [label, fn] of injections) {
     const res = await refused(fn);
@@ -153,8 +176,19 @@ async function main() {
   record("No neondb_owner / bare neon() usage outside src/lib/db.ts", ownerUsage.trim() === "", ownerUsage.trim() || undefined);
 
   // --- Cleanup: delete both throwaway accounts, cascades everything -------
-  execSync(`npx --yes neonctl neon-auth user delete ${a.accountId} --project-id ${PROJECT_ID} --branch ${BRANCH}`, { stdio: "ignore" });
-  execSync(`npx --yes neonctl neon-auth user delete ${b.accountId} --project-id ${PROJECT_ID} --branch ${BRANCH}`, { stdio: "ignore" });
+  // stdio was "ignore" — a failed delete here used to pass silently. Now each is
+  // wrapped so a failure is printed loudly (with the id to delete by hand) instead of
+  // disappearing, and one failing doesn't stop the other from being attempted.
+  for (const [label, id] of [["A", a.accountId], ["B", b.accountId]]) {
+    try {
+      execSync(`npx --yes neonctl neon-auth user delete ${id} --project-id ${PROJECT_ID} --branch ${BRANCH}`, {
+        stdio: "pipe",
+      });
+    } catch (e) {
+      console.error(`CLEANUP FAILED for throwaway account ${label} (${id}): ${e.stderr?.toString() ?? e.message}`);
+      console.error(`Delete by hand: npx neonctl neon-auth user delete ${id} --project-id ${PROJECT_ID} --branch ${BRANCH}`);
+    }
+  }
 
   const failures = results.filter((r) => !r.ok);
   console.log(`\n${results.length - failures.length}/${results.length} checks passed.`);
