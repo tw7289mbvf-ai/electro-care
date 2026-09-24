@@ -88,26 +88,40 @@ export async function deleteAppliance(id: string): Promise<void> {
 
 // The onboarding questionnaire never duplicates an appliance already in the place: if
 // one of this exact equipment type exists there, it's reused (and its obligations, if
-// any, are left untouched) rather than creating a second record.
+// any, are left untouched) rather than creating a second record. A plain
+// check-then-insert races when the same step is submitted twice at once (double
+// click, two open tabs on the same place): both requests can see "not found" before
+// either commits, and both insert. An advisory lock scoped to this exact
+// (place, equipment type) pair — held only for this one transaction — serializes that
+// specific race without a table-wide unique constraint, which would also block two
+// legitimately identical splits installed in two different rooms (the manual-entry
+// path in this file never takes this lock and is unaffected).
 export async function findOrCreateApplianceByType(input: {
   placeId: string;
   equipmentTypeId: string;
   category: Category;
 }): Promise<{ appliance: Appliance; created: boolean }> {
   const { sql } = await getAuthedContext();
-  const existing = (await sql`
-    SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
-    FROM appliances
-    WHERE place_id = ${input.placeId} AND equipment_type_id = ${input.equipmentTypeId}
-    LIMIT 1
-  `) as ApplianceRow[];
-  if (existing[0]) {
-    return { appliance: toAppliance(existing[0]), created: false };
+  const [, inserted, existing] = (await sql.transaction([
+    sql`SELECT pg_advisory_xact_lock(hashtext(${input.placeId}), hashtext(${input.equipmentTypeId}))`,
+    sql`
+      INSERT INTO appliances (place_id, category, equipment_type_id, field_sources)
+      SELECT ${input.placeId}, ${input.category}, ${input.equipmentTypeId}, '{"category":"manual"}'::jsonb
+      WHERE NOT EXISTS (
+        SELECT 1 FROM appliances WHERE place_id = ${input.placeId} AND equipment_type_id = ${input.equipmentTypeId}
+      )
+      RETURNING id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+    `,
+    sql`
+      SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+      FROM appliances
+      WHERE place_id = ${input.placeId} AND equipment_type_id = ${input.equipmentTypeId}
+      LIMIT 1
+    `,
+  ])) as [unknown, ApplianceRow[], ApplianceRow[]];
+
+  if (inserted[0]) {
+    return { appliance: toAppliance(inserted[0]), created: true };
   }
-  const appliance = await addAppliance({
-    placeId: input.placeId,
-    category: input.category,
-    equipmentTypeId: input.equipmentTypeId,
-  });
-  return { appliance, created: true };
+  return { appliance: toAppliance(existing[0]), created: false };
 }
