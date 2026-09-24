@@ -75,6 +75,23 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   `us-east-1`) expecting it to add the account_id/RLS layer in place: that database's
   existing rows have no account to attach to, by design (see `docs/spec.md`, "Empty
   start") — it is being retired, not migrated in place.
+- `scripts/test-isolation.mjs` cannot run on a disposable branch of the EU project
+  (`electro-care-eu` / `icy-union-72562625`): this project has a legacy web access
+  role, so schema-only branches are refused outright, and a normal (data-copying)
+  branch still comes up with `neon_auth.project_config.endpoint_id` pointing at the
+  *parent's* endpoint, not its own — `/token` fails with `jwk not found` until that row
+  is fixed, and fixing it by hand broke `/token` a different way (500). A disposable
+  project isn't available either (the org is Vercel-managed). Found and given up on
+  during the 2026-09-24 dashboard/management work — don't rediscover this each
+  session. Until Neon fixes branch-created Auth wiring for this project: back up
+  `main` first (`neonctl branches create --parent main --name main-backup-<date>`, kept,
+  not expiring), run `scripts/migrate.mjs` (idempotent) to confirm schema is current,
+  read the script's cleanup block out loud before running it — it must delete only the
+  two account ids it just created, never by email pattern — then run
+  `scripts/test-isolation.mjs` once against `main` itself. Afterwards, verify by id
+  (`SELECT id FROM neon_auth.user WHERE id = ANY(...)`, expect zero rows) that both
+  throwaway accounts are actually gone — the script's own cleanup calls are not
+  silently trustworthy on their own.
 
 ## Économie
 
