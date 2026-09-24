@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 24). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 25). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -80,13 +80,15 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 
 Asked at first use and for each new place. Afterwards, appliances are added one by one, as described in Adding Appliances.
 
-- **Plain-language questions**: property type first, which decides who is liable, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, vehicles. Answers create the matching records and their obligations directly.
+- **Plain-language questions**: property type first, skipped when it was set at place creation, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, vehicles. Answers create the matching records and their obligations directly.
 - **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it.
+- **Questions name the appliance**: every question and every date request states which appliance it is about ("Wood stove and its flue: last service and sweep?"). Dates are entered as numbers, MM/YYYY.
 - **Never blocking**: every obligation question offers "Je ne sais pas", shown as a discreet choice. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
-- **Smoke detector added automatically**: it is mandatory in every home, so the app only asks whether it is installed.
-- **Last service date**: asked for every obligation created, as month and year. "I don't know" means "to schedule".
+- **Smoke detector added automatically**: it is mandatory in every home, so the app only asks whether it is installed and its manufacturing date printed on the back, which sets its 10-year replacement.
+- **Last service date**: asked for every obligation created, with the graded answers described in Obligations and Maintenance.
+- **One date for an appliance and its flue**: a stove, insert or boiler and its flue get a single date question, since servicing and sweeping are done in the same visit. A "done separately?" link allows two dates, or marking only one of the two as done.
 - **Optional appliance checklist**: common appliances (fridge, washing machine, dishwasher…) seed the maintenance track the same way.
-- **Then improve**: brand, model and purchase date are added later through a photo or an invoice.
+- **Then improve**: brand, model and purchase date are added later from the appliance card.
 
 ## Accounts and Privacy
 
@@ -98,15 +100,23 @@ Each person has an account, and sees only their own places and appliances. This 
 - **EU region**: the database is hosted in the European Union, since the app stores personal data (invoices carry names and addresses). This keeps GDPR compliance simple.
 - **Empty start**: accounts begin with no data; the earlier test records are not carried over.
 
+## Dashboard
+
+What a signed-in user sees first.
+
+- **Empty**: a single button, "Ajouter votre premier lieu", which leads straight into the questionnaire.
+- **Places stacked**: one below the other, ordered by property type: main home, second home, long-term rental, short-term rental. Letting the user reorder places is noted for later, outside the MVP.
+- **Two add buttons at two levels**: "Ajouter un lieu" on the dashboard, and "Ajouter un appareil" inside each place, so an appliance is always created in its place. The add form no longer sits on the dashboard.
+- **"C'est fait" on every obligation**: the most frequent action is one tap away from where a red or orange status appears.
+
 ## Managing Appliances
 
 Tapping an appliance opens its card.
 
-- **Edit**: brand, model, purchase date, room, and the fields that resolve an orange status, such as power or a precise date, without going back through the questionnaire.
+- **Edit**: brand, model, power, purchase date, room, and the fields that resolve an orange status, without going back through the questionnaire.
+- **Mark as done**: from the appliance card, or straight from an obligation on the dashboard ("C'est fait"). The user gives the month of the intervention, defaulting to the current month; the status turns green and the next due date is recalculated. Proof can be attached once documents exist.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
-- **Questions name the appliance**: every question and every date request states which appliance it is about ("Gas boiler — does it vent through a flue?"). Dates are entered as numbers, a MM/YYYY picker.
-- **One date for an appliance and its flue**: when an answer creates both, such as a stove and its flue, a single date is asked and applied to both, since they are serviced together.
 
 ## Business Model
 

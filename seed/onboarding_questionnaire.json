@@ -3,12 +3,22 @@
     {
       "id": "REGLE-01",
       "label": "Date du dernier passage",
-      "text": "Pour chaque obligation créée : date approximative du dernier entretien, ramonage, contrôle ou vidange (mois et année). « Je ne sais pas » la classe « à planifier »."
+      "text": "Pour chaque obligation créée, la date du dernier passage (entretien, ramonage, contrôle ou vidange) se donne en chiffres (MM/AAAA). Réponses graduées : date précise → calcul normal ; fait récemment, sans date exacte → à confirmer (orange), avec un rappel pour la préciser ; plus ancien que le délai légal → en retard (rouge) ; jamais réalisé ou je ne sais pas → en retard (rouge), prioritaire."
     },
     {
       "id": "REGLE-02",
       "label": "Réponse « Je ne sais pas »",
       "text": "« Je ne sais pas » ne bloque jamais la progression : la réponse ajoute un point « à vérifier » sur l'écran d'accueil, avec l'aide associée pour trouver la réponse. Même règle pour les questions de suivi. À l'écran, c'est un choix discret, sous les autres."
+    },
+    {
+      "id": "REGLE-03",
+      "label": "Appareil et conduit de fumée",
+      "text": "Quand une réponse crée un appareil à combustion et son conduit de fumée (poêle, insert, chaudière), une seule question de date couvre les deux : l'entretien et le ramonage se font au même passage. Un lien « faits séparément ? » permet de donner deux dates, ou d'indiquer que seul l'un des deux a été fait."
+    },
+    {
+      "id": "REGLE-04",
+      "label": "Type de logement déjà connu",
+      "text": "La question Q01 n'est pas posée si le type de logement a déjà été renseigné à la création du lieu."
     }
   ],
   "questions": [
@@ -396,7 +406,7 @@
           ],
           "help": null,
           "follow_up": {
-            "question": "Date de péremption imprimée sur le tuyau flexible (une photo suffit).",
+            "question": "Date de péremption imprimée sur le tuyau flexible (MM/AAAA).",
             "creates_if_yes": []
           },
           "unknown": false,
@@ -567,7 +577,7 @@
           ],
           "help": null,
           "follow_up": {
-            "question": "Date de première immatriculation et du dernier contrôle technique (photo de la carte grise possible).",
+            "question": "Date de première immatriculation (sur la carte grise) et du dernier contrôle technique (MM/AAAA).",
             "creates_if_yes": []
           },
           "unknown": false,
@@ -580,7 +590,7 @@
           ],
           "help": null,
           "follow_up": {
-            "question": "Date de première immatriculation et du dernier contrôle technique (photo de la carte grise possible).",
+            "question": "Date de première immatriculation (sur la carte grise) et du dernier contrôle technique (MM/AAAA).",
             "creates_if_yes": []
           },
           "unknown": false,
@@ -629,7 +639,7 @@
           ],
           "help": "Obligatoire dans tout logement : il n'y a pas de question à poser.",
           "follow_up": {
-            "question": "Est-il installé ? Photographiez la date imprimée au dos pour le rappel de remplacement à 10 ans.",
+            "question": "Est-il installé ? Si oui, notez la date de fabrication imprimée au dos (MM/AAAA) : elle fixe son remplacement, 10 ans après.",
             "creates_if_yes": []
           },
           "unknown": false,
