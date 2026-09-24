@@ -18,7 +18,12 @@
     {
       "id": "REGLE-04",
       "label": "Type de logement déjà connu",
-      "text": "La question Q01 n'est pas posée si le type de logement a déjà été renseigné à la création du lieu."
+      "text": "La question Q01 n'est pas posée si le type de logement a déjà été renseigné à la création du lieu. Sa réponse est alors déduite du type du lieu, et les conditions qui en dépendent (skip_if) s'appliquent."
+    },
+    {
+      "id": "REGLE-05",
+      "label": "Nom du logement dans les questions",
+      "text": "Dans les textes, {residence} se remplace par « votre résidence principale » ou « votre résidence secondaire », selon le type du lieu."
     }
   ],
   "questions": [
@@ -566,16 +571,25 @@
       "id": "Q10",
       "block": "legal",
       "order": 10,
-      "question": "Avez-vous un véhicule ?",
+      "question": "Un véhicule est-il rattaché à {residence} ?",
       "answer_type": "multiple",
-      "skip_if": null,
+      "skip_if": [
+        {
+          "question": "Q01",
+          "answer": "Un logement loué à l'année"
+        },
+        {
+          "question": "Q01",
+          "answer": "Un logement loué en courte durée"
+        }
+      ],
       "answers": [
         {
           "label": "Voiture",
           "creates": [
             "VEH-01"
           ],
-          "help": null,
+          "help": "Rattachez chaque véhicule à un seul logement, celui où il est principalement garé, pour ne pas le compter deux fois.",
           "follow_up": {
             "question": "Date de première immatriculation (sur la carte grise) et du dernier contrôle technique (MM/AAAA).",
             "creates_if_yes": []

@@ -39,7 +39,11 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
           </p>
         </header>
 
-        <QuestionnaireWizard placeId={place.id} existingEquipmentTypeIds={existingEquipmentTypeIds} />
+        <QuestionnaireWizard
+          placeId={place.id}
+          existingEquipmentTypeIds={existingEquipmentTypeIds}
+          existingPropertyType={place.propertyType}
+        />
       </main>
     </div>
   );

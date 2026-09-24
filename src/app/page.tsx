@@ -2,10 +2,12 @@ import Link from "next/link";
 import { PlaceSection } from "@/components/PlaceSection";
 import { DemoDashboard } from "@/components/DemoDashboard";
 import { SignOutButton } from "@/components/SignOutButton";
+import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
 import { comparePlacesByPropertyType } from "@/lib/place-types";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
+import { countObligationsByStatus, getObligationsForAppliance, type ObligationCounts } from "@/lib/obligations";
 import { getPlaceChecks } from "@/lib/place-checks";
 import { auth } from "@/lib/auth/server";
 
@@ -66,6 +68,21 @@ export default async function Home() {
     }))
   );
 
+  const totalCounts = placesData.reduce<ObligationCounts>(
+    (acc, { appliances: placeAppliances, obligationRecords }) => {
+      for (const appliance of placeAppliances) {
+        if (!appliance.equipmentTypeId) continue;
+        const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
+        const counts = countObligationsByStatus(getObligationsForAppliance(appliance.equipmentTypeId, records));
+        acc.overdue += counts.overdue;
+        acc.toConfirm += counts.toConfirm;
+        acc.upToDate += counts.upToDate;
+      }
+      return acc;
+    },
+    { overdue: 0, toConfirm: 0, upToDate: 0 }
+  );
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
@@ -80,6 +97,8 @@ export default async function Home() {
           </div>
           <SignOutButton />
         </header>
+
+        {places.length > 0 && <ComplianceBanner counts={totalCounts} />}
 
         {places.length === 0 ? (
           <section className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">

@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 25). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 26). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -80,8 +80,10 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 
 Asked at first use and for each new place. Afterwards, appliances are added one by one, as described in Adding Appliances.
 
-- **Plain-language questions**: property type first, skipped when it was set at place creation, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, vehicles. Answers create the matching records and their obligations directly.
-- **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it.
+- **Plain-language questions**: property type first, skipped when it was set at place creation, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, and vehicles for a main or second home.
+- **Back button and recap**: a "Précédent" button lets the user go back and change any answer. Nothing is created during the questionnaire: at the end, a recap lists what will be created, each line editable, and a single confirmation creates it all. Going back never leaves a stray appliance behind.
+- **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it, no vehicle question for a rental.
+- **Vehicles phrased per home**: "Un véhicule est-il rattaché à votre résidence principale ?" Each vehicle belongs to one home only, where it is mainly parked, so it is never counted twice.
 - **Questions name the appliance**: every question and every date request states which appliance it is about ("Wood stove and its flue: last service and sweep?"). Dates are entered as numbers, MM/YYYY.
 - **Never blocking**: every obligation question offers "Je ne sais pas", shown as a discreet choice. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
 - **Smoke detector added automatically**: it is mandatory in every home, so the app only asks whether it is installed and its manufacturing date printed on the back, which sets its 10-year replacement.
@@ -117,6 +119,17 @@ Tapping an appliance opens its card.
 - **Mark as done**: from the appliance card, or straight from an obligation on the dashboard ("C'est fait"). The user gives the month of the intervention, defaulting to the current month; the status turns green and the next due date is recalculated. Proof can be attached once documents exist.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
+
+## Tenants (planned)
+
+In a long-term rental, several obligations fall on the tenant (boiler service, chimney sweeping, smoke detector upkeep, gas hose), while the owner bears the consequences with the insurer. Landlords chase these certificates by hand today: automating it is a strong candidate for the paid tier.
+
+- **Tenant contacts**: the owner enters one or more tenant emails on the place.
+- **Notice and proof**: before each tenant-liable deadline, the app emails the tenant a link to upload the proof, with no account needed. The link is single-use, time-limited and opens nothing else.
+- **Owner's view**: "tenant's responsibility: proof received" or "pending", with automatic reminders.
+- **Short-term rentals unchanged**: the owner remains responsible for everything.
+- **Privacy**: tenant emails are a third party's personal data. Only what is needed is kept, and they are deleted at the end of the lease.
+- **Order**: a European email-sending service with the owner's own reminders first, then document upload, then tenants.
 
 ## Business Model
 
