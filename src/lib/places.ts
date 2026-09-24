@@ -1,7 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import type { Place, PropertyType } from "@/lib/place-types";
-
-const sql = neon(process.env.DATABASE_URL!);
+import { getAuthedContext } from "@/lib/db";
 
 type PlaceRow = {
   id: string;
@@ -31,6 +29,7 @@ function toPlace(row: PlaceRow): Place {
 }
 
 export async function getPlaces(): Promise<Place[]> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT id, name, commune, postcode, property_type, created_at, onboarded_at
     FROM places
@@ -40,6 +39,7 @@ export async function getPlaces(): Promise<Place[]> {
 }
 
 export async function getPlace(id: string): Promise<Place | null> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT id, name, commune, postcode, property_type, created_at, onboarded_at
     FROM places
@@ -54,9 +54,10 @@ export async function addPlace(input: {
   postcode: string | null;
   propertyType: PropertyType | null;
 }): Promise<Place> {
+  const { sql, accountId } = await getAuthedContext();
   const rows = (await sql`
-    INSERT INTO places (name, commune, postcode, property_type)
-    VALUES (${input.name}, ${input.commune}, ${input.postcode}, ${input.propertyType})
+    INSERT INTO places (account_id, name, commune, postcode, property_type)
+    VALUES (${accountId}, ${input.name}, ${input.commune}, ${input.postcode}, ${input.propertyType})
     RETURNING id, name, commune, postcode, property_type, created_at, onboarded_at
   `) as PlaceRow[];
   return toPlace(rows[0]);
@@ -71,6 +72,7 @@ export async function updatePlace(
     propertyType: PropertyType | null;
   }
 ): Promise<Place> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     UPDATE places
     SET name = ${input.name}, commune = ${input.commune}, postcode = ${input.postcode},
@@ -84,9 +86,11 @@ export async function updatePlace(
 // Q01 of the onboarding questionnaire sets property_type directly, without going
 // through the full place-edit form (name/commune/postcode are untouched).
 export async function setPlacePropertyType(id: string, propertyType: PropertyType): Promise<void> {
+  const { sql } = await getAuthedContext();
   await sql`UPDATE places SET property_type = ${propertyType} WHERE id = ${id}`;
 }
 
 export async function markPlaceOnboarded(id: string): Promise<void> {
+  const { sql } = await getAuthedContext();
   await sql`UPDATE places SET onboarded_at = now() WHERE id = ${id}`;
 }

@@ -1,6 +1,4 @@
-import { neon } from "@neondatabase/serverless";
-
-const sql = neon(process.env.DATABASE_URL!);
+import { getAuthedContext } from "@/lib/db";
 
 export type PlaceCheck = {
   id: string;
@@ -32,6 +30,7 @@ function toPlaceCheck(row: PlaceCheckRow): PlaceCheck {
 }
 
 export async function getPlaceChecks(placeId: string): Promise<PlaceCheck[]> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT id, place_id, question_id, question_label, help, created_at
     FROM place_checks
@@ -47,6 +46,7 @@ export async function addPlaceCheck(input: {
   questionLabel: string;
   help: string | null;
 }): Promise<void> {
+  const { sql } = await getAuthedContext();
   await sql`
     INSERT INTO place_checks (place_id, question_id, question_label, help)
     VALUES (${input.placeId}, ${input.questionId}, ${input.questionLabel}, ${input.help})

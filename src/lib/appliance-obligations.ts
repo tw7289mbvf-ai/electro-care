@@ -1,7 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import type { ApplianceObligationRecord } from "@/lib/obligations";
-
-const sql = neon(process.env.DATABASE_URL!);
+import { getAuthedContext } from "@/lib/db";
 
 type ObligationRow = {
   appliance_id: string;
@@ -29,6 +27,7 @@ function toRecord(row: ObligationRow): ApplianceObligationRecord {
 }
 
 export async function getObligationRecordsForPlace(placeId: string): Promise<ApplianceObligationRecord[]> {
+  const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT ao.appliance_id, ao.maintenance_task_id, ao.last_service_date, ao.known_due_date
     FROM appliance_obligations ao
@@ -44,6 +43,7 @@ export async function setApplianceObligation(input: {
   lastServiceDate?: string | null;
   knownDueDate?: string | null;
 }): Promise<void> {
+  const { sql } = await getAuthedContext();
   await sql`
     INSERT INTO appliance_obligations (appliance_id, maintenance_task_id, last_service_date, known_due_date)
     VALUES (${input.applianceId}, ${input.maintenanceTaskId}, ${input.lastServiceDate ?? null}, ${input.knownDueDate ?? null})

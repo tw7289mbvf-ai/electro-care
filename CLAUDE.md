@@ -36,21 +36,51 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 
 ## Production database operations
 
-- The Neon `neondb_owner` password rotates outside of Vercel's env-var history. Vercel's
+- Two roles, two different jobs — never let them cross:
+  - **`authenticated`** is what the running app connects as (`DATABASE_URL` /
+    `DATABASE_URL_UNPOOLED`, in Vercel and in `.env.local`). It owns nothing, does not
+    bypass row-level security, and every query attaches the caller's own session JWT
+    (`src/lib/db.ts`) so RLS actually scopes the row set to their account.
+  - **`neondb_owner`** owns every table and bypasses RLS entirely (`rolbypassrls =
+    true`). It exists for schema migrations and one-off admin queries only — it must
+    never be the app's `DATABASE_URL`, in any environment, ever. If a future cutover
+    (e.g. the EU region move) ever repoints `DATABASE_URL` at a `neondb_owner`
+    connection string, the app silently loses row-level isolation between accounts:
+    every account would see every other account's data. Before flipping `DATABASE_URL`
+    in Vercel, confirm the new value's role is `authenticated`, not `neondb_owner`.
+- Both role passwords rotate outside of Vercel's env-var history. Vercel's
   `DATABASE_URL` / `DATABASE_URL_UNPOOLED` are stored as **Secret** (not Config) on
   purpose — never downgrade them to Config, even to make `vercel env pull` work again.
-- To run `scripts/migrate.mjs` (or any one-off script) against production, fetch the
-  connection string at the moment you need it with `neonctl connection-string main`
-  (pooled and unpooled), export it inline for that single command, and let the shell
-  variable go out of scope. Never run `vercel env pull --environment=production`: it
-  writes the production password to a file on disk.
+- To run `scripts/migrate.mjs` (or any one-off admin script) against production, fetch
+  the `neondb_owner` connection string at the moment you need it with
+  `neonctl connection-string main --role-name neondb_owner` (pooled and unpooled),
+  export it inline for that single command, and let the shell variable go out of scope.
+  Never run `vercel env pull --environment=production`: it writes the production
+  password to a file on disk (and can't pull `authenticated`'s Secret value anyway).
 - Never display a database password (or any connection string containing one) in
   plaintext in any output — mask it (e.g. keep host/user, replace the password segment)
   before printing, or redirect straight to a scratch file the same way.
-- Always test schema/data changes on a disposable Neon branch first (see the
-  `schema_migrations` journal pattern in `scripts/migrate.mjs`), and delete that branch
-  once it's served its purpose — a branch created before a password rotation still
-  answers to the old password after the rotation.
+- Always test schema/data changes on a disposable Neon branch (or, for a structural
+  change like adding RLS to a table, a disposable project) first — see the
+  `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
+  and delete that branch/project once it's served its purpose: one created before a
+  password rotation still answers to the old password after the rotation.
+- `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
+  tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
+  EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
+  `account_id` makes the very next statement (`CREATE POLICY ... USING (account_id =
+  auth.uid())`) fail — safely, inside the transaction, rolled back — but only once you
+  are sure that's what you're pointed at. Never run this script against the old
+  pre-auth production database (`neon-beige-feather` / `curly-base-57056864`,
+  `us-east-1`) expecting it to add the account_id/RLS layer in place: that database's
+  existing rows have no account to attach to, by design (see `docs/spec.md`, "Empty
+  start") — it is being retired, not migrated in place.
+
+## Économie
+
+- Pas de sous-agents en parallèle, pas de `/code-review max`, pas d'ultrareview, sans mon accord explicite.
+- Ne lire que les fichiers nécessaires à la tâche en cours ; pas d'exploration large.
+- Réponses courtes ; pas de long récapitulatif si non demandé.
 
 ## Commands
 

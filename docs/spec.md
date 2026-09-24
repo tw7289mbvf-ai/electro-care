@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 19). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 24). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -12,9 +12,11 @@ Homeowners in France (v1 market: France only) who want to extend the life of the
 
 ## MVP Feature Set (v1)
 
+- Personal account: sign in to see your own places and appliances; a signed-out visitor sees a demo dashboard ([Accounts and Privacy](#accounts-and-privacy))
 - Organize everything by place, then by category ([Places and Categories](#places-and-categories))
 - Onboarding questionnaire at first use and for each new place: plain-language questions create the equipment and its legal obligations ([Onboarding Questionnaire](#onboarding-questionnaire))
 - Add one or several appliances from an invoice (document), a nameplate photo or manual entry (photo and/or text) ([Adding Appliances](#adding-appliances))
+- Tap an appliance to edit or delete it; delete a place with a cascade warning ([Managing Appliances](#managing-appliances))
 - Legal obligations and lifespan maintenance shown as two separate tracks, with the risks of non-compliance ([Obligations and Maintenance](#obligations-and-maintenance))
 - Warranty and documents: one space per appliance for manuals, invoices and warranty forms of new products
 - Automatic maintenance calendar: email reminders based on manufacturer or best-practice intervals
@@ -58,7 +60,7 @@ Three entry points feed one appliance record. None fills it alone, so each is de
 
 Legal obligations and lifespan maintenance are shown as two separate tracks, built on the same data. One appliance can carry both: a boiler's mandatory annual service and its monthly pressure check. In the reference data, 31 of 154 tasks are legal obligations, and 24 of them need a professional.
 
-| | Legal obligations | Maintenance (lifespan) |
+|  | Legal obligations | Maintenance (lifespan) |
 | --- | --- | --- |
 | Stake | Fine, insurance, liability | Savings, longevity |
 | Who | Mostly a professional | Mostly the user |
@@ -67,9 +69,11 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 | Postponing | Always visible | Free |
 | Reminders | One by one, a month before the deadline | Grouped by season |
 
-- **Home screen**: obligations first, with a status per place (up to date, to schedule, overdue), then the season's maintenance checklist.
+- **Home screen**: obligations first, sorted by urgency, then the season's maintenance checklist. A compliance banner sums it up: "2 overdue, 1 to confirm, 4 up to date".
 - **Risks on every obligation**: fine, insurance consequences, liability and physical danger, taken from the reference data.
-- **To confirm**: an obligation that depends on a threshold, such as air conditioning from 4 kW, stays "to confirm" until the nameplate or a single question settles it.
+- **Three colour-coded statuses**, like a vehicle inspection: green (up to date, recent valid proof), orange (to confirm, the app needs an input from the user), red (overdue, no valid proof, action needed). Only green counts as compliant: orange is never "in order", since an insurer won't accept "it was recent".
+- **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?). An annual obligation said to be recent without a date stays orange until the date is given.
+- **Grading the date answer**: a precise month and year is calculated normally (green or red); recent but no exact date is orange, with a reminder to add the date later; longer ago than the legal interval is red; never done or "I don't know" is red, shown as a priority.
 - **Bridge to the paid tier**: most obligations need a professional, so an obligation coming due offers to book a technician.
 
 ## Onboarding Questionnaire
@@ -83,6 +87,26 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 - **Last service date**: asked for every obligation created, as month and year. "I don't know" means "to schedule".
 - **Optional appliance checklist**: common appliances (fridge, washing machine, dishwasher…) seed the maintenance track the same way.
 - **Then improve**: brand, model and purchase date are added later through a photo or an invoice.
+
+## Accounts and Privacy
+
+Each person has an account, and sees only their own places and appliances. This is the foundation everything else depends on.
+
+- **First screen for a signed-out visitor**: log in or create an account at the top; below it, a demonstration dashboard. The demo shows fixed, fictional data only, never anyone's real data, and is read-only. A sample home with a few appliances and two overdue obligations in red lets the visitor grasp in one glance that the app tracks legal obligations and flags what is late.
+- **Sign-in for the MVP**: email and password. Google and Apple sign-in can come later.
+- **Per-account isolation**: places, appliances, documents and their obligations belong to an account and are visible only after signing in.
+- **EU region**: the database is hosted in the European Union, since the app stores personal data (invoices carry names and addresses). This keeps GDPR compliance simple.
+- **Empty start**: accounts begin with no data; the earlier test records are not carried over.
+
+## Managing Appliances
+
+Tapping an appliance opens its card.
+
+- **Edit**: brand, model, purchase date, room, and the fields that resolve an orange status, such as power or a precise date, without going back through the questionnaire.
+- **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
+- **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
+- **Questions name the appliance**: every question and every date request states which appliance it is about ("Gas boiler — does it vent through a flue?"). Dates are entered as numbers, a MM/YYYY picker.
+- **One date for an appliance and its flue**: when an answer creates both, such as a stove and its flue, a single date is asked and applied to both, since they are serviced together.
 
 ## Business Model
 
