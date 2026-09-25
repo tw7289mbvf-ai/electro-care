@@ -58,7 +58,7 @@ export async function setApplianceObligation(input: {
   maintenanceTaskId: string;
   lastServiceDate?: string | null;
   knownDueDate?: string | null;
-  serviceConfidence?: "recent" | "old" | "never" | null;
+  serviceConfidence?: "recent" | "old" | "never" | "compliant" | null;
 }): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`

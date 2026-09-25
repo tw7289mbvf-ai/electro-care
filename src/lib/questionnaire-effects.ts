@@ -4,6 +4,7 @@ import { addPlaceCheck } from "@/lib/place-checks";
 import { setPlacePropertyType } from "@/lib/places";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { getTrackedLegalTasks } from "@/lib/maintenance-tasks";
+import { getDateQuestionForTask } from "@/lib/date-questions";
 import { getTodayInFrance } from "@/lib/obligations";
 import type { PropertyType } from "@/lib/place-types";
 
@@ -18,7 +19,7 @@ export type QuestionnaireStepEffects = {
     // Exactly one of these is set: a precise date, or (last_service_date only,
     // REGLE-01) a graded answer with no exact date.
     date?: string;
-    confidence?: "recent" | "old" | "never";
+    confidence?: "recent" | "old" | "never" | "compliant";
   }[];
   unknownChecks: { questionId: string; questionLabel: string; help: string | null }[];
 };
@@ -39,13 +40,13 @@ export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEf
       equipmentTypeId,
       category: type.category,
     });
-    // Tasks due more often than yearly (e.g. a monthly smoke detector test) aren't
-    // worth asking "when did you last do this" — assume compliance starts today.
-    // Only for a genuinely new appliance: reusing an existing one must not reset its
-    // tracked history.
+    // A task with no date question (kind "none": a monthly test, a check that starts
+    // tracking from day one) is assumed compliant from today. Only for a genuinely new
+    // appliance: reusing an existing one must not reset its tracked history. REGLE-06
+    // can still override this below (dateAnswers is applied after, so it always wins).
     if (created) {
       for (const task of getTrackedLegalTasks(equipmentTypeId)) {
-        if (task.frequency.months < 12) {
+        if (getDateQuestionForTask(task.id)?.kind === "none") {
           await setApplianceObligation({
             applianceId: appliance.id,
             maintenanceTaskId: task.id,

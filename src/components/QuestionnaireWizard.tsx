@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { QUESTIONS, type QuestionnaireAnswer, type QuestionnaireQuestion } from "@/lib/questionnaire";
 import {
-  QUESTIONS,
-  FOLLOW_UP_DATE_TARGETS,
-  type QuestionnaireAnswer,
-  type QuestionnaireQuestion,
-} from "@/lib/questionnaire";
-import { getQuestionnaireApplianceLabel } from "@/lib/questionnaire-appliance-labels";
+  getApplianceLabelForEquipmentType,
+  getCombinedDateQuestion,
+  getDateQuestionForTask,
+  type DateQuestion,
+} from "@/lib/date-questions";
 import { getEquipmentType } from "@/lib/equipment-types";
-import { getTrackedLegalTasks } from "@/lib/maintenance-tasks";
+import { getTrackedLegalTasks, getMaintenanceTask } from "@/lib/maintenance-tasks";
+import { formatFrenchMonthYear, pastYearOptions, wideYearOptions } from "@/lib/french-dates";
+import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { submitQuestionnaireStep, completeQuestionnaire } from "@/app/actions";
 import type { QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
 import { PROPERTY_TYPE_LABELS, type PropertyType } from "@/lib/place-types";
@@ -18,10 +20,12 @@ type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireA
 // REGLE-03: a hearth appliance (poele, insert, chaudiere) created alongside its flue
 // (CH-07) in the same step is asked as one combined date question, not two.
 type PendingDateAsk =
-  | { kind: "single"; equipmentTypeId: string; taskId: string }
-  | { kind: "combined"; applianceTypeId: string; applianceTaskId: string; conduitTypeId: string; conduitTaskId: string };
-// REGLE-01's graded answer to a "date du dernier passage" question.
-type DateGradeResult = { date: string } | { confidence: "recent" | "old" | "never" };
+  | { kind: "single"; taskId: string; equipmentTypeId: string; dq: DateQuestion }
+  | { kind: "combined"; taskIds: [string, string]; dq: DateQuestion };
+// A date question's answer: a precise date (last_service_date), a fixed due date
+// (known_due_date — an expiry, or a vehicle's registration + threshold), or (REGLE-01)
+// a graded answer with no exact date.
+type DateAnswerResult = { date: string } | { dueDate: string } | { confidence: "recent" | "old" | "never" | "compliant" };
 
 // Nothing is written to the database until the final recap confirmation (see spec's
 // "Back button and recap"). Each fully-answered question becomes one entry here; "Précédent"
@@ -33,8 +37,15 @@ type AnsweredStep = {
   effects: QuestionnaireStepEffects;
 };
 
-const HEARTH_TYPE_IDS = new Set(["CH-01", "CH-02", "CH-03", "CH-04", "CH-05"]);
 const Q01 = QUESTIONS.find((q) => q.id === "Q01")!;
+
+// The "jamais, elle/il a moins de N ans" branch (vehicle_inspection): wording and
+// threshold are seed-authored (seed/date_questions.json's note field), copied here
+// since the seed has no structured field for either.
+const VEHICLE_YOUNG_OPTION: Record<string, { label: string; years: number }> = {
+  "T-152": { label: "Jamais, elle a moins de 4 ans", years: 4 },
+  "T-153": { label: "Jamais, il a moins de 5 ans", years: 5 },
+};
 
 function isSkipped(
   question: QuestionnaireQuestion,
@@ -74,22 +85,34 @@ function resolveResidenceText(text: string, propertyType: PropertyType | null): 
 }
 
 function applianceLabel(equipmentTypeId: string): string {
-  return getQuestionnaireApplianceLabel(equipmentTypeId) ?? getEquipmentType(equipmentTypeId)?.label ?? equipmentTypeId;
+  return getApplianceLabelForEquipmentType(equipmentTypeId) ?? getEquipmentType(equipmentTypeId)?.label ?? equipmentTypeId;
 }
 
-function formatMonth(isoDate: string): string {
-  const [year, month] = isoDate.split("-");
-  return `${month}/${year}`;
+function toDateAnswer(
+  equipmentTypeId: string,
+  taskId: string,
+  result: DateAnswerResult
+): QuestionnaireStepEffects["dateAnswers"][number] {
+  if ("date" in result) return { equipmentTypeId, taskId, field: "last_service_date", date: result.date };
+  if ("dueDate" in result) return { equipmentTypeId, taskId, field: "known_due_date", date: result.dueDate };
+  return { equipmentTypeId, taskId, field: "last_service_date", confidence: result.confidence };
 }
 
 function describeDateAnswer(d: QuestionnaireStepEffects["dateAnswers"][number]): string {
   if (d.field === "known_due_date") {
-    return d.date ? `date de péremption : ${formatMonth(d.date)}` : "date de péremption inconnue";
+    return d.date ? `échéance : ${formatFrenchMonthYear(d.date)}` : "échéance inconnue";
   }
-  if (d.date) return `dernier passage : ${formatMonth(d.date)}`;
-  if (d.confidence === "recent") return "fait récemment — date à confirmer";
-  if (d.confidence === "old") return "fait, il y a plus longtemps que le délai";
+  if (d.date) return `dernier passage : ${formatFrenchMonthYear(d.date)}`;
+  const kind = getDateQuestionForTask(d.taskId)?.kind;
+  if (d.confidence === "compliant") return "conforme";
+  if (d.confidence === "old") return kind === "yes_no" ? "non déclaré" : "fait, il y a plus longtemps que le délai";
+  if (d.confidence === "recent") return kind === "yes_no" ? "à confirmer" : "date à préciser plus tard";
   return "jamais fait ou inconnu";
+}
+
+function addYearsIso(isoDate: string, years: number): string {
+  const [y, m, d] = isoDate.split("-");
+  return `${Number(y) + years}-${m}-${d}`;
 }
 
 const CARD_CLASS =
@@ -101,8 +124,7 @@ const BUTTON_CLASS =
 const GHOST_BUTTON_CLASS =
   "rounded-lg border border-zinc-300 px-4 py-2.5 font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
 const DISCREET_LINK_CLASS = "self-start text-xs text-zinc-400 hover:underline dark:text-zinc-500";
-const BACK_LINK_CLASS =
-  "self-start text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400";
+const BACK_LINK_CLASS = "self-start text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400";
 
 function BackLink({ onClick }: { onClick: () => void }) {
   return (
@@ -147,9 +169,6 @@ export function QuestionnaireWizard({
   const [selected, setSelected] = useState<string[]>([]);
   const [pendingFollowUps, setPendingFollowUps] = useState<PendingFollowUp[]>([]);
   const [pendingDateAsks, setPendingDateAsks] = useState<PendingDateAsk[]>([]);
-  // Equipment types whose date was already asked as a follow-up (REGLE-01, answered or
-  // skipped) in this step: the generic date-ask pass must not ask again for them.
-  const [dateAskedViaFollowUp, setDateAskedViaFollowUp] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState(false);
 
   // Accumulated across the main question and any follow-ups it triggers, folded into
@@ -161,9 +180,9 @@ export function QuestionnaireWizard({
     return new Set([...existingEquipmentTypeIds, ...atHistory.flatMap((s) => s.effects.createEquipmentTypeIds)]);
   }
 
-  // "automatic" questions (the mandatory smoke detector) have nothing to ask: the
-  // single answer always applies, submitted as soon as this question is reached. Every
-  // hook must run unconditionally, so this sits above the early returns below.
+  // "automatic" questions have nothing to ask: the single answer always applies,
+  // submitted as soon as this question is reached. Every hook must run
+  // unconditionally, so this sits above the early returns below.
   useEffect(() => {
     if (currentQuestion?.answerType === "automatic" && pendingFollowUps.length === 0 && pendingDateAsks.length === 0) {
       handleMainSubmit([currentQuestion.answers[0].label]);
@@ -174,7 +193,6 @@ export function QuestionnaireWizard({
   function resetStepState() {
     setPendingFollowUps([]);
     setPendingDateAsks([]);
-    setDateAskedViaFollowUp(new Set());
     setStepEffects(emptyStepEffects(placeId));
     setStepAnswerLabels([]);
   }
@@ -235,45 +253,44 @@ export function QuestionnaireWizard({
     resetStepState();
   }
 
-  function computeDateAsks(equipmentTypeIds: string[], alreadyTargeted: Set<string>): PendingDateAsk[] {
+  // REGLE-03: two pending tasks with a combo entry in date_questions.json are asked as
+  // one combined question. REGLE-06: a task already fixed by initial_status
+  // (excludeTaskIds) isn't asked at all. A task whose kind is "none" needs no question
+  // either (its obligation defaults to compliant at creation — see questionnaire-effects.ts).
+  function computeDateAsks(equipmentTypeIds: string[], excludeTaskIds: Set<string>): PendingDateAsk[] {
     const inPlace = placeEquipmentTypeIds();
-    const raw: { equipmentTypeId: string; taskId: string }[] = [];
+    const pending: { taskId: string; equipmentTypeId: string }[] = [];
     for (const typeId of equipmentTypeIds) {
-      if (inPlace.has(typeId) || alreadyTargeted.has(typeId)) continue;
+      if (inPlace.has(typeId)) continue;
       for (const task of getTrackedLegalTasks(typeId)) {
-        if (task.frequency.months >= 12) {
-          raw.push({ equipmentTypeId: typeId, taskId: task.id });
-        }
+        if (excludeTaskIds.has(task.id)) continue;
+        const dq = getDateQuestionForTask(task.id);
+        if (!dq || dq.kind === "none") continue;
+        pending.push({ taskId: task.id, equipmentTypeId: typeId });
       }
     }
-    const hearth = raw.filter((a) => HEARTH_TYPE_IDS.has(a.equipmentTypeId));
-    const conduit = raw.filter((a) => a.equipmentTypeId === "CH-07");
-    if (hearth.length === 1 && conduit.length === 1) {
-      const combined: PendingDateAsk = {
-        kind: "combined",
-        applianceTypeId: hearth[0].equipmentTypeId,
-        applianceTaskId: hearth[0].taskId,
-        conduitTypeId: conduit[0].equipmentTypeId,
-        conduitTaskId: conduit[0].taskId,
-      };
-      const others = raw
-        .filter((a) => a !== hearth[0] && a !== conduit[0])
-        .map((a) => ({ kind: "single" as const, ...a }));
-      return [combined, ...others];
+    const asks: PendingDateAsk[] = [];
+    const consumed = new Set<string>();
+    for (const p of pending) {
+      if (consumed.has(p.taskId)) continue;
+      const partner = pending.find(
+        (o) => !consumed.has(o.taskId) && o.taskId !== p.taskId && getCombinedDateQuestion(p.taskId, o.taskId)
+      );
+      if (partner) {
+        consumed.add(p.taskId);
+        consumed.add(partner.taskId);
+        asks.push({ kind: "combined", taskIds: [p.taskId, partner.taskId], dq: getCombinedDateQuestion(p.taskId, partner.taskId)! });
+      } else {
+        consumed.add(p.taskId);
+        asks.push({ kind: "single", taskId: p.taskId, equipmentTypeId: p.equipmentTypeId, dq: getDateQuestionForTask(p.taskId)! });
+      }
     }
-    return raw.map((a) => ({ kind: "single" as const, ...a }));
+    return asks;
   }
 
-  function proceedAfterFollowUps(
-    effects: QuestionnaireStepEffects,
-    answerLabels: string[],
-    askedViaFollowUp: Set<string> = dateAskedViaFollowUp
-  ) {
-    const alreadyTargeted = new Set([
-      ...effects.dateAnswers.map((d) => d.equipmentTypeId),
-      ...askedViaFollowUp,
-    ]);
-    const asks = computeDateAsks(effects.createEquipmentTypeIds, alreadyTargeted);
+  function proceedAfterFollowUps(effects: QuestionnaireStepEffects, answerLabels: string[]) {
+    const excludeTaskIds = new Set(effects.dateAnswers.map((d) => d.taskId));
+    const asks = computeDateAsks(effects.createEquipmentTypeIds, excludeTaskIds);
     if (asks.length > 0) {
       setStepEffects(effects);
       setStepAnswerLabels(answerLabels);
@@ -298,6 +315,15 @@ export function QuestionnaireWizard({
       const sets = chosenAnswers[0]?.sets;
       if (sets) effects.setPropertyType = sets.property_type as QuestionnaireStepEffects["setPropertyType"];
     }
+    // REGLE-06: a "Statut initial" fixes the confidence directly; its date question is
+    // never asked (proceedAfterFollowUps excludes it via effects.dateAnswers below).
+    for (const answer of chosenAnswers) {
+      for (const [taskId, confidence] of Object.entries(answer.initialStatus ?? {})) {
+        const equipmentTypeId = getMaintenanceTask(taskId)?.equipmentTypeId;
+        if (!equipmentTypeId) continue;
+        effects.dateAnswers.push({ equipmentTypeId, taskId, field: "last_service_date", confidence });
+      }
+    }
     const followUps = chosenAnswers
       .filter((a) => a.followUp)
       .map((a) => ({ question, answer: a }));
@@ -310,13 +336,13 @@ export function QuestionnaireWizard({
     }
   }
 
-  function advanceFollowUp(effects: QuestionnaireStepEffects, updatedAsked: Set<string>) {
+  function advanceFollowUp(effects: QuestionnaireStepEffects) {
     const remaining = pendingFollowUps.slice(1);
     setPendingFollowUps(remaining);
     if (remaining.length > 0) {
       setStepEffects(effects);
     } else {
-      proceedAfterFollowUps(effects, stepAnswerLabels, updatedAsked);
+      proceedAfterFollowUps(effects, stepAnswerLabels);
     }
   }
 
@@ -332,50 +358,20 @@ export function QuestionnaireWizard({
         { questionId: question.id, questionLabel: followUp.question, help: null },
       ];
     }
-    advanceFollowUp(effects, dateAskedViaFollowUp);
+    advanceFollowUp(effects);
   }
 
-  // REGLE-01: the "date du dernier passage" follow-ups (SPANC, controle technique).
-  function handleFollowUpServiceDate(result: DateGradeResult) {
-    const { question, answer } = pendingFollowUps[0];
-    const target = FOLLOW_UP_DATE_TARGETS[`${question.id}|${answer.label}`]!;
-    const effects = {
-      ...stepEffects,
-      dateAnswers: [
-        ...stepEffects.dateAnswers,
-        { equipmentTypeId: target.equipmentTypeId, taskId: target.taskId, field: "last_service_date" as const, ...result },
-      ],
-    };
-    const updated = new Set([...dateAskedViaFollowUp, target.equipmentTypeId]);
-    setDateAskedViaFollowUp(updated);
-    advanceFollowUp(effects, updated);
-  }
-
-  // A future date (e.g. the gas hose's printed expiry), not a REGLE-01 last-service date.
-  function handleFollowUpFutureDate(value: string | null) {
-    const { question, answer } = pendingFollowUps[0];
-    const target = FOLLOW_UP_DATE_TARGETS[`${question.id}|${answer.label}`]!;
-    const effects = { ...stepEffects };
-    if (value) {
-      effects.dateAnswers = [
-        ...effects.dateAnswers,
-        { equipmentTypeId: target.equipmentTypeId, taskId: target.taskId, field: target.field, date: value },
-      ];
-    }
-    const updated = new Set([...dateAskedViaFollowUp, target.equipmentTypeId]);
-    setDateAskedViaFollowUp(updated);
-    advanceFollowUp(effects, updated);
-  }
-
-  function handleDateAskAnswer(result: DateGradeResult) {
+  function handleDateAskAnswer(result: DateAnswerResult) {
     const ask = pendingDateAsks[0];
     const dateAnswers = [...stepEffects.dateAnswers];
     if (ask.kind === "single") {
-      dateAnswers.push({ equipmentTypeId: ask.equipmentTypeId, taskId: ask.taskId, field: "last_service_date", ...result });
+      dateAnswers.push(toDateAnswer(ask.equipmentTypeId, ask.taskId, result));
     } else {
       // REGLE-03: same passage services both, unless "faits separement ?" was used.
-      dateAnswers.push({ equipmentTypeId: ask.applianceTypeId, taskId: ask.applianceTaskId, field: "last_service_date", ...result });
-      dateAnswers.push({ equipmentTypeId: ask.conduitTypeId, taskId: ask.conduitTaskId, field: "last_service_date", ...result });
+      for (const taskId of ask.taskIds) {
+        const equipmentTypeId = getMaintenanceTask(taskId)!.equipmentTypeId;
+        dateAnswers.push(toDateAnswer(equipmentTypeId, taskId, result));
+      }
     }
     const effects = { ...stepEffects, dateAnswers };
     const remaining = pendingDateAsks.slice(1);
@@ -390,56 +386,63 @@ export function QuestionnaireWizard({
   function handleDateAskSeparate() {
     const ask = pendingDateAsks[0];
     if (ask.kind !== "combined") return;
-    setPendingDateAsks([
-      { kind: "single", equipmentTypeId: ask.applianceTypeId, taskId: ask.applianceTaskId },
-      { kind: "single", equipmentTypeId: ask.conduitTypeId, taskId: ask.conduitTaskId },
-      ...pendingDateAsks.slice(1),
-    ]);
+    const singles: PendingDateAsk[] = ask.taskIds.map((taskId) => ({
+      kind: "single",
+      taskId,
+      equipmentTypeId: getMaintenanceTask(taskId)!.equipmentTypeId,
+      dq: getDateQuestionForTask(taskId)!,
+    }));
+    setPendingDateAsks([...singles, ...pendingDateAsks.slice(1)]);
   }
 
   if (pendingDateAsks.length > 0) {
     const ask = pendingDateAsks[0];
     if (ask.kind === "combined") {
       return (
-        <ServiceDateGradeCard
-          title={`${applianceLabel(ask.applianceTypeId)} et son conduit de fumée : date du dernier entretien et ramonage ?`}
+        <GradedMonthCard
+          dq={ask.dq}
           onAnswer={handleDateAskAnswer}
           onBack={handleBack}
           extraLink={{ label: "Faits séparément ?", onClick: handleDateAskSeparate }}
         />
       );
     }
-    return (
-      <ServiceDateGradeCard
-        title={`${applianceLabel(ask.equipmentTypeId)} : date du dernier passage (entretien, ramonage, contrôle ou vidange) ?`}
-        onAnswer={handleDateAskAnswer}
-        onBack={handleBack}
-      />
-    );
-  }
-
-  if (pendingFollowUps.length > 0) {
-    const { question, answer } = pendingFollowUps[0];
-    const target = FOLLOW_UP_DATE_TARGETS[`${question.id}|${answer.label}`];
-    const subjectTypeId = target?.equipmentTypeId ?? answer.creates[0];
-    const subjectLabel = getQuestionnaireApplianceLabel(subjectTypeId);
-    const questionText = answer.followUp!.question;
-    const title = subjectLabel ? `${subjectLabel} : ${questionText}` : questionText;
-
-    if (target) {
-      if (target.field === "known_due_date") {
+    switch (ask.dq.kind) {
+      case "expiry_date":
         return (
-          <DateAskCard
-            title={title}
-            dateType="date"
-            future
-            onAnswer={handleFollowUpFutureDate}
+          <SimpleDateOrUnknownCard
+            title={ask.dq.question!}
+            resultKind="dueDate"
+            unknownLabel="Je ne trouve pas la date"
+            futureYears
+            onAnswer={handleDateAskAnswer}
             onBack={handleBack}
           />
         );
-      }
-      return <ServiceDateGradeCard title={title} onAnswer={handleFollowUpServiceDate} onBack={handleBack} />;
+      case "manufacture_date":
+        return (
+          <SimpleDateOrUnknownCard
+            title={ask.dq.question!}
+            resultKind="date"
+            unknownLabel="Je ne la trouve pas"
+            onAnswer={handleDateAskAnswer}
+            onBack={handleBack}
+          />
+        );
+      case "vehicle_inspection":
+        return <VehicleInspectionCard dq={ask.dq} taskId={ask.taskId} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
+      case "yes_no":
+        return <YesNoStatusCard title={ask.dq.question!} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
+      default:
+        return <GradedMonthCard dq={ask.dq} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
     }
+  }
+
+  if (pendingFollowUps.length > 0) {
+    const { answer } = pendingFollowUps[0];
+    const subjectLabel = getApplianceLabelForEquipmentType(answer.creates[0]);
+    const questionText = answer.followUp!.question;
+    const title = subjectLabel ? `${subjectLabel} : ${questionText}` : questionText;
     return <YesNoCard question={title} onAnswer={handleFollowUpYesNo} onBack={handleBack} />;
   }
 
@@ -533,101 +536,207 @@ function YesNoCard({
   );
 }
 
-function DateAskCard({
+// yes_no kind (e.g. T-137, le puits declare en mairie): Oui -> conforme (vert), Non ->
+// en retard (rouge), Je ne sais pas -> a confirmer (orange).
+function YesNoStatusCard({
   title,
-  dateType = "month",
-  future = false,
   onAnswer,
   onBack,
 }: {
   title: string;
-  dateType?: "month" | "date";
-  future?: boolean;
-  onAnswer: (value: string | null) => void;
+  onAnswer: (result: DateAnswerResult) => void;
   onBack: () => void;
 }) {
-  const [value, setValue] = useState("");
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
       <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
-      <input
-        type={dateType}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        max={future ? undefined : new Date().toISOString().slice(0, dateType === "month" ? 7 : 10)}
-        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-      />
       <div className="flex flex-wrap gap-2">
-        <button
-          className={BUTTON_CLASS}
-          disabled={!value}
-          onClick={() => onAnswer(dateType === "month" ? `${value}-01` : value)}
-        >
-          Valider
+        <button className={BUTTON_CLASS} onClick={() => onAnswer({ confidence: "compliant" })}>
+          Oui
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
+          Non
         </button>
       </div>
-      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer(null)}>
+      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
         Je ne sais pas
       </button>
     </div>
   );
 }
 
-// REGLE-01: date precise -> calcul normal ; fait recemment sans date exacte -> a
-// confirmer (orange) ; plus ancien que le delai legal -> en retard (rouge) ; jamais
-// realise ou je ne sais pas -> en retard (rouge), prioritaire. Dates saisies en
-// chiffres (MM/AAAA).
-function ServiceDateGradeCard({
-  title,
+// REGLE-01: date precise -> calcul normal ; « Il y a moins de {delai} », sans date
+// exacte -> a confirmer (orange) ; « Il y a plus de {delai} » -> en retard (rouge) ;
+// « Jamais » ou « Je ne sais pas » -> en retard, prioritaire.
+function GradedMonthCard({
+  dq,
   onAnswer,
   onBack,
   extraLink,
 }: {
-  title: string;
-  onAnswer: (result: DateGradeResult) => void;
+  dq: DateQuestion;
+  onAnswer: (result: DateAnswerResult) => void;
   onBack: () => void;
   extraLink?: { label: string; onClick: () => void };
 }) {
-  const [value, setValue] = useState("");
-  const today = new Date().toISOString().slice(0, 7);
+  const [value, setValue] = useState({ month: "", year: "" });
+  const iso = monthYearToIso(value);
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
+      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
 
       <div className="flex flex-wrap items-center gap-2">
-        <input
-          type="month"
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          max={today}
-          placeholder="MM/AAAA"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
-        />
-        <button className={BUTTON_CLASS} disabled={!value} onClick={() => onAnswer({ date: `${value}-01` })}>
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} />
+        <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
           Valider
         </button>
       </div>
 
       <div className="flex flex-wrap gap-2">
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
-          Fait récemment, date exacte inconnue
+          Il y a moins de {dq.intervalLabel}
         </button>
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
-          Fait, mais il y a plus longtemps que le délai
+          Il y a plus de {dq.intervalLabel}
         </button>
       </div>
 
       <div className="flex flex-wrap items-center gap-4">
         <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
-          Jamais fait ou je ne sais pas
+          Jamais
+        </button>
+        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
+          Je ne sais pas
         </button>
         {extraLink && (
           <button className={DISCREET_LINK_CLASS} onClick={extraLink.onClick}>
             {extraLink.label}
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+// expiry_date (T-060, le tuyau de gaz) : la date donnee devient l'echeance.
+// manufacture_date (T-083, le detecteur) : l'echeance = date + intervalLabel, calculee
+// comme un passage normal (meme mecanisme que graded_month).
+function SimpleDateOrUnknownCard({
+  title,
+  resultKind,
+  unknownLabel,
+  futureYears = false,
+  onAnswer,
+  onBack,
+}: {
+  title: string;
+  resultKind: "date" | "dueDate";
+  unknownLabel: string;
+  futureYears?: boolean;
+  onAnswer: (result: DateAnswerResult) => void;
+  onBack: () => void;
+}) {
+  const [value, setValue] = useState({ month: "", year: "" });
+  const iso = monthYearToIso(value);
+  return (
+    <div className={CARD_CLASS}>
+      <BackLink onClick={onBack} />
+      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
+      <div className="flex flex-wrap items-center gap-2">
+        <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} />
+        <button
+          className={BUTTON_CLASS}
+          disabled={!iso}
+          onClick={() => onAnswer(resultKind === "dueDate" ? { dueDate: iso! } : { date: iso! })}
+        >
+          Valider
+        </button>
+      </div>
+      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+        {unknownLabel}
+      </button>
+    </div>
+  );
+}
+
+// vehicle_inspection (T-152, T-153) : comme graded_month, plus une option « Jamais,
+// elle/il a moins de N ans » qui demande la date de premiere immatriculation ; echeance
+// = cette date + N ans.
+function VehicleInspectionCard({
+  dq,
+  taskId,
+  onAnswer,
+  onBack,
+}: {
+  dq: DateQuestion;
+  taskId: string;
+  onAnswer: (result: DateAnswerResult) => void;
+  onBack: () => void;
+}) {
+  const [value, setValue] = useState({ month: "", year: "" });
+  const [showYoung, setShowYoung] = useState(false);
+  const [regValue, setRegValue] = useState({ month: "", year: "" });
+  const young = VEHICLE_YOUNG_OPTION[taskId];
+  const iso = monthYearToIso(value);
+  const regIso = monthYearToIso(regValue);
+
+  if (showYoung) {
+    return (
+      <div className={CARD_CLASS}>
+        <BackLink onClick={() => setShowYoung(false)} />
+        <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Date de première immatriculation ?</h2>
+        <div className="flex flex-wrap items-center gap-2">
+          <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} />
+          <button
+            className={BUTTON_CLASS}
+            disabled={!regIso}
+            onClick={() => onAnswer({ dueDate: addYearsIso(regIso!, young.years) })}
+          >
+            Valider
+          </button>
+        </div>
+        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+          Je ne sais pas
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className={CARD_CLASS}>
+      <BackLink onClick={onBack} />
+      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} />
+        <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
+          Valider
+        </button>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+          Il y a moins de {dq.intervalLabel}
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
+          Il y a plus de {dq.intervalLabel}
+        </button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4">
+        {young && (
+          <button className={DISCREET_LINK_CLASS} onClick={() => setShowYoung(true)}>
+            {young.label}
+          </button>
+        )}
+        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
+          Jamais
+        </button>
+        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
+          Je ne sais pas
+        </button>
       </div>
     </div>
   );
@@ -658,23 +767,29 @@ function RecapCard({
         text: `Type de logement : ${PROPERTY_TYPE_LABELS[step.effects.setPropertyType]}`,
       });
     }
-    const dateByType = new Map(step.effects.dateAnswers.map((d) => [d.equipmentTypeId, d]));
+    const dateAnswersByType = new Map<string, QuestionnaireStepEffects["dateAnswers"]>();
+    for (const d of step.effects.dateAnswers) {
+      dateAnswersByType.set(d.equipmentTypeId, [...(dateAnswersByType.get(d.equipmentTypeId) ?? []), d]);
+    }
+    const coveredTypes = new Set<string>();
     for (const typeId of step.effects.createEquipmentTypeIds) {
-      const dateAnswer = dateByType.get(typeId);
+      if (coveredTypes.has(typeId)) continue;
+      coveredTypes.add(typeId);
+      const dAnswers = dateAnswersByType.get(typeId) ?? [];
       lines.push({
         key: `${stepIndex}-${typeId}`,
         stepIndex,
         text: applianceLabel(typeId),
-        sub: dateAnswer ? describeDateAnswer(dateAnswer) : undefined,
+        sub: dAnswers.length > 0 ? dAnswers.map(describeDateAnswer).join(" · ") : undefined,
       });
     }
-    for (const d of step.effects.dateAnswers) {
-      if (step.effects.createEquipmentTypeIds.includes(d.equipmentTypeId)) continue;
+    for (const [typeId, dAnswers] of dateAnswersByType) {
+      if (coveredTypes.has(typeId)) continue;
       lines.push({
-        key: `${stepIndex}-date-${d.equipmentTypeId}-${d.taskId}`,
+        key: `${stepIndex}-date-${typeId}`,
         stepIndex,
-        text: applianceLabel(d.equipmentTypeId),
-        sub: describeDateAnswer(d),
+        text: applianceLabel(typeId),
+        sub: dAnswers.map(describeDateAnswer).join(" · "),
       });
     }
     for (const check of step.effects.unknownChecks) {

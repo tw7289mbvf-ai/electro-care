@@ -1,0 +1,403 @@
+[
+  {
+    "key": "T-001",
+    "tasks": [
+      "T-001"
+    ],
+    "appliance": "Chaudière au gaz",
+    "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-004",
+    "tasks": [
+      "T-004"
+    ],
+    "appliance": "Chaudière au fioul",
+    "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-006",
+    "tasks": [
+      "T-006"
+    ],
+    "appliance": "Chaudière bois ou granulés",
+    "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-010",
+    "tasks": [
+      "T-010"
+    ],
+    "appliance": "Poêle à granulés",
+    "question": "Quand le poêle à granulés a-t-il été entretenu pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-013",
+    "tasks": [
+      "T-013"
+    ],
+    "appliance": "Poêle ou insert à bois",
+    "question": "Quand le poêle ou l'insert a-t-il été entretenu pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-014",
+    "tasks": [
+      "T-014"
+    ],
+    "appliance": "Conduit de fumée",
+    "question": "Quand le conduit de fumée a-t-il été ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Posée seule quand l'appareil et le conduit ont été faits à des dates différentes."
+  },
+  {
+    "key": "T-016",
+    "tasks": [
+      "T-016"
+    ],
+    "appliance": "Cheminée à foyer ouvert",
+    "question": "Quand la cheminée a-t-elle été ramonée pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-001+T-014",
+    "tasks": [
+      "T-001",
+      "T-014"
+    ],
+    "appliance": "Chaudière au gaz et son conduit",
+    "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+  },
+  {
+    "key": "T-004+T-014",
+    "tasks": [
+      "T-004",
+      "T-014"
+    ],
+    "appliance": "Chaudière au fioul et son conduit",
+    "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+  },
+  {
+    "key": "T-006+T-014",
+    "tasks": [
+      "T-006",
+      "T-014"
+    ],
+    "appliance": "Chaudière bois ou granulés et son conduit",
+    "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+  },
+  {
+    "key": "T-010+T-014",
+    "tasks": [
+      "T-010",
+      "T-014"
+    ],
+    "appliance": "Poêle à granulés et son conduit",
+    "question": "Quand le poêle à granulés a-t-il été entretenu et son conduit ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+  },
+  {
+    "key": "T-013+T-014",
+    "tasks": [
+      "T-013",
+      "T-014"
+    ],
+    "appliance": "Poêle ou insert à bois et son conduit",
+    "question": "Quand le poêle ou l'insert a-t-il été entretenu et son conduit ramoné pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+  },
+  {
+    "key": "T-017",
+    "tasks": [
+      "T-017"
+    ],
+    "appliance": "Pompe à chaleur air/eau",
+    "question": "Quand la pompe à chaleur a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-021",
+    "tasks": [
+      "T-021"
+    ],
+    "appliance": "Pompe à chaleur air/air",
+    "question": "Quand la pompe à chaleur a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-122",
+    "tasks": [
+      "T-122"
+    ],
+    "appliance": "Pompe à chaleur géothermique",
+    "question": "Quand la pompe à chaleur géothermique a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-030",
+    "tasks": [
+      "T-030"
+    ],
+    "appliance": "Chauffe-eau thermodynamique",
+    "question": "Quand le chauffe-eau thermodynamique a-t-il été entretenu pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-126",
+    "tasks": [
+      "T-126"
+    ],
+    "appliance": "Chauffe-eau au gaz",
+    "question": "Quand le chauffe-eau au gaz a-t-il été entretenu pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-118",
+    "tasks": [
+      "T-118"
+    ],
+    "appliance": "Climatisation",
+    "question": "Quand la climatisation a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-147",
+    "tasks": [
+      "T-147"
+    ],
+    "appliance": "Pompe à chaleur de piscine",
+    "question": "Quand la pompe à chaleur de la piscine a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "2 ans",
+    "note": null
+  },
+  {
+    "key": "T-121",
+    "tasks": [
+      "T-121"
+    ],
+    "appliance": "Circuit de climatisation",
+    "question": "Quand l'étanchéité du circuit de climatisation a-t-elle été contrôlée pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-124",
+    "tasks": [
+      "T-124"
+    ],
+    "appliance": "Citerne de propane",
+    "question": "Quand votre fournisseur de gaz a-t-il contrôlé la citerne pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "5 ans",
+    "note": "Selon le contrat du fournisseur."
+  },
+  {
+    "key": "T-071",
+    "tasks": [
+      "T-071"
+    ],
+    "appliance": "Fosse septique",
+    "question": "Quand la fosse a-t-elle été vidangée pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "4 ans",
+    "note": "Délai indicatif : la vidange dépend du niveau de boues."
+  },
+  {
+    "key": "T-072",
+    "tasks": [
+      "T-072"
+    ],
+    "appliance": "Fosse septique",
+    "question": "Quand le SPANC est-il venu contrôler l'installation pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "10 ans",
+    "note": "La commune peut fixer un délai plus court."
+  },
+  {
+    "key": "T-075",
+    "tasks": [
+      "T-075"
+    ],
+    "appliance": "Micro-station",
+    "question": "Quand la micro-station a-t-elle été entretenue pour la dernière fois ?",
+    "kind": "graded_month",
+    "interval_label": "un an",
+    "note": null
+  },
+  {
+    "key": "T-087",
+    "tasks": [
+      "T-087"
+    ],
+    "appliance": "Ascenseur",
+    "question": "Quand l'ascenseur a-t-il passé son dernier contrôle technique ?",
+    "kind": "graded_month",
+    "interval_label": "5 ans",
+    "note": null
+  },
+  {
+    "key": "T-142",
+    "tasks": [
+      "T-142"
+    ],
+    "appliance": "Installation de gaz",
+    "question": "Quand le diagnostic de l'installation de gaz a-t-il été réalisé ?",
+    "kind": "graded_month",
+    "interval_label": "3 ans",
+    "note": "Exigé à la vente (valable 3 ans) ou à la mise en location (6 ans)."
+  },
+  {
+    "key": "T-060",
+    "tasks": [
+      "T-060"
+    ],
+    "appliance": "Tuyau de gaz",
+    "question": "Quelle date de péremption est imprimée sur le tuyau de gaz de la cuisinière ?",
+    "kind": "expiry_date",
+    "interval_label": null,
+    "note": "Mois et année, ou « Je ne trouve pas la date » (à confirmer). La date donnée devient l'échéance."
+  },
+  {
+    "key": "T-083",
+    "tasks": [
+      "T-083"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": "Quelle date est imprimée au dos du détecteur ?",
+    "kind": "manufacture_date",
+    "interval_label": "10 ans",
+    "note": "Explication affichée : un détecteur se remplace 10 ans après sa fabrication. Mois et année, ou « Je ne la trouve pas » (à confirmer). Échéance = date + 10 ans."
+  },
+  {
+    "key": "T-152",
+    "tasks": [
+      "T-152"
+    ],
+    "appliance": "Voiture",
+    "question": "Quand la voiture a-t-elle passé son dernier contrôle technique ?",
+    "kind": "vehicle_inspection",
+    "interval_label": "2 ans",
+    "note": "Option en plus : « Jamais, elle a moins de 4 ans ». On demande alors la date de première immatriculation ; échéance = cette date + 4 ans."
+  },
+  {
+    "key": "T-153",
+    "tasks": [
+      "T-153"
+    ],
+    "appliance": "Moto, scooter ou quadricycle",
+    "question": "Quand le véhicule a-t-il passé son dernier contrôle technique ?",
+    "kind": "vehicle_inspection",
+    "interval_label": "3 ans",
+    "note": "Option en plus : « Jamais, il a moins de 5 ans ». Échéance = date de première immatriculation + 5 ans."
+  },
+  {
+    "key": "T-137",
+    "tasks": [
+      "T-137"
+    ],
+    "appliance": "Puits ou forage",
+    "question": "Le puits est-il déclaré en mairie ?",
+    "kind": "yes_no",
+    "interval_label": null,
+    "note": "Oui → à jour ; Non → en retard (à déclarer) ; Je ne sais pas → à confirmer."
+  },
+  {
+    "key": "T-082",
+    "tasks": [
+      "T-082"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": null,
+    "kind": "none",
+    "interval_label": null,
+    "note": "Test mensuel : démarre à la création."
+  },
+  {
+    "key": "T-086",
+    "tasks": [
+      "T-086"
+    ],
+    "appliance": "Ascenseur",
+    "question": null,
+    "kind": "none",
+    "interval_label": null,
+    "note": "Visite toutes les 6 semaines : démarre à la création."
+  },
+  {
+    "key": "T-093",
+    "tasks": [
+      "T-093"
+    ],
+    "appliance": "Piscine",
+    "question": null,
+    "kind": "none",
+    "interval_label": null,
+    "note": "Contrôle mensuel du dispositif : démarre à la création, sauf statut initial fixé par le questionnaire."
+  },
+  {
+    "key": "T-100",
+    "tasks": [
+      "T-100"
+    ],
+    "appliance": "Alarme de piscine",
+    "question": null,
+    "kind": "none",
+    "interval_label": null,
+    "note": "Test mensuel : démarre à la création."
+  },
+  {
+    "key": "T-015",
+    "tasks": [
+      "T-015"
+    ],
+    "appliance": "Conduit de fumée",
+    "question": null,
+    "kind": "not_generated",
+    "interval_label": null,
+    "note": "Second ramonage : seulement au-delà de 6 m³ de bois ou 2,5 t de granulés par an."
+  }
+]

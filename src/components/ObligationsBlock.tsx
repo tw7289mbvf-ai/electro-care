@@ -9,6 +9,7 @@ import {
 } from "@/lib/obligations";
 import type { PlaceCheck } from "@/lib/place-checks";
 import { MarkDoneButton } from "@/components/MarkDoneButton";
+import { formatFrenchMonthYear } from "@/lib/french-dates";
 
 const STATUS_STYLES: Record<ObligationStatus, string> = {
   up_to_date: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
@@ -16,11 +17,6 @@ const STATUS_STYLES: Record<ObligationStatus, string> = {
   overdue: "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300",
   to_confirm: "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
 };
-
-function formatDate(isoDate: string): string {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString("fr-FR", { year: "numeric", month: "short", day: "numeric" });
-}
 
 export function ObligationsBlock({
   appliances,
@@ -64,10 +60,15 @@ export function ObligationsBlock({
                 <span className="text-sm text-zinc-500 dark:text-zinc-400">— {row.task.title}</span>
                 {row.dueDate && (
                   <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    ({row.status === "overdue" ? "depuis le" : "prochaine échéance :"} {formatDate(row.dueDate)})
+                    ({row.status === "overdue" ? "depuis" : "prochaine échéance :"} {formatFrenchMonthYear(row.dueDate)})
                   </span>
                 )}
-                <MarkDoneButton applianceId={row.appliance.id} maintenanceTaskId={row.task.id} />
+                <MarkDoneButton
+                  applianceId={row.appliance.id}
+                  maintenanceTaskId={row.task.id}
+                  status={row.status}
+                  toConfirmReason={row.toConfirmReason}
+                />
               </div>
               {row.legalObligations.map((obligation) =>
                 obligation.risks ? (

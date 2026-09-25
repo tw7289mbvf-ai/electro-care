@@ -12,10 +12,11 @@ export const OBLIGATION_STATUS_LABELS: Record<ObligationStatus, string> = {
   to_confirm: "À confirmer",
 };
 
-// REGLE-01's graded answer to "date du dernier passage" when there is no exact date:
-// 'recent' (fait recemment, sans date exacte), 'old' (plus ancien que le delai legal),
-// 'never' (jamais fait ou je ne sais pas).
-export type ServiceConfidence = "recent" | "old" | "never" | null;
+// REGLE-01's graded answer to a date question when there is no exact date: 'recent'
+// (fait recemment / date inconnue, a confirmer), 'old' (plus ancien que le delai, ou une
+// obligation connue non tenue, e.g. un puits non declare), 'never' (jamais fait ou je ne
+// sais pas), 'compliant' (verifie conforme sans date, e.g. un puits declare).
+export type ServiceConfidence = "recent" | "old" | "never" | "compliant" | null;
 
 export type ApplianceObligationRecord = {
   applianceId: string;
@@ -31,6 +32,9 @@ export type ObligationView = {
   dueDate: string | null;
   // REGLE-01: "jamais realise ou je ne sais pas" sorts ahead of other overdue rows.
   priority: boolean;
+  // Spec "Actions by status": an orange row updates either a date or the power/threshold
+  // — this says which, so the button can route to the right place. Null otherwise.
+  toConfirmReason: "date" | "threshold" | null;
   legalObligations: LegalObligation[];
 };
 
@@ -51,31 +55,35 @@ function computeStatusAndDueDate(
   task: MaintenanceTask,
   record: ApplianceObligationRecord | undefined,
   today: string
-): { status: ObligationStatus; dueDate: string | null; priority: boolean } {
+): { status: ObligationStatus; dueDate: string | null; priority: boolean; toConfirmReason: "date" | "threshold" | null } {
   if (equipmentType.legalStatus === "conditional") {
-    return { status: "to_confirm", dueDate: null, priority: false };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold" };
   }
   if (record?.knownDueDate) {
     return {
       status: record.knownDueDate < today ? "overdue" : "up_to_date",
       dueDate: record.knownDueDate,
       priority: false,
+      toConfirmReason: null,
     };
   }
+  if (record?.serviceConfidence === "compliant") {
+    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null };
+  }
   if (record?.serviceConfidence === "recent") {
-    return { status: "to_confirm", dueDate: null, priority: false };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date" };
   }
   if (record?.serviceConfidence === "old") {
-    return { status: "overdue", dueDate: null, priority: false };
+    return { status: "overdue", dueDate: null, priority: false, toConfirmReason: null };
   }
   if (record?.serviceConfidence === "never") {
-    return { status: "overdue", dueDate: null, priority: true };
+    return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null };
   }
   if (!record?.lastServiceDate) {
-    return { status: "to_schedule", dueDate: null, priority: false };
+    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null };
   }
   const dueDate = addMonths(record.lastServiceDate, task.frequency.months);
-  return { status: dueDate < today ? "overdue" : "up_to_date", dueDate, priority: false };
+  return { status: dueDate < today ? "overdue" : "up_to_date", dueDate, priority: false, toConfirmReason: null };
 }
 
 export function getObligationsForAppliance(
@@ -89,12 +97,13 @@ export function getObligationsForAppliance(
 
   return tasks.map((task) => {
     const record = records.find((r) => r.maintenanceTaskId === task.id);
-    const { status, dueDate, priority } = computeStatusAndDueDate(equipmentType, task, record, today);
+    const { status, dueDate, priority, toConfirmReason } = computeStatusAndDueDate(equipmentType, task, record, today);
     return {
       task,
       status,
       dueDate,
       priority,
+      toConfirmReason,
       legalObligations: getLegalObligationsForType(equipmentTypeId),
     };
   });
