@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 26). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 28). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -72,22 +72,25 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 - **Home screen**: obligations first, sorted by urgency, then the season's maintenance checklist. A compliance banner sums it up: "2 overdue, 1 to confirm, 4 up to date".
 - **Risks on every obligation**: fine, insurance consequences, liability and physical danger, taken from the reference data.
 - **Three colour-coded statuses**, like a vehicle inspection: green (up to date, recent valid proof), orange (to confirm, the app needs an input from the user), red (overdue, no valid proof, action needed). Only green counts as compliant: orange is never "in order", since an insurer won't accept "it was recent".
-- **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?). An annual obligation said to be recent without a date stays orange until the date is given.
-- **Grading the date answer**: a precise month and year is calculated normally (green or red); recent but no exact date is orange, with a reminder to add the date later; longer ago than the legal interval is red; never done or "I don't know" is red, shown as a priority.
+- **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?).
+- **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); never, or I don't know (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
+- **Dates in French**: picked from two lists (month in words, year) and shown as "septembre 2026", never with a day.
+- **Actions by status**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", whether a date or the power is missing.
 - **Bridge to the paid tier**: most obligations need a professional, so an obligation coming due offers to book a technician.
 
 ## Onboarding Questionnaire
 
 Asked at first use and for each new place. Afterwards, appliances are added one by one, as described in Adding Appliances.
 
-- **Plain-language questions**: property type first, skipped when it was set at place creation, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, and vehicles for a main or second home.
+- **Plain-language questions**: property type first, skipped when it was set at place creation, then about ten questions: main heating, fireplace or stove, hot water, air conditioning, gas cooking, sewer or septic tank, pool, well, vehicles for a main or second home, and the smoke detector.
 - **Back button and recap**: a "Précédent" button lets the user go back and change any answer. Nothing is created during the questionnaire: at the end, a recap lists what will be created, each line editable, and a single confirmation creates it all. Going back never leaves a stray appliance behind.
 - **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it, no vehicle question for a rental.
 - **Vehicles phrased per home**: "Un véhicule est-il rattaché à votre résidence principale ?" Each vehicle belongs to one home only, where it is mainly parked, so it is never counted twice.
-- **Questions name the appliance**: every question and every date request states which appliance it is about ("Wood stove and its flue: last service and sweep?"). Dates are entered as numbers, MM/YYYY.
+- **Questions name the appliance**: every question and every date request states which appliance and which intervention it is about.
 - **Never blocking**: every obligation question offers "Je ne sais pas", shown as a discreet choice. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
-- **Smoke detector added automatically**: it is mandatory in every home, so the app only asks whether it is installed and its manufacturing date printed on the back, which sets its 10-year replacement.
-- **Last service date**: asked for every obligation created, with the graded answers described in Obligations and Maintenance.
+- **Smoke detector**: always created, since it is mandatory in every home. The questionnaire asks whether one is installed ("no" shows as overdue), then the date printed on its back, which sets its replacement 10 years later. Recent models have a sealed 10-year battery, so there is no yearly battery reminder.
+- **Pool**: the answer names the safety device (barrier, alarm, cover or shelter); "no device" shows as overdue.
+- **Dates**: asked through each obligation's own question, described in Obligations and Maintenance.
 - **One date for an appliance and its flue**: a stove, insert or boiler and its flue get a single date question, since servicing and sweeping are done in the same visit. A "done separately?" link allows two dates, or marking only one of the two as done.
 - **Optional appliance checklist**: common appliances (fridge, washing machine, dishwasher…) seed the maintenance track the same way.
 - **Then improve**: brand, model and purchase date are added later from the appliance card.
@@ -109,7 +112,7 @@ What a signed-in user sees first.
 - **Empty**: a single button, "Ajouter votre premier lieu", which leads straight into the questionnaire.
 - **Places stacked**: one below the other, ordered by property type: main home, second home, long-term rental, short-term rental. Letting the user reorder places is noted for later, outside the MVP.
 - **Two add buttons at two levels**: "Ajouter un lieu" on the dashboard, and "Ajouter un appareil" inside each place, so an appliance is always created in its place. The add form no longer sits on the dashboard.
-- **"C'est fait" on every obligation**: the most frequent action is one tap away from where a red or orange status appears.
+- **An action next to each obligation**: "C'est fait" on red, "Mettre à jour" on orange, nothing on green. The most frequent actions are one tap away from the status.
 
 ## Managing Appliances
 
@@ -120,16 +123,44 @@ Tapping an appliance opens its card.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
 
+## Reminders
+
+- **Legal obligations, by email**: a first email three months before the deadline, leaving time to find a professional; a reminder one month before if not done; another at the deadline. Sent from the app's own domain through a European email service.
+- **A ready-to-send request in the email**: a quote request (new provider) or an intervention request (usual provider), naming the appliance, its brand and model when known, the intervention and its legal basis ("Annual gas boiler service, Saunier Duval Thema C, required by decree 2009-649"). One button opens it in the user's mail app.
+- **Brand and model, optional**: asked in the appliance card and at reminder time ("add the model, it will appear in your request"), only for appliances that have a nameplate.
+- **Lifespan maintenance, in the app only**: no email; the season's tasks show on the dashboard with a notification count.
+- **Calendar**: a subscription link for the user's calendar comes later, as a small addition.
+
+## Maintenance Guidance
+
+- **General procedure, free**: every maintenance task shows the general recommended steps from the reference data, with tools and what goes wrong if skipped.
+- **Model-specific step-by-step, paid tier**: when brand and model are known, a precise procedure is generated on demand from the manufacturer's manual, stored and reused for everyone with the same model. It complements the general procedure, labelled "from the manufacturer's manual" with a link and a "report an error" button. The manual is summarised, never copied.
+- **Never for risky interventions**: model-specific steps only cover tasks users do themselves (filters, descaling); gas and combustion work stays with a professional.
+- **In the MVP**: a single demonstration on one precise product, written once, with no generation.
+
+## Delivery Plan
+
+Short, separate work sessions, each with the isolation test and the production procedure described in CLAUDE.md:
+
+1. Date questions and actions by status.
+2. Lifespan maintenance in the app.
+3. Obligation reminders by email. Requires the app's own domain and an email service account.
+4. Model-specific step-by-step demo on one product.
+5. Documents: uploading proofs, the basis for tenants.
+6. Tenants.
+
+The calendar subscription link follows step 3.
+
 ## Tenants (planned)
 
 In a long-term rental, several obligations fall on the tenant (boiler service, chimney sweeping, smoke detector upkeep, gas hose), while the owner bears the consequences with the insurer. Landlords chase these certificates by hand today: automating it is a strong candidate for the paid tier.
 
 - **Tenant contacts**: the owner enters one or more tenant emails on the place.
 - **Notice and proof**: before each tenant-liable deadline, the app emails the tenant a link to upload the proof, with no account needed. The link is single-use, time-limited and opens nothing else.
+- **Routine maintenance**: the law already puts routine upkeep of the home and of the equipment listed in the lease on the tenant. The app sends the matching tasks in a seasonal email, twice a year, as a reminder only: no proof is asked for small tasks, and the natural checkpoint is the exit inspection. Only equipment provided by the owner and listed in the lease is covered, and replacing worn-out equipment stays with the owner.
 - **Owner's view**: "tenant's responsibility: proof received" or "pending", with automatic reminders.
 - **Short-term rentals unchanged**: the owner remains responsible for everything.
 - **Privacy**: tenant emails are a third party's personal data. Only what is needed is kept, and they are deleted at the end of the lease.
-- **Order**: a European email-sending service with the owner's own reminders first, then document upload, then tenants.
 
 ## Business Model
 

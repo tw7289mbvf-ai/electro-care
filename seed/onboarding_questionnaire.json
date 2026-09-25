@@ -3,7 +3,7 @@
     {
       "id": "REGLE-01",
       "label": "Date du dernier passage",
-      "text": "Pour chaque obligation créée, la date du dernier passage (entretien, ramonage, contrôle ou vidange) se donne en chiffres (MM/AAAA). Réponses graduées : date précise → calcul normal ; fait récemment, sans date exacte → à confirmer (orange), avec un rappel pour la préciser ; plus ancien que le délai légal → en retard (rouge) ; jamais réalisé ou je ne sais pas → en retard (rouge), prioritaire."
+      "text": "Chaque obligation a sa propre question de date (onglet Questions de date, seed/date_questions.json), qui nomme l'appareil et l'intervention. Réponses graduées avec le vrai délai de l'obligation : mois et année → calcul normal ; « Il y a moins de {délai} », sans date précise → à confirmer (orange) ; « Il y a plus de {délai} » → en retard (rouge) ; « Jamais » ou « Je ne sais pas » → en retard, prioritaire. Les dates se choisissent dans deux listes (mois en toutes lettres, année) et s'affichent « septembre 2026 », jamais avec un jour."
     },
     {
       "id": "REGLE-02",
@@ -24,6 +24,11 @@
       "id": "REGLE-05",
       "label": "Nom du logement dans les questions",
       "text": "Dans les textes, {residence} se remplace par « votre résidence principale » ou « votre résidence secondaire », selon le type du lieu."
+    },
+    {
+      "id": "REGLE-06",
+      "label": "Statut initial fixé",
+      "text": "Si une réponse fixe le statut initial d'une tâche (colonne Statut initial), sa question de date n'est pas posée."
     }
   ],
   "questions": [
@@ -41,6 +46,7 @@
           "help": "Type de bien : résidence principale.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": {
             "property_type": "main_home"
           }
@@ -51,6 +57,7 @@
           "help": "Active les tâches d'hivernage et de remise en service.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": {
             "property_type": "second_home"
           }
@@ -61,6 +68,7 @@
           "help": "Les tâches à la charge de l'occupant (entretien de la chaudière, ramonage, entretien du détecteur) reviennent au locataire : elles sont affichées pour information.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": {
             "property_type": "long_term_rental"
           }
@@ -71,6 +79,7 @@
           "help": "Toutes les obligations restent à votre charge.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": {
             "property_type": "short_term_rental"
           }
@@ -92,12 +101,13 @@
           ],
           "help": null,
           "follow_up": {
-            "question": "Évacue-t-elle ses fumées par un conduit de cheminée, et non par une ventouse murale ?",
+            "question": "Est-elle raccordée à un conduit de cheminée, et non à une ventouse (un tuyau qui sort directement du mur) ?",
             "creates_if_yes": [
               "CH-07"
             ]
           },
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -108,12 +118,13 @@
           ],
           "help": null,
           "follow_up": {
-            "question": "Évacue-t-elle ses fumées par un conduit de cheminée, et non par une ventouse murale ?",
+            "question": "Est-elle raccordée à un conduit de cheminée, et non à une ventouse (un tuyau qui sort directement du mur) ?",
             "creates_if_yes": [
               "CH-07"
             ]
           },
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -126,6 +137,7 @@
           "help": "Crée aussi la cuve et le conduit de fumée.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -137,6 +149,7 @@
           "help": "Crée aussi le conduit de fumée.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -148,6 +161,7 @@
           "help": "Crée aussi le conduit de fumée.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -159,6 +173,7 @@
           "help": "Crée aussi le conduit de fumée.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -169,6 +184,7 @@
           "help": "Pompe à chaleur air/eau.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -179,6 +195,7 @@
           "help": "Obligation à confirmer selon la puissance, à partir de 4 kW.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -189,6 +206,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -199,6 +217,7 @@
           "help": "Pas d'obligation : entretien seulement.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -207,6 +226,7 @@
           "help": "Indice : une chaudière se trouve souvent dans la cuisine, la buanderie, le garage ou la cave ; une pompe à chaleur a une unité extérieure.",
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -236,6 +256,7 @@
           "help": "Un conduit de fumée est créé pour chaque appareil raccordé.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -247,6 +268,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -258,6 +280,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -266,6 +289,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -274,6 +298,7 @@
           "help": null,
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -292,6 +317,7 @@
           "help": "Déjà couvert par le chauffage.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -302,6 +328,7 @@
           "help": "Pas d'obligation : entretien seulement.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -312,6 +339,7 @@
           "help": "Obligation à confirmer selon la puissance.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -322,6 +350,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -332,6 +361,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -340,6 +370,7 @@
           "help": "Indice : un ballon électrique est un grand cylindre, souvent dans un placard, la buanderie ou le garage.",
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -365,6 +396,7 @@
           "help": "Obligation à confirmer selon la puissance, à partir de 4 kW.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -375,6 +407,7 @@
           "help": "Pas d'obligation : entretien seulement.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -383,6 +416,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -391,6 +425,7 @@
           "help": null,
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -410,11 +445,9 @@
             "CUIS-04"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Date de péremption imprimée sur le tuyau flexible (MM/AAAA).",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -423,6 +456,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -431,6 +465,7 @@
           "help": "Indice : des brûleurs à flamme signalent une cuisson au gaz.",
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -449,6 +484,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -457,11 +493,9 @@
             "ASS-01"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Date du dernier contrôle du SPANC et de la dernière vidange.",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -470,11 +504,9 @@
             "ASS-02"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Date du dernier contrôle du SPANC et de la dernière vidange.",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -483,6 +515,7 @@
           "help": "Indice : si votre facture d'eau comporte une ligne « assainissement collectif », le logement est raccordé.",
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -496,18 +529,50 @@
       "skip_if": null,
       "answers": [
         {
-          "label": "Oui",
+          "label": "Oui, protégée par une barrière",
           "creates": [
             "PIS-01"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Le dispositif de sécurité est-il une alarme ? (Sinon : barrière, couverture ou abri.)",
-            "creates_if_yes": [
-              "PIS-07"
-            ]
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Oui, protégée par une alarme",
+          "creates": [
+            "PIS-01",
+            "PIS-07"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Oui, protégée par une couverture ou un abri",
+          "creates": [
+            "PIS-01"
+          ],
+          "help": null,
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Oui, sans dispositif de sécurité",
+          "creates": [
+            "PIS-01"
+          ],
+          "help": "Un dispositif de sécurité est obligatoire : l'obligation apparaîtra en retard.",
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": {
+            "T-093": "never"
+          },
           "sets": null
         },
         {
@@ -516,6 +581,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -524,6 +590,7 @@
           "help": null,
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -542,11 +609,9 @@
             "EAU-05"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Est-il déclaré en mairie ?",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -555,6 +620,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -563,6 +629,7 @@
           "help": null,
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
@@ -590,11 +657,9 @@
             "VEH-01"
           ],
           "help": "Rattachez chaque véhicule à un seul logement, celui où il est principalement garé, pour ne pas le compter deux fois.",
-          "follow_up": {
-            "question": "Date de première immatriculation (sur la carte grise) et du dernier contrôle technique (MM/AAAA).",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -603,11 +668,9 @@
             "VEH-02"
           ],
           "help": null,
-          "follow_up": {
-            "question": "Date de première immatriculation (sur la carte grise) et du dernier contrôle technique (MM/AAAA).",
-            "creates_if_yes": []
-          },
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -618,6 +681,7 @@
           "help": "Pas d'obligation : entretien seulement.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -626,6 +690,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -634,29 +699,55 @@
           "help": null,
           "follow_up": null,
           "unknown": true,
+          "initial_status": null,
           "sets": null
         }
       ]
     },
     {
-      "id": "AUTO-01",
+      "id": "Q11",
       "block": "legal",
       "order": 11,
-      "question": "Détecteur de fumée",
-      "answer_type": "automatic",
+      "question": "Avez-vous un détecteur de fumée installé ?",
+      "answer_type": "single",
       "skip_if": null,
       "answers": [
         {
-          "label": "Ajouté d'office",
+          "label": "Oui",
           "creates": [
             "SEC-01"
           ],
-          "help": "Obligatoire dans tout logement : il n'y a pas de question à poser.",
-          "follow_up": {
-            "question": "Est-il installé ? Si oui, notez la date de fabrication imprimée au dos (MM/AAAA) : elle fixe son remplacement, 10 ans après.",
-            "creates_if_yes": []
-          },
+          "help": "Obligatoire dans tout logement.",
+          "follow_up": null,
           "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Non",
+          "creates": [
+            "SEC-01"
+          ],
+          "help": "Obligatoire dans tout logement : l'installation apparaîtra en retard.",
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": {
+            "T-082": "never",
+            "T-083": "never"
+          },
+          "sets": null
+        },
+        {
+          "label": "Je ne sais pas",
+          "creates": [
+            "SEC-01"
+          ],
+          "help": "Indice : il se trouve en général au plafond d'un couloir ou d'un palier.",
+          "follow_up": null,
+          "unknown": true,
+          "initial_status": {
+            "T-083": "never"
+          },
           "sets": null
         }
       ]
@@ -677,6 +768,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -687,6 +779,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -697,6 +790,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -707,6 +801,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -717,6 +812,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -727,6 +823,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -737,6 +834,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -747,6 +845,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -757,6 +856,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -767,6 +867,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -777,6 +878,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -787,6 +889,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -797,6 +900,7 @@
           "help": "Simple flux par défaut ; double flux à préciser ensuite.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -807,6 +911,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -817,6 +922,7 @@
           "help": "Recommandé dès qu'un appareil à combustion est présent.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -827,6 +933,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -837,6 +944,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -847,6 +955,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -857,6 +966,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -868,6 +978,7 @@
           "help": "Crée aussi l'onduleur.",
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -878,6 +989,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         },
         {
@@ -888,6 +1000,7 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
+          "initial_status": null,
           "sets": null
         }
       ]

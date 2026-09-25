@@ -165,16 +165,17 @@ try {
       UNIQUE (appliance_id, maintenance_task_id)
     )
   `);
-  // Graded answer to "date du dernier passage" (REGLE-01) when the user has no exact
-  // date: 'recent' (à confirmer, orange) or 'never' (jamais fait / je ne sais pas,
-  // en retard prioritaire) mirror last_service_date's absence — 'old' (plus ancien que
-  // le delai, en retard) does too. Column added separately for a database that already
-  // had this table before service_confidence existed.
+  // Graded answer to a date question (REGLE-01) when there is no exact date: 'recent'
+  // (à confirmer, orange), 'old' (en retard) and 'never' (jamais fait / je ne sais pas,
+  // en retard prioritaire) mirror last_service_date's absence; 'compliant' (à jour,
+  // vert, e.g. un puits déclaré) does too, on the up_to_date side. Column added
+  // separately for a database that already had this table before service_confidence
+  // existed.
   await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS service_confidence TEXT`);
   await client.query(`ALTER TABLE appliance_obligations DROP CONSTRAINT IF EXISTS appliance_obligations_service_confidence_check`);
   await client.query(`
     ALTER TABLE appliance_obligations ADD CONSTRAINT appliance_obligations_service_confidence_check
-      CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never'))
+      CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never', 'compliant'))
   `);
   await client.query(`ALTER TABLE appliance_obligations ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS appliance_obligations_isolation ON appliance_obligations`);
@@ -191,6 +192,27 @@ try {
       ))
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON appliance_obligations TO authenticated`);
+
+  // --- One-time data conversions (journaled in schema_migrations, run at most once) ---
+
+  // T-083 changed meaning (chantier 1): it used to be the annual battery check, it is
+  // now the 10-years-after-manufacture detector replacement. An existing row's
+  // last_service_date meant "last battery change" under the old meaning — wrong under
+  // the new one — so every existing T-083 row moves to orange (service_confidence
+  // 'recent': manufacture date to confirm) instead of carrying that stale date forward.
+  const T083_MIGRATION = "2026-09-t083-manufacture-date-orange";
+  const [{ exists: t083Done }] = (
+    await client.query(`SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE name = $1) AS exists`, [T083_MIGRATION])
+  ).rows;
+  if (!t083Done) {
+    const { rowCount } = await client.query(`
+      UPDATE appliance_obligations
+      SET last_service_date = NULL, known_due_date = NULL, service_confidence = 'recent'
+      WHERE maintenance_task_id = 'T-083'
+    `);
+    await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [T083_MIGRATION]);
+    console.log(`T-083 data migration: ${rowCount} row(s) moved to orange (manufacture date to confirm).`);
+  }
 
   // A "to check" item from a "Je ne sais pas" answer (REGLE-02). question_label and
   // help are snapshotted from the questionnaire at answer time, not looked up live,

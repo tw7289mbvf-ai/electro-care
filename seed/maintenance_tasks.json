@@ -1399,17 +1399,18 @@
   {
     "id": "T-083",
     "equipment_type_id": "SEC-01",
-    "title": "Remplacement de la pile et controle de la date limite",
+    "title": "Remplacement du detecteur de fumee (10 ans apres fabrication)",
     "performer": "diy",
     "frequency": {
-      "rule": "every_n_months",
-      "months": 12,
-      "label": "Tous les ans (pile) / 10 ans (appareil)"
+      "rule": "threshold",
+      "months": 120,
+      "label": "10 ans apres la date de fabrication imprimee au dos",
+      "threshold": "Due date = manufacture date printed on the back of the detector + 10 years"
     },
-    "season": "Meme mois chaque annee",
-    "duration_min": 10,
-    "tools": "Pile 9V ou lithium selon modele",
-    "procedure": "Remplacer la pile meme sans signal de defaut. Verifier la date de fabrication imprimee au dos : un DAAF se remplace integralement au bout de 10 ans.",
+    "season": "Selon echeance",
+    "duration_min": 15,
+    "tools": "Detecteur neuf certifie NF EN 14604",
+    "procedure": "Remplacer l'appareil complet 10 ans apres sa date de fabrication, ou des qu'il signale sa fin de vie. Les modeles recents ont une pile scellee de 10 ans : rien a changer entre-temps. Sur un ancien modele a pile remplacable, changer la pile chaque annee.",
     "if_skipped": "Detecteur hors service sans que personne ne s'en apercoive",
     "legal": "yes"
   },

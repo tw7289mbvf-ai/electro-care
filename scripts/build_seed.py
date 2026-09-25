@@ -69,7 +69,12 @@ THRESHOLD_TASKS = {
              "first check within 6 months before the 4th anniversary, then every 2 years",
     "T-153": "Due date computed from the first registration date (registration certificate, field B): "
              "first check 4.5 to 5 years after first registration, then every 3 years",
+    "T-083": "Due date = manufacture date printed on the back of the detector + 10 years",
 }
+DATE_KINDS = {"Mois gradué": "graded_month", "Péremption": "expiry_date", "Fabrication": "manufacture_date",
+              "Contrôle véhicule": "vehicle_inspection", "Oui / non": "yes_no", "Aucune": "none",
+              "Non générée": "not_generated"}
+STATUS_WORDS = {"jamais": "never"}
 
 # Indicative identifier patterns. Only groups with status "verified" may drive
 # validation in production; the others are kept for testing until confirmed.
@@ -238,9 +243,19 @@ def main():
         by_id[r["ID"]]["answers"].append({"label": r["Reponse"], "creates": split(r["Types crees"], ", "),
                                           "help": r["Aide"], "follow_up": follow_up,
                                           "unknown": r["Reponse"] == "Je ne sais pas",
+                                          "initial_status": ({k.strip(): STATUS_WORDS[v.strip()] for k, v in
+                                                              (part.split(" = ", 1) for part in
+                                                               split(r["Statut initial"], " ; "))}
+                                                             if r["Statut initial"] else None),
                                           "sets": ({k.strip(): v.strip() for k, v in
                                                     [r["Renseigne"].split(" = ", 1)]}
                                                    if r["Renseigne"] else None)})
+
+    date_questions = []
+    for r in rows(wb["Questions de date"]):
+        date_questions.append({"key": r["Cle"], "tasks": split(r["Taches"], ", "), "appliance": r["Appareil"],
+                               "question": r["Question"], "kind": DATE_KINDS[r["Type"]],
+                               "interval_label": r["Delai"], "note": r["Note"]})
 
     brands = []
     for r in rows(wb["Plaques par marque"]):
@@ -274,6 +289,15 @@ def main():
     bad_skip = [c for q in questionnaire["questions"] for c in (q["skip_if"] or [])
                 if (c["question"], c["answer"]) not in labels]
     assert not bad_skip, f"skip_if points to unknown answers: {bad_skip}"
+    task_ids = {t["id"] for t in tasks}
+    bad_dq = sorted({i for d in date_questions for i in d["tasks"]} - task_ids)
+    assert not bad_dq, f"Date questions point to unknown tasks: {bad_dq}"
+    covered = {d["tasks"][0] for d in date_questions if len(d["tasks"]) == 1}
+    uncovered = sorted(t["id"] for t in tasks if t["legal"] == "yes" and t["id"] not in covered)
+    assert not uncovered, f"Legal tasks without their own date question: {uncovered}"
+    bad_init = sorted({k for q in questionnaire["questions"] for a in q["answers"]
+                       for k in (a["initial_status"] or {})} - task_ids)
+    assert not bad_init, f"initial_status points to unknown tasks: {bad_init}"
     property_types = {k for k, _ in ENUMS["property_type"]}
     bad_sets = [a["sets"] for q in questionnaire["questions"] for a in q["answers"]
                 if a["sets"] and a["sets"].get("property_type") not in property_types]
@@ -282,7 +306,7 @@ def main():
     files = {"categories.json": categories, "equipment_types.json": equipment,
              "maintenance_tasks.json": tasks, "legal_obligations.json": obligations,
              "brand_nameplates.json": brands, "enums.json": enums,
-             "onboarding_questionnaire.json": questionnaire}
+             "onboarding_questionnaire.json": questionnaire, "date_questions.json": date_questions}
     for name, data in files.items():
         (OUT / name).write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"seed/{name}: {len(data)} records")
