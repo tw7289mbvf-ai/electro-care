@@ -5,22 +5,36 @@ export type MaintenanceTask = {
   id: string;
   equipmentTypeId: string;
   title: string;
-  performer: string;
+  performer: "diy" | "pro";
   frequency: {
     rule: "every_n_months" | "season_anchor" | "threshold" | "per_use";
     months: number;
     label: string;
     threshold?: string;
   };
+  // Months (1-12) the task applies to; [] = all year (seed/README.md "Key fields").
+  seasonMonths: number[];
+  procedure: string;
+  tools: string;
+  ifSkipped: string;
   legal: "yes" | "no";
+};
+
+export const PERFORMER_LABELS: Record<MaintenanceTask["performer"], string> = {
+  diy: "À faire soi-même",
+  pro: "Professionnel recommandé",
 };
 
 const ALL_TASKS: MaintenanceTask[] = maintenanceTasksSeed.map((t) => ({
   id: t.id,
   equipmentTypeId: t.equipment_type_id,
   title: t.title,
-  performer: t.performer,
+  performer: t.performer as MaintenanceTask["performer"],
   frequency: t.frequency as MaintenanceTask["frequency"],
+  seasonMonths: t.season_months,
+  procedure: t.procedure,
+  tools: t.tools,
+  ifSkipped: t.if_skipped,
   legal: t.legal as "yes" | "no",
 }));
 
@@ -38,4 +52,16 @@ export function getTrackedLegalTasks(equipmentTypeId: string): MaintenanceTask[]
   return ALL_TASKS.filter(
     (t) => t.equipmentTypeId === equipmentTypeId && t.legal === "yes" && getDateQuestionForTask(t.id)?.kind !== "not_generated"
   );
+}
+
+// "Entretien" candidates for an equipment type: non-legal tasks (legal obligations are
+// tracked separately, see getTrackedLegalTasks) at monthly frequency or slower. Anything
+// more frequent than monthly (weekly, per use) stays a routine in the appliance card and
+// never reaches the dashboard or the place page.
+export function getLifespanMaintenanceTasks(equipmentTypeId: string): MaintenanceTask[] {
+  return ALL_TASKS.filter((t) => t.equipmentTypeId === equipmentTypeId && t.legal !== "yes" && t.frequency.months >= 1);
+}
+
+export function isTaskDueInMonth(task: MaintenanceTask, month: number): boolean {
+  return task.seasonMonths.length === 0 || task.seasonMonths.includes(month);
 }

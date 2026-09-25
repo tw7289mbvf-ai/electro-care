@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { PlaceSection } from "@/components/PlaceSection";
+import { PlaceCard } from "@/components/PlaceCard";
+import { UrgentActions } from "@/components/UrgentActions";
 import { DemoDashboard } from "@/components/DemoDashboard";
 import { SignOutButton } from "@/components/SignOutButton";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
@@ -7,8 +8,10 @@ import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
 import { comparePlacesByPropertyType } from "@/lib/place-types";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
-import { countObligationsByStatus, getObligationsForAppliance, type ObligationCounts } from "@/lib/obligations";
-import { getPlaceChecks } from "@/lib/place-checks";
+import { getObligationCountsForAppliances, type ObligationCounts } from "@/lib/obligations";
+import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
+import { getMaintenanceGuidanceForAppliances, filterPendingGuidance } from "@/lib/maintenance-guidance";
+import { currentMonthKey } from "@/lib/french-dates";
 import { auth } from "@/lib/auth/server";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -59,29 +62,32 @@ export default async function Home() {
 
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
   const orderedPlaces = [...places].sort(comparePlacesByPropertyType);
+  const month = currentMonthKey();
   const placesData = await Promise.all(
-    orderedPlaces.map(async (place) => ({
-      place,
-      appliances: appliances.filter((a) => a.placeId === place.id),
-      obligationRecords: await getObligationRecordsForPlace(place.id),
-      placeChecks: await getPlaceChecks(place.id),
-    }))
+    orderedPlaces.map(async (place) => {
+      const placeAppliances = appliances.filter((a) => a.placeId === place.id);
+      const [obligationRecords, completions] = await Promise.all([
+        getObligationRecordsForPlace(place.id),
+        getMaintenanceCompletionsForPlace(place.id, month),
+      ]);
+      const counts = getObligationCountsForAppliances(placeAppliances, obligationRecords);
+      const maintenanceDueCount = filterPendingGuidance(
+        getMaintenanceGuidanceForAppliances(placeAppliances),
+        completions
+      ).length;
+      return { place, appliances: placeAppliances, obligationRecords, counts, maintenanceDueCount };
+    })
   );
 
   const totalCounts = placesData.reduce<ObligationCounts>(
-    (acc, { appliances: placeAppliances, obligationRecords }) => {
-      for (const appliance of placeAppliances) {
-        if (!appliance.equipmentTypeId) continue;
-        const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
-        const counts = countObligationsByStatus(getObligationsForAppliance(appliance.equipmentTypeId, records));
-        acc.overdue += counts.overdue;
-        acc.toConfirm += counts.toConfirm;
-        acc.upToDate += counts.upToDate;
-      }
-      return acc;
-    },
+    (acc, { counts }) => ({
+      overdue: acc.overdue + counts.overdue,
+      toConfirm: acc.toConfirm + counts.toConfirm,
+      upToDate: acc.upToDate + counts.upToDate,
+    }),
     { overdue: 0, toConfirm: 0, upToDate: 0 }
   );
+  const totalMaintenanceDue = placesData.reduce((sum, p) => sum + p.maintenanceDueCount, 0);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -98,7 +104,7 @@ export default async function Home() {
           <SignOutButton />
         </header>
 
-        {places.length > 0 && <ComplianceBanner counts={totalCounts} />}
+        {places.length > 0 && <ComplianceBanner counts={totalCounts} maintenanceDueCount={totalMaintenanceDue} />}
 
         {places.length === 0 ? (
           <section className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">
@@ -112,15 +118,13 @@ export default async function Home() {
           </section>
         ) : (
           <>
-            {placesData.map(({ place, appliances: placeAppliances, obligationRecords, placeChecks }) => (
-              <PlaceSection
-                key={place.id}
-                place={place}
-                appliances={placeAppliances}
-                obligationRecords={obligationRecords}
-                placeChecks={placeChecks}
-              />
-            ))}
+            <UrgentActions placesData={placesData} />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {placesData.map(({ place, counts, maintenanceDueCount }) => (
+                <PlaceCard key={place.id} place={place} counts={counts} maintenanceDueCount={maintenanceDueCount} />
+              ))}
+            </div>
 
             <div>
               <Link

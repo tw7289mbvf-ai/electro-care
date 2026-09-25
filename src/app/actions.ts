@@ -2,9 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { addAppliance, deleteAppliance, updateAppliance as updateApplianceRecord } from "@/lib/appliances";
+import { addAppliance, deleteAppliance, getAppliance, updateAppliance as updateApplianceRecord } from "@/lib/appliances";
 import { addPlace, deletePlace, getPlaces, markPlaceOnboarded, updatePlace as updatePlaceRecord } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
+import { recordMaintenanceCompletion } from "@/lib/maintenance-completions";
+import { currentMonthKey } from "@/lib/french-dates";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
@@ -59,12 +61,15 @@ export async function createAppliance(
 
   await addAppliance({ placeId, category, name, brand, model, room, equipmentTypeId, purchaseDate });
   revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
   return {};
 }
 
 export async function removeAppliance(id: string): Promise<void> {
+  const appliance = await getAppliance(id);
   await deleteAppliance(id);
   revalidatePath("/");
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
 }
 
 export async function updateAppliance(
@@ -132,7 +137,8 @@ export async function updatePlace(
 
   await updatePlaceRecord(id, { name, commune, postcode, propertyType: propertyType as PropertyType | null });
   revalidatePath("/");
-  redirect("/");
+  revalidatePath(`/places/${id}`);
+  redirect(`/places/${id}`);
 }
 
 export async function removePlace(id: string): Promise<void> {
@@ -158,6 +164,16 @@ export async function markObligationDone(
   await setApplianceObligation({ applianceId, maintenanceTaskId, lastServiceDate: `${month}-01` });
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// "Entretien" fiche de tâche: no date to give, no email — just a completion for the
+// current month (spec's "Lifespan maintenance, in the app only").
+export async function markMaintenanceTaskDone(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {
+  await recordMaintenanceCompletion({ applianceId, maintenanceTaskId, doneMonth: currentMonthKey() });
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
 }
 
 export async function submitQuestionnaireStep(effects: QuestionnaireStepEffects): Promise<void> {

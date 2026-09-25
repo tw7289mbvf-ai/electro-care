@@ -140,4 +140,24 @@ export function countObligationsByStatus(obligations: ObligationView[]): Obligat
   return counts;
 }
 
+// Dashboard and place cards: total status counts across a set of appliances, e.g. one
+// place's or every place's. An appliance with no equipment_type_id has no tracked
+// obligations and is skipped, same as countObligationsByStatus's caller does elsewhere.
+export function getObligationCountsForAppliances(
+  appliances: { id: string; equipmentTypeId: string | null }[],
+  obligationRecords: ApplianceObligationRecord[],
+  today: string = getTodayInFrance()
+): ObligationCounts {
+  const counts: ObligationCounts = { overdue: 0, toConfirm: 0, upToDate: 0 };
+  for (const appliance of appliances) {
+    if (!appliance.equipmentTypeId) continue;
+    const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
+    const c = countObligationsByStatus(getObligationsForAppliance(appliance.equipmentTypeId, records, today));
+    counts.overdue += c.overdue;
+    counts.toConfirm += c.toConfirm;
+    counts.upToDate += c.upToDate;
+  }
+  return counts;
+}
+
 export { getMaintenanceTask };

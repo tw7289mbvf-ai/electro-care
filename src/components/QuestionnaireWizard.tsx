@@ -528,10 +528,10 @@ function YesNoCard({
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer("no")}>
           Non
         </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer("unknown")}>
+          Je ne sais pas
+        </button>
       </div>
-      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer("unknown")}>
-        Je ne sais pas
-      </button>
     </div>
   );
 }
@@ -558,10 +558,10 @@ function YesNoStatusCard({
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
           Non
         </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+          Je ne sais pas
+        </button>
       </div>
-      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
-        Je ne sais pas
-      </button>
     </div>
   );
 }
@@ -601,21 +601,16 @@ function GradedMonthCard({
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
           Il y a plus de {dq.intervalLabel}
         </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
+          Jamais ou je ne sais pas
+        </button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
-        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
-          Jamais
+      {extraLink && (
+        <button className={DISCREET_LINK_CLASS} onClick={extraLink.onClick}>
+          {extraLink.label}
         </button>
-        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
-          Je ne sais pas
-        </button>
-        {extraLink && (
-          <button className={DISCREET_LINK_CLASS} onClick={extraLink.onClick}>
-            {extraLink.label}
-          </button>
-        )}
-      </div>
+      )}
     </div>
   );
 }
@@ -654,7 +649,7 @@ function SimpleDateOrUnknownCard({
           Valider
         </button>
       </div>
-      <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+      <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
         {unknownLabel}
       </button>
     </div>
@@ -697,7 +692,7 @@ function VehicleInspectionCard({
             Valider
           </button>
         </div>
-        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
           Je ne sais pas
         </button>
       </div>
@@ -723,19 +718,13 @@ function VehicleInspectionCard({
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "old" })}>
           Il y a plus de {dq.intervalLabel}
         </button>
-      </div>
-
-      <div className="flex flex-wrap items-center gap-4">
         {young && (
-          <button className={DISCREET_LINK_CLASS} onClick={() => setShowYoung(true)}>
+          <button className={GHOST_BUTTON_CLASS} onClick={() => setShowYoung(true)}>
             {young.label}
           </button>
         )}
-        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
-          Jamais
-        </button>
-        <button className={DISCREET_LINK_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
-          Je ne sais pas
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "never" })}>
+          Jamais ou je ne sais pas
         </button>
       </div>
     </div>

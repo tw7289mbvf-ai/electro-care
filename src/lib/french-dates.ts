@@ -21,6 +21,21 @@ export function formatFrenchMonthYear(isoDate: string): string {
   return `${FRENCH_MONTHS[Number(month) - 1]} ${year}`;
 }
 
+// Maintenance guidance is scheduled by calendar month in France (Europe/Paris), same
+// timezone reasoning as obligations.ts's getTodayInFrance.
+export function getCurrentMonthInFrance(): number {
+  return Number(new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", month: "numeric" }).format(new Date()));
+}
+
+// "YYYY-MM" for the current month in France — the key maintenance completions are
+// recorded and looked up under.
+export function currentMonthKey(): string {
+  const [year, month] = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit" })
+    .format(new Date())
+    .split("-");
+  return `${year}-${month}`;
+}
+
 // A past date (last service, manufacture...): from 30 years ago to the current month.
 export function pastYearOptions(): number[] {
   const currentYear = new Date().getFullYear();

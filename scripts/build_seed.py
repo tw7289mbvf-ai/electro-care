@@ -93,6 +93,38 @@ MONTH_WORDS = ("janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", 
                "printemps", "ete", "automne", "hiver", "chauffe")
 
 
+MONTH_NUM = {"janvier": 1, "fevrier": 2, "mars": 3, "avril": 4, "mai": 5, "juin": 6, "juillet": 7,
+             "aout": 8, "septembre": 9, "octobre": 10, "novembre": 11, "decembre": 12}
+SEASON_NUM = {"printemps": [3, 4, 5], "ete": [6, 7, 8], "automne": [9, 10, 11], "hiver": [12, 1, 2]}
+
+
+def season_months(text):
+    """Months (1-12) when a task applies, parsed from the workbook's season text.
+    'Aout a octobre' -> [8, 9, 10]; 'Octobre a avril' wraps; seasons expand; [] = all year."""
+    t = re.sub(r"\(.*?\)", " ", (text or "").lower())
+    if "hors" in t:  # 'Hors hiver', 'Hors saison de chauffe' : tout sauf une periode -> toute l'annee
+        return []
+    tok = re.findall(r"[a-z]+", t)
+    months, i = [], 0
+    while i < len(tok):
+        w = tok[i]
+        if w in MONTH_NUM:
+            if i + 2 < len(tok) and tok[i + 1] == "a" and tok[i + 2] in MONTH_NUM:
+                a, b = MONTH_NUM[w], MONTH_NUM[tok[i + 2]]
+                months += list(range(a, b + 1)) if a <= b else list(range(a, 13)) + list(range(1, b + 1))
+                i += 3
+                continue
+            months.append(MONTH_NUM[w])
+        elif w in SEASON_NUM:
+            months += SEASON_NUM[w]
+        i += 1
+    if "apres l'hiver" in t:
+        months = SEASON_NUM["printemps"]  # 'apres l'hiver' = au printemps
+    if not months and "chauffe" in t:
+        months = [9, 10]  # 'avant la saison de chauffe'
+    return list(dict.fromkeys(months))
+
+
 def clean(v):
     if v is None:
         return None
@@ -195,6 +227,7 @@ def main():
             "frequency": {"rule": frequency(r["ID tache"], months, r["Periode recommandee"]),
                           "months": months, "label": r["Frequence (texte)"]},
             "season": r["Periode recommandee"],
+            "season_months": season_months(r["Periode recommandee"]),
             "duration_min": r["Duree (min)"],
             "tools": r["Outils et consommables"],
             "procedure": r["Mode operatoire"],
@@ -290,6 +323,8 @@ def main():
                 if (c["question"], c["answer"]) not in labels]
     assert not bad_skip, f"skip_if points to unknown answers: {bad_skip}"
     task_ids = {t["id"] for t in tasks}
+    no_months = [t["id"] for t in tasks if t["frequency"]["rule"] == "season_anchor" and not t["season_months"]]
+    assert not no_months, f"season_anchor tasks without parsable months: {no_months}"
     bad_dq = sorted({i for d in date_questions for i in d["tasks"]} - task_ids)
     assert not bad_dq, f"Date questions point to unknown tasks: {bad_dq}"
     covered = {d["tasks"][0] for d in date_questions if len(d["tasks"]) == 1}
