@@ -28,7 +28,10 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
         <header className="flex items-start justify-between gap-4">
           <div>
-            <Link href="/" className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">
+            <Link
+              href={`/places/${appliance.placeId}`}
+              className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+            >
               ← Retour
             </Link>
             <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
@@ -38,7 +41,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
           <DeleteApplianceButton
             id={appliance.id}
             confirmMessage={`Supprimer « ${getApplianceDisplayName(appliance)} » ? Ses obligations et rappels seront supprimés avec.`}
-            redirectTo="/"
+            redirectTo={`/places/${appliance.placeId}`}
           />
         </header>
 

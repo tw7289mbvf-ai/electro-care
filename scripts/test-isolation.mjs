@@ -82,6 +82,7 @@ async function main() {
   const [appliance] = await owner`INSERT INTO appliances (place_id, category, name) VALUES (${place.id}, 'kitchen', 'A appliance') RETURNING id`;
   const [obligation] = await owner`INSERT INTO appliance_obligations (appliance_id, maintenance_task_id) VALUES (${appliance.id}, 'T-TEST') RETURNING id`;
   const [check] = await owner`INSERT INTO place_checks (place_id, question_id, question_label) VALUES (${place.id}, 'Q-TEST', 'test') RETURNING id`;
+  const [completion] = await owner`INSERT INTO maintenance_completions (appliance_id, maintenance_task_id, done_month) VALUES (${appliance.id}, 'T-TEST', '2026-09') RETURNING id`;
   const [document] = await owner`INSERT INTO documents (account_id, document_type, storage_path) VALUES (${a.accountId}, 'invoice', '/test.pdf') RETURNING id`;
   await owner`INSERT INTO document_appliances (document_id, appliance_id) VALUES (${document.id}, ${appliance.id})`;
 
@@ -96,6 +97,7 @@ async function main() {
     { table: "appliance_obligations", id: obligation.id, col: "maintenance_task_id" },
     { table: "place_checks", id: check.id, col: "question_label" },
     { table: "documents", id: document.id, col: "storage_path" },
+    { table: "maintenance_completions", id: completion.id, col: "maintenance_task_id" },
   ];
   for (const t of targets) {
     const sel = await refused(() => sqlB.query(`SELECT * FROM ${t.table} WHERE id = $1`, [t.id]));
@@ -121,6 +123,7 @@ async function main() {
     ["INSERT appliances under A's place", () => sqlB.query("INSERT INTO appliances (place_id, category, name) VALUES ($1, 'kitchen', 'x')", [place.id])],
     ["INSERT appliance_obligations on A's appliance", () => sqlB.query("INSERT INTO appliance_obligations (appliance_id, maintenance_task_id) VALUES ($1, 'x')", [appliance.id])],
     ["INSERT place_checks on A's place", () => sqlB.query("INSERT INTO place_checks (place_id, question_id, question_label) VALUES ($1, 'x', 'x')", [place.id])],
+    ["INSERT maintenance_completions on A's appliance", () => sqlB.query("INSERT INTO maintenance_completions (appliance_id, maintenance_task_id, done_month) VALUES ($1, 'x', '2026-09')", [appliance.id])],
     ["INSERT document_appliances linking A's document to B's appliance", () => sqlB.query("INSERT INTO document_appliances (document_id, appliance_id) VALUES ($1, $2)", [document.id, applianceB.id])],
     ["UPDATE B's own appliance to attach it to A's place", () => sqlB.query("UPDATE appliances SET place_id = $1 WHERE id = $2", [place.id, applianceB.id])],
     // Dashboard actions (src/app/actions.ts): "Supprimer ce lieu" and "C'est fait",
@@ -154,7 +157,7 @@ async function main() {
   record("SELECT A's document after injection attempt", stillHidden.ok);
 
   // --- 3. No session at all ------------------------------------------------
-  for (const table of ["places", "appliances", "appliance_obligations", "place_checks", "documents", "document_appliances"]) {
+  for (const table of ["places", "appliances", "appliance_obligations", "place_checks", "documents", "document_appliances", "maintenance_completions"]) {
     const res = await refused(() => sqlAs(undefined).query(`SELECT * FROM ${table}`));
     record(`SELECT ${table} with no session token`, res.ok, res.code);
   }

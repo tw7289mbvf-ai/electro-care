@@ -193,6 +193,35 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON appliance_obligations TO authenticated`);
 
+  // Lifespan maintenance is app-only (no email, no legal deadline): one row per
+  // (appliance, task, calendar month) marks it done for that month. done_month in the
+  // unique key means re-doing the same task next month is a new row, not an overwrite.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS maintenance_completions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      done_month TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id, done_month)
+    )
+  `);
+  await client.query(`ALTER TABLE maintenance_completions ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS maintenance_completions_isolation ON maintenance_completions`);
+  await client.query(`
+    CREATE POLICY maintenance_completions_isolation ON maintenance_completions
+      FOR ALL
+      USING (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_completions.appliance_id AND p.account_id = auth.uid()
+      ))
+      WITH CHECK (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_completions.appliance_id AND p.account_id = auth.uid()
+      ))
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON maintenance_completions TO authenticated`);
+
   // --- One-time data conversions (journaled in schema_migrations, run at most once) ---
 
   // T-083 changed meaning (chantier 1): it used to be the annual battery check, it is

@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 28). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 31). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -69,11 +69,11 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 | Postponing | Always visible | Free |
 | Reminders | One by one, a month before the deadline | Grouped by season |
 
-- **Home screen**: obligations first, sorted by urgency, then the season's maintenance checklist. A compliance banner sums it up: "2 overdue, 1 to confirm, 4 up to date".
+- **Where obligations show**: the dashboard gives the global status and the overdue ones, place by place; each place's page lists all its obligations, sorted by urgency, then the month's maintenance.
 - **Risks on every obligation**: fine, insurance consequences, liability and physical danger, taken from the reference data.
 - **Three colour-coded statuses**, like a vehicle inspection: green (up to date, recent valid proof), orange (to confirm, the app needs an input from the user), red (overdue, no valid proof, action needed). Only green counts as compliant: orange is never "in order", since an insurer won't accept "it was recent".
 - **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?).
-- **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); never, or I don't know (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
+- **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); and last, a single "never or I don't know" button (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
 - **Dates in French**: picked from two lists (month in words, year) and shown as "septembre 2026", never with a day.
 - **Actions by status**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", whether a date or the power is missing.
 - **Bridge to the paid tier**: most obligations need a professional, so an obligation coming due offers to book a technician.
@@ -87,7 +87,7 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 - **Adaptive**: nothing is asked twice. No fireplace question when a stove is the main heating, no air conditioning question when a reversible heat pump already covers it, no vehicle question for a rental.
 - **Vehicles phrased per home**: "Un véhicule est-il rattaché à votre résidence principale ?" Each vehicle belongs to one home only, where it is mainly parked, so it is never counted twice.
 - **Questions name the appliance**: every question and every date request states which appliance and which intervention it is about.
-- **Never blocking**: every obligation question offers "Je ne sais pas", shown as a discreet choice. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
+- **Never blocking**: every obligation question offers "Je ne sais pas", as a regular button in last position. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
 - **Smoke detector**: always created, since it is mandatory in every home. The questionnaire asks whether one is installed ("no" shows as overdue), then the date printed on its back, which sets its replacement 10 years later. Recent models have a sealed 10-year battery, so there is no yearly battery reminder.
 - **Pool**: the answer names the safety device (barrier, alarm, cover or shelter); "no device" shows as overdue.
 - **Dates**: asked through each obligation's own question, described in Obligations and Maintenance.
@@ -109,10 +109,12 @@ Each person has an account, and sees only their own places and appliances. This 
 
 What a signed-in user sees first.
 
-- **Empty**: a single button, "Ajouter votre premier lieu", which leads straight into the questionnaire.
-- **Places stacked**: one below the other, ordered by property type: main home, second home, long-term rental, short-term rental. Letting the user reorder places is noted for later, outside the MVP.
-- **Two add buttons at two levels**: "Ajouter un lieu" on the dashboard, and "Ajouter un appareil" inside each place, so an appliance is always created in its place. The add form no longer sits on the dashboard.
-- **An action next to each obligation**: "C'est fait" on red, "Mettre à jour" on orange, nothing on green. The most frequent actions are one tap away from the status.
+- **Global status first**: across all places, "2 overdue · 1 to confirm · 12 up to date", and "3 maintenance tasks this month".
+- **"À faire maintenant"**: only overdue (red) obligations, grouped under each place's name so it stays readable, each with its "C'est fait" button. The urgent stays actionable from the home screen.
+- **One card per place**: name, property type and status dots, ordered by property type (main home, second home, long-term rental, short-term rental). Letting the user reorder places is noted for later, outside the MVP.
+- **Place page**: tapping a card opens all the place's obligations with their actions, the month's maintenance, its appliances by category, and "Ajouter un appareil".
+- **Same layout with one place**: consistent, and the urgent stays at the top.
+- **Empty**: a single button, "Ajouter votre premier lieu", which leads straight into the questionnaire. Otherwise "Ajouter un lieu" sits below the place cards.
 
 ## Managing Appliances
 
@@ -128,7 +130,8 @@ Tapping an appliance opens its card.
 - **Legal obligations, by email**: a first email three months before the deadline, leaving time to find a professional; a reminder one month before if not done; another at the deadline. Sent from the app's own domain through a European email service.
 - **A ready-to-send request in the email**: a quote request (new provider) or an intervention request (usual provider), naming the appliance, its brand and model when known, the intervention and its legal basis ("Annual gas boiler service, Saunier Duval Thema C, required by decree 2009-649"). One button opens it in the user's mail app.
 - **Brand and model, optional**: asked in the appliance card and at reminder time ("add the model, it will appear in your request"), only for appliances that have a nameplate.
-- **Lifespan maintenance, in the app only**: no email; the season's tasks show on the dashboard with a notification count.
+- **Lifespan maintenance, in the app only**: no email. The count of tasks due this month shows in the global status; the tasks themselves are listed on each place's page, timed by each task's frequency and the months it applies to.
+- **Routines stay in the appliance card**: tasks more frequent than monthly (weekly, after each use) never reach the dashboard or the place page, so both stay readable.
 - **Calendar**: a subscription link for the user's calendar comes later, as a small addition.
 
 ## Maintenance Guidance

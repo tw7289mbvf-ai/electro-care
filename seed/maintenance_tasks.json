@@ -10,6 +10,11 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a octobre (avant la chauffe)",
+    "season_months": [
+      8,
+      9,
+      10
+    ],
     "duration_min": 90,
     "tools": "Prestataire qualifie PG",
     "procedure": "Prendre rendez-vous hors pic saisonnier. Le technicien controle le corps de chauffe, le bruleur, les organes de securite, mesure le taux de CO et le rendement. Recuperer l'attestation sous 15 jours et l'archiver.",
@@ -27,6 +32,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 3,
     "tools": "Aucun (manometre integre)",
     "procedure": "Lire le manometre a froid. Entre 1 et 1,5 bar en general. Si en dessous, ouvrir la vanne de remplissage jusqu'a 1,2 bar puis refermer. Si la pression rechute chaque semaine, il y a une fuite : appeler un professionnel.",
@@ -44,6 +50,7 @@
       "label": "Tous les 2 ans"
     },
     "season": "Pendant l'entretien annuel",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Manometre, pompe a velo",
     "procedure": "A faire realiser lors de l'entretien : controle de la pression de gonflage du vase (generalement 0,8 a 1 bar, circuit vide) et purge du circulateur.",
@@ -61,6 +68,11 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a octobre",
+    "season_months": [
+      8,
+      9,
+      10
+    ],
     "duration_min": 120,
     "tools": "Prestataire qualifie",
     "procedure": "Nettoyage du corps de chauffe et de la buse, remplacement du gicleur et du filtre fioul, reglage de la combustion avec analyseur, mesure de l'indice de noircissement. Attestation a archiver.",
@@ -78,6 +90,14 @@
       "label": "Tous les mois"
     },
     "season": "Octobre a mars",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
     "duration_min": 5,
     "tools": "Jauge",
     "procedure": "Relever le niveau. Commander des que la cuve descend sous 25% : les delais et les prix montent fortement en pleine saison de chauffe.",
@@ -95,6 +115,10 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a septembre",
+    "season_months": [
+      8,
+      9
+    ],
     "duration_min": 120,
     "tools": "Prestataire qualifie",
     "procedure": "Nettoyage complet de l'echangeur, du foyer et du systeme d'extraction des cendres, controle des sondes et de la vis sans fin, reglage de la combustion.",
@@ -112,6 +136,15 @@
       "label": "Toutes les 2 a 6 semaines selon usage"
     },
     "season": "Octobre a avril",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
     "duration_min": 10,
     "tools": "Aspirateur a cendres",
     "procedure": "Laisser refroidir completement. Aspirer avec un aspirateur a cendres uniquement (jamais un aspirateur domestique). Verifier que le cendrier est bien reclipse.",
@@ -129,6 +162,15 @@
       "label": "Toutes les semaines en saison"
     },
     "season": "Octobre a avril",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
     "duration_min": 15,
     "tools": "Aspirateur a cendres, grattoir, chiffon",
     "procedure": "Appareil froid. Retirer le creuset, gratter les trous d'arrivee d'air un par un, aspirer le logement. Nettoyer la vitre avec de la cendre humide sur du papier journal.",
@@ -146,6 +188,15 @@
       "label": "Tous les mois en saison"
     },
     "season": "Octobre a avril",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
     "duration_min": 25,
     "tools": "Aspirateur a cendres, ecouvillon fourni",
     "procedure": "Actionner les tringles de decendrage si l'appareil en dispose, ouvrir les trappes de ramonage internes et aspirer. Se referer a la notice pour l'emplacement exact des trappes.",
@@ -163,6 +214,10 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a septembre",
+    "season_months": [
+      8,
+      9
+    ],
     "duration_min": 90,
     "tools": "Prestataire qualifie",
     "procedure": "Demontage, nettoyage des ventilateurs et du bougeoir, controle des joints, de la sonde de temperature et du pressostat, mise a jour des parametres de combustion.",
@@ -180,6 +235,7 @@
       "label": "Tous les 3 ans"
     },
     "season": "Hors saison",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Kit de joints, colle refractaire",
     "procedure": "A faire realiser lors de l'entretien annuel. Test prealable : glisser une feuille de papier dans la porte fermee, si elle coulisse sans resistance, le joint est a changer.",
@@ -197,6 +253,15 @@
       "label": "Toutes les semaines en saison"
     },
     "season": "Octobre a avril",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
     "duration_min": 15,
     "tools": "Cendre, papier journal, aspirateur a cendres",
     "procedure": "Laisser un lit de cendres de 2 a 3 cm au fond du foyer : il favorise la combustion. Nettoyer la vitre avec du papier journal humidifie trempe dans la cendre.",
@@ -214,6 +279,10 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a septembre",
+    "season_months": [
+      8,
+      9
+    ],
     "duration_min": 60,
     "tools": "Prestataire qualifie",
     "procedure": "Controle des briques refractaires, du deflecteur, des joints et du tirage. A coupler avec le ramonage pour une seule intervention.",
@@ -231,6 +300,12 @@
       "label": "1 fois par an minimum"
     },
     "season": "Aout a septembre, ou fevrier-mars",
+    "season_months": [
+      8,
+      9,
+      2,
+      3
+    ],
     "duration_min": 45,
     "tools": "Ramoneur qualifie",
     "procedure": "Ramonage mecanique obligatoire (herisson), le ramonage chimique ne vaut pas preuve. Exiger le certificat de ramonage et le conserver 5 ans : c'est la piece que l'assureur reclame apres un sinistre.",
@@ -249,6 +324,10 @@
       "threshold": "Wood > 6 m3 or pellets > 2.5 t burned in the year"
     },
     "season": "Pendant la periode de chauffe",
+    "season_months": [
+      9,
+      10
+    ],
     "duration_min": 45,
     "tools": "Ramoneur qualifie",
     "procedure": "Verifier sa consommation annuelle. Au-dela des seuils, un second ramonage est requis, dont un pendant la periode d'utilisation. Certaines communes restent plus exigeantes : verifier en mairie.",
@@ -266,6 +345,10 @@
       "label": "1 fois par an minimum"
     },
     "season": "Avant la saison de chauffe",
+    "season_months": [
+      9,
+      10
+    ],
     "duration_min": 45,
     "tools": "Ramoneur qualifie",
     "procedure": "Meme obligation que pour un foyer ferme. Le foyer ouvert lui-meme est dispense d'entretien reglementaire mais doit etre maintenu propre et en bon etat.",
@@ -283,6 +366,14 @@
       "label": "Tous les 2 ans"
     },
     "season": "Printemps ou automne",
+    "season_months": [
+      3,
+      4,
+      5,
+      9,
+      10,
+      11
+    ],
     "duration_min": 90,
     "tools": "Prestataire qualifie",
     "procedure": "Controle de l'etancheite du circuit frigorifique, des pressions, du degivrage, nettoyage de l'echangeur, controle du circulateur et de la regulation. Attestation a archiver.",
@@ -300,6 +391,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 20,
     "tools": "Brosse souple, jet d'eau basse pression",
     "procedure": "Couper l'alimentation. Retirer feuilles et debris autour de l'unite, brosser delicatement les ailettes dans le sens des lamelles. Degager 50 cm tout autour. Ne jamais utiliser de nettoyeur haute pression.",
@@ -317,6 +412,9 @@
       "label": "Tous les ans"
     },
     "season": "Novembre",
+    "season_months": [
+      11
+    ],
     "duration_min": 10,
     "tools": "Aucun",
     "procedure": "Verifier que l'evacuation des condensats sous l'unite n'est pas obstruee et que l'unite n'est pas posee dans une cuvette qui gele. Surelever si necessaire.",
@@ -334,6 +432,7 @@
       "label": "Tous les mois en saison d'usage"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Eau tiede savonneuse",
     "procedure": "Ouvrir la facade, retirer les filtres, laver a l'eau tiede, secher completement a l'ombre avant remontage. Un filtre remonte humide devient un nid a moisissures.",
@@ -351,6 +450,11 @@
       "label": "Tous les 2 ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 90,
     "tools": "Pro avec attestation de capacite fluides",
     "procedure": "Controle d'etancheite, desinfection de l'echangeur interieur, controle des pressions et du bac a condensats.",
@@ -368,6 +472,10 @@
       "label": "Tous les ans"
     },
     "season": "Septembre ou octobre",
+    "season_months": [
+      9,
+      10
+    ],
     "duration_min": 30,
     "tools": "Cle de purge, chiffon, recipient",
     "procedure": "Chauffage en marche puis coupe 1 h avant. Commencer par le radiateur le plus bas et le plus proche de la chaudiere, finir par le plus eloigne en etage. Ouvrir jusqu'a ce que l'eau coule sans bulles. Retablir la pression a la fin.",
@@ -385,6 +493,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Septembre et mars",
+    "season_months": [
+      9,
+      3
+    ],
     "duration_min": 20,
     "tools": "Aspirateur, goupillon long",
     "procedure": "Aspirer les ailettes par le dessus et passer un goupillon entre les lames. La poussiere agit comme un isolant sur la surface d'echange.",
@@ -402,6 +514,7 @@
       "label": "Tous les 8 a 10 ans"
     },
     "season": "Hors saison de chauffe",
+    "season_months": [],
     "duration_min": 240,
     "tools": "Prestataire specialise",
     "procedure": "Injection d'un desembouant, circulation, rincage et repose d'un inhibiteur de corrosion. Recommande d'installer un pot a boues magnetique a cette occasion.",
@@ -419,6 +532,9 @@
       "label": "Tous les ans"
     },
     "season": "Septembre",
+    "season_months": [
+      9
+    ],
     "duration_min": 15,
     "tools": "Aspirateur, brosse",
     "procedure": "Appareil eteint et froid. Aspirer les grilles hautes et basses. Ne jamais poser de linge a secher dessus.",
@@ -436,6 +552,7 @@
       "label": "Tous les 5 a 10 ans"
     },
     "season": "Cuve presque vide",
+    "season_months": [],
     "duration_min": 180,
     "tools": "Prestataire agree",
     "procedure": "Pompage des boues de fond, controle de l'etancheite et de la cuvette de retention, verification de l'event et de la jauge.",
@@ -453,6 +570,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
     "procedure": "Tourner la manette du groupe de securite en position vidange quelques secondes jusqu'a ce que l'eau coule franchement, puis refermer. Cela evite que le clapet ne se bloque par le calcaire.",
@@ -470,6 +588,7 @@
       "label": "Tous les 2 ans (annuel en eau tres dure)"
     },
     "season": "Hors periode de forte demande",
+    "season_months": [],
     "duration_min": 120,
     "tools": "Plombier",
     "procedure": "Vidange du ballon, demontage de la platine, detartrage de la resistance et de la cuve, controle et remplacement de l'anode si elle est consommee a plus de 50%, remplacement du joint de bride.",
@@ -487,6 +606,7 @@
       "label": "Tous les ans"
     },
     "season": "A la mise en service",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Tournevis",
     "procedure": "Regler entre 55 et 60 degres : en dessous, risque de legionelle ; au-dessus, entartrage accelere et brulures.",
@@ -504,6 +624,11 @@
       "label": "Tous les 2 ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 90,
     "tools": "Pro qualifie",
     "procedure": "Nettoyage de l'evaporateur et du filtre d'air, controle du circuit frigorifique, de l'anode et des condensats.",
@@ -521,6 +646,7 @@
       "label": "Tous les 3 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Aspirateur, eau tiede",
     "procedure": "Retirer le filtre a l'arriere ou au-dessus de l'appareil, aspirer puis rincer, secher avant remontage.",
@@ -538,6 +664,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 60,
     "tools": "Pro qualifie",
     "procedure": "Controle du pH et du point de congelation du glycol, de la pression du circuit primaire, de l'etat du vase d'expansion et de la sonde capteur.",
@@ -555,6 +686,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Sacs de sel pastilles",
     "procedure": "Maintenir le niveau de sel au-dessus du niveau d'eau. Verifier l'absence de croute de sel agglomeree au fond : la casser si besoin.",
@@ -572,6 +704,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Desinfectant pour resine, bandelettes de test",
     "procedure": "Lancer un cycle de desinfection selon la notice. Mesurer la durete en sortie avec les bandelettes : viser 8 a 12 degres francais, pas 0.",
@@ -589,6 +722,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 30,
     "tools": "Eau savonneuse, brosse",
     "procedure": "Deposer les bouches en les devissant, les faire tremper dans de l'eau chaude savonneuse, brosser, secher. Reperer leur position d'origine : les bouches de cuisine et de salle de bains ne sont pas interchangeables.",
@@ -606,6 +743,7 @@
       "label": "Tous les 2 ans"
     },
     "season": "Hors hiver",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Pro ou particulier bricoleur",
     "procedure": "Couper l'alimentation. Depoussierer la turbine et le caisson, controler les fixations et l'etat des gaines souples (ecrasement, percements).",
@@ -623,6 +761,7 @@
       "label": "Tous les 3 a 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Jeu de filtres (G4 et F7 en general)",
     "procedure": "Couper la centrale. Noter la date au feutre sur le filtre neuf. En zone pollinique ou proche d'un axe routier, passer a 3 mois.",
@@ -640,6 +779,11 @@
       "label": "Tous les ans"
     },
     "season": "Ete",
+    "season_months": [
+      6,
+      7,
+      8
+    ],
     "duration_min": 45,
     "tools": "Eau tiede savonneuse",
     "procedure": "Extraire le bloc echangeur, le rincer a l'eau tiede, le laisser secher. Verifier que le siphon de condensats est amorce et non bouche.",
@@ -657,6 +801,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Lave-vaisselle ou eau tres chaude + bicarbonate",
     "procedure": "Les filtres metalliques passent au lave-vaisselle en cycle intensif. Bien secher avant remontage.",
@@ -674,6 +819,7 @@
       "label": "Tous les 6 mois (hotte recyclante)"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Filtre a charbon compatible",
     "procedure": "Uniquement pour les hottes recyclantes (sans evacuation exterieure). Le charbon ne se lave pas, il se remplace.",
@@ -691,6 +837,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 15,
     "tools": "Aspirateur, chiffon humide",
     "procedure": "Deposer le capot des reglettes en haut des fenetres, aspirer, essuyer. Ne jamais les obturer, meme en hiver.",
@@ -708,6 +858,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 15,
     "tools": "Aspirateur avec brosse, goupillon",
     "procedure": "Debrancher l'appareil, l'ecarter du mur, aspirer la grille noire a l'arriere ou la grille basse selon le modele. Laisser 5 cm de degagement a l'arriere.",
@@ -725,6 +879,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 10,
     "tools": "Eau savonneuse, coton-tige, feuille de papier",
     "procedure": "Nettoyer la gorge du joint au coton-tige. Test : coincer une feuille de papier dans la porte fermee ; si elle glisse sans resistance, le joint est a remplacer.",
@@ -742,6 +900,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 10,
     "tools": "Coton-tige, seringue d'eau tiede",
     "procedure": "Localiser le petit orifice au fond de la paroi arriere du refrigerateur. Le degager delicatement et rincer a l'eau tiede.",
@@ -759,6 +921,9 @@
       "label": "Tous les ans (ou des 3 mm de givre)"
     },
     "season": "Janvier ou avant les grosses courses",
+    "season_months": [
+      1
+    ],
     "duration_min": 180,
     "tools": "Glaciere, serpillieres, bassine",
     "procedure": "Transferer les denrees dans une glaciere, debrancher, laisser fondre porte ouverte avec des serpillieres au sol. Ne jamais gratter avec un objet metallique : perforer le circuit condamne l'appareil.",
@@ -776,6 +941,7 @@
       "label": "Tous les 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Filtre d'origine compatible",
     "procedure": "Localiser la cartouche (souvent en bas a droite ou dans le compartiment froid). Purger 2 a 3 litres apres remplacement avant consommation.",
@@ -793,6 +959,7 @@
       "label": "Tous les 3 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Recipient plat, serpilliere, chiffon",
     "procedure": "Ouvrir la trappe en bas de l'appareil, placer un recipient, devisser lentement le bouchon. Retirer pieces, cheveux et peluches. Rincer et revisser fermement.",
@@ -810,6 +977,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Chiffon, vinaigre blanc ou bicarbonate",
     "procedure": "Ecarter le pli du joint sur tout le tour et essuyer. Laisser le hublot entrouvert apres chaque lessive.",
@@ -827,6 +995,7 @@
       "label": "Tous les 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 120,
     "tools": "Acide citrique (100 g) ou vinaigre blanc (500 ml)",
     "procedure": "Machine vide, cycle le plus chaud (90 degres), produit directement dans le tambour. Nettoyer ensuite le bac a lessive a l'eau chaude.",
@@ -844,6 +1013,7 @@
       "label": "Tous les 5 ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Tuyau neuf avec joints, pince multiprise",
     "procedure": "Fermer l'arrivee d'eau, devisser, remplacer joints compris. Prevoir un tuyau aquastop si l'appareil est a l'etage.",
@@ -861,6 +1031,7 @@
       "label": "A chaque cycle"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
     "procedure": "Retirer le voile de peluches a la main apres chaque sechage. Rincer le filtre a l'eau une fois par mois pour eliminer le film d'adoucissant.",
@@ -878,6 +1049,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Eau courante, brosse souple",
     "procedure": "Deverrouiller la trappe basse, extraire le bloc condenseur, le rincer sous le robinet jusqu'a ce que l'eau ressorte claire, secher et remonter.",
@@ -895,6 +1067,7 @@
       "label": "Tous les 3 mois (modeles PAC)"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Aspirateur, eau tiede",
     "procedure": "Filtre fin situe derriere le filtre principal. Aspirer puis rincer. Sur les seche-linge PAC, c'est la piece la plus souvent negligee.",
@@ -912,6 +1085,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Brosse a vaisselle, eau chaude",
     "procedure": "Deverrouiller le filtre cylindrique au fond de la cuve, retirer les residus, brosser la grille inox, rincer.",
@@ -929,6 +1103,7 @@
       "label": "Tous les 3 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Cure-dent, aiguille",
     "procedure": "Deposer les bras (souvent un quart de tour), degager chaque buse avec un cure-dent, rincer, verifier qu'ils tournent librement une fois remontes.",
@@ -946,6 +1121,7 @@
       "label": "Tous les 2 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Sel regenerant specifique, liquide de rincage",
     "procedure": "Remplir le reservoir de sel (jamais de sel de table). Regler la durete de l'appareil sur celle de l'eau du reseau, disponible sur la facture d'eau.",
@@ -963,6 +1139,7 @@
       "label": "Tous les 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 90,
     "tools": "Acide citrique ou produit specifique",
     "procedure": "Appareil vide, cycle le plus chaud avec le produit dans le panier superieur.",
@@ -980,6 +1157,7 @@
       "label": "Tous les 3 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 150,
     "tools": "Aucun (retirer grilles et lechefrite)",
     "procedure": "Retirer tous les accessoires non pyrolysables. Ventiler la piece. Sortir les animaux domestiques, en particulier les oiseaux, sensibles aux vapeurs.",
@@ -997,6 +1175,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
     "procedure": "Passer le doigt sur tout le pourtour : le joint doit etre souple et sans cassure. Un joint durci se remplace, piece disponible chez le fabricant.",
@@ -1015,6 +1194,7 @@
       "threshold": "Expiry date printed on the gas hose"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 3,
     "tools": "Aucun",
     "procedure": "Lire la date imprimee sur la bague du flexible. Remplacer imperativement a echeance, meme si le tuyau parait intact. Privilegier un flexible a duree de vie illimitee avec embouts vissables.",
@@ -1032,6 +1212,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Brosse metallique fine, aiguille, eau savonneuse",
     "procedure": "Deposer chapeaux et couronnes, les faire tremper, degager chaque orifice a l'aiguille. Une flamme doit etre bleue et stable.",
@@ -1049,6 +1230,7 @@
       "label": "Tous les 1 a 3 mois selon durete"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Detartrant specifique ou acide citrique",
     "procedure": "Lancer le programme de detartrage de l'appareil. En eau dure (au-dela de 25 degres francais), passer a un detartrage mensuel ou installer un filtre.",
@@ -1066,6 +1248,7 @@
       "label": "Hebdomadaire"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Eau tiede, pastilles degraissantes",
     "procedure": "Rincer le groupe d'infusion amovible a l'eau claire sans detergent. Nettoyer le circuit lait apres chaque usage, imperativement le jour meme.",
@@ -1083,6 +1266,7 @@
       "label": "Tous les 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Filtre compatible",
     "procedure": "Certains filtres sont lavables (rincer, secher 24 h), d'autres se remplacent. Verifier la notice : remonter un filtre humide endommage le moteur.",
@@ -1100,6 +1284,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Peigne coupe-fils, chiffon microfibre sec",
     "procedure": "Demonter la brosse centrale et couper les cheveux enroules, nettoyer les brosses laterales, essuyer les capteurs de chute et la lentille de navigation.",
@@ -1117,6 +1302,7 @@
       "label": "Tous les 6 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Vinaigre blanc, pince, chiffon",
     "procedure": "Devisser l'embout, le faire tremper une nuit dans du vinaigre blanc, rincer, remonter.",
@@ -1134,6 +1320,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Aucun",
     "procedure": "Fermer tous les points d'eau, relever le compteur, attendre 2 h sans consommation, relever de nouveau. Toute difference signale une fuite. Commencer par les chasses d'eau.",
@@ -1151,6 +1338,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 30,
     "tools": "Pro habilite",
     "procedure": "Obligatoire si le reseau d'arrosage ou un recuperateur d'eau de pluie est raccorde au reseau public. Controle du clapet et de la mise a l'air.",
@@ -1168,6 +1360,10 @@
       "label": "Tous les 6 mois (filtre) / 12 mois (cuve)"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 45,
     "tools": "Brosse, jet d'eau",
     "procedure": "Nettoyer le filtre en amont de la cuve, verifier le siphon anti-odeurs et le trop-plein. Tenir a jour le carnet sanitaire si l'eau alimente des WC ou un lave-linge.",
@@ -1185,6 +1381,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 20,
     "tools": "Seau d'eau",
     "procedure": "Verser de l'eau pour declencher le flotteur et verifier le demarrage. Nettoyer la crepine et controler le clapet anti-retour.",
@@ -1203,6 +1404,7 @@
       "threshold": "Sludge reaches 50% of the tank's useful volume"
     },
     "season": "Hors periode de gel",
+    "season_months": [],
     "duration_min": 120,
     "tools": "Vidangeur agree par le prefet",
     "procedure": "Faire mesurer la hauteur de boues. Exiger le bordereau de suivi des matieres de vidange : c'est la piece que le SPANC reclame au controle. Ne jamais faire nettoyer au jet haute pression, cela detruit la flore bacterienne.",
@@ -1220,6 +1422,7 @@
       "label": "Au moins tous les 10 ans (souvent 4 a 8 selon la commune)"
     },
     "season": "Sur convocation",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Plan de l'installation, bordereaux de vidange",
     "procedure": "Degager les regards et tampons, rassembler le plan, les factures d'entretien et les bordereaux de vidange. Verifier la hauteur de boues avant la visite.",
@@ -1237,6 +1440,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 30,
     "tools": "Gants, raclette, sac etanche",
     "procedure": "Retirer la croute de graisse en surface, racler les parois, evacuer avec les ordures menageres (jamais dans les canalisations).",
@@ -1254,6 +1461,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 30,
     "tools": "Jet d'eau, gants",
     "procedure": "Sortir les materiaux filtrants (pouzzolane), les rincer au jet au-dessus de la fosse, les remettre en place.",
@@ -1271,6 +1482,7 @@
       "label": "Tous les ans (contrat)"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Prestataire agree",
     "procedure": "Controle du surpresseur, des diffuseurs d'air, de la recirculation des boues et mesure du taux de boues.",
@@ -1288,6 +1500,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 15,
     "tools": "Jumelles depuis le sol",
     "procedure": "Observer depuis le sol : salissures, fientes, mousses, ombrage nouveau (branche qui a pousse), modules deplaces apres une tempete. Ne jamais monter sur la toiture sans equipement.",
@@ -1305,6 +1521,11 @@
       "label": "Tous les 1 a 2 ans"
     },
     "season": "Printemps, tot le matin",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 90,
     "tools": "Prestataire equipe (travail en hauteur)",
     "procedure": "Eau demineralisee et brosse douce, jamais de haute pression ni de detergent. Modules froids imperativement, sinon choc thermique.",
@@ -1322,6 +1543,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Application du monitoring",
     "procedure": "Comparer la production du mois a celle du meme mois l'an dernier. Un ecart superieur a 10% signale un probleme (onduleur, string hors service, salissure).",
@@ -1339,6 +1561,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 45,
     "tools": "Pro qualifie IRVE",
     "procedure": "Controle du serrage des connexions, de l'etat du cable et de la prise, test du differentiel dedie, verification de la mise a la terre.",
@@ -1356,6 +1579,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
     "procedure": "Appuyer sur le bouton Test de chaque differentiel : il doit declencher immediatement. Reenclencher. Prevenir les occupants avant (coupure des appareils).",
@@ -1373,6 +1597,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Carburant stabilise",
     "procedure": "Faire tourner 15 minutes en charge. Vidanger le carburant ou utiliser un stabilisant si l'appareil reste inutilise plus de 3 mois.",
@@ -1390,6 +1615,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
     "procedure": "Appuyer sur le bouton test jusqu'au signal sonore. Depoussierer la grille a l'aspirateur tous les 6 mois.",
@@ -1408,6 +1634,7 @@
       "threshold": "Due date = manufacture date printed on the back of the detector + 10 years"
     },
     "season": "Selon echeance",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Detecteur neuf certifie NF EN 14604",
     "procedure": "Remplacer l'appareil complet 10 ans apres sa date de fabrication, ou des qu'il signale sa fin de vie. Les modeles recents ont une pile scellee de 10 ans : rien a changer entre-temps. Sur un ancien modele a pile remplacable, changer la pile chaque annee.",
@@ -1425,6 +1652,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
     "procedure": "Bouton test mensuel. Positionner l'appareil a hauteur de respiration, dans la piece ou se trouve l'appareil a combustion, a 1 a 3 m de celui-ci.",
@@ -1442,6 +1670,7 @@
       "label": "Test mensuel / piles annuelles"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Piles lithium des detecteurs",
     "procedure": "Passer en mode test, declencher chaque detecteur un par un, verifier la transmission vers la centrale et la sirene.",
@@ -1459,6 +1688,7 @@
       "label": "Toutes les 6 semaines au maximum"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Ascensoriste sous contrat",
     "procedure": "Obligation legale : contrat d'entretien et visite toutes les 6 semaines. Le carnet d'entretien doit etre tenu a jour et conservable.",
@@ -1476,6 +1706,7 @@
       "label": "Tous les 5 ans"
     },
     "season": "Selon echeance",
+    "season_months": [],
     "duration_min": 180,
     "tools": "Organisme de controle agree",
     "procedure": "Controle independant de l'installation et de l'etat de securite. Rapport a conserver et a annexer au carnet d'entretien.",
@@ -1493,6 +1724,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 30,
     "tools": "Graisse silicone, chiffon",
     "procedure": "Nettoyer le rail ou les gonds, graisser les articulations. Tester l'anti-ecrasement en interposant un obstacle souple : le portail doit s'arreter et repartir en arriere.",
@@ -1510,6 +1745,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 10,
     "tools": "Chiffon microfibre",
     "procedure": "Essuyer les deux lentilles, verifier l'alignement (voyant fixe) et l'absence de vegetation devant le faisceau.",
@@ -1527,6 +1766,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 20,
     "tools": "Lampe torche",
     "procedure": "Inspecter visuellement les ressorts, cables et galets. En cas de fil casse ou de ressort detendu, ne pas intervenir soi-meme : la tension est mortelle.",
@@ -1544,6 +1787,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 30,
     "tools": "Aspirateur fin, lubrifiant silicone",
     "procedure": "Aspirer les coulisses, pulveriser du silicone (jamais de graisse qui attire la poussiere), manoeuvrer plusieurs fois.",
@@ -1561,6 +1809,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 45,
     "tools": "Silicone, graisse pour quincaillerie, tournevis",
     "procedure": "Nettoyer les joints et les nourrir au silicone. Graisser gaches et cremones. Regler la compression avec les excentriques si un courant d'air se fait sentir.",
@@ -1578,6 +1831,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Aucun",
     "procedure": "Verifier le bon etat et le fonctionnement du dispositif retenu (barriere, alarme, couverture ou abri) et conserver l'attestation de conformite.",
@@ -1595,6 +1849,13 @@
       "label": "Toutes les semaines en saison"
     },
     "season": "Mai a septembre",
+    "season_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 15,
     "tools": "Aucun (vanne 6 voies)",
     "procedure": "Pompe a l'arret, vanne sur Backwash, relancer 2 minutes jusqu'a ce que l'eau du voyant soit claire, puis Rinse 30 secondes, puis retour en Filtration. Faire l'appoint d'eau ensuite.",
@@ -1612,6 +1873,11 @@
       "label": "Tous les 5 a 7 ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 180,
     "tools": "Sable de silice calibre ou verre filtrant",
     "procedure": "Vidange du filtre, evacuation du sable agglomere, remplissage neuf en respectant la granulometrie et le volume prevus par le constructeur.",
@@ -1629,6 +1895,13 @@
       "label": "Toutes les semaines en saison"
     },
     "season": "Mai a septembre",
+    "season_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 10,
     "tools": "Aucun",
     "procedure": "Couper la pompe, fermer les vannes, ouvrir le couvercle transparent, vider le panier des feuilles et insectes, rincer, refermer sans trop serrer.",
@@ -1646,6 +1919,9 @@
       "label": "Tous les ans"
     },
     "season": "Novembre (eau sous 12 degres)",
+    "season_months": [
+      11
+    ],
     "duration_min": 120,
     "tools": "Bouchons d'hivernage, gizzmo, flotteurs, produit d'hivernage",
     "procedure": "Baisser le niveau sous les buses, vidanger integralement pompe et filtre, poser les bouchons, proteger le skimmer avec un gizzmo, ajouter le produit d'hivernage.",
@@ -1663,6 +1939,10 @@
       "label": "Tous les ans"
     },
     "season": "Mars a avril (eau sous 15 degres)",
+    "season_months": [
+      3,
+      4
+    ],
     "duration_min": 180,
     "tools": "Produits de traitement, epuisette, kit de test",
     "procedure": "Retirer les bouchons, remonter le niveau, nettoyer le bassin, analyser l'eau, ajuster pH puis desinfectant, filtrer en continu 24 a 48 h.",
@@ -1680,6 +1960,13 @@
       "label": "Mensuel (controle) / annuel (detartrage)"
     },
     "season": "Mai a septembre",
+    "season_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 30,
     "tools": "Vinaigre blanc ou acide dilue, gants",
     "procedure": "Inspecter les plaques par transparence. Si le calcaire est visible, tremper la cellule dans une solution de detartrage, rincer abondamment a l'eau claire.",
@@ -1697,6 +1984,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
     "procedure": "Declencher volontairement le detecteur et verifier la sirene. Remplacer la pile chaque annee. C'est un equipement reglementaire, pas un accessoire.",
@@ -1714,6 +2002,7 @@
       "label": "Filtres mensuels / vidange trimestrielle"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 90,
     "tools": "Filtre de rechange, nettoyant de canalisations",
     "procedure": "Rincer les cartouches chaque mois et les faire tremper dans un degraissant. Vidanger tous les 3 mois en purgeant les canalisations avec un produit anti-biofilm.",
@@ -1731,6 +2020,9 @@
       "label": "Tous les ans"
     },
     "season": "Mars, avant la saison",
+    "season_months": [
+      3
+    ],
     "duration_min": 60,
     "tools": "Huile moteur, bougie, filtre a air, lime",
     "procedure": "Vidanger l'huile moteur a chaud, remplacer la bougie et le filtre a air, affuter et equilibrer la lame, nettoyer le carter.",
@@ -1748,6 +2040,9 @@
       "label": "Tous les ans"
     },
     "season": "Novembre",
+    "season_months": [
+      11
+    ],
     "duration_min": 30,
     "tools": "Stabilisant carburant",
     "procedure": "Vider le reservoir ou ajouter un stabilisant, faire tourner jusqu'a la panne seche, nettoyer le carter, stocker au sec.",
@@ -1765,6 +2060,16 @@
       "label": "Tous les 2 a 3 mois"
     },
     "season": "Mars a octobre",
+    "season_months": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
     "duration_min": 15,
     "tools": "Jeu de lames et vis d'origine",
     "procedure": "Retourner le robot, devisser les lames, les remplacer toutes en meme temps pour preserver l'equilibrage. Nettoyer le chassis a la brosse, jamais au jet.",
@@ -1782,6 +2087,9 @@
       "label": "Tous les ans"
     },
     "season": "Novembre",
+    "season_months": [
+      11
+    ],
     "duration_min": 20,
     "tools": "Antigel pour pompe",
     "procedure": "Purger toute l'eau de la pompe et du flexible, aspirer un peu d'antigel, stocker hors gel.",
@@ -1799,6 +2107,9 @@
       "label": "Tous les ans"
     },
     "season": "Novembre",
+    "season_months": [
+      11
+    ],
     "duration_min": 60,
     "tools": "Compresseur ou vannes de purge",
     "procedure": "Couper l'alimentation, ouvrir les purges de point bas, souffler les reseaux a l'air comprime si l'installation le permet, rentrer le programmateur.",
@@ -1816,6 +2127,10 @@
       "label": "Tous les ans"
     },
     "season": "Mars a avril",
+    "season_months": [
+      3,
+      4
+    ],
     "duration_min": 45,
     "tools": "Aucun",
     "procedure": "Remettre en eau progressivement, faire tourner chaque zone, reperer goutteurs bouches, tuyeres desaxees et fuites, reprogrammer selon la saison.",
@@ -1833,6 +2148,9 @@
       "label": "Tous les ans"
     },
     "season": "Avril",
+    "season_months": [
+      4
+    ],
     "duration_min": 20,
     "tools": "Eau savonneuse, brosse",
     "procedure": "Verifier la date du flexible. Test de fuite : badigeonner les raccords d'eau savonneuse, des bulles signalent une fuite. Degager les orifices des bruleurs.",
@@ -1850,6 +2168,10 @@
       "label": "2 fois par an"
     },
     "season": "Novembre (apres la chute des feuilles) et avril",
+    "season_months": [
+      11,
+      4
+    ],
     "duration_min": 90,
     "tools": "Echelle stabilisee, gants, seau, jet d'eau",
     "procedure": "Retirer feuilles et mousses, rincer vers les descentes, verifier l'ecoulement et l'etat des crochets. Travail en hauteur : ne jamais operer seul.",
@@ -1867,6 +2189,11 @@
       "label": "Tous les ans"
     },
     "season": "Apres les tempetes d'automne",
+    "season_months": [
+      9,
+      10,
+      11
+    ],
     "duration_min": 30,
     "tools": "Jumelles",
     "procedure": "Observer depuis le sol ou une fenetre en vis-a-vis : tuiles deplacees ou cassees, faitage, solins de cheminee, mousses. Ne jamais monter sur le toit sans securisation.",
@@ -1884,6 +2211,14 @@
       "label": "Tous les 5 a 10 ans"
     },
     "season": "Printemps ou automne",
+    "season_months": [
+      3,
+      4,
+      5,
+      9,
+      10,
+      11
+    ],
     "duration_min": 480,
     "tools": "Entreprise de couverture",
     "procedure": "Demoussage, traitement anti-mousse puis hydrofuge selon l'exposition. Verifier que l'entreprise est assuree pour le travail en hauteur.",
@@ -1901,6 +2236,10 @@
       "label": "Tous les ans"
     },
     "season": "Avril a mai",
+    "season_months": [
+      4,
+      5
+    ],
     "duration_min": 240,
     "tools": "Degriseur, saturateur, brosse, pinceau",
     "procedure": "Nettoyer au degriseur, rincer, laisser secher 48 h, appliquer le saturateur dans le sens des fibres. Jamais de nettoyeur haute pression, qui ouvre le bois.",
@@ -1918,6 +2257,7 @@
       "label": "Tous les 3 a 5 ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 90,
     "tools": "Diagnostiqueur ou entreprise de traitement",
     "procedure": "Inspection de la charpente, des bois en contact avec la maconnerie et des points d'humidite. Obligatoire au titre du diagnostic termites a la vente dans les zones classees par arrete prefectoral.",
@@ -1935,6 +2275,11 @@
       "label": "Tous les ans"
     },
     "season": "Automne",
+    "season_months": [
+      9,
+      10,
+      11
+    ],
     "duration_min": 20,
     "tools": "Lampe torche",
     "procedure": "Chercher traces d'humidite, isolant tasse ou deplace, dejections de rongeurs, jour visible au travers de la couverture.",
@@ -1952,6 +2297,11 @@
       "label": "Tous les ans"
     },
     "season": "Automne",
+    "season_months": [
+      9,
+      10,
+      11
+    ],
     "duration_min": 15,
     "tools": "Hygrometre",
     "procedure": "Mesurer l'hygrometrie, chercher salpetre, auréoles et odeur de moisi, verifier que les aerations basses ne sont pas obstruees.",
@@ -1969,6 +2319,9 @@
       "label": "Tous les ans"
     },
     "season": "Decembre",
+    "season_months": [
+      12
+    ],
     "duration_min": 30,
     "tools": "Scanner ou smartphone",
     "procedure": "Numeriser attestations de chaudiere, certificats de ramonage, bordereaux de vidange, rapports de controle. Conserver au moins 5 ans : c'est ce que l'assureur reclame apres un sinistre.",
@@ -1986,6 +2339,13 @@
       "label": "Tous les mois en saison"
     },
     "season": "Mai a septembre",
+    "season_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 10,
     "tools": "Eau tiede savonneuse",
     "procedure": "Clipser la facade, retirer les filtres, laver a l'eau tiede, secher completement a l'ombre. Un filtre remonte humide devient un nid a moisissures.",
@@ -2003,6 +2363,9 @@
       "label": "Tous les 2 ans"
     },
     "season": "Avril, avant la saison",
+    "season_months": [
+      4
+    ],
     "duration_min": 90,
     "tools": "Pro avec attestation de capacite fluides",
     "procedure": "Controle d'etancheite du circuit, desinfection de l'echangeur et du bac a condensats, controle des pressions et du serrage electrique.",
@@ -2020,6 +2383,9 @@
       "label": "Tous les ans"
     },
     "season": "Avril",
+    "season_months": [
+      4
+    ],
     "duration_min": 15,
     "tools": "Souffleur, eau claire",
     "procedure": "Verifier que le tuyau de condensats s'ecoule librement. Un bouchon d'algues provoque un debordement dans le mur.",
@@ -2037,6 +2403,12 @@
       "label": "Tous les mois en usage"
     },
     "season": "Juin a septembre",
+    "season_months": [
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 10,
     "tools": "Eau tiede",
     "procedure": "Rincer le filtre, vider le bac de condensats, verifier que la gaine d'evacuation n'est pas pliee.",
@@ -2054,6 +2426,7 @@
       "label": "Tous les 12 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Operateur certifie, detecteur de fuite",
     "procedure": "Controle obligatoire des 5 t CO2 eq de charge. Le professionnel renseigne la fiche d'intervention CERFA 15497.",
@@ -2071,6 +2444,11 @@
       "label": "Tous les 2 ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 120,
     "tools": "Pro qualifie geothermie",
     "procedure": "Controle du circuit de captage, de la pression et du taux de glycol, des echangeurs et du circulateur.",
@@ -2088,6 +2466,9 @@
       "label": "Tous les ans"
     },
     "season": "Septembre",
+    "season_months": [
+      9
+    ],
     "duration_min": 20,
     "tools": "Cle de purge, chiffon",
     "procedure": "Purger le collecteur, verifier les debitmetres boucle par boucle et l'absence de suintement aux raccords.",
@@ -2105,6 +2486,7 @@
       "label": "Selon le contrat de fourniture"
     },
     "season": "Selon echeance",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Distributeur agree",
     "procedure": "Le controle est assure par le distributeur dans le cadre du contrat. Verifier que l'echeance figure bien au contrat et relancer si le passage n'a pas lieu.",
@@ -2122,6 +2504,9 @@
       "label": "Tous les ans"
     },
     "season": "Septembre",
+    "season_months": [
+      9
+    ],
     "duration_min": 5,
     "tools": "Piles alcalines",
     "procedure": "Remplacer avant la saison de chauffe. Sur thermostat connecte, verifier aussi la liaison avec la chaudiere apres remplacement.",
@@ -2139,6 +2524,11 @@
       "label": "Tous les 12 mois"
     },
     "season": "Aout a octobre",
+    "season_months": [
+      8,
+      9,
+      10
+    ],
     "duration_min": 60,
     "tools": "Pro qualifie PG",
     "procedure": "Nettoyage du bruleur et du corps de chauffe, controle du tirage et de l'evacuation des fumees, mesure du taux de CO.",
@@ -2156,6 +2546,7 @@
       "label": "Tous les 5 ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 45,
     "tools": "Groupe de securite neuf, plombier",
     "procedure": "Piece d'usure a remplacer preventivement, meme si elle fonctionne encore. A coupler avec le detartrage du ballon.",
@@ -2173,6 +2564,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 45,
     "tools": "Pro ou particulier equipe",
     "procedure": "Verifier l'evacuation des condensats, nettoyer le filtre de la borne de prise d'air et controler l'absence d'eau stagnante dans le conduit.",
@@ -2190,6 +2586,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Filtre compatible",
     "procedure": "Le filtre assure le renouvellement d'air sans transmettre d'odeurs. Nettoyer egalement le bac de recuperation d'eau.",
@@ -2207,6 +2604,7 @@
       "label": "Trimestriel"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Brosse, acide citrique",
     "procedure": "Cumuler les gestes du lave-linge et du seche-linge : filtre de vidange, joint de hublot, condenseur et detartrage.",
@@ -2224,6 +2622,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 15,
     "tools": "Aspirateur a embout fin",
     "procedure": "Aspirer la grille de ventilation sous le plan de travail ou en facade de meuble. L'electronique d'induction chauffe et doit respirer.",
@@ -2241,6 +2643,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
     "procedure": "Inspecter le pourtour de la porte et la grille : ni deformation, ni corrosion, ni jeu a la fermeture.",
@@ -2258,6 +2661,7 @@
       "label": "Tous les 6 a 12 mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 10,
     "tools": "Jeu de filtres d'origine",
     "procedure": "Noter la date au feutre sur le filtre neuf. Le prefiltre lavable se rince tous les mois, le HEPA se remplace.",
@@ -2275,6 +2679,14 @@
       "label": "Tous les mois en usage"
     },
     "season": "Octobre a mars",
+    "season_months": [
+      10,
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
     "duration_min": 10,
     "tools": "Eau savonneuse",
     "procedure": "Vider et laver le reservoir, rincer le filtre a l'entree d'air, verifier que la sonde d'hygrometrie n'est pas encrassee.",
@@ -2292,6 +2704,7 @@
       "label": "Tous les 1 a 3 mois selon durete"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 20,
     "tools": "Eau demineralisee, detartrant",
     "procedure": "Lancer le cycle de rincage de la chaudiere prevu par le fabricant. Utiliser de l'eau demineralisee si l'eau du reseau depasse 25 degres francais.",
@@ -2309,6 +2722,7 @@
       "label": "Tous les mois"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 5,
     "tools": "Photo du compteur",
     "procedure": "Photographier l'index chaque mois. Un ecart inexplique signale une fuite bien avant la facture de regularisation.",
@@ -2326,6 +2740,7 @@
       "label": "Declaration unique ; controle selon la commune"
     },
     "season": "A la mise en service",
+    "season_months": [],
     "duration_min": 60,
     "tools": "CERFA 13837",
     "procedure": "Declarer l'ouvrage en mairie. Si le puits alimente le reseau interieur, un controle du service des eaux est requis et une separation stricte des reseaux est obligatoire.",
@@ -2343,6 +2758,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 20,
     "tools": "Manometre, pompe a velo",
     "procedure": "Couper la pompe, vidanger, controler la pression de gonflage du vase (generalement 0,2 bar sous la pression d'enclenchement) et regonfler.",
@@ -2360,6 +2780,7 @@
       "label": "Tous les 2 ans"
     },
     "season": "Pendant l'entretien de la chaudiere",
+    "season_months": [],
     "duration_min": 30,
     "tools": "Pro qualifie",
     "procedure": "Controle de la pression, de l'isolation et de l'anode si le ballon en est equipe.",
@@ -2377,6 +2798,7 @@
       "label": "Tous les 2 a 3 ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 90,
     "tools": "Entreprise de curage",
     "procedure": "Hydrocurage des collecteurs depuis les regards. Profiter du passage pour faire inspecter a la camera si la maison a plus de 40 ans.",
@@ -2394,6 +2816,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 45,
     "tools": "Pro qualifie",
     "procedure": "Releve de l'etat de sante (SOH), controle de la ventilation du local et des connexions de puissance, mise a jour du firmware.",
@@ -2411,6 +2834,7 @@
       "label": "A la vente (3 ans) ou a la mise en location (6 ans)"
     },
     "season": "Avant signature",
+    "season_months": [],
     "duration_min": 90,
     "tools": "Diagnostiqueur certifie",
     "procedure": "Obligatoire si l'installation a plus de 15 ans. Controle de la tuyauterie fixe, du raccordement des appareils, de la ventilation et de l'evacuation des produits de combustion.",
@@ -2428,6 +2852,7 @@
       "label": "Tous les ans"
     },
     "season": "Toute l'annee",
+    "season_months": [],
     "duration_min": 15,
     "tools": "Societe de maintenance incendie",
     "procedure": "Controle de la pression, de la goupille et de l'etat du flexible, apposition de l'etiquette datee. Requalification complete tous les 10 ans.",
@@ -2445,6 +2870,10 @@
       "label": "Tous les 6 mois"
     },
     "season": "Avril et octobre",
+    "season_months": [
+      4,
+      10
+    ],
     "duration_min": 20,
     "tools": "Chiffon microfibre",
     "procedure": "Nettoyer les optiques et les capteurs infrarouges, verifier le cadrage apres les tempetes, purger les enregistrements anciens conformement au RGPD.",
@@ -2462,6 +2891,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 15,
     "tools": "Chiffon, graisse silicone pour joints",
     "procedure": "Nettoyer l'objectif et le clavier, verifier l'etancheite du capot et graisser le joint. La platine est exposee en permanence aux intemperies.",
@@ -2479,6 +2913,9 @@
       "label": "Tous les ans"
     },
     "season": "Avril",
+    "season_months": [
+      4
+    ],
     "duration_min": 45,
     "tools": "Brosse douce, savon neutre, graisse silicone",
     "procedure": "Brosser la toile deployee et seche, graisser les articulations des bras. Ne jamais enrouler une toile humide.",
@@ -2496,6 +2933,9 @@
       "label": "Tous les 2 ans"
     },
     "season": "Avril, a la remise en service",
+    "season_months": [
+      4
+    ],
     "duration_min": 60,
     "tools": "Pro qualifie",
     "procedure": "Controle d'etancheite du circuit frigorifique, nettoyage de l'evaporateur, controle du debit d'eau et du condenseur.",
@@ -2513,6 +2953,13 @@
       "label": "Apres chaque usage (filtre) / annuel (brosses)"
     },
     "season": "Mai a septembre",
+    "season_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "duration_min": 15,
     "tools": "Jet d'eau claire",
     "procedure": "Rincer le filtre a l'eau claire apres chaque session, verifier les brosses et les chenilles, stocker a l'ombre et hors gel.",
@@ -2530,6 +2977,9 @@
       "label": "Tous les ans"
     },
     "season": "Mars",
+    "season_months": [
+      3
+    ],
     "duration_min": 45,
     "tools": "Lime, huile de lame, filtre a air, bougie",
     "procedure": "Affuter et huiler les lames, remplacer le filtre a air et la bougie, verifier le fil ou la lame de coupe.",
@@ -2547,6 +2997,10 @@
       "label": "Tous les 2 a 3 ans"
     },
     "season": "Mai a juin, par temps sec",
+    "season_months": [
+      5,
+      6
+    ],
     "duration_min": 240,
     "tools": "Lasure ou saturateur, brosse, ponceuse",
     "procedure": "Poncer legerement, depoussierer, appliquer deux couches. Traiter en priorite les lisses basses et les pieds de poteaux, au contact du sol.",
@@ -2564,6 +3018,11 @@
       "label": "Tous les ans"
     },
     "season": "Apres l'hiver",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 30,
     "tools": "Jumelles",
     "procedure": "Chercher fissures, cloques d'enduit, joints degrades autour des menuiseries et traces de ruissellement sous les appuis de fenetre.",
@@ -2582,6 +3041,7 @@
       "threshold": "Due date computed from the first registration date (registration certificate, field B): first check within 6 months before the 4th anniversary, then every 2 years"
     },
     "season": "Selon echeance",
+    "season_months": [],
     "duration_min": 60,
     "tools": "Centre de controle agree, carte grise",
     "procedure": "La date de premiere immatriculation figure sur la carte grise (champ B) : l'echeance en decoule. Prendre rendez-vous dans le mois qui precede. En cas de contre-visite, les reparations doivent etre controlees dans les 2 mois.",
@@ -2600,6 +3060,7 @@
       "threshold": "Due date computed from the first registration date (registration certificate, field B): first check 4.5 to 5 years after first registration, then every 3 years"
     },
     "season": "Selon echeance",
+    "season_months": [],
     "duration_min": 45,
     "tools": "Centre de controle agree categorie L, carte grise",
     "procedure": "L'echeance depend de la date de premiere immatriculation (carte grise, champ B). Les vehicules immatricules avant 2022 suivent un calendrier transitoire. Choisir un centre agree pour la categorie L.",
@@ -2617,6 +3078,11 @@
       "label": "Tous les ans"
     },
     "season": "Printemps",
+    "season_months": [
+      3,
+      4,
+      5
+    ],
     "duration_min": 60,
     "tools": "Reparateur velo",
     "procedure": "Controle des freins, de la transmission et des pneus, mise a jour du moteur si le fabricant la propose. Entre deux periodes d'usage, stocker la batterie a mi-charge, au sec et a temperature ambiante.",

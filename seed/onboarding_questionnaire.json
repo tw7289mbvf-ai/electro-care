@@ -3,12 +3,12 @@
     {
       "id": "REGLE-01",
       "label": "Date du dernier passage",
-      "text": "Chaque obligation a sa propre question de date (onglet Questions de date, seed/date_questions.json), qui nomme l'appareil et l'intervention. Réponses graduées avec le vrai délai de l'obligation : mois et année → calcul normal ; « Il y a moins de {délai} », sans date précise → à confirmer (orange) ; « Il y a plus de {délai} » → en retard (rouge) ; « Jamais » ou « Je ne sais pas » → en retard, prioritaire. Les dates se choisissent dans deux listes (mois en toutes lettres, année) et s'affichent « septembre 2026 », jamais avec un jour."
+      "text": "Chaque obligation a sa propre question de date (onglet Questions de date, seed/date_questions.json), qui nomme l'appareil et l'intervention. Réponses graduées avec le vrai délai de l'obligation : mois et année → calcul normal ; « Il y a moins de {délai} », sans date précise → à confirmer (orange) ; « Il y a plus de {délai} » → en retard (rouge) ; « Jamais ou je ne sais pas », un seul bouton en dernière position → en retard, prioritaire. Les dates se choisissent dans deux listes (mois en toutes lettres, année) et s'affichent « septembre 2026 », jamais avec un jour."
     },
     {
       "id": "REGLE-02",
       "label": "Réponse « Je ne sais pas »",
-      "text": "« Je ne sais pas » ne bloque jamais la progression : la réponse ajoute un point « à vérifier » sur l'écran d'accueil, avec l'aide associée pour trouver la réponse. Même règle pour les questions de suivi. À l'écran, c'est un choix discret, sous les autres."
+      "text": "« Je ne sais pas » ne bloque jamais la progression : la réponse ajoute un point « à vérifier » sur l'écran d'accueil, avec l'aide associée pour trouver la réponse. Même règle pour les questions de suivi. À l'écran, c'est un bouton comme les autres, en dernière position."
     },
     {
       "id": "REGLE-03",
