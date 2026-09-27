@@ -11,9 +11,8 @@ export const MAINTENANCE_LEVEL_LABELS: Record<MaintenanceLevel, string> = Object
 
 export const MAINTENANCE_LEVEL_DESCRIPTIONS: Record<MaintenanceLevel, string> = {
   none: "Uniquement les obligations légales.",
-  essential: "Éviter les pannes et les risques.",
-  recommended: "Faire durer vos appareils.",
-  complete: "Tout, y compris le confort et l'aspect.",
+  essential: "Éviter les pannes et les dégâts.",
+  recommended: "Faire aussi durer vos appareils et votre maison.",
 };
 
 const LEVEL_RANK: Record<MaintenanceLevel, number> = Object.fromEntries(

@@ -46,30 +46,42 @@ type AnsweredStep = {
 const Q01 = QUESTIONS.find((q) => q.id === "Q01")!;
 
 // Not a seed-driven question (level doesn't create an appliance or fix a date): a
-// synthetic step inserted right before Q20 (the appliance checklist), matching the
-// spec's "chosen in the questionnaire, just before the appliance checklist". Its order
-// only needs to sit between Q11 (last legal question) and Q20.
+// synthetic step inserted right after Q20 (the appliance checklist), matching the
+// spec's "then the level, once the appliances are known" — the time estimate it shows
+// needs every appliance the place has, including the ones just checked in Q20. Its
+// order only needs to sit after Q20 (the last seed-driven question).
 const LEVEL_QUESTION: QuestionnaireQuestion = {
   id: "LEVEL",
   block: "maintenance",
-  order: 19.5,
-  question: "Quel niveau d'entretien souhaitez-vous pour ce lieu ?",
+  order: 20.5,
+  question: "Quel suivi voulez-vous pour l'entretien de vos appareils ?",
   answerType: "single",
   skipIf: null,
   answers: [],
 };
 
+// Only these two are offered here: Aucun is already handled by Q19 ("Non, plus tard"),
+// which never reaches this step at all.
+const QUESTIONNAIRE_LEVEL_CHOICES: readonly MaintenanceLevel[] = ["essential", "recommended"];
+
 const LEVEL_LABEL_TO_KEY: Record<string, MaintenanceLevel> = Object.fromEntries(
   Object.entries(MAINTENANCE_LEVEL_LABELS).map(([key, label]) => [label, key as MaintenanceLevel])
 );
 
-// The level step is inserted once, right before Q20: skipped on any later pass once a
-// LEVEL entry already sits in history (e.g. reached again via "Précédent" from Q20).
+// The level step is inserted once, right after Q20 is answered — only when Q20 was
+// actually asked (the "Oui, je les ajoute" branch): the "Non, plus tard" branch skips
+// Q20 via skip_if and must reach the recap directly, per Q19's own `sets`. Skipped on
+// any later pass once a LEVEL entry already sits in history (e.g. reached again via
+// "Précédent" from the recap).
 function withLevelGate(
   next: QuestionnaireQuestion | null,
   historyForCheck: AnsweredStep[]
 ): QuestionnaireQuestion | null {
-  if (next?.id === "Q20" && !historyForCheck.some((s) => s.question.id === "LEVEL")) {
+  if (
+    next === null &&
+    historyForCheck.some((s) => s.question.id === "Q20") &&
+    !historyForCheck.some((s) => s.question.id === "LEVEL")
+  ) {
     return LEVEL_QUESTION;
   }
   return next;
@@ -490,10 +502,13 @@ export function QuestionnaireWizard({
     // jumpToStep already put its answer label into `selected` the same way it does for
     // every other step, since by then the step itself has been dropped from `history`.
     const previousChoice = LEVEL_LABEL_TO_KEY[selected[0]];
+    // Essentiel by default (spec): existingMaintenanceLevel is "none" the first time
+    // through, which isn't one of the two choices offered here.
+    const defaultChoice = existingMaintenanceLevel === "none" ? "essential" : existingMaintenanceLevel;
     return (
       <MaintenanceLevelStepCard
         equipmentTypeIds={Array.from(placeEquipmentTypeIds())}
-        defaultLevel={previousChoice ?? existingMaintenanceLevel}
+        defaultLevel={previousChoice ?? defaultChoice}
         onBack={handleBack}
         onSubmit={(level) =>
           completeCurrentStep(
@@ -585,9 +600,17 @@ function MaintenanceLevelStepCard({
       <BackLink onClick={onBack} />
       <p className="text-sm text-zinc-500 dark:text-zinc-400">Entretien</p>
       <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
-        Quel niveau d&apos;entretien souhaitez-vous pour ce lieu ?
+        Quel suivi voulez-vous pour l&apos;entretien de vos appareils ?
       </h2>
-      <MaintenanceLevelOptions value={level} onChange={setLevel} estimates={estimates} />
+      <MaintenanceLevelOptions
+        value={level}
+        onChange={setLevel}
+        estimates={estimates}
+        levels={QUESTIONNAIRE_LEVEL_CHOICES}
+      />
+      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+        Vos obligations légales restent suivies dans tous les cas.
+      </p>
       <button className={BUTTON_CLASS} onClick={() => onSubmit(level)}>
         Suivant
       </button>

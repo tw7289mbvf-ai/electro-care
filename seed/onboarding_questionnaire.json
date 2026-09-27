@@ -753,12 +753,47 @@
       ]
     },
     {
+      "id": "Q19",
+      "block": "maintenance",
+      "order": 19,
+      "question": "Vos obligations légales sont prêtes. Voulez-vous aussi suivre l'entretien de vos autres appareils, pour les faire durer ?",
+      "answer_type": "single",
+      "skip_if": null,
+      "answers": [
+        {
+          "label": "Oui, je les ajoute",
+          "creates": [],
+          "help": "Réfrigérateur, lave-linge, lave-vaisselle… : vous cocherez ceux que vous avez.",
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Non, plus tard",
+          "creates": [],
+          "help": "Le lieu reste au niveau Aucun : seules les obligations légales sont suivies. Activable à tout moment depuis la page du lieu.",
+          "follow_up": null,
+          "unknown": false,
+          "initial_status": null,
+          "sets": {
+            "maintenance_level": "none"
+          }
+        }
+      ]
+    },
+    {
       "id": "Q20",
       "block": "maintenance",
       "order": 20,
-      "question": "Quels appareils avez-vous ? (facultatif)",
+      "question": "Quels appareils avez-vous ?",
       "answer_type": "checklist",
-      "skip_if": null,
+      "skip_if": [
+        {
+          "question": "Q19",
+          "answer": "Non, plus tard"
+        }
+      ],
       "answers": [
         {
           "label": "Réfrigérateur",

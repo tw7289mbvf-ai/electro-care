@@ -20,7 +20,7 @@ export type MaintenanceTask = {
   legal: "yes" | "no";
   // Maintenance level of a non-legal task; null for legal obligations, tracked at
   // every level (seed/README.md "level").
-  level: "essential" | "recommended" | "complete" | null;
+  level: "essential" | "recommended" | null;
   // Hands-on minutes for the user, 0 when a professional does it (seed/README.md
   // "active_minutes").
   activeMinutes: number;

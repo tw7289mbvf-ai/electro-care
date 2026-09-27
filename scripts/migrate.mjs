@@ -90,6 +90,23 @@ try {
   // same statement, matching the spec's "Essentiel by default, including for existing
   // places" without a separate UPDATE.
   await client.query(`ALTER TABLE places ADD COLUMN IF NOT EXISTS maintenance_level TEXT NOT NULL DEFAULT 'essential'`);
+
+  // Complet is dropped as a level (its tasks now sit in Recommandé, seed/README.md
+  // "level"): existing places at 'complete' move to 'recommended' before the
+  // constraint below stops accepting 'complete' at all. Must run before that ALTER,
+  // or the ADD CONSTRAINT fails validating any row still at 'complete'.
+  const COMPLETE_LEVEL_MIGRATION = "2026-09-drop-complete-maintenance-level";
+  const [{ exists: completeLevelDone }] = (
+    await client.query(`SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE name = $1) AS exists`, [COMPLETE_LEVEL_MIGRATION])
+  ).rows;
+  if (!completeLevelDone) {
+    const { rowCount } = await client.query(
+      `UPDATE places SET maintenance_level = 'recommended' WHERE maintenance_level = 'complete'`
+    );
+    await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [COMPLETE_LEVEL_MIGRATION]);
+    console.log(`Complete maintenance level migration: ${rowCount} place(s) moved to recommended.`);
+  }
+
   await client.query(`ALTER TABLE places DROP CONSTRAINT IF EXISTS places_maintenance_level_check`);
   await client.query(`
     ALTER TABLE places ADD CONSTRAINT places_maintenance_level_check

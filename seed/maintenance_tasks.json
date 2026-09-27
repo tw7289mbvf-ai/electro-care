@@ -546,7 +546,7 @@
     "procedure": "Aspirer les ailettes par le dessus et passer un goupillon entre les lames. La poussiere agit comme un isolant sur la surface d'echange.",
     "if_skipped": "Jusqu'a 10% de rendement perdu",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 20
   },
   {
@@ -903,7 +903,7 @@
     "procedure": "Uniquement pour les hottes recyclantes (sans evacuation exterieure). Le charbon ne se lave pas, il se remplace.",
     "if_skipped": "Odeurs de cuisine qui stagnent dans tout le logement",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 10
   },
   {
@@ -1277,7 +1277,7 @@
     "procedure": "Retirer tous les accessoires non pyrolysables. Ventiler la piece. Sortir les animaux domestiques, en particulier les oiseaux, sensibles aux vapeurs.",
     "if_skipped": "Graisses carbonisees = fumees a chaque cuisson, joint attaque",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 5
   },
   {
@@ -1438,7 +1438,7 @@
     "procedure": "Devisser l'embout, le faire tremper une nuit dans du vinaigre blanc, rincer, remonter.",
     "if_skipped": "Debit reduit, projections, eclaboussures",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 5
   },
   {
@@ -1683,7 +1683,7 @@
     "procedure": "Eau demineralisee et brosse douce, jamais de haute pression ni de detergent. Modules froids imperativement, sinon choc thermique.",
     "if_skipped": "Salissures = 5 a 15% de production perdue",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 0
   },
   {
@@ -2467,7 +2467,7 @@
     "procedure": "Nettoyer au degriseur, rincer, laisser secher 48 h, appliquer le saturateur dans le sens des fibres. Jamais de nettoyeur haute pression, qui ouvre le bois.",
     "if_skipped": "Grisaillement, echardes, lames qui se fendent et doivent etre remplacees",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 180
   },
   {
@@ -2511,7 +2511,7 @@
     "procedure": "Chercher traces d'humidite, isolant tasse ou deplace, dejections de rongeurs, jour visible au travers de la couverture.",
     "if_skipped": "Isolant humide ou tasse : performance divisee par deux sans signe visible depuis l'interieur",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 20
   },
   {
@@ -2535,7 +2535,7 @@
     "procedure": "Mesurer l'hygrometrie, chercher salpetre, auréoles et odeur de moisi, verifier que les aerations basses ne sont pas obstruees.",
     "if_skipped": "Remontees capillaires, planchers bois degrades, air vicie diffuse vers le logement",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 15
   },
   {
@@ -2848,7 +2848,7 @@
     "procedure": "Le filtre assure le renouvellement d'air sans transmettre d'odeurs. Nettoyer egalement le bac de recuperation d'eau.",
     "if_skipped": "Hygrometrie instable, odeurs transmises aux bouchons",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 10
   },
   {
@@ -2998,7 +2998,7 @@
     "procedure": "Photographier l'index chaque mois. Un ecart inexplique signale une fuite bien avant la facture de regularisation.",
     "if_skipped": "Fuite enterree facturee au plein tarif pendant des mois",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 5
   },
   {
@@ -3165,7 +3165,7 @@
     "procedure": "Nettoyer les optiques et les capteurs infrarouges, verifier le cadrage apres les tempetes, purger les enregistrements anciens conformement au RGPD.",
     "if_skipped": "Images inexploitables au moment ou on en a besoin",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 20
   },
   {
@@ -3189,7 +3189,7 @@
     "procedure": "Nettoyer l'objectif et le clavier, verifier l'etancheite du capot et graisser le joint. La platine est exposee en permanence aux intemperies.",
     "if_skipped": "Corrosion des contacts, platine muette",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 15
   },
   {
@@ -3304,7 +3304,7 @@
     "procedure": "Poncer legerement, depoussierer, appliquer deux couches. Traiter en priorite les lisses basses et les pieds de poteaux, au contact du sol.",
     "if_skipped": "Pourrissement des pieds de poteaux et de la toiture, structure a remplacer",
     "legal": "no",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 180
   },
   {
@@ -3328,7 +3328,7 @@
     "procedure": "Chercher fissures, cloques d'enduit, joints degrades autour des menuiseries et traces de ruissellement sous les appuis de fenetre.",
     "if_skipped": "Infiltration par microfissure ; ravalement pouvant etre impose par arrete municipal",
     "legal": "conditional",
-    "level": "complete",
+    "level": "recommended",
     "active_minutes": 30
   },
   {
