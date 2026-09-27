@@ -109,6 +109,17 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   until a fallback is chosen — see that file's comment. Found 2026-09-27, chantier 3;
   don't rediscover this each session.
 
+## Git
+
+- Le début de chaque chantier commence par `git fetch` puis une branche créée à partir
+  d'un `main` local à jour (`git checkout main && git merge --ff-only origin/main`
+  avant `git checkout -b ...`) : les PR sont fusionnées sur GitHub, jamais localement,
+  donc le `main` local est systématiquement périmé sans ce fetch.
+- Toute PR a `main` pour base, jamais une autre branche de fonctionnalité : une PR
+  fusionnée dans une branche qui n'est pas `main` ne touche ni `main` ni la production,
+  même si GitHub affiche la PR comme "Merged" (trouvé 2026-09-27 : la #12, base
+  `maintenance-levels-account`, fusionnée sans jamais atteindre `main`).
+
 ## Économie
 
 - Pas de sous-agents en parallèle, pas de `/code-review max`, pas d'ultrareview, sans mon accord explicite.
