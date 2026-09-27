@@ -209,10 +209,6 @@
     {
       "key": "recommended",
       "label": "Recommandé"
-    },
-    {
-      "key": "complete",
-      "label": "Complet"
     }
   ]
 }

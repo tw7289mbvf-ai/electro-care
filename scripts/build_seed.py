@@ -52,8 +52,7 @@ ENUMS = {
                       ("secondary", "Source secondaire"), ("to_document", "À documenter")],
     "plan": [("free", "Gratuit"), ("paid", "Abonnement")],
     "mvp_priority": [(1, "Indispensable au lancement"), (2, "Deuxième vague"), (3, "Confort")],
-    "maintenance_level": [("none", "Aucun"), ("essential", "Essentiel"), ("recommended", "Recommandé"),
-                          ("complete", "Complet")],
+    "maintenance_level": [("none", "Aucun"), ("essential", "Essentiel"), ("recommended", "Recommandé")],
 }
 
 PHOTO_TARGET = {"Plaque signaletique": "nameplate", "Etiquette datee": "dated_label",
@@ -77,7 +76,7 @@ DATE_KINDS = {"Mois gradué": "graded_month", "Péremption": "expiry_date", "Fab
               "Contrôle véhicule": "vehicle_inspection", "Oui / non": "yes_no", "Aucune": "none",
               "Non générée": "not_generated"}
 STATUS_WORDS = {"jamais": "never"}
-LEVELS = {"Essentiel": "essential", "Recommande": "recommended", "Complet": "complete", "Obligation": None}
+LEVELS = {"Essentiel": "essential", "Recommande": "recommended", "Obligation": None}
 
 # Indicative identifier patterns. Only groups with status "verified" may drive
 # validation in production; the others are kept for testing until confirmed.
@@ -340,10 +339,11 @@ def main():
     bad_init = sorted({k for q in questionnaire["questions"] for a in q["answers"]
                        for k in (a["initial_status"] or {})} - task_ids)
     assert not bad_init, f"initial_status points to unknown tasks: {bad_init}"
-    property_types = {k for k, _ in ENUMS["property_type"]}
-    bad_sets = [a["sets"] for q in questionnaire["questions"] for a in q["answers"]
-                if a["sets"] and a["sets"].get("property_type") not in property_types]
-    assert not bad_sets, f"Answers set an unknown property_type: {bad_sets}"
+    settable = {field: {k for k, _ in ENUMS[field]} for field in ("property_type", "maintenance_level")}
+    bad_sets = [a["sets"] for q in questionnaire["questions"] for a in q["answers"] if a["sets"]
+                for field, value in a["sets"].items()
+                if field not in settable or value not in settable[field]]
+    assert not bad_sets, f"Answers set an unknown field or value: {bad_sets}"
 
     files = {"categories.json": categories, "equipment_types.json": equipment,
              "maintenance_tasks.json": tasks, "legal_obligations.json": obligations,

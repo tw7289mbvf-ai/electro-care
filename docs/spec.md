@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 36). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 39). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -92,7 +92,7 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 - **Pool**: the answer names the safety device (barrier, alarm, cover or shelter); "no device" shows as overdue.
 - **Dates**: asked through each obligation's own question, described in Obligations and Maintenance.
 - **One date for an appliance and its flue**: a stove, insert or boiler and its flue get a single date question, since servicing and sweeping are done in the same visit. A "done separately?" link allows two dates, or marking only one of the two as done.
-- **Optional appliance checklist**: common appliances (fridge, washing machine, dishwasher…) seed the maintenance track the same way.
+- **Appliance upkeep, optional**: a gate question separates it from the legal part; if the user opts in, the appliance checklist and the maintenance level follow, as described in Maintenance Levels.
 - **Then improve**: brand, model and purchase date are added later from the appliance card.
 
 ## Accounts and Privacy
@@ -162,10 +162,11 @@ Tapping an appliance opens its card.
 
 Lifespan maintenance comes in levels, so users are not overwhelmed by every recommendation.
 
-- **Four levels, labelled by their meaning**: Aucun (legal obligations only), Essentiel (avoid breakdowns and hazards), Recommandé (make appliances last), Complet (everything, including comfort and appearance). Each level includes the previous one, and legal obligations are always tracked, whatever the level.
-- **Chosen per place**: in the questionnaire, just before the appliance checklist, with Essentiel by default; changeable later from the place page. A second home can stay on Essentiel while the main home is on Recommandé.
-- **Estimated time per month**: each level shows the hands-on time it asks for ("Essentiel: about 5 minutes a month for this home"), computed from the place's appliances. Only the time the user actually acts counts, not the time an appliance runs: a two-hour descaling cycle asks for five minutes.
-- **Example, a washing machine**: Essentiel cleans the drain filter every 3 months and replaces the supply hose every 5 years (about 5 minutes a month); Recommandé adds descaling and the door seal (about a quarter of an hour); Complet adds nothing more for this appliance.
+- **Three settings, labelled by their meaning**: Aucun (legal obligations only), Essentiel (avoid breakdowns and damage), Recommandé (also make appliances and the house last). Recommandé includes Essentiel, and legal obligations are always tracked, whatever the setting. A fourth level, Complet, was dropped: it added a handful of unrelated tasks that no single label could describe, and they now sit in Recommandé.
+- **A gate question first**: after the legal questions, "Vos obligations légales sont prêtes. Voulez-vous aussi suivre l'entretien de vos autres appareils ?" "Non, plus tard" sets the place to Aucun and ends the questionnaire, with upkeep available later from the place page.
+- **Then the level, once the appliances are known**: if yes, the appliance checklist, then "Quel suivi voulez-vous pour l'entretien de vos appareils ?" with two choices, Essentiel "Éviter les pannes et les dégâts" (by default) and Recommandé "Faire aussi durer vos appareils et votre maison", each with its time estimate, and the line "Vos obligations légales restent suivies dans tous les cas." Then the recap. The place page offers all three settings, Aucun included.
+- **Estimated time per month**: each level shows the hands-on time it asks for, computed from all the place's appliances: for a typical house, about an hour a month on Essentiel and two on Recommandé. It includes the everyday upkeep of the appliances created by the legal questions, such as the boiler pressure check, but not the legal obligations themselves, tracked separately and mostly done by a professional. Only the time the user actually acts counts, not the time an appliance runs: a two-hour descaling cycle asks for five minutes.
+- **Example, the kitchen**: Essentiel cleans the cooker hood's grease filter every month, since grease buildup is a common cause of kitchen fires. Recommandé adds the oven door seal check, a pyrolysis cycle every three months and the hood's charcoal filter.
 
 ## Delivery Plan
 

@@ -12,14 +12,16 @@ export function MaintenanceLevelOptions({
   value,
   onChange,
   estimates,
+  levels = MAINTENANCE_LEVELS,
 }: {
   value: MaintenanceLevel;
   onChange: (level: MaintenanceLevel) => void;
   estimates: Record<MaintenanceLevel, number>;
+  levels?: readonly MaintenanceLevel[];
 }) {
   return (
     <div className="flex flex-col gap-2">
-      {MAINTENANCE_LEVELS.map((level) => (
+      {levels.map((level) => (
         <label key={level} className={OPTION_CLASS}>
           <input
             type="radio"
