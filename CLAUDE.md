@@ -72,6 +72,9 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
   and delete that branch/project once it's served its purpose: one created before a
   password rotation still answers to the old password after the rotation.
+- A `main` backup is created fresh right before each migration, never reused from an
+  earlier one, even from the same day: rolling back to a stale backup would silently
+  lose every row written between that backup and the migration being rolled back.
 - `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
   tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
@@ -91,8 +94,10 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   project isn't available either (the org is Vercel-managed). Found and given up on
   during the 2026-09-24 dashboard/management work — don't rediscover this each
   session. Until Neon fixes branch-created Auth wiring for this project: back up
-  `main` first (`neonctl branches create --parent main --name main-backup-<date>`, kept,
-  not expiring), run `scripts/migrate.mjs` (idempotent) to confirm schema is current,
+  `main` first, fresh for this migration (`neonctl branches create --parent main
+  --name main-backup-<date>-<time>`, kept, not expiring — never reuse a backup from an
+  earlier migration, even one from the same day), run `scripts/migrate.mjs` (idempotent)
+  to confirm schema is current,
   read the script's cleanup block out loud before running it — it must delete only the
   two account ids it just created, never by email pattern — then run
   `scripts/test-isolation.mjs` once against `main` itself. Afterwards, verify by id
