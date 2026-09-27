@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 31). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 36). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -104,6 +104,23 @@ Each person has an account, and sees only their own places and appliances. This 
 - **Per-account isolation**: places, appliances, documents and their obligations belong to an account and are visible only after signing in.
 - **EU region**: the database is hosted in the European Union, since the app stores personal data (invoices carry names and addresses). This keeps GDPR compliance simple.
 - **Empty start**: accounts begin with no data; the earlier test records are not carried over.
+- **Account settings**: the existing Paramètres menu gathers editing the account (what Neon Auth allows, such as the password), requesting the deletion of the account, and contacting the admin. No new icon.
+- **Delete my account**: Neon Auth offers no self-service deletion, so the user sends a request from Paramètres, with a clear message ("your account will be deleted within 7 days"). The admin handles it from the admin page, reusing the tested deletion action. GDPR allows up to one month to act on an erasure request; the privacy policy states the 7-day delay.
+- **Contact the admin**: a short form in Paramètres. Messages land in the admin page with the sender's email, and the admin replies from their own mailbox: no email service is needed for this.
+- **Legal pages**: legal notice, privacy policy and simple terms of use, required before opening the app to other testers.
+
+## Administration
+
+An admin page, reserved to the owner's account, gives a global view without access to users' content.
+
+- **Figures without personal data**: accounts (total, new in the last 7 days, active in the last 30), places, appliances, completed questionnaires, obligations by status.
+- **Account list**: email, creation date, last sign-in, number of places and appliances. Not their content, no addresses and no appliances, following the GDPR need-to-know principle.
+- **Three actions**: suspend or reactivate, delete (with a confirmation, in cascade), and send a password reset link. Passwords are never visible: only a hash is stored, so the admin can neither read nor set one.
+- **Requests**: deletion requests and contact messages, each with its date and a "handled" mark. A deletion request is processed with the existing delete action.
+- **No impersonation** ("sign in as") in the MVP: too sensitive.
+- **Audit log**: every admin action, with who, what and when.
+- **Hidden from clients**: no link to the admin page anywhere in the interface, not even for the owner, who reaches it by its direct address. For any other account or a signed-out visitor, the admin page and its actions answer "not found" (404), without revealing they exist.
+- **Access and isolation**: reserved to the owner's account and checked server-side; hiding the link is discretion, the server check is the protection. Seeing all accounts must never bring the owner database connection back into the app: accounts go through the Neon Auth administration API, figures through aggregate views. The isolation test proves that a regular account gets a 404 on the admin page and on each admin action.
 
 ## Dashboard
 
@@ -141,18 +158,29 @@ Tapping an appliance opens its card.
 - **Never for risky interventions**: model-specific steps only cover tasks users do themselves (filters, descaling); gas and combustion work stays with a professional.
 - **In the MVP**: a single demonstration on one precise product, written once, with no generation.
 
+## Maintenance Levels
+
+Lifespan maintenance comes in levels, so users are not overwhelmed by every recommendation.
+
+- **Four levels, labelled by their meaning**: Aucun (legal obligations only), Essentiel (avoid breakdowns and hazards), Recommandé (make appliances last), Complet (everything, including comfort and appearance). Each level includes the previous one, and legal obligations are always tracked, whatever the level.
+- **Chosen per place**: in the questionnaire, just before the appliance checklist, with Essentiel by default; changeable later from the place page. A second home can stay on Essentiel while the main home is on Recommandé.
+- **Estimated time per month**: each level shows the hands-on time it asks for ("Essentiel: about 5 minutes a month for this home"), computed from the place's appliances. Only the time the user actually acts counts, not the time an appliance runs: a two-hour descaling cycle asks for five minutes.
+- **Example, a washing machine**: Essentiel cleans the drain filter every 3 months and replaces the supply hose every 5 years (about 5 minutes a month); Recommandé adds descaling and the door seal (about a quarter of an hour); Complet adds nothing more for this appliance.
+
 ## Delivery Plan
 
 Short, separate work sessions, each with the isolation test and the production procedure described in CLAUDE.md:
 
-1. Date questions and actions by status.
-2. Lifespan maintenance in the app.
-3. Obligation reminders by email. Requires the app's own domain and an email service account.
-4. Model-specific step-by-step demo on one product.
-5. Documents: uploading proofs, the basis for tenants.
-6. Tenants.
+1. Date questions and actions by status. Done.
+2. Focused dashboard and lifespan maintenance. Done.
+3. Administration and GDPR basics: admin page, legal pages.
+4. Maintenance levels, chosen per place, with the estimated hands-on time per month for each level; account menu, deletion requests and contact form. After steps 3 and 4, the app opens to testers.
+5. Obligation reminders by email. Requires the app's own domain and an email service account.
+6. Model-specific step-by-step demo on one product.
+7. Documents: uploading proofs, the basis for tenants.
+8. Tenants.
 
-The calendar subscription link follows step 3.
+The calendar subscription link follows step 5.
 
 ## Tenants (planned)
 

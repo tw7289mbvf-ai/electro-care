@@ -3,14 +3,24 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { addAppliance, deleteAppliance, getAppliance, updateAppliance as updateApplianceRecord } from "@/lib/appliances";
-import { addPlace, deletePlace, getPlaces, markPlaceOnboarded, updatePlace as updatePlaceRecord } from "@/lib/places";
+import {
+  addPlace,
+  deletePlace,
+  getPlaces,
+  markPlaceOnboarded,
+  updatePlace as updatePlaceRecord,
+  updatePlaceMaintenanceLevel,
+} from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
 import { recordMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { currentMonthKey } from "@/lib/french-dates";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
+import { MAINTENANCE_LEVELS, type MaintenanceLevel } from "@/lib/maintenance-levels";
 import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
+import { createDeletionRequest, createContactMessage } from "@/lib/account-requests";
+import { auth } from "@/lib/auth/server";
 
 export type FormState = {
   error?: string;
@@ -22,6 +32,10 @@ function isCategory(value: string): value is Category {
 
 function isPropertyType(value: string): value is PropertyType {
   return (PROPERTY_TYPES as readonly string[]).includes(value);
+}
+
+function isMaintenanceLevel(value: string): value is MaintenanceLevel {
+  return (MAINTENANCE_LEVELS as readonly string[]).includes(value);
 }
 
 function optionalTrimmed(formData: FormData, key: string): string | null {
@@ -184,4 +198,38 @@ export async function completeQuestionnaire(placeId: string): Promise<void> {
   await markPlaceOnboarded(placeId);
   revalidatePath("/");
   redirect("/");
+}
+
+export async function updatePlaceMaintenanceLevelAction(placeId: string, level: string): Promise<void> {
+  if (!isMaintenanceLevel(level)) {
+    throw new Error("Niveau d'entretien invalide");
+  }
+  await updatePlaceMaintenanceLevel(placeId, level);
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
+}
+
+async function requireSessionEmail(): Promise<string> {
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    throw new Error("Non authentifié");
+  }
+  return session.user.email;
+}
+
+export async function requestAccountDeletion(): Promise<void> {
+  const email = await requireSessionEmail();
+  await createDeletionRequest(email);
+  revalidatePath("/settings");
+}
+
+export async function submitContactMessage(_prevState: FormState, formData: FormData): Promise<FormState> {
+  const message = String(formData.get("message") ?? "").trim();
+  if (!message) {
+    return { error: "Veuillez saisir un message." };
+  }
+  const email = await requireSessionEmail();
+  await createContactMessage(email, message);
+  revalidatePath("/settings");
+  return {};
 }

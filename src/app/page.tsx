@@ -74,7 +74,7 @@ export default async function Home() {
       ]);
       const counts = getObligationCountsForAppliances(placeAppliances, obligationRecords);
       const maintenanceDueCount = filterPendingGuidance(
-        getMaintenanceGuidanceForAppliances(placeAppliances),
+        getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel),
         completions
       ).length;
       return { place, appliances: placeAppliances, obligationRecords, counts, maintenanceDueCount };

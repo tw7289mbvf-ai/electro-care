@@ -1,5 +1,6 @@
 import type { Appliance } from "@/lib/appliance-types";
 import { getLifespanMaintenanceTasks, isTaskDueInMonth, type MaintenanceTask } from "@/lib/maintenance-tasks";
+import { isTaskIncludedAtLevel, type MaintenanceLevel } from "@/lib/maintenance-levels";
 import { getCurrentMonthInFrance } from "@/lib/french-dates";
 import type { MaintenanceCompletion } from "@/lib/maintenance-completions";
 
@@ -7,15 +8,16 @@ export type MaintenanceGuidanceItem = { appliance: Appliance; task: MaintenanceT
 
 // "Entretien" section: non-legal maintenance tasks (getLifespanMaintenanceTasks already
 // excludes legal obligations and routines more frequent than monthly) due this month per
-// their season_months window.
+// their season_months window, and included at the place's chosen maintenance level.
 export function getMaintenanceGuidanceForAppliances(
   appliances: Appliance[],
+  level: MaintenanceLevel,
   month: number = getCurrentMonthInFrance()
 ): MaintenanceGuidanceItem[] {
   return appliances.flatMap((appliance) => {
     if (!appliance.equipmentTypeId) return [];
     return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
-      .filter((task) => isTaskDueInMonth(task, month))
+      .filter((task) => isTaskIncludedAtLevel(task.level, level) && isTaskDueInMonth(task, month))
       .map((task) => ({ appliance, task }));
   });
 }

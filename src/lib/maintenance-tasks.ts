@@ -18,6 +18,12 @@ export type MaintenanceTask = {
   tools: string;
   ifSkipped: string;
   legal: "yes" | "no";
+  // Maintenance level of a non-legal task; null for legal obligations, tracked at
+  // every level (seed/README.md "level").
+  level: "essential" | "recommended" | "complete" | null;
+  // Hands-on minutes for the user, 0 when a professional does it (seed/README.md
+  // "active_minutes").
+  activeMinutes: number;
 };
 
 export const PERFORMER_LABELS: Record<MaintenanceTask["performer"], string> = {
@@ -36,6 +42,8 @@ const ALL_TASKS: MaintenanceTask[] = maintenanceTasksSeed.map((t) => ({
   tools: t.tools,
   ifSkipped: t.if_skipped,
   legal: t.legal as "yes" | "no",
+  level: t.level as MaintenanceTask["level"],
+  activeMinutes: t.active_minutes,
 }));
 
 const TASKS_BY_ID = new Map(ALL_TASKS.map((t) => [t.id, t]));

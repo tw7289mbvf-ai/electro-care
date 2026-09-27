@@ -1,16 +1,18 @@
 import { findOrCreateApplianceByType } from "@/lib/appliances";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
 import { addPlaceCheck } from "@/lib/place-checks";
-import { setPlacePropertyType } from "@/lib/places";
+import { setPlacePropertyType, updatePlaceMaintenanceLevel } from "@/lib/places";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { getTrackedLegalTasks } from "@/lib/maintenance-tasks";
 import { getDateQuestionForTask } from "@/lib/date-questions";
 import { getTodayInFrance } from "@/lib/obligations";
 import type { PropertyType } from "@/lib/place-types";
+import type { MaintenanceLevel } from "@/lib/maintenance-levels";
 
 export type QuestionnaireStepEffects = {
   placeId: string;
   setPropertyType?: PropertyType;
+  maintenanceLevel?: MaintenanceLevel;
   createEquipmentTypeIds: string[];
   dateAnswers: {
     equipmentTypeId: string;
@@ -30,6 +32,10 @@ export type QuestionnaireStepEffects = {
 export async function applyQuestionnaireStepEffects(effects: QuestionnaireStepEffects): Promise<void> {
   if (effects.setPropertyType) {
     await setPlacePropertyType(effects.placeId, effects.setPropertyType);
+  }
+
+  if (effects.maintenanceLevel) {
+    await updatePlaceMaintenanceLevel(effects.placeId, effects.maintenanceLevel);
   }
 
   for (const equipmentTypeId of effects.createEquipmentTypeIds) {

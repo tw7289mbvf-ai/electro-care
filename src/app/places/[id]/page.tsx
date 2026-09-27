@@ -8,9 +8,11 @@ import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getPlaceChecks } from "@/lib/place-checks";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceGuidanceForAppliances, filterPendingGuidance } from "@/lib/maintenance-guidance";
+import { estimateMaintenanceMinutesForAllLevels } from "@/lib/maintenance-levels";
 import { currentMonthKey } from "@/lib/french-dates";
 import { ObligationsBlock } from "@/components/ObligationsBlock";
 import { MaintenanceGuidanceList } from "@/components/MaintenanceGuidanceList";
+import { MaintenanceLevelPicker } from "@/components/MaintenanceLevelPicker";
 import { ApplianceList } from "@/components/ApplianceList";
 
 export const dynamic = "force-dynamic";
@@ -34,7 +36,13 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     getMaintenanceCompletionsForPlace(id, currentMonthKey()),
   ]);
   const appliances = allAppliances.filter((a) => a.placeId === id);
-  const guidance = filterPendingGuidance(getMaintenanceGuidanceForAppliances(appliances), completions);
+  const guidance = filterPendingGuidance(
+    getMaintenanceGuidanceForAppliances(appliances, place.maintenanceLevel),
+    completions
+  );
+  const levelEstimates = estimateMaintenanceMinutesForAllLevels(
+    appliances.map((a) => a.equipmentTypeId).filter((typeId): typeId is string => typeId !== null)
+  );
 
   const byCategory = CATEGORIES.map((category) => ({
     category,
@@ -75,6 +83,8 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             </Link>
           )}
         </header>
+
+        <MaintenanceLevelPicker placeId={place.id} level={place.maintenanceLevel} estimates={levelEstimates} />
 
         <ObligationsBlock appliances={appliances} obligationRecords={obligationRecords} placeChecks={placeChecks} />
 

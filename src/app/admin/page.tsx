@@ -1,5 +1,6 @@
-import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminActionLog } from "@/lib/admin";
+import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminActionLog, getAdminRequests } from "@/lib/admin";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
+import { AdminRequestRow } from "@/components/AdminRequestRow";
 
 // Same rule as every other page reading live data (see src/app/page.tsx): never served
 // from a static/ISR cache.
@@ -30,9 +31,10 @@ function StatTile({ label, value }: { label: string; value: number }) {
 export default async function AdminPage() {
   const adminAccountId = await requireAdminPage();
   const { stats, accounts } = await getAdminOverview();
-  const [obligationCounts, actionLog] = await Promise.all([
+  const [obligationCounts, actionLog, requests] = await Promise.all([
     getAdminObligationCounts(),
     getAdminActionLog(accounts),
+    getAdminRequests(),
   ]);
 
   return (
@@ -87,6 +89,35 @@ export default async function AdminPage() {
                   <tr>
                     <td colSpan={7} className="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">
                       Aucun compte.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Demandes</h2>
+          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Reçu le</th>
+                  <th className="px-4 py-2 font-medium">Type</th>
+                  <th className="px-4 py-2 font-medium">E-mail</th>
+                  <th className="px-4 py-2 font-medium">Message</th>
+                  <th className="px-4 py-2 font-medium">Statut</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+                {requests.map((request) => (
+                  <AdminRequestRow key={request.id} request={request} formattedCreatedAt={formatDateTime(request.createdAt)} />
+                ))}
+                {requests.length === 0 && (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                      Aucune demande pour l&apos;instant.
                     </td>
                   </tr>
                 )}

@@ -15,6 +15,12 @@ import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { submitQuestionnaireStep, completeQuestionnaire } from "@/app/actions";
 import type { QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
 import { PROPERTY_TYPE_LABELS, type PropertyType } from "@/lib/place-types";
+import {
+  MAINTENANCE_LEVEL_LABELS,
+  estimateMaintenanceMinutesForAllLevels,
+  type MaintenanceLevel,
+} from "@/lib/maintenance-levels";
+import { MaintenanceLevelOptions } from "@/components/MaintenanceLevelOptions";
 
 type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireAnswer };
 // REGLE-03: a hearth appliance (poele, insert, chaudiere) created alongside its flue
@@ -38,6 +44,36 @@ type AnsweredStep = {
 };
 
 const Q01 = QUESTIONS.find((q) => q.id === "Q01")!;
+
+// Not a seed-driven question (level doesn't create an appliance or fix a date): a
+// synthetic step inserted right before Q20 (the appliance checklist), matching the
+// spec's "chosen in the questionnaire, just before the appliance checklist". Its order
+// only needs to sit between Q11 (last legal question) and Q20.
+const LEVEL_QUESTION: QuestionnaireQuestion = {
+  id: "LEVEL",
+  block: "maintenance",
+  order: 19.5,
+  question: "Quel niveau d'entretien souhaitez-vous pour ce lieu ?",
+  answerType: "single",
+  skipIf: null,
+  answers: [],
+};
+
+const LEVEL_LABEL_TO_KEY: Record<string, MaintenanceLevel> = Object.fromEntries(
+  Object.entries(MAINTENANCE_LEVEL_LABELS).map(([key, label]) => [label, key as MaintenanceLevel])
+);
+
+// The level step is inserted once, right before Q20: skipped on any later pass once a
+// LEVEL entry already sits in history (e.g. reached again via "Précédent" from Q20).
+function withLevelGate(
+  next: QuestionnaireQuestion | null,
+  historyForCheck: AnsweredStep[]
+): QuestionnaireQuestion | null {
+  if (next?.id === "Q20" && !historyForCheck.some((s) => s.question.id === "LEVEL")) {
+    return LEVEL_QUESTION;
+  }
+  return next;
+}
 
 // The "jamais, elle/il a moins de N ans" branch (vehicle_inspection): wording and
 // threshold are seed-authored (seed/date_questions.json's note field), copied here
@@ -138,10 +174,12 @@ export function QuestionnaireWizard({
   placeId,
   existingEquipmentTypeIds,
   existingPropertyType,
+  existingMaintenanceLevel,
 }: {
   placeId: string;
   existingEquipmentTypeIds: string[];
   existingPropertyType: PropertyType | null;
+  existingMaintenanceLevel: MaintenanceLevel;
 }) {
   const propertyTypeAlreadyKnown = existingPropertyType !== null;
   // REGLE-04: when Q01 is skipped, its answer is deduced from the place's property
@@ -164,7 +202,7 @@ export function QuestionnaireWizard({
 
   const [history, setHistory] = useState<AnsweredStep[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<QuestionnaireQuestion | null>(
-    nextQuestion(mergedAnswers([]), 0, propertyTypeAlreadyKnown)
+    withLevelGate(nextQuestion(mergedAnswers([]), 0, propertyTypeAlreadyKnown), [])
   );
   const [selected, setSelected] = useState<string[]>([]);
   const [pendingFollowUps, setPendingFollowUps] = useState<PendingFollowUp[]>([]);
@@ -227,6 +265,7 @@ export function QuestionnaireWizard({
             acc.dateAnswers.push(...step.effects.dateAnswers);
             acc.unknownChecks.push(...step.effects.unknownChecks);
             if (step.effects.setPropertyType) acc.setPropertyType = step.effects.setPropertyType;
+            if (step.effects.maintenanceLevel) acc.maintenanceLevel = step.effects.maintenanceLevel;
             return acc;
           }, emptyStepEffects(placeId));
           await submitQuestionnaireStep(merged);
@@ -240,7 +279,7 @@ export function QuestionnaireWizard({
     const newHistory = [...history, { question: currentQuestion!, answerLabels, effects: finalEffects }];
     setHistory(newHistory);
     const merged = mergedAnswers(newHistory);
-    const next = nextQuestion(merged, currentQuestion!.order, propertyTypeAlreadyKnown);
+    const next = withLevelGate(nextQuestion(merged, currentQuestion!.order, propertyTypeAlreadyKnown), newHistory);
     setCurrentQuestion(next);
     // A checklist shows what's already there as a starting point (never auto-removed
     // if unchecked: confirming only ever finds-or-creates the boxes left checked).
@@ -446,6 +485,26 @@ export function QuestionnaireWizard({
     return <YesNoCard question={title} onAnswer={handleFollowUpYesNo} onBack={handleBack} />;
   }
 
+  if (currentQuestion.id === "LEVEL") {
+    // "Précédent" back to this step must restore the level chosen this session:
+    // jumpToStep already put its answer label into `selected` the same way it does for
+    // every other step, since by then the step itself has been dropped from `history`.
+    const previousChoice = LEVEL_LABEL_TO_KEY[selected[0]];
+    return (
+      <MaintenanceLevelStepCard
+        equipmentTypeIds={Array.from(placeEquipmentTypeIds())}
+        defaultLevel={previousChoice ?? existingMaintenanceLevel}
+        onBack={handleBack}
+        onSubmit={(level) =>
+          completeCurrentStep(
+            { ...emptyStepEffects(placeId), maintenanceLevel: level },
+            [MAINTENANCE_LEVEL_LABELS[level]]
+          )
+        }
+      />
+    );
+  }
+
   if (currentQuestion.answerType === "automatic") {
     return (
       <div className={CARD_CLASS}>
@@ -502,6 +561,34 @@ export function QuestionnaireWizard({
         disabled={currentQuestion.answerType !== "checklist" && selected.length === 0}
         onClick={() => handleMainSubmit()}
       >
+        Suivant
+      </button>
+    </div>
+  );
+}
+
+function MaintenanceLevelStepCard({
+  equipmentTypeIds,
+  defaultLevel,
+  onBack,
+  onSubmit,
+}: {
+  equipmentTypeIds: string[];
+  defaultLevel: MaintenanceLevel;
+  onBack: () => void;
+  onSubmit: (level: MaintenanceLevel) => void;
+}) {
+  const [level, setLevel] = useState<MaintenanceLevel>(defaultLevel);
+  const estimates = estimateMaintenanceMinutesForAllLevels(equipmentTypeIds);
+  return (
+    <div className={CARD_CLASS}>
+      <BackLink onClick={onBack} />
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">Entretien</p>
+      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+        Quel niveau d&apos;entretien souhaitez-vous pour ce lieu ?
+      </h2>
+      <MaintenanceLevelOptions value={level} onChange={setLevel} estimates={estimates} />
+      <button className={BUTTON_CLASS} onClick={() => onSubmit(level)}>
         Suivant
       </button>
     </div>
@@ -754,6 +841,13 @@ function RecapCard({
         key: `${stepIndex}-property`,
         stepIndex,
         text: `Type de logement : ${PROPERTY_TYPE_LABELS[step.effects.setPropertyType]}`,
+      });
+    }
+    if (step.effects.maintenanceLevel) {
+      lines.push({
+        key: `${stepIndex}-level`,
+        stepIndex,
+        text: `Niveau d'entretien : ${MAINTENANCE_LEVEL_LABELS[step.effects.maintenanceLevel]}`,
       });
     }
     const dateAnswersByType = new Map<string, QuestionnaireStepEffects["dateAnswers"]>();

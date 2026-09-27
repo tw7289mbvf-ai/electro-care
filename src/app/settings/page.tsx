@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { hasPendingDeletionRequest } from "@/lib/account-requests";
+import { ChangePasswordForm } from "@/components/ChangePasswordForm";
+import { RequestAccountDeletionButton } from "@/components/RequestAccountDeletionButton";
+import { ContactAdminForm } from "@/components/ContactAdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -9,6 +13,7 @@ export default async function SettingsPage() {
   if (!session?.user) {
     redirect("/auth/sign-in");
   }
+  const alreadyRequestedDeletion = await hasPendingDeletionRequest();
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -19,6 +24,11 @@ export default async function SettingsPage() {
           </h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{session.user.email}</p>
         </header>
+
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Modifier mon compte</h2>
+          <ChangePasswordForm />
+        </section>
 
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Vie privée</h2>
@@ -35,13 +45,12 @@ export default async function SettingsPage() {
               Conditions d&apos;utilisation
             </Link>
           </p>
+          <RequestAccountDeletionButton alreadyRequested={alreadyRequestedDeletion} />
         </section>
 
-        {/* "Supprimer mon compte" is temporarily hidden: POST /delete-user returns 404
-            with a valid session on this Neon Auth instance (verified 2026-09-27), and
-            Neon exposes no config to enable it. See DeleteAccountButton.tsx and
-            CLAUDE.md for the fallback under discussion — re-enable only once one is
-            chosen and actually deletes the account, not just the app's own tables. */}
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <ContactAdminForm />
+        </section>
       </main>
     </div>
   );
