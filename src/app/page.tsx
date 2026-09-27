@@ -12,6 +12,7 @@ import { getObligationCountsForAppliances, type ObligationCounts } from "@/lib/o
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceGuidanceForAppliances, filterPendingGuidance } from "@/lib/maintenance-guidance";
 import { currentMonthKey } from "@/lib/french-dates";
+import { touchAccountActivity } from "@/lib/account-activity";
 import { auth } from "@/lib/auth/server";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -60,6 +61,7 @@ export default async function Home() {
     );
   }
 
+  await touchAccountActivity();
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
   const orderedPlaces = [...places].sort(comparePlacesByPropertyType);
   const month = currentMonthKey();
@@ -101,7 +103,15 @@ export default async function Home() {
               Suivez les appareils de votre maison.
             </p>
           </div>
-          <SignOutButton />
+          <div className="flex items-center gap-4">
+            <Link
+              href="/settings"
+              className="text-sm font-medium text-zinc-500 underline-offset-2 hover:underline dark:text-zinc-400"
+            >
+              Paramètres
+            </Link>
+            <SignOutButton />
+          </div>
         </header>
 
         {places.length > 0 && <ComplianceBanner counts={totalCounts} maintenanceDueCount={totalMaintenanceDue} />}
