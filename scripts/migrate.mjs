@@ -85,6 +85,16 @@ try {
     ALTER TABLE places ADD CONSTRAINT places_property_type_check
       CHECK (property_type IS NULL OR property_type IN (${sqlKeyList(enums.property_type)}))
   `);
+  // Essentiel by default for every place, including ones that existed before this
+  // column: ADD COLUMN ... NOT NULL DEFAULT backfills every existing row with it in the
+  // same statement, matching the spec's "Essentiel by default, including for existing
+  // places" without a separate UPDATE.
+  await client.query(`ALTER TABLE places ADD COLUMN IF NOT EXISTS maintenance_level TEXT NOT NULL DEFAULT 'essential'`);
+  await client.query(`ALTER TABLE places DROP CONSTRAINT IF EXISTS places_maintenance_level_check`);
+  await client.query(`
+    ALTER TABLE places ADD CONSTRAINT places_maintenance_level_check
+      CHECK (maintenance_level IN (${sqlKeyList(enums.maintenance_level)}))
+  `);
   await client.query(`ALTER TABLE places ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS places_isolation ON places`);
   await client.query(`
@@ -517,6 +527,64 @@ try {
   `);
   await client.query(`REVOKE ALL ON FUNCTION admin_list_actions() FROM PUBLIC`);
   await client.query(`GRANT EXECUTE ON FUNCTION admin_list_actions() TO authenticated`);
+
+  // --- Account requests (chantier 4): deletion requests and contact messages, one
+  // table for both since the admin page shows them together ("Demandes"). The owning
+  // account can read and create its own rows (so "Paramètres" can show "already sent"
+  // and so test-isolation.mjs can prove an account never sees another's), but only
+  // SELECT/INSERT are granted: handled_at is admin-only, set through
+  // admin_mark_request_handled below, never by the submitting account itself.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS account_requests (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      kind TEXT NOT NULL CHECK (kind IN ('deletion', 'contact')),
+      email TEXT NOT NULL,
+      message TEXT,
+      handled_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      CONSTRAINT account_requests_message_shape CHECK (
+        (kind = 'contact' AND message IS NOT NULL) OR (kind = 'deletion' AND message IS NULL)
+      )
+    )
+  `);
+  await client.query(`ALTER TABLE account_requests ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS account_requests_isolation ON account_requests`);
+  await client.query(`
+    CREATE POLICY account_requests_isolation ON account_requests
+      FOR ALL
+      USING (account_id = auth.uid())
+      WITH CHECK (account_id = auth.uid())
+  `);
+  await client.query(`GRANT SELECT, INSERT ON account_requests TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_list_requests()
+    RETURNS TABLE (
+      id UUID, account_id UUID, kind TEXT, email TEXT, message TEXT,
+      handled_at TIMESTAMPTZ, created_at TIMESTAMPTZ
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT r.id, r.account_id, r.kind, r.email, r.message, r.handled_at, r.created_at
+      FROM account_requests r ORDER BY r.created_at DESC LIMIT 200;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_list_requests() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_list_requests() TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_mark_request_handled(p_id UUID) RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      UPDATE account_requests SET handled_at = now() WHERE id = p_id;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_mark_request_handled(UUID) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_mark_request_handled(UUID) TO authenticated`);
 
   await client.query("COMMIT");
   console.log("Migration complete: schema, RLS policies and grants ready.");

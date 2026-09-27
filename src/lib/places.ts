@@ -1,4 +1,5 @@
 import type { Place, PropertyType } from "@/lib/place-types";
+import type { MaintenanceLevel } from "@/lib/maintenance-levels";
 import { getAuthedContext } from "@/lib/db";
 
 type PlaceRow = {
@@ -7,6 +8,7 @@ type PlaceRow = {
   commune: string | null;
   postcode: string | null;
   property_type: string | null;
+  maintenance_level: string;
   created_at: string | Date;
   onboarded_at: string | Date | null;
 };
@@ -23,6 +25,7 @@ function toPlace(row: PlaceRow): Place {
     commune: row.commune,
     postcode: row.postcode,
     propertyType: row.property_type as PropertyType | null,
+    maintenanceLevel: row.maintenance_level as MaintenanceLevel,
     createdAt: typeof row.created_at === "string" ? row.created_at : row.created_at.toISOString(),
     onboardedAt: toIsoOrNull(row.onboarded_at),
   };
@@ -31,7 +34,7 @@ function toPlace(row: PlaceRow): Place {
 export async function getPlaces(): Promise<Place[]> {
   const { sql } = await getAuthedContext();
   const rows = (await sql`
-    SELECT id, name, commune, postcode, property_type, created_at, onboarded_at
+    SELECT id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
     FROM places
     ORDER BY created_at ASC
   `) as PlaceRow[];
@@ -41,7 +44,7 @@ export async function getPlaces(): Promise<Place[]> {
 export async function getPlace(id: string): Promise<Place | null> {
   const { sql } = await getAuthedContext();
   const rows = (await sql`
-    SELECT id, name, commune, postcode, property_type, created_at, onboarded_at
+    SELECT id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
     FROM places
     WHERE id = ${id}
   `) as PlaceRow[];
@@ -58,7 +61,7 @@ export async function addPlace(input: {
   const rows = (await sql`
     INSERT INTO places (account_id, name, commune, postcode, property_type)
     VALUES (${accountId}, ${input.name}, ${input.commune}, ${input.postcode}, ${input.propertyType})
-    RETURNING id, name, commune, postcode, property_type, created_at, onboarded_at
+    RETURNING id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
   `) as PlaceRow[];
   return toPlace(rows[0]);
 }
@@ -78,7 +81,7 @@ export async function updatePlace(
     SET name = ${input.name}, commune = ${input.commune}, postcode = ${input.postcode},
         property_type = ${input.propertyType}
     WHERE id = ${id}
-    RETURNING id, name, commune, postcode, property_type, created_at, onboarded_at
+    RETURNING id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
   `) as PlaceRow[];
   return toPlace(rows[0]);
 }
@@ -88,6 +91,13 @@ export async function updatePlace(
 export async function setPlacePropertyType(id: string, propertyType: PropertyType): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`UPDATE places SET property_type = ${propertyType} WHERE id = ${id}`;
+}
+
+// Chosen in the questionnaire (just before the appliance checklist) or changed later
+// from the place page — same picker, same action, either way.
+export async function updatePlaceMaintenanceLevel(id: string, level: MaintenanceLevel): Promise<void> {
+  const { sql } = await getAuthedContext();
+  await sql`UPDATE places SET maintenance_level = ${level} WHERE id = ${id}`;
 }
 
 export async function markPlaceOnboarded(id: string): Promise<void> {

@@ -52,6 +52,8 @@ ENUMS = {
                       ("secondary", "Source secondaire"), ("to_document", "À documenter")],
     "plan": [("free", "Gratuit"), ("paid", "Abonnement")],
     "mvp_priority": [(1, "Indispensable au lancement"), (2, "Deuxième vague"), (3, "Confort")],
+    "maintenance_level": [("none", "Aucun"), ("essential", "Essentiel"), ("recommended", "Recommandé"),
+                          ("complete", "Complet")],
 }
 
 PHOTO_TARGET = {"Plaque signaletique": "nameplate", "Etiquette datee": "dated_label",
@@ -75,6 +77,7 @@ DATE_KINDS = {"Mois gradué": "graded_month", "Péremption": "expiry_date", "Fab
               "Contrôle véhicule": "vehicle_inspection", "Oui / non": "yes_no", "Aucune": "none",
               "Non générée": "not_generated"}
 STATUS_WORDS = {"jamais": "never"}
+LEVELS = {"Essentiel": "essential", "Recommande": "recommended", "Complet": "complete", "Obligation": None}
 
 # Indicative identifier patterns. Only groups with status "verified" may drive
 # validation in production; the others are kept for testing until confirmed.
@@ -233,6 +236,8 @@ def main():
             "procedure": r["Mode operatoire"],
             "if_skipped": r["Si la tache n'est pas faite"],
             "legal": legal_status(r["Obligation legale"]),
+            "level": LEVELS.get(r["Niveau d'entretien"]),
+            "active_minutes": r["Temps actif (min)"],
         }
         if task["id"] in THRESHOLD_TASKS:
             task["frequency"]["threshold"] = THRESHOLD_TASKS[task["id"]]
@@ -323,6 +328,8 @@ def main():
                 if (c["question"], c["answer"]) not in labels]
     assert not bad_skip, f"skip_if points to unknown answers: {bad_skip}"
     task_ids = {t["id"] for t in tasks}
+    no_level = [t["id"] for t in tasks if t["legal"] != "yes" and not t["level"]]
+    assert not no_level, f"Maintenance tasks without a level: {no_level}"
     no_months = [t["id"] for t in tasks if t["frequency"]["rule"] == "season_anchor" and not t["season_months"]]
     assert not no_months, f"season_anchor tasks without parsable months: {no_months}"
     bad_dq = sorted({i for d in date_questions for i in d["tasks"]} - task_ids)

@@ -224,6 +224,43 @@ export async function deleteAccountAsAdmin(accountId: string): Promise<void> {
   if (error) throw new Error(`Neon Auth: suppression impossible (${error.message})`);
 }
 
+export type AdminRequest = {
+  id: string;
+  accountId: string;
+  kind: "deletion" | "contact";
+  email: string;
+  message: string | null;
+  handledAt: string | null;
+  createdAt: string;
+};
+
+export async function getAdminRequests(): Promise<AdminRequest[]> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`SELECT * FROM admin_list_requests()`) as {
+    id: string;
+    account_id: string;
+    kind: string;
+    email: string;
+    message: string | null;
+    handled_at: string | Date | null;
+    created_at: string | Date;
+  }[];
+  return rows.map((r) => ({
+    id: r.id,
+    accountId: r.account_id,
+    kind: r.kind as AdminRequest["kind"],
+    email: r.email,
+    message: r.message,
+    handledAt: r.handled_at === null ? null : toIso(r.handled_at),
+    createdAt: toIso(r.created_at),
+  }));
+}
+
+export async function markRequestHandled(requestId: string): Promise<void> {
+  const { sql } = await getAuthedContext();
+  await sql`SELECT admin_mark_request_handled(${requestId})`;
+}
+
 export async function sendPasswordResetLink(accountId: string): Promise<void> {
   const { data, error } = await auth.admin.listUsers({
     query: { limit: 1, filterField: "id", filterOperator: "eq", filterValue: accountId },

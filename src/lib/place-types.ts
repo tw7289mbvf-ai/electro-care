@@ -1,4 +1,5 @@
 import enumsSeed from "../../seed/enums.json";
+import type { MaintenanceLevel } from "@/lib/maintenance-levels";
 
 export const PROPERTY_TYPES = enumsSeed.property_type.map((p) => p.key) as [string, ...string[]];
 
@@ -14,6 +15,7 @@ export type Place = {
   commune: string | null;
   postcode: string | null;
   propertyType: PropertyType | null;
+  maintenanceLevel: MaintenanceLevel;
   createdAt: string;
   onboardedAt: string | null;
 };

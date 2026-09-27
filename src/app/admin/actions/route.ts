@@ -5,9 +5,10 @@ import {
   reactivateAccount,
   deleteAccountAsAdmin,
   sendPasswordResetLink,
+  markRequestHandled,
 } from "@/lib/admin";
 
-const ACTIONS = ["suspend", "reactivate", "delete", "reset-link"] as const;
+const ACTIONS = ["suspend", "reactivate", "delete", "reset-link", "mark-request-handled"] as const;
 type Action = (typeof ACTIONS)[number];
 
 function isAction(value: unknown): value is Action {
@@ -33,15 +34,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(null, { status: 404 });
   }
 
-  let body: { action?: unknown; accountId?: unknown };
+  let body: { action?: unknown; accountId?: unknown; requestId?: unknown };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
   }
-  const { action, accountId } = body;
-  if (!isAction(action) || typeof accountId !== "string" || !accountId) {
-    return NextResponse.json({ error: "Action ou compte invalide." }, { status: 400 });
+  const { action, accountId, requestId } = body;
+  if (!isAction(action)) {
+    return NextResponse.json({ error: "Action invalide." }, { status: 400 });
+  }
+
+  if (action === "mark-request-handled") {
+    if (typeof requestId !== "string" || !requestId) {
+      return NextResponse.json({ error: "Demande invalide." }, { status: 400 });
+    }
+    try {
+      await markRequestHandled(requestId);
+    } catch (err) {
+      return NextResponse.json({ error: err instanceof Error ? err.message : "Erreur inconnue." }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true });
+  }
+
+  if (typeof accountId !== "string" || !accountId) {
+    return NextResponse.json({ error: "Compte invalide." }, { status: 400 });
   }
   if (accountId === adminAccountId) {
     return NextResponse.json({ error: "Action impossible sur votre propre compte." }, { status: 400 });
