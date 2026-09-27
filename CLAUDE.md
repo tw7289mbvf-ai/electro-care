@@ -60,6 +60,13 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - Never display a database password (or any connection string containing one) in
   plaintext in any output — mask it (e.g. keep host/user, replace the password segment)
   before printing, or redirect straight to a scratch file the same way.
+- `neonctl branches create` prints a `connection_uris` block with the new branch's
+  `neondb_owner` password by default — always redirect its output (e.g. `> /dev/null`
+  or to a scratch file never read back) instead of letting it print. A branch also
+  inherits its parent's role passwords at creation time, so a leaked branch password is
+  also the parent's password at that moment — rotating the parent afterward doesn't
+  retroactively protect the branch, which still answers to the old password until its
+  own is separately reset or the branch is deleted (found 2026-09-27, chantier 3).
 - Always test schema/data changes on a disposable Neon branch (or, for a structural
   change like adding RLS to a table, a disposable project) first — see the
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
@@ -92,6 +99,15 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   (`SELECT id FROM neon_auth.user WHERE id = ANY(...)`, expect zero rows) that both
   throwaway accounts are actually gone — the script's own cleanup calls are not
   silently trustworthy on their own.
+- Self-service account deletion (`POST /delete-user`) does not work on this Neon Auth
+  instance: it 401s with no session (route exists) but 404s with a valid one. Checked
+  for a config toggle — `neonctl neon-auth plugins list`, `neon-auth config
+  email-password get`, and the full `/auth/*` Management API surface (`neonctl api
+  --list`) — none exposes one; the only account-deletion endpoint Neon exposes is the
+  admin one (`DELETE .../auth/users/{id}`, already used for admin-delete). The
+  self-service "Supprimer mon compte" button is hidden in `src/app/settings/page.tsx`
+  until a fallback is chosen — see that file's comment. Found 2026-09-27, chantier 3;
+  don't rediscover this each session.
 
 ## Économie
 

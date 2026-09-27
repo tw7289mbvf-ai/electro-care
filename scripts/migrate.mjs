@@ -339,6 +339,185 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, DELETE ON document_appliances TO authenticated`);
 
+  // --- Admin & RGPD (chantier 3) --------------------------------------------
+
+  // "Dernière connexion" / "actifs sur 30 jours" for the admin dashboard: better-auth
+  // does not track last sign-in on the user record, so the app touches its own row on
+  // each visit to the dashboard. RLS keeps every account able to write only its own row
+  // (same isolation shape as every other per-account table); the admin's aggregate read
+  // goes through admin_account_activity() below, never through a bypass-RLS connection.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS account_activity (
+      account_id UUID PRIMARY KEY REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      last_seen_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await client.query(`ALTER TABLE account_activity ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS account_activity_isolation ON account_activity`);
+  await client.query(`
+    CREATE POLICY account_activity_isolation ON account_activity
+      FOR ALL
+      USING (account_id = auth.uid())
+      WITH CHECK (account_id = auth.uid())
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE ON account_activity TO authenticated`);
+
+  // Admin action journal (who/what/when). RLS denies every row to every account,
+  // including the admin's own ordinary session: all access goes through the
+  // SECURITY DEFINER functions below, which run as the table owner and enforce the
+  // admin check themselves before touching a row. Cascading on both actor and target
+  // means a deleted account (self-service or admin-deleted) leaves no trace here, even
+  // of its own deletion — the right to erasure extends to the audit trail.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS admin_actions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      actor_account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      action TEXT NOT NULL CHECK (action IN ('suspend', 'reactivate', 'delete', 'send_reset_link')),
+      target_account_id UUID REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await client.query(`ALTER TABLE admin_actions ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS admin_actions_no_direct_access ON admin_actions`);
+  await client.query(`
+    CREATE POLICY admin_actions_no_direct_access ON admin_actions FOR ALL USING (false) WITH CHECK (false)
+  `);
+  // Deliberately no GRANT to authenticated: the policy above would block rows anyway,
+  // but not granting table privileges at all means there is no direct path to try.
+
+  // Internal helper: not reachable by any role but its owner. It must never be granted
+  // to `authenticated` directly, or any signed-in account could call it standalone —
+  // it only ever runs from inside the SECURITY DEFINER functions below, which already
+  // execute as the owner, so the internal call succeeds without a separate grant.
+  // "admin" means exactly one thing: the `role` column Neon Auth manages on
+  // neon_auth.user, set once via `neonctl neon-auth user set-role`. No id is
+  // hardcoded here or anywhere else in this file.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION _require_admin() RETURNS void AS $func$
+    BEGIN
+      IF auth.uid() IS NULL OR NOT EXISTS (
+        SELECT 1 FROM neon_auth."user" WHERE id = auth.uid() AND role = 'admin'
+      ) THEN
+        RAISE EXCEPTION 'not authorized' USING ERRCODE = '42501';
+      END IF;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION _require_admin() FROM PUBLIC`);
+
+  // Global figures without personal data. Account totals/new-in-7-days come from the
+  // Neon Auth admin API in the app layer (its own admin-role check), not from here —
+  // this function only aggregates our own tables, so it never needs to read
+  // neon_auth.user's columns (whose exact casing this file doesn't otherwise assume).
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_stats()
+    RETURNS TABLE (
+      accounts_active_30d BIGINT,
+      places_total BIGINT,
+      appliances_total BIGINT,
+      questionnaires_completed BIGINT
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT
+        (SELECT COUNT(*) FROM account_activity WHERE last_seen_at > now() - interval '30 days'),
+        (SELECT COUNT(*) FROM places),
+        (SELECT COUNT(*) FROM appliances),
+        (SELECT COUNT(*) FROM places WHERE onboarded_at IS NOT NULL);
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_stats() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_stats() TO authenticated`);
+
+  // Per-account counts for the admin account list: places and appliances only, never
+  // their content (name, brand, room…), per the GDPR need-to-know principle in the spec.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_account_counts()
+    RETURNS TABLE (account_id UUID, places_count BIGINT, appliances_count BIGINT) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT p.account_id, COUNT(DISTINCT p.id), COUNT(a.id)
+      FROM places p
+      LEFT JOIN appliances a ON a.place_id = p.id
+      GROUP BY p.account_id;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_account_counts() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_account_counts() TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_account_activity()
+    RETURNS TABLE (account_id UUID, last_seen_at TIMESTAMPTZ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY SELECT a.account_id, a.last_seen_at FROM account_activity a;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_account_activity() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_account_activity() TO authenticated`);
+
+  // Anonymous obligation rows (appliance id, equipment type, task dates/confidence —
+  // no name, brand, room, place or account) for every account at once, so the app can
+  // recompute "obligations by status" with the exact same getObligationsForAppliance
+  // logic the dashboard already uses, instead of duplicating that logic in SQL.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_obligation_rows()
+    RETURNS TABLE (
+      appliance_id UUID,
+      equipment_type_id TEXT,
+      maintenance_task_id TEXT,
+      last_service_date DATE,
+      known_due_date DATE,
+      service_confidence TEXT
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT a.id, a.equipment_type_id, o.maintenance_task_id, o.last_service_date,
+             o.known_due_date, o.service_confidence
+      FROM appliances a
+      LEFT JOIN appliance_obligations o ON o.appliance_id = a.id
+      WHERE a.equipment_type_id IS NOT NULL;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_obligation_rows() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_obligation_rows() TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_log_action(p_action TEXT, p_target_account_id UUID)
+    RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      INSERT INTO admin_actions (actor_account_id, action, target_account_id)
+      VALUES (auth.uid(), p_action, p_target_account_id);
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_log_action(TEXT, UUID) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_log_action(TEXT, UUID) TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_list_actions()
+    RETURNS TABLE (
+      id UUID, actor_account_id UUID, action TEXT, target_account_id UUID, created_at TIMESTAMPTZ
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT a.id, a.actor_account_id, a.action, a.target_account_id, a.created_at
+      FROM admin_actions a ORDER BY a.created_at DESC LIMIT 200;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_list_actions() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_list_actions() TO authenticated`);
+
   await client.query("COMMIT");
   console.log("Migration complete: schema, RLS policies and grants ready.");
 } catch (err) {

@@ -5,11 +5,14 @@
 // never be able to touch real rows.
 //
 // Required env: NEON_AUTH_BASE_URL, DATABASE_URL (the `authenticated`-role connection
-// string the app itself uses), NEON_PROJECT_ID. Optional: NEON_BRANCH (default "main").
+// string the app itself uses), NEON_PROJECT_ID. Optional: NEON_BRANCH (default "main"),
+// SKIP_HTTP_ISOLATION=1 to skip the /admin HTTP checks (they spawn `next dev` locally
+// against this same DATABASE_URL/NEON_AUTH_BASE_URL — needs the app buildable at cwd).
 //
 // Usage: node scripts/test-isolation.mjs
 
-import { execSync } from "node:child_process";
+import { execSync, spawn } from "node:child_process";
+import { createServer } from "node:net";
 import { neon } from "@neondatabase/serverless";
 
 const AUTH_BASE = process.env.NEON_AUTH_BASE_URL;
@@ -34,8 +37,10 @@ function ownerUrl() {
   ).trim();
 }
 
+const TEST_PASSWORD = "TestPassword123!";
+
 async function createAccountAndToken(email) {
-  const password = "TestPassword123!";
+  const password = TEST_PASSWORD;
   const signUp = await fetch(`${AUTH_BASE}/sign-up/email`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Origin: "http://localhost:3000" },
@@ -62,6 +67,56 @@ async function refused(fn) {
   } catch (e) {
     return { ok: true, code: e.code };
   }
+}
+
+function findFreePort() {
+  return new Promise((resolve, reject) => {
+    const server = createServer();
+    server.unref();
+    server.on("error", reject);
+    server.listen(0, () => {
+      const { port } = server.address();
+      server.close(() => resolve(port));
+    });
+  });
+}
+
+// Spins up the app itself (next dev, against the same DATABASE_URL/NEON_AUTH_BASE_URL
+// this script already uses) so /admin's notFound() and the admin/actions Route
+// Handler's 404s can be proven over real HTTP, the same way a browser would see them —
+// not just inferred from the underlying SQL/session checks.
+async function startAppServer() {
+  const port = await findFreePort();
+  const child = spawn("npx", ["--yes", "next", "dev", "-p", String(port)], {
+    cwd: new URL("..", import.meta.url).pathname,
+    stdio: "pipe",
+  });
+  const base = `http://localhost:${port}`;
+  const deadline = Date.now() + 60_000;
+  while (Date.now() < deadline) {
+    try {
+      await fetch(base);
+      return { base, stop: () => child.kill() };
+    } catch {
+      await new Promise((r) => setTimeout(r, 500));
+    }
+  }
+  child.kill();
+  throw new Error(`App server did not become ready on ${base} within 60s`);
+}
+
+// Signs in through the app's OWN proxied auth route (not NEON_AUTH_BASE_URL directly)
+// so the returned cookie is the one the app's middleware actually recognizes — the
+// same cookie a real signed-in browser would carry.
+async function signInLocally(base, email, password) {
+  const res = await fetch(`${base}/api/auth/sign-in/email`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Origin: base },
+    body: JSON.stringify({ email, password }),
+  });
+  const cookie = res.headers.get("set-cookie");
+  if (!cookie) throw new Error(`Local sign-in failed for ${email}: ${res.status} ${await res.text()}`);
+  return cookie;
 }
 
 async function main() {
@@ -177,6 +232,63 @@ async function main() {
     // grep exits 1 when it finds nothing — that's the success case here
   }
   record("No neondb_owner / bare neon() usage outside src/lib/db.ts", ownerUsage.trim() === "", ownerUsage.trim() || undefined);
+
+  // --- 6. Admin SECURITY DEFINER functions, called directly as B (non-admin) --------
+  // Same proof as the RLS checks above, but for the admin surface: the database itself
+  // must refuse a non-admin caller, not just the app's own page/route-level checks.
+  const adminFunctionCalls = [
+    ["admin_stats()", () => sqlB`SELECT * FROM admin_stats()`],
+    ["admin_account_counts()", () => sqlB`SELECT * FROM admin_account_counts()`],
+    ["admin_account_activity()", () => sqlB`SELECT * FROM admin_account_activity()`],
+    ["admin_obligation_rows()", () => sqlB`SELECT * FROM admin_obligation_rows()`],
+    ["admin_list_actions()", () => sqlB`SELECT * FROM admin_list_actions()`],
+    ["admin_log_action(...)", () => sqlB`SELECT admin_log_action('suspend', ${a.accountId})`],
+  ];
+  for (const [label, fn] of adminFunctionCalls) {
+    const res = await refused(fn);
+    record(`${label} (B, not admin)`, res.ok, res.rows !== undefined ? `${res.rows} row(s)` : res.code);
+  }
+
+  // --- 7. /admin and its actions over real HTTP, for a non-admin session and for no
+  // session at all — both must answer 404, indistinguishable from a route that doesn't
+  // exist. Skippable via SKIP_HTTP_ISOLATION=1 for a quick DB-only run.
+  if (process.env.SKIP_HTTP_ISOLATION !== "1") {
+    const app = await startAppServer();
+    try {
+      const bCookie = await signInLocally(app.base, `test-isolation-b-${suffix}@example.com`, TEST_PASSWORD);
+
+      const httpChecks = [
+        ["GET /admin, no session", () => fetch(`${app.base}/admin`)],
+        ["GET /admin, B (not admin)", () => fetch(`${app.base}/admin`, { headers: { Cookie: bCookie } })],
+        [
+          "POST /admin/actions, no session",
+          () =>
+            fetch(`${app.base}/admin/actions`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Origin: app.base },
+              body: JSON.stringify({ action: "suspend", accountId: a.accountId }),
+            }),
+        ],
+        [
+          "POST /admin/actions, B (not admin)",
+          () =>
+            fetch(`${app.base}/admin/actions`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Origin: app.base, Cookie: bCookie },
+              body: JSON.stringify({ action: "suspend", accountId: a.accountId }),
+            }),
+        ],
+      ];
+      for (const [label, fn] of httpChecks) {
+        const res = await fn();
+        record(label, res.status === 404, `HTTP ${res.status}`);
+      }
+    } finally {
+      app.stop();
+    }
+  } else {
+    console.log("SKIP_HTTP_ISOLATION=1 — skipping /admin HTTP checks");
+  }
 
   // --- Cleanup: delete both throwaway accounts, cascades everything -------
   // stdio was "ignore" — a failed delete here used to pass silently. Now each is
