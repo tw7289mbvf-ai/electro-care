@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminActionLog, getAdminRequests } from "@/lib/admin";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
 import { AdminRequestRow } from "@/components/AdminRequestRow";
@@ -41,7 +42,10 @@ export default async function AdminPage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
         <header>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <Link href="/" className="self-start text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400">
+            ← Tableau de bord
+          </Link>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
             Administration
           </h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
