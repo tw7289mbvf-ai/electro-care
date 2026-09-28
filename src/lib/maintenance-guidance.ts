@@ -68,15 +68,17 @@ export function applyDeferrals(
 
 // Whether "Reporter" may push this task one more month: never past a full interval
 // away from where it was first due this cycle. A strictly monthly task (frequency.months
-// 1) has no room to defer at all past its first push, since by then the next occurrence
-// is already due anyway.
+// 1) is always deferrable — spec "For a monthly task, postponing simply skips this
+// month": next month's occurrence is due regardless, so skipping this one can't make it
+// vanish for a full interval the way it could for a less frequent task.
 export function canDeferMaintenanceTask(
   task: MaintenanceTask,
   deferral: MaintenanceDeferral | null,
   monthKey: string
 ): boolean {
+  if (task.frequency.months <= 1) return true;
   const origin = deferral?.originMonth ?? monthKey;
-  const maxShift = Math.max(1, Math.round(task.frequency.months));
+  const maxShift = Math.round(task.frequency.months);
   const candidate = addMonthsToKey(monthKey, 1);
   return monthsBetweenKeys(origin, candidate) < maxShift;
 }
