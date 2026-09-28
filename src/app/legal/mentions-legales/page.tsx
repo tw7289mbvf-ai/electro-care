@@ -12,21 +12,56 @@ export default function MentionsLegalesPage() {
             ← Retour aux paramètres
           </Link>
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">Mentions légales</h1>
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">Mentions légales</h1>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 28 septembre 2026</p>
+        </div>
 
         <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Éditeur du site</h2>
-          <p>[À COMPLÉTER : nom ou raison sociale, statut juridique, adresse, numéro SIRET, directeur de la publication]</p>
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Éditeur</h2>
+          <p>
+            Le service Electro Care, accessible à l&apos;adresse electro-care-seven.vercel.app, est édité par :
+          </p>
+          <ul className="list-disc pl-5">
+            <li>Mathieu Decrop, personne physique</li>
+            <li>Adresse : 43 rue Rosa Bonheur, 33000 Bordeaux</li>
+            <li>Téléphone : 06 60 38 51 96</li>
+            <li>E-mail : matdec41@hotmail.com</li>
+          </ul>
+        </section>
+
+        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Directeur de la publication</h2>
+          <p>Mathieu Decrop.</p>
         </section>
 
         <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Hébergement</h2>
-          <p>[À COMPLÉTER : nom et adresse de l&apos;hébergeur des applications (Vercel) et de la base de données (Neon)]</p>
+          <p>
+            Le service est hébergé par Vercel Inc., 440 North Barranca Avenue, Suite 4133, Covina, Californie 91723,
+            États-Unis. Téléphone : +1 951-383-6898. Site : vercel.com.
+          </p>
+          <p>
+            Les données des comptes sont stockées dans une base de données hébergée dans l&apos;Union européenne, à
+            Francfort, par Neon, Inc. La politique de confidentialité détaille l&apos;ensemble des prestataires.
+          </p>
+        </section>
+
+        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Propriété intellectuelle</h2>
+          <p>
+            L&apos;interface d&apos;Electro Care, ses textes et son référentiel des obligations et de l&apos;entretien
+            sont la propriété de l&apos;éditeur. Toute reproduction sans autorisation est interdite. Les informations
+            et documents que vous déposez restent les vôtres.
+          </p>
         </section>
 
         <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Contact</h2>
-          <p>[À COMPLÉTER : adresse e-mail ou formulaire de contact]</p>
+          <p>
+            Pour toute question : matdec41@hotmail.com, ou le formulaire « Contacter l&apos;administrateur » dans
+            Paramètres.
+          </p>
         </section>
       </main>
     </div>

@@ -121,6 +121,8 @@ export async function createPlace(_prevState: FormState, formData: FormData): Pr
   const name = optionalTrimmed(formData, "name");
   const commune = optionalTrimmed(formData, "commune");
   const postcode = optionalTrimmed(formData, "postcode");
+  const streetAddress = optionalTrimmed(formData, "streetAddress");
+  const addressComplement = optionalTrimmed(formData, "addressComplement");
   const propertyType = optionalTrimmed(formData, "propertyType");
 
   if (!name) {
@@ -130,7 +132,14 @@ export async function createPlace(_prevState: FormState, formData: FormData): Pr
     return { error: "Veuillez choisir un type de bien valide." };
   }
 
-  const place = await addPlace({ name, commune, postcode, propertyType: propertyType as PropertyType | null });
+  const place = await addPlace({
+    name,
+    commune,
+    postcode,
+    streetAddress,
+    addressComplement,
+    propertyType: propertyType as PropertyType | null,
+  });
   revalidatePath("/");
   redirect(`/places/${place.id}/questionnaire`);
 }
@@ -143,6 +152,8 @@ export async function updatePlace(
   const name = optionalTrimmed(formData, "name");
   const commune = optionalTrimmed(formData, "commune");
   const postcode = optionalTrimmed(formData, "postcode");
+  const streetAddress = optionalTrimmed(formData, "streetAddress");
+  const addressComplement = optionalTrimmed(formData, "addressComplement");
   const propertyType = optionalTrimmed(formData, "propertyType");
 
   if (!name) {
@@ -152,7 +163,14 @@ export async function updatePlace(
     return { error: "Veuillez choisir un type de bien valide." };
   }
 
-  await updatePlaceRecord(id, { name, commune, postcode, propertyType: propertyType as PropertyType | null });
+  await updatePlaceRecord(id, {
+    name,
+    commune,
+    postcode,
+    streetAddress,
+    addressComplement,
+    propertyType: propertyType as PropertyType | null,
+  });
   revalidatePath("/");
   revalidatePath(`/places/${id}`);
   redirect(`/places/${id}`);

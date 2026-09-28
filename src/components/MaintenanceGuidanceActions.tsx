@@ -26,7 +26,7 @@ export function MaintenanceGuidanceActions({
           type="button"
           disabled={isPending}
           onClick={() => startTransition(() => deferMaintenanceTaskAction(applianceId, maintenanceTaskId, placeId))}
-          className="shrink-0 rounded-md bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 transition-colors hover:bg-amber-100 disabled:opacity-60 dark:bg-amber-950/50 dark:text-amber-300 dark:hover:bg-amber-950"
+          className="shrink-0 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100 disabled:opacity-60 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950"
         >
           Reporter
         </button>

@@ -8,7 +8,7 @@ export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
   up_to_date: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
   to_schedule: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
   overdue: "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300",
-  to_confirm: "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
+  to_confirm: "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300",
 };
 
 // Shared by ObligationsBlock (a place's or an appliance's full list) and UrgentActions
