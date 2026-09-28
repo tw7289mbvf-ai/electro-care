@@ -7,6 +7,8 @@ type PlaceRow = {
   name: string;
   commune: string | null;
   postcode: string | null;
+  street_address: string | null;
+  address_complement: string | null;
   property_type: string | null;
   maintenance_level: string;
   created_at: string | Date;
@@ -24,6 +26,8 @@ function toPlace(row: PlaceRow): Place {
     name: row.name,
     commune: row.commune,
     postcode: row.postcode,
+    streetAddress: row.street_address,
+    addressComplement: row.address_complement,
     propertyType: row.property_type as PropertyType | null,
     maintenanceLevel: row.maintenance_level as MaintenanceLevel,
     createdAt: typeof row.created_at === "string" ? row.created_at : row.created_at.toISOString(),
@@ -34,7 +38,8 @@ function toPlace(row: PlaceRow): Place {
 export async function getPlaces(): Promise<Place[]> {
   const { sql } = await getAuthedContext();
   const rows = (await sql`
-    SELECT id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
+    SELECT id, name, commune, postcode, street_address, address_complement, property_type,
+           maintenance_level, created_at, onboarded_at
     FROM places
     ORDER BY created_at ASC
   `) as PlaceRow[];
@@ -44,7 +49,8 @@ export async function getPlaces(): Promise<Place[]> {
 export async function getPlace(id: string): Promise<Place | null> {
   const { sql } = await getAuthedContext();
   const rows = (await sql`
-    SELECT id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
+    SELECT id, name, commune, postcode, street_address, address_complement, property_type,
+           maintenance_level, created_at, onboarded_at
     FROM places
     WHERE id = ${id}
   `) as PlaceRow[];
@@ -55,13 +61,17 @@ export async function addPlace(input: {
   name: string;
   commune: string | null;
   postcode: string | null;
+  streetAddress: string | null;
+  addressComplement: string | null;
   propertyType: PropertyType | null;
 }): Promise<Place> {
   const { sql, accountId } = await getAuthedContext();
   const rows = (await sql`
-    INSERT INTO places (account_id, name, commune, postcode, property_type)
-    VALUES (${accountId}, ${input.name}, ${input.commune}, ${input.postcode}, ${input.propertyType})
-    RETURNING id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
+    INSERT INTO places (account_id, name, commune, postcode, street_address, address_complement, property_type)
+    VALUES (${accountId}, ${input.name}, ${input.commune}, ${input.postcode}, ${input.streetAddress},
+            ${input.addressComplement}, ${input.propertyType})
+    RETURNING id, name, commune, postcode, street_address, address_complement, property_type,
+              maintenance_level, created_at, onboarded_at
   `) as PlaceRow[];
   return toPlace(rows[0]);
 }
@@ -72,6 +82,8 @@ export async function updatePlace(
     name: string;
     commune: string | null;
     postcode: string | null;
+    streetAddress: string | null;
+    addressComplement: string | null;
     propertyType: PropertyType | null;
   }
 ): Promise<Place> {
@@ -79,9 +91,11 @@ export async function updatePlace(
   const rows = (await sql`
     UPDATE places
     SET name = ${input.name}, commune = ${input.commune}, postcode = ${input.postcode},
+        street_address = ${input.streetAddress}, address_complement = ${input.addressComplement},
         property_type = ${input.propertyType}
     WHERE id = ${id}
-    RETURNING id, name, commune, postcode, property_type, maintenance_level, created_at, onboarded_at
+    RETURNING id, name, commune, postcode, street_address, address_complement, property_type,
+              maintenance_level, created_at, onboarded_at
   `) as PlaceRow[];
   return toPlace(rows[0]);
 }

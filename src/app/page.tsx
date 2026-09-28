@@ -56,6 +56,19 @@ export default async function Home() {
             </div>
           </section>
 
+          <section className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Votre logement, entretenu et en règle
+            </h2>
+            <p className="text-sm text-zinc-600 dark:text-zinc-300">
+              Chaudière, ramonage, détecteur de fumée, fosse septique : certains entretiens sont
+              obligatoires, et les oublier peut coûter une amende ou un refus d&apos;indemnisation de
+              votre assureur. Electro Care établit la liste de vos obligations en quelques questions,
+              vous signale chaque échéance et vous guide pour l&apos;entretien courant de vos appareils.
+              Gratuit.
+            </p>
+          </section>
+
           <DemoDashboard />
         </main>
       </div>

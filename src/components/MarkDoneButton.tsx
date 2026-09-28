@@ -33,14 +33,15 @@ export function MarkDoneButton({
 
   if (status === "up_to_date") return null;
 
-  const label = status === "to_confirm" ? "Mettre à jour" : "C'est fait";
+  const isToConfirm = status === "to_confirm";
+  const label = isToConfirm ? "Mettre à jour" : "C'est fait";
+  const closedButtonClass = isToConfirm
+    ? "shrink-0 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950"
+    : "shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950";
 
-  if (status === "to_confirm" && toConfirmReason === "threshold") {
+  if (isToConfirm && toConfirmReason === "threshold") {
     return (
-      <Link
-        href={`/appliances/${applianceId}`}
-        className="shrink-0 rounded-md bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700 transition-colors hover:bg-sky-100 dark:bg-sky-950/50 dark:text-sky-300 dark:hover:bg-sky-950"
-      >
+      <Link href={`/appliances/${applianceId}`} className={closedButtonClass}>
         {label}
       </Link>
     );
@@ -48,11 +49,7 @@ export function MarkDoneButton({
 
   if (!open) {
     return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950"
-      >
+      <button type="button" onClick={() => setOpen(true)} className={closedButtonClass}>
         {label}
       </button>
     );

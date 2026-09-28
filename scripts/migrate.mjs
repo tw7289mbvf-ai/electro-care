@@ -80,6 +80,10 @@ try {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
+  // Optional postal address, entered once so intervention requests carry it without
+  // retyping (spec "Postal address, optional"). Never selected by the admin queries below.
+  await client.query(`ALTER TABLE places ADD COLUMN IF NOT EXISTS street_address TEXT`);
+  await client.query(`ALTER TABLE places ADD COLUMN IF NOT EXISTS address_complement TEXT`);
   await client.query(`ALTER TABLE places DROP CONSTRAINT IF EXISTS places_property_type_check`);
   await client.query(`
     ALTER TABLE places ADD CONSTRAINT places_property_type_check

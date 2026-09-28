@@ -1,10 +1,12 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 39). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 44). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
 Home appliances and equipment (boiler, washing machine, pool pump, HVAC, etc.) lose years of useful life because owners don't know when maintenance is due or how to perform it. Electro Care centralizes every appliance a household owns, sends timely reminders for periodic upkeep, and gives clear step-by-step instructions for each task — extending equipment lifespan and preventing costly failures.
+
+The ambition is a "Doctolib of the home": the home's health record (legal obligations, maintenance, documents), files ready to send to an insurer or for a sale, and later the booking of the professionals who keep it compliant. Unlike the French home logbook apps (CLÉA, Mon Suivi Logement, Homekonect), which send generic reminders, Electro Care tracks each legal obligation with a status, its risks and a ready-to-send request.
 
 ## Target User & Market
 
@@ -21,14 +23,15 @@ Homeowners in France (v1 market: France only) who want to extend the life of the
 - Warranty and documents: one space per appliance for manuals, invoices and warranty forms of new products
 - Automatic maintenance calendar: email reminders based on manufacturer or best-practice intervals
 - Step-by-step maintenance guide per appliance and task
-- Free tier: unlimited appliances, reminders, and guides
-- Paid tier: adds on-demand booking of a technician for complex interventions
+- Free for individuals: every feature, with no paid tier for them
+- Revenue from professionals and product links, as described in Business Model
 
 ## Places and Categories
 
 The app is organized by place first, then by category, then by appliance. A place is more than a folder:
 
 - **Commune**: legal reminders are computed per place, because local rules vary. Example: the SPANC inspection is due at least every 10 years, but a commune can set a shorter interval ([source](https://www.ethnasystem.eu/2026/04/12/controle-spanc-est-il-obligatoire-pour-lassainissement-non-collectif/)).
+- **Postal address, optional**: street and number, with an optional second line, entered once on the place so that intervention requests carry it without retyping. Like the rest of the place, never visible to the admin.
 - **Property type**: main home, second home or rental. It sets who is liable for upkeep and which seasonal tasks apply, such as winterizing a second home.
 - **Sharing scope**: a place is the natural unit for inviting a tenant or a technician later, without exposing the other places.
 - **Room**: optional tag, not a navigation level. Mainly used to tell two identical units apart, such as two splits in two bedrooms.
@@ -69,14 +72,14 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 | Postponing | Always visible | Free |
 | Reminders | One by one, a month before the deadline | Grouped by season |
 
-- **Where obligations show**: the dashboard gives the global status and the overdue ones, place by place; each place's page lists all its obligations, sorted by urgency, then the month's maintenance.
+- **Where obligations show**: the dashboard gives the global status and the overdue ones, place by place. Each place's page lists the obligations to act on first, red then orange, then an "À jour" group, collapsed, with the number of up-to-date obligations and the next action date. Tapping it lists each of them with its last completion date and next due date.
 - **Risks on every obligation**: fine, insurance consequences, liability and physical danger, taken from the reference data.
 - **Three colour-coded statuses**, like a vehicle inspection: green (up to date, recent valid proof), orange (to confirm, the app needs an input from the user), red (overdue, no valid proof, action needed). Only green counts as compliant: orange is never "in order", since an insurer won't accept "it was recent".
 - **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?).
 - **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); and last, a single "never or I don't know" button (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
 - **Dates in French**: picked from two lists (month in words, year) and shown as "septembre 2026", never with a day.
-- **Actions by status**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", whether a date or the power is missing.
-- **Bridge to the paid tier**: most obligations need a professional, so an obligation coming due offers to book a technician.
+- **Actions and colours**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", whether a date or the power is missing. Status badges use the three status colours, "À confirmer" in orange like its status. Buttons keep one colour everywhere: "C'est fait" in green, "Mettre à jour" in orange like the status it resolves, and "Reporter" in orange; the two orange buttons never appear side by side, one in obligations, the other in the monthly maintenance.
+- **Bridge to professionals**: most obligations need a professional, so an obligation coming due offers the ready-to-send request today, and booking a listed professional once the professional side exists.
 
 ## Onboarding Questionnaire
 
@@ -99,7 +102,7 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 
 Each person has an account, and sees only their own places and appliances. This is the foundation everything else depends on.
 
-- **First screen for a signed-out visitor**: log in or create an account at the top; below it, a demonstration dashboard. The demo shows fixed, fictional data only, never anyone's real data, and is read-only. A sample home with a few appliances and two overdue obligations in red lets the visitor grasp in one glance that the app tracks legal obligations and flags what is late.
+- **First screen for a signed-out visitor**: log in or create an account at the top; then a short text explaining the app; below it, a demonstration dashboard. The demo shows fixed, fictional data only, never anyone's real data, and is read-only. A sample home with a few appliances and two overdue obligations in red lets the visitor grasp in one glance that the app tracks legal obligations and flags what is late.
 - **Sign-in for the MVP**: email and password. Google and Apple sign-in can come later.
 - **Per-account isolation**: places, appliances, documents and their obligations belong to an account and are visible only after signing in.
 - **EU region**: the database is hosted in the European Union, since the app stores personal data (invoices carry names and addresses). This keeps GDPR compliance simple.
@@ -145,16 +148,19 @@ Tapping an appliance opens its card.
 ## Reminders
 
 - **Legal obligations, by email**: a first email three months before the deadline, leaving time to find a professional; a reminder one month before if not done; another at the deadline. Sent from the app's own domain through a European email service.
-- **A ready-to-send request in the email**: a quote request (new provider) or an intervention request (usual provider), naming the appliance, its brand and model when known, the intervention and its legal basis ("Annual gas boiler service, Saunier Duval Thema C, required by decree 2009-649"). One button opens it in the user's mail app.
+- **A ready-to-send request in the email**: a quote request (new provider) or an intervention request (usual provider), naming the appliance, its brand and model when known, the intervention and its legal basis ("Annual gas boiler service, Saunier Duval Thema C, required by decree 2009-649"), and the place's postal address when entered. One button opens it in the user's mail app.
 - **Brand and model, optional**: asked in the appliance card and at reminder time ("add the model, it will appear in your request"), only for appliances that have a nameplate.
-- **Lifespan maintenance, in the app only**: no email. The count of tasks due this month shows in the global status; the tasks themselves are listed on each place's page, timed by each task's frequency and the months it applies to.
+- **Lifespan maintenance, in the app only**: no email. The count of tasks due this month shows in the global status; the tasks themselves are listed on each place's page, timed by each task's frequency and the months it applies to. Legal obligations never appear in it, even when an appliance carries both.
+- **Times in the monthly list**: "Entretien du mois" shows its total hands-on time in its header, and each task its own time, or "Professionnel" when a professional does it.
+- **Two actions on every task**: a green "C'est fait", which sets the next date, and an orange "Reporter", which moves the task to next month. For a monthly task, postponing simply skips this month; for a less frequent one, it never skips a whole interval, so a task due every two years cannot vanish for two years.
 - **Routines stay in the appliance card**: tasks more frequent than monthly (weekly, after each use) never reach the dashboard or the place page, so both stay readable.
 - **Calendar**: a subscription link for the user's calendar comes later, as a small addition.
 
 ## Maintenance Guidance
 
-- **General procedure, free**: every maintenance task shows the general recommended steps from the reference data, with tools and what goes wrong if skipped.
-- **Model-specific step-by-step, paid tier**: when brand and model are known, a precise procedure is generated on demand from the manufacturer's manual, stored and reused for everyone with the same model. It complements the general procedure, labelled "from the manufacturer's manual" with a link and a "report an error" button. The manual is summarised, never copied.
+- **General procedure**: every maintenance task shows the general recommended steps from the reference data, with tools and what goes wrong if skipped.
+- **Model-specific step-by-step**: when brand and model are known, a precise procedure is generated on demand from the manufacturer's manual, stored and reused for everyone with the same model. It complements the general procedure, labelled "from the manufacturer's manual" with a link and a "report an error" button. The manual is summarised, never copied. Free, like everything for individuals.
+- **Product links**: each task that lists consumables (filters, descaler, batteries) offers a link to buy them, with the exact reference once the model is known. Links are marked as affiliate links and never presented as neutral advice.
 - **Never for risky interventions**: model-specific steps only cover tasks users do themselves (filters, descaling); gas and combustion work stays with a professional.
 - **In the MVP**: a single demonstration on one precise product, written once, with no generation.
 
@@ -174,18 +180,22 @@ Short, separate work sessions, each with the isolation test and the production p
 
 1. Date questions and actions by status. Done.
 2. Focused dashboard and lifespan maintenance. Done.
-3. Administration and GDPR basics: admin page, legal pages.
-4. Maintenance levels, chosen per place, with the estimated hands-on time per month for each level; account menu, deletion requests and contact form. After steps 3 and 4, the app opens to testers.
-5. Obligation reminders by email. Requires the app's own domain and an email service account.
-6. Model-specific step-by-step demo on one product.
-7. Documents: uploading proofs, the basis for tenants.
-8. Tenants.
+3. Administration and GDPR basics. Done, except the text of the legal pages.
+4. Maintenance levels and account settings. Done.
+5. Place page (times, "C'est fait" and "Reporter") and accented reference texts. In progress.
+6. Legal pages completed, then the app opens to a first circle of testers.
+7. Obligation reminders by email, with the ready-to-send request. Requires the app's own domain and an email service account.
+8. Product links on maintenance tasks, and the step-by-step demo on one product. Requires affiliate program accounts.
+9. Documents: uploading proofs and invoices.
+10. Insurer file and sale file, built on documents.
+11. Tenants.
+12. Professional side: the tradespeople's agenda, once usage is validated, starting with one city.
 
-The calendar subscription link follows step 5.
+The calendar subscription link follows step 7.
 
 ## Tenants (planned)
 
-In a long-term rental, several obligations fall on the tenant (boiler service, chimney sweeping, smoke detector upkeep, gas hose), while the owner bears the consequences with the insurer. Landlords chase these certificates by hand today: automating it is a strong candidate for the paid tier.
+In a long-term rental, several obligations fall on the tenant (boiler service, chimney sweeping, smoke detector upkeep, gas hose), while the owner bears the consequences with the insurer. Landlords chase these certificates by hand today. The feature is free for individual landlords; property managers handling many homes are part of the professional offer.
 
 - **Tenant contacts**: the owner enters one or more tenant emails on the place.
 - **Notice and proof**: before each tenant-liable deadline, the app emails the tenant a link to upload the proof, with no account needed. The link is single-use, time-limited and opens nothing else.
@@ -196,10 +206,13 @@ In a long-term rental, several obligations fall on the tenant (boiler service, c
 
 ## Business Model
 
-Freemium, with a monthly subscription for the paid tier.
+Decided on 28 September 2026: individuals never pay. Revenue comes from professionals, as with Doctolib, where practitioners pay and patients don't.
 
-- Free: unlimited appliances, reminders, and self-service maintenance guides
-- Paid (subscription): everything in Free, plus booking a technician for complex interventions (e.g. boiler descaling, HVAC servicing) directly through the app
+- **Individuals, free**: every feature, from obligations and reminders to documents, guides and tenant follow-up for an individual landlord.
+- **Tradespeople, paying**: later, heating engineers, chimney sweeps and other trades get an agenda and appointments from the app's users. Launched city by city, starting with one, since a professional only pays where the demand is.
+- **Property professionals, paying**: property managers, short-term rental concierges and agencies managing many homes, for multi-place management and tenant follow-up at scale.
+- **Product links**: affiliate commissions on the consumables of each maintenance task. A complement, not a business model on its own: Centriq, which also sold replacement parts through its app, closed its consumer product.
+- **Later, partnerships**: insurers, for prevention and the insurer file, and home builders, for the logbook of new homes.
 
 ## Out of Scope for v1
 

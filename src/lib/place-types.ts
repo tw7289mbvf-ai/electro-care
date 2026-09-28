@@ -14,6 +14,8 @@ export type Place = {
   name: string;
   commune: string | null;
   postcode: string | null;
+  streetAddress: string | null;
+  addressComplement: string | null;
   propertyType: PropertyType | null;
   maintenanceLevel: MaintenanceLevel;
   createdAt: string;

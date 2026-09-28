@@ -91,6 +91,34 @@ export function PlaceForm({
         />
       </div>
 
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="streetAddress" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Adresse (facultatif)
+        </label>
+        <input
+          id="streetAddress"
+          name="streetAddress"
+          type="text"
+          defaultValue={place?.streetAddress ?? ""}
+          placeholder="ex. 12 rue des Lilas"
+          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+        />
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="addressComplement" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Complément d&apos;adresse (facultatif)
+        </label>
+        <input
+          id="addressComplement"
+          name="addressComplement"
+          type="text"
+          defaultValue={place?.addressComplement ?? ""}
+          placeholder="ex. Bâtiment B, 3e étage"
+          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+        />
+      </div>
+
       <div className="flex flex-col gap-1.5 sm:col-span-2">
         <label htmlFor="propertyType" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Type de bien
