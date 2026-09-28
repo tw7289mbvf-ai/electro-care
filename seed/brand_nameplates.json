@@ -9,15 +9,15 @@
       "Constructa"
     ],
     "categories": "Lavage, froid, cuisson, hottes",
-    "identifiers": "E-Nr (reference modele), FD (date de fabrication), Z-Nr / n. de serie",
-    "validation_rule": "E-Nr : alphanumerique termine par / et 1 a 2 chiffres (ex. B57CR22N0/01). FD : 4 chiffres",
+    "identifiers": "E-Nr (référence modèle), FD (date de fabrication), Z-Nr / n. de série",
+    "validation_rule": "E-Nr : alphanumérique terminé par / et 1 à 2 chiffres (ex. B57CR22N0/01). FD : 4 chiffres",
     "patterns": {
       "e_nr": "^[A-Z0-9]{5,15}/[0-9]{1,2}$",
       "fd": "^FD ?[0-9]{4}"
     },
-    "date_decoding": "Annee = 2 premiers chiffres du FD + 1920 ; mois = 2 derniers (FD 9405 = mai 2014). Regle publiee jusqu'a FD 9912 (dec. 2019) : format posterieur a confirmer aupres de BSH",
-    "locations": "Localisateur officiel par categorie sur les sites de chaque marque ; en general au niveau de la porte",
-    "notes": "Bosch propose deja la lecture photo de sa plaque sur son site : preuve de faisabilite et benchmark",
+    "date_decoding": "Année = 2 premiers chiffres du FD + 1920 ; mois = 2 derniers (FD 9405 = mai 2014). Règle publiée jusqu'à FD 9912 (dec. 2019) : format postérieur à confirmer auprès de BSH",
+    "locations": "Localisateur officiel par catégorie sur les sites de chaque marque ; en général au niveau de la porte",
+    "notes": "Bosch propose déjà la lecture photo de sa plaque sur son site : preuve de faisabilité et benchmark",
     "sources": [
       "https://www.bosch-home.fr/france/localiser-plaque-signaletique",
       "https://www.neff-home.com/fr/promotions/plaque-signaletique"
@@ -29,13 +29,13 @@
     "brands": [
       "Miele"
     ],
-    "categories": "Tout le gros electromenager",
-    "identifiers": "Reference du modele, numero de materiel, numero de fabrication, numero de serie",
-    "validation_rule": "Format propre a Miele",
+    "categories": "Tout le gros électroménager",
+    "identifiers": "Référence du modèle, numéro de matériel, numéro de fabrication, numéro de série",
+    "validation_rule": "Format propre à Miele",
     "patterns": null,
-    "date_decoding": "A documenter",
+    "date_decoding": "À documenter",
     "locations": "Tables de cuisson : plaque SOUS l'appareil",
-    "notes": "Une 2e plaque est fournie pour etre collee dans le mode d'emploi : c'est elle qu'il faut photographier pour une table encastree",
+    "notes": "Une 2e plaque est fournie pour être collée dans le mode d'emploi : c'est elle qu'il faut photographier pour une table encastrée",
     "sources": [
       "https://www.miele.fr/c/plate-finder.htm"
     ],
@@ -46,13 +46,13 @@
     "brands": [
       "Liebherr"
     ],
-    "categories": "Refrigerateurs, congelateurs, caves a vin",
+    "categories": "Réfrigérateurs, congélateurs, caves à vin",
     "identifiers": "Service no. et Serial no.",
-    "validation_rule": "Numero a 9 chiffres (selon Liebherr)",
+    "validation_rule": "Numéro à 9 chiffres (selon Liebherr)",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Plaque a l'interieur de l'appareil",
-    "notes": "Modeles a ecran : plaque signaletique numerique dans Reglages > Informations. Une capture de l'ecran suffit, sans chercher la plaque",
+    "date_decoding": "À documenter",
+    "locations": "Plaque à l'intérieur de l'appareil",
+    "notes": "Modèles à écran : plaque signalétique numérique dans Réglages > Informations. Une capture de l'écran suffit, sans chercher la plaque",
     "sources": [
       "https://www.liebherr.com/fr-fr/refrigerateurs-congelateurs/plaque-signaletique-3042050"
     ],
@@ -64,12 +64,12 @@
       "Samsung"
     ],
     "categories": "Lavage, froid, cuisson, climatisation",
-    "identifiers": "Code modele, n. de serie (S/N)",
-    "validation_rule": "Format propre a Samsung",
+    "identifiers": "Code modèle, n. de série (S/N)",
+    "validation_rule": "Format propre à Samsung",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Froid : paroi gauche, interieure ou exterieure. Lavage frontal : cadre de porte pres du joint, sinon etiquette au dos",
-    "notes": "Sur certains refrigerateurs, le numero de l'autocollant exterieur est un numero de controle usine, pas le n. de serie : lire l'etiquette interieure",
+    "date_decoding": "À documenter",
+    "locations": "Froid : paroi gauche, intérieure ou extérieure. Lavage frontal : cadre de porte près du joint, sinon étiquette au dos",
+    "notes": "Sur certains réfrigérateurs, le numéro de l'autocollant extérieur est un numéro de contrôle usine, pas le n. de série : lire l'étiquette intérieure",
     "sources": [
       "https://ushl.samsung.com/ch_fr/support/home-appliances/comment-trouver-le-numero-de-serie-code-modele-ou-numero-imei-de-mon-appareil",
       "https://ushl.samsung.com/be_fr/support/home-appliances/ou-puis-je-trouver-le-numero-de-serie-de-mon-refrigerateur"
@@ -82,11 +82,11 @@
       "LG"
     ],
     "categories": "Lavage, froid, cuisson, climatisation",
-    "identifiers": "Modele, n. de serie",
-    "validation_rule": "Format propre a LG",
+    "identifiers": "Modèle, n. de série",
+    "validation_rule": "Format propre à LG",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Lavage frontal : etiquette argentee autour de l'ouverture du tambour, en general en haut. Chargement par le haut : au dos ou cote droit. Froid : paroi interieure gauche (modeles recents), droite (anciens)",
+    "date_decoding": "À documenter",
+    "locations": "Lavage frontal : étiquette argentée autour de l'ouverture du tambour, en général en haut. Chargement par le haut : au dos ou côté droit. Froid : paroi intérieure gauche (modèles récents), droite (anciens)",
     "notes": null,
     "sources": [
       "https://www.lg.com/africa_fr/support/aide-produit/CT40007876-20155091574353",
@@ -104,14 +104,14 @@
       "une partie des appareils Ikea"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "Code service 12NC, n. de serie",
-    "validation_rule": "Code service : 12 chiffres commencant par 85",
+    "identifiers": "Code service 12NC, n. de série",
+    "validation_rule": "Code service : 12 chiffres commençant par 85",
     "patterns": {
       "service_code_12nc": "^85[0-9]{10}$"
     },
-    "date_decoding": "A documenter",
-    "locations": "Plaque visible porte ouverte (lavage), paroi interieure (froid)",
-    "notes": "Ikea : le fabricant reel varie selon le modele, le format de l'identifiant revele lequel. Activites europeennes de Whirlpool reprises par Beko Europe",
+    "date_decoding": "À documenter",
+    "locations": "Plaque visible porte ouverte (lavage), paroi intérieure (froid)",
+    "notes": "Ikea : le fabricant réel varie selon le modèle, le format de l'identifiant révèle lequel. Activités européennes de Whirlpool reprises par Beko Europe",
     "sources": [
       "https://www.boulanger.com/ref/9000518317"
     ],
@@ -122,18 +122,18 @@
     "brands": [
       "Indesit",
       "Hotpoint",
-      "Ariston (electromenager)",
+      "Ariston (électroménager)",
       "Scholtes"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "Modele, code article, n. de serie",
-    "validation_rule": "Code article : F suivi de 6 chiffres (ex. F078786) ; productions recentes : code numerique a 12 chiffres",
+    "identifiers": "Modèle, code article, n. de série",
+    "validation_rule": "Code article : F suivi de 6 chiffres (ex. F078786) ; productions récentes : code numérique à 12 chiffres",
     "patterns": {
       "article_code": "^F[0-9]{6}$|^[0-9]{12}$"
     },
-    "date_decoding": "A documenter",
-    "locations": "Plaque visible porte ouverte (lavage), paroi interieure (froid)",
-    "notes": "Deux generations de formats coexistent dans le parc installe",
+    "date_decoding": "À documenter",
+    "locations": "Plaque visible porte ouverte (lavage), paroi intérieure (froid)",
+    "notes": "Deux générations de formats coexistent dans le parc installé",
     "sources": [
       "https://www.boulanger.com/ref/9000542389"
     ],
@@ -149,12 +149,12 @@
       "Arthur Martin"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "Modele, PNC (code produit), n. de serie",
-    "validation_rule": "PNC numerique : longueur a confirmer avant d'en faire une regle de validation",
+    "identifiers": "Modèle, PNC (code produit), n. de série",
+    "validation_rule": "PNC numérique : longueur à confirmer avant d'en faire une règle de validation",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Cadre du hublot (lavage), chant de porte (lave-vaisselle), paroi interieure (froid)",
-    "notes": "Le PNC est indispensable pour commander une piece detachee d'origine",
+    "date_decoding": "À documenter",
+    "locations": "Cadre du hublot (lavage), chant de porte (lave-vaisselle), paroi intérieure (froid)",
+    "notes": "Le PNC est indispensable pour commander une pièce détachée d'origine",
     "sources": [
       "https://notices.underdog.shop/user-manuals/7332543124978-8da7de9f-4c2d-48eb-9c88-224de49afc0f.pdf"
     ],
@@ -166,13 +166,13 @@
       "Saunier Duval",
       "Vaillant"
     ],
-    "categories": "Chaudieres, chauffe-eau, PAC",
-    "identifiers": "Gamme et modele, n. de serie, puissance, annee",
+    "categories": "Chaudières, chauffe-eau, PAC",
+    "identifiers": "Gamme et modèle, n. de série, puissance, année",
     "validation_rule": "Format propre au fabricant",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Chaudiere : sous le capot avant ou sur le flanc. Chauffe-eau : cote ou arriere",
-    "notes": "Ne jamais deposer le capot d'un appareil gaz : relever la plaque lors de l'entretien annuel ou sur l'attestation",
+    "date_decoding": "À documenter",
+    "locations": "Chaudière : sous le capot avant ou sur le flanc. Chauffe-eau : côté ou arrière",
+    "notes": "Ne jamais déposer le capot d'un appareil gaz : relever la plaque lors de l'entretien annuel ou sur l'attestation",
     "sources": [
       "https://selectra.info/energie/renovation-energetique/marque-chaudiere/saunier-duval"
     ],
@@ -189,15 +189,15 @@
       "etc."
     ],
     "categories": "Climatisation, PAC, chauffe-eau thermodynamique",
-    "identifiers": "Modele, n. de serie, puissance, type de fluide, charge en kg et en t eq. CO2, mention hermetiquement scelle",
-    "validation_rule": "Charge x PRG du fluide = t eq. CO2 : seuil de controle d'etancheite a 5 t eq. CO2",
+    "identifiers": "Modèle, n. de série, puissance, type de fluide, charge en kg et en t eq. CO2, mention hermétiquement scellé",
+    "validation_rule": "Charge x PRG du fluide = t eq. CO2 : seuil de contrôle d'étanchéité à 5 t eq. CO2",
     "patterns": null,
     "date_decoding": null,
-    "locations": "Unite exterieure : flanc ou dos. Unite interieure : sous le capot frontal ou sur le cote",
-    "notes": "En residentiel, un equipement etiquete hermetiquement scelle contenant moins de 3 kg de gaz fluores est exempte de controle d'etancheite",
+    "locations": "Unité extérieure : flanc ou dos. Unité intérieure : sous le capot frontal ou sur le côté",
+    "notes": "En résidentiel, un équipement étiqueté hermétiquement scellé contenant moins de 3 kg de gaz fluores est exempte de contrôle d'étanchéité",
     "sources": [
       "http://data.europa.eu/eli/reg/2024/573/oj",
-      "https://oeil.europarl.europa.eu/oeil/fr/document-summary?id=1772308"
+      "https://œil.europarl.europa.eu/œil/fr/document-summary?id=1772308"
     ],
     "status": "verified"
   },
@@ -208,11 +208,11 @@
       "Grundig"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Emplacements generiques par categorie",
+    "date_decoding": "À documenter",
+    "locations": "Emplacements génériques par catégorie",
     "notes": null,
     "sources": [],
     "status": "to_document"
@@ -223,14 +223,14 @@
       "Haier",
       "Candy",
       "Hoover",
-      "Rosieres"
+      "Rosières"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Emplacements generiques par categorie",
+    "date_decoding": "À documenter",
+    "locations": "Emplacements génériques par catégorie",
     "notes": null,
     "sources": [],
     "status": "to_document"
@@ -239,16 +239,16 @@
     "group": "Groupe Brandt",
     "brands": [
       "Brandt",
-      "De Dietrich (electromenager)",
+      "De Dietrich (électroménager)",
       "Sauter",
       "Vedette"
     ],
     "categories": "Lavage, froid, cuisson",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Emplacements generiques par categorie",
+    "date_decoding": "À documenter",
+    "locations": "Emplacements génériques par catégorie",
     "notes": null,
     "sources": [],
     "status": "to_document"
@@ -261,12 +261,12 @@
       "Sauter (chauffage)",
       "Ygnis"
     ],
-    "categories": "Chauffe-eau, PAC, radiateurs, chaudieres",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "categories": "Chauffe-eau, PAC, radiateurs, chaudières",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Chauffe-eau : enveloppe du ballon, pres du capot electrique",
+    "date_decoding": "À documenter",
+    "locations": "Chauffe-eau : enveloppe du ballon, près du capot électrique",
     "notes": null,
     "sources": [],
     "status": "to_document"
@@ -281,18 +281,18 @@
       "Viessmann",
       "Chaffoteaux"
     ],
-    "categories": "Chaudieres, PAC",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "categories": "Chaudières, PAC",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
-    "locations": "Chaudiere : sous l'appareil ou derriere le capot",
-    "notes": "Meme regle de securite que pour Vaillant Group : jamais de demontage du capot",
+    "date_decoding": "À documenter",
+    "locations": "Chaudière : sous l'appareil ou derrière le capot",
+    "notes": "Même règle de sécurité que pour Vaillant Group : jamais de démontage du capot",
     "sources": [],
     "status": "to_document"
   },
   {
-    "group": "Poeles",
+    "group": "Poêles",
     "brands": [
       "MCZ",
       "Palazzetti",
@@ -300,18 +300,18 @@
       "Invicta",
       "Supra"
     ],
-    "categories": "Poeles a granules et a bois, inserts",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "categories": "Poêles à granules et à bois, inserts",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
+    "date_decoding": "À documenter",
     "locations": "Au dos de l'appareil",
     "notes": null,
     "sources": [],
     "status": "to_document"
   },
   {
-    "group": "Petit electromenager",
+    "group": "Petit électroménager",
     "brands": [
       "Groupe SEB (Rowenta",
       "Moulinex",
@@ -321,11 +321,11 @@
       "Dyson",
       "Philips"
     ],
-    "categories": "Cafe, aspirateurs, repassage",
-    "identifiers": "A documenter",
-    "validation_rule": "A documenter",
+    "categories": "Café, aspirateurs, repassage",
+    "identifiers": "À documenter",
+    "validation_rule": "À documenter",
     "patterns": null,
-    "date_decoding": "A documenter",
+    "date_decoding": "À documenter",
     "locations": "Sous l'appareil",
     "notes": null,
     "sources": [],

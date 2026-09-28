@@ -9,16 +9,16 @@
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a octobre (avant la chauffe)",
+    "season": "Août à octobre (avant la chauffe)",
     "season_months": [
       8,
       9,
       10
     ],
     "duration_min": 90,
-    "tools": "Prestataire qualifie PG",
-    "procedure": "Prendre rendez-vous hors pic saisonnier. Le technicien controle le corps de chauffe, le bruleur, les organes de securite, mesure le taux de CO et le rendement. Recuperer l'attestation sous 15 jours et l'archiver.",
-    "if_skipped": "Obligation legale non respectee, risque de CO, refus de prise en charge par l'assurance",
+    "tools": "Prestataire qualifié PG",
+    "procedure": "Prendre rendez-vous hors pic saisonnier. Le technicien contrôle le corps de chauffe, le brûleur, les organes de sécurité, mesure le taux de CO et le rendement. Récupérer l'attestation sous 15 jours et l'archiver.",
+    "if_skipped": "Obligation légale non respectée, risque de CO, refus de prise en charge par l'assurance",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -26,19 +26,19 @@
   {
     "id": "T-002",
     "equipment_type_id": "CH-01",
-    "title": "Controle de la pression du circuit",
+    "title": "Contrôle de la pression du circuit",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 3,
-    "tools": "Aucun (manometre integre)",
-    "procedure": "Lire le manometre a froid. Entre 1 et 1,5 bar en general. Si en dessous, ouvrir la vanne de remplissage jusqu'a 1,2 bar puis refermer. Si la pression rechute chaque semaine, il y a une fuite : appeler un professionnel.",
-    "if_skipped": "Mise en securite de la chaudiere, arret du chauffage",
+    "tools": "Aucun (manomètre intégré)",
+    "procedure": "Lire le manomètre à froid. Entre 1 et 1,5 bar en général. Si en dessous, ouvrir la vanne de remplissage jusqu'à 1,2 bar puis refermer. Si la pression rechute chaque semaine, il y a une fuite : appeler un professionnel.",
+    "if_skipped": "Mise en sécurité de la chaudière, arrêt du chauffage",
     "legal": "no",
     "level": "essential",
     "active_minutes": 3
@@ -46,7 +46,7 @@
   {
     "id": "T-003",
     "equipment_type_id": "CH-01",
-    "title": "Purge du circulateur et verification du vase d'expansion",
+    "title": "Purge du circulateur et vérification du vase d'expansion",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
@@ -56,9 +56,9 @@
     "season": "Pendant l'entretien annuel",
     "season_months": [],
     "duration_min": 20,
-    "tools": "Manometre, pompe a velo",
-    "procedure": "A faire realiser lors de l'entretien : controle de la pression de gonflage du vase (generalement 0,8 a 1 bar, circuit vide) et purge du circulateur.",
-    "if_skipped": "Vase creve = variations de pression permanentes et fatigue du circuit",
+    "tools": "Manomètre, pompe à vélo",
+    "procedure": "À faire réaliser lors de l'entretien : contrôle de la pression de gonflage du vase (généralement 0,8 à 1 bar, circuit vide) et purge du circulateur.",
+    "if_skipped": "Vase crevé = variations de pression permanentes et fatigue du circuit",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -66,23 +66,23 @@
   {
     "id": "T-004",
     "equipment_type_id": "CH-02",
-    "title": "Entretien annuel chaudiere fioul",
+    "title": "Entretien annuel chaudière fioul",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a octobre",
+    "season": "Août à octobre",
     "season_months": [
       8,
       9,
       10
     ],
     "duration_min": 120,
-    "tools": "Prestataire qualifie",
-    "procedure": "Nettoyage du corps de chauffe et de la buse, remplacement du gicleur et du filtre fioul, reglage de la combustion avec analyseur, mesure de l'indice de noircissement. Attestation a archiver.",
-    "if_skipped": "Bruleur encrasse, surconsommation, panne en plein hiver",
+    "tools": "Prestataire qualifié",
+    "procedure": "Nettoyage du corps de chauffe et de la buse, remplacement du gicleur et du filtre fioul, réglage de la combustion avec analyseur, mesure de l'indice de noircissement. Attestation à archiver.",
+    "if_skipped": "Brûleur encrassé, surconsommation, panne en plein hiver",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -90,14 +90,14 @@
   {
     "id": "T-005",
     "equipment_type_id": "CH-02",
-    "title": "Releve du niveau de la cuve et commande anticipee",
+    "title": "Relevé du niveau de la cuve et commande anticipée",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Octobre a mars",
+    "season": "Octobre à mars",
     "season_months": [
       10,
       11,
@@ -108,8 +108,8 @@
     ],
     "duration_min": 5,
     "tools": "Jauge",
-    "procedure": "Relever le niveau. Commander des que la cuve descend sous 25% : les delais et les prix montent fortement en pleine saison de chauffe.",
-    "if_skipped": "Panne seche, aspiration des boues de fond de cuve",
+    "procedure": "Relever le niveau. Commander dès que la cuve descend sous 25% : les délais et les prix montent fortement en pleine saison de chauffe.",
+    "if_skipped": "Panne sèche, aspiration des boues de fond de cuve",
     "legal": "no",
     "level": "essential",
     "active_minutes": 5
@@ -117,21 +117,21 @@
   {
     "id": "T-006",
     "equipment_type_id": "CH-03",
-    "title": "Entretien annuel chaudiere bois / granules",
+    "title": "Entretien annuel chaudière bois / granules",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a septembre",
+    "season": "Août à septembre",
     "season_months": [
       8,
       9
     ],
     "duration_min": 120,
-    "tools": "Prestataire qualifie",
-    "procedure": "Nettoyage complet de l'echangeur, du foyer et du systeme d'extraction des cendres, controle des sondes et de la vis sans fin, reglage de la combustion.",
+    "tools": "Prestataire qualifié",
+    "procedure": "Nettoyage complet de l'échangeur, du foyer et du système d'extraction des cendres, contrôle des sondes et de la vis sans fin, réglage de la combustion.",
     "if_skipped": "Perte de rendement, blocage de la vis d'alimentation",
     "legal": "yes",
     "level": null,
@@ -145,9 +145,9 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
-      "label": "Toutes les 2 a 6 semaines selon usage"
+      "label": "Toutes les 2 à 6 semaines selon usage"
     },
-    "season": "Octobre a avril",
+    "season": "Octobre à avril",
     "season_months": [
       10,
       11,
@@ -158,9 +158,9 @@
       4
     ],
     "duration_min": 10,
-    "tools": "Aspirateur a cendres",
-    "procedure": "Laisser refroidir completement. Aspirer avec un aspirateur a cendres uniquement (jamais un aspirateur domestique). Verifier que le cendrier est bien reclipse.",
-    "if_skipped": "Debordement dans le foyer, combustion degradee",
+    "tools": "Aspirateur à cendres",
+    "procedure": "Laisser refroidir complètement. Aspirer avec un aspirateur à cendres uniquement (jamais un aspirateur domestique). Vérifier que le cendrier est bien reclipse.",
+    "if_skipped": "Débordement dans le foyer, combustion dégradée",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -175,7 +175,7 @@
       "months": 0.25,
       "label": "Toutes les semaines en saison"
     },
-    "season": "Octobre a avril",
+    "season": "Octobre à avril",
     "season_months": [
       10,
       11,
@@ -186,9 +186,9 @@
       4
     ],
     "duration_min": 15,
-    "tools": "Aspirateur a cendres, grattoir, chiffon",
-    "procedure": "Appareil froid. Retirer le creuset, gratter les trous d'arrivee d'air un par un, aspirer le logement. Nettoyer la vitre avec de la cendre humide sur du papier journal.",
-    "if_skipped": "Trous obstrues = mauvaise combustion, extinction, code d'erreur",
+    "tools": "Aspirateur à cendres, grattoir, chiffon",
+    "procedure": "Appareil froid. Retirer le creuset, gratter les trous d'arrivée d'air un par un, aspirer le logement. Nettoyer la vitre avec de la cendre humide sur du papier journal.",
+    "if_skipped": "Trous obstrués = mauvaise combustion, extinction, code d'erreur",
     "legal": "no",
     "level": "essential",
     "active_minutes": 15
@@ -196,14 +196,14 @@
   {
     "id": "T-009",
     "equipment_type_id": "CH-04",
-    "title": "Nettoyage de l'echangeur et des conduits internes",
+    "title": "Nettoyage de l'échangeur et des conduits internes",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois en saison"
     },
-    "season": "Octobre a avril",
+    "season": "Octobre à avril",
     "season_months": [
       10,
       11,
@@ -214,9 +214,9 @@
       4
     ],
     "duration_min": 25,
-    "tools": "Aspirateur a cendres, ecouvillon fourni",
-    "procedure": "Actionner les tringles de decendrage si l'appareil en dispose, ouvrir les trappes de ramonage internes et aspirer. Se referer a la notice pour l'emplacement exact des trappes.",
-    "if_skipped": "Echangeur encrasse = jusqu'a 20% de rendement perdu",
+    "tools": "Aspirateur à cendres, ecouvillon fourni",
+    "procedure": "Actionner les tringles de decendrage si l'appareil en dispose, ouvrir les trappes de ramonage internes et aspirer. Se référer à la notice pour l'emplacement exact des trappes.",
+    "if_skipped": "Échangeur encrassé = jusqu'à 20% de rendement perdu",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 25
@@ -231,15 +231,15 @@
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a septembre",
+    "season": "Août à septembre",
     "season_months": [
       8,
       9
     ],
     "duration_min": 90,
-    "tools": "Prestataire qualifie",
-    "procedure": "Demontage, nettoyage des ventilateurs et du bougeoir, controle des joints, de la sonde de temperature et du pressostat, mise a jour des parametres de combustion.",
-    "if_skipped": "Obligation legale, usure prematuree, arret en pleine saison",
+    "tools": "Prestataire qualifié",
+    "procedure": "Démontage, nettoyage des ventilateurs et du bougeoir, contrôle des joints, de la sonde de température et du pressostat, mise à jour des paramètres de combustion.",
+    "if_skipped": "Obligation légale, usure prématurée, arrêt en pleine saison",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -257,9 +257,9 @@
     "season": "Hors saison",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Kit de joints, colle refractaire",
-    "procedure": "A faire realiser lors de l'entretien annuel. Test prealable : glisser une feuille de papier dans la porte fermee, si elle coulisse sans resistance, le joint est a changer.",
-    "if_skipped": "Entree d'air parasite, combustion incontrolee, surconsommation",
+    "tools": "Kit de joints, colle réfractaire",
+    "procedure": "À faire réaliser lors de l'entretien annuel. Test préalable : glisser une feuille de papier dans la porte fermée, si elle coulisse sans résistance, le joint est à changer.",
+    "if_skipped": "Entrée d'air parasite, combustion incontrôlée, surconsommation",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -274,7 +274,7 @@
       "months": 0.25,
       "label": "Toutes les semaines en saison"
     },
-    "season": "Octobre a avril",
+    "season": "Octobre à avril",
     "season_months": [
       10,
       11,
@@ -285,8 +285,8 @@
       4
     ],
     "duration_min": 15,
-    "tools": "Cendre, papier journal, aspirateur a cendres",
-    "procedure": "Laisser un lit de cendres de 2 a 3 cm au fond du foyer : il favorise la combustion. Nettoyer la vitre avec du papier journal humidifie trempe dans la cendre.",
+    "tools": "Cendre, papier journal, aspirateur à cendres",
+    "procedure": "Laisser un lit de cendres de 2 à 3 cm au fond du foyer : il favorise la combustion. Nettoyer la vitre avec du papier journal humidifié trempé dans la cendre.",
     "if_skipped": "Vitre opaque, mauvais tirage",
     "legal": "no",
     "level": "recommended",
@@ -302,15 +302,15 @@
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a septembre",
+    "season": "Août à septembre",
     "season_months": [
       8,
       9
     ],
     "duration_min": 60,
-    "tools": "Prestataire qualifie",
-    "procedure": "Controle des briques refractaires, du deflecteur, des joints et du tirage. A coupler avec le ramonage pour une seule intervention.",
-    "if_skipped": "Deflecteur perce = chaleur perdue et conduit surchauffe",
+    "tools": "Prestataire qualifié",
+    "procedure": "Contrôle des briques réfractaires, du déflecteur, des joints et du tirage. À coupler avec le ramonage pour une seule intervention.",
+    "if_skipped": "Déflecteur percé = chaleur perdue et conduit surchauffe",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -318,14 +318,14 @@
   {
     "id": "T-014",
     "equipment_type_id": "CH-07",
-    "title": "Ramonage mecanique du conduit",
+    "title": "Ramonage mécanique du conduit",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "1 fois par an minimum"
     },
-    "season": "Aout a septembre, ou fevrier-mars",
+    "season": "Août à septembre, ou février-mars",
     "season_months": [
       8,
       9,
@@ -333,9 +333,9 @@
       3
     ],
     "duration_min": 45,
-    "tools": "Ramoneur qualifie",
-    "procedure": "Ramonage mecanique obligatoire (herisson), le ramonage chimique ne vaut pas preuve. Exiger le certificat de ramonage et le conserver 5 ans : c'est la piece que l'assureur reclame apres un sinistre.",
-    "if_skipped": "Amende jusqu'a 450 EUR, refus d'indemnisation en cas de feu de cheminee",
+    "tools": "Ramoneur qualifié",
+    "procedure": "Ramonage mécanique obligatoire (hérisson), le ramonage chimique ne vaut pas preuve. Exiger le certificat de ramonage et le conserver 5 ans : c'est la pièce que l'assureur réclame après un sinistre.",
+    "if_skipped": "Amende jusqu'à 450 EUR, refus d'indemnisation en cas de feu de cheminée",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -351,15 +351,15 @@
       "label": "2e passage si > 6 m3 de bois ou > 2,5 t de granules par an",
       "threshold": "Wood > 6 m3 or pellets > 2.5 t burned in the year"
     },
-    "season": "Pendant la periode de chauffe",
+    "season": "Pendant la période de chauffe",
     "season_months": [
       9,
       10
     ],
     "duration_min": 45,
-    "tools": "Ramoneur qualifie",
-    "procedure": "Verifier sa consommation annuelle. Au-dela des seuils, un second ramonage est requis, dont un pendant la periode d'utilisation. Certaines communes restent plus exigeantes : verifier en mairie.",
-    "if_skipped": "Non-conformite, bistre accumule, risque de feu de conduit",
+    "tools": "Ramoneur qualifié",
+    "procedure": "Vérifier sa consommation annuelle. Au-delà des seuils, un second ramonage est requis, dont un pendant la période d'utilisation. Certaines communes restent plus exigeantes : vérifier en mairie.",
+    "if_skipped": "Non-conformité, bistre accumulé, risque de feu de conduit",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -367,7 +367,7 @@
   {
     "id": "T-016",
     "equipment_type_id": "CH-06",
-    "title": "Ramonage du conduit de cheminee ouverte",
+    "title": "Ramonage du conduit de cheminée ouverte",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
@@ -380,9 +380,9 @@
       10
     ],
     "duration_min": 45,
-    "tools": "Ramoneur qualifie",
-    "procedure": "Meme obligation que pour un foyer ferme. Le foyer ouvert lui-meme est dispense d'entretien reglementaire mais doit etre maintenu propre et en bon etat.",
-    "if_skipped": "Feu de conduit, propagation a la charpente",
+    "tools": "Ramoneur qualifié",
+    "procedure": "Même obligation que pour un foyer fermé. Le foyer ouvert lui-même est dispensé d'entretien réglementaire mais doit être maintenu propre et en bon état.",
+    "if_skipped": "Feu de conduit, propagation à la charpente",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -407,9 +407,9 @@
       11
     ],
     "duration_min": 90,
-    "tools": "Prestataire qualifie",
-    "procedure": "Controle de l'etancheite du circuit frigorifique, des pressions, du degivrage, nettoyage de l'echangeur, controle du circulateur et de la regulation. Attestation a archiver.",
-    "if_skipped": "Obligation legale, perte de COP, casse compresseur (3000 a 6000 EUR)",
+    "tools": "Prestataire qualifié",
+    "procedure": "Contrôle de l'étanchéité du circuit frigorifique, des pressions, du dégivrage, nettoyage de l'échangeur, contrôle du circulateur et de la régulation. Attestation à archiver.",
+    "if_skipped": "Obligation légale, perte de COP, casse compresseur (3000 à 6000 EUR)",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -417,7 +417,7 @@
   {
     "id": "T-018",
     "equipment_type_id": "CH-08",
-    "title": "Nettoyage de l'unite exterieure",
+    "title": "Nettoyage de l'unité extérieure",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -431,8 +431,8 @@
     ],
     "duration_min": 20,
     "tools": "Brosse souple, jet d'eau basse pression",
-    "procedure": "Couper l'alimentation. Retirer feuilles et debris autour de l'unite, brosser delicatement les ailettes dans le sens des lamelles. Degager 50 cm tout autour. Ne jamais utiliser de nettoyeur haute pression.",
-    "if_skipped": "Echangeur obstrue = perte de rendement et degivrages a repetition",
+    "procedure": "Couper l'alimentation. Retirer feuilles et débris autour de l'unité, brosser délicatement les ailettes dans le sens des lamelles. Dégager 50 cm tout autour. Ne jamais utiliser de nettoyeur haute pression.",
+    "if_skipped": "Échangeur obstrué = perte de rendement et degivrages à répétition",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -440,7 +440,7 @@
   {
     "id": "T-019",
     "equipment_type_id": "CH-08",
-    "title": "Controle du degagement hivernal et de l'evacuation des condensats",
+    "title": "Contrôle du dégagement hivernal et de l'évacuation des condensats",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -453,8 +453,8 @@
     ],
     "duration_min": 10,
     "tools": "Aucun",
-    "procedure": "Verifier que l'evacuation des condensats sous l'unite n'est pas obstruee et que l'unite n'est pas posee dans une cuvette qui gele. Surelever si necessaire.",
-    "if_skipped": "Bac de degivrage pris en glace, ventilateur bloque",
+    "procedure": "Vérifier que l'évacuation des condensats sous l'unité n'est pas obstruée et que l'unité n'est pas posée dans une cuvette qui gèle. Surélever si nécessaire.",
+    "if_skipped": "Bac de dégivrage pris en glace, ventilateur bloqué",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -462,19 +462,19 @@
   {
     "id": "T-020",
     "equipment_type_id": "CH-09",
-    "title": "Nettoyage des filtres des unites interieures",
+    "title": "Nettoyage des filtres des unités intérieures",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois en saison d'usage"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
-    "tools": "Eau tiede savonneuse",
-    "procedure": "Ouvrir la facade, retirer les filtres, laver a l'eau tiede, secher completement a l'ombre avant remontage. Un filtre remonte humide devient un nid a moisissures.",
-    "if_skipped": "Debit d'air reduit, odeurs, allergenes diffuses dans le logement",
+    "tools": "Eau tiède savonneuse",
+    "procedure": "Ouvrir la façade, retirer les filtres, laver à l'eau tiède, sécher complètement à l'ombre avant remontage. Un filtre remonté humide devient un nid à moisissures.",
+    "if_skipped": "Débit d'air réduit, odeurs, allergenes diffusés dans le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -482,7 +482,7 @@
   {
     "id": "T-021",
     "equipment_type_id": "CH-09",
-    "title": "Entretien biennal du systeme",
+    "title": "Entretien biennal du système",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
@@ -496,9 +496,9 @@
       5
     ],
     "duration_min": 90,
-    "tools": "Pro avec attestation de capacite fluides",
-    "procedure": "Controle d'etancheite, desinfection de l'echangeur interieur, controle des pressions et du bac a condensats.",
-    "if_skipped": "Obligation legale, fuite de fluide frigorigene a fort pouvoir rechauffant",
+    "tools": "Pro avec attestation de capacité fluides",
+    "procedure": "Contrôle d'étanchéité, désinfection de l'échangeur intérieur, contrôle des pressions et du bac à condensats.",
+    "if_skipped": "Obligation légale, fuite de fluide frigorigene à fort pouvoir réchauffant",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -519,8 +519,8 @@
       10
     ],
     "duration_min": 30,
-    "tools": "Cle de purge, chiffon, recipient",
-    "procedure": "Chauffage en marche puis coupe 1 h avant. Commencer par le radiateur le plus bas et le plus proche de la chaudiere, finir par le plus eloigne en etage. Ouvrir jusqu'a ce que l'eau coule sans bulles. Retablir la pression a la fin.",
+    "tools": "Clé de purge, chiffon, récipient",
+    "procedure": "Chauffage en marche puis coupé 1 h avant. Commencer par le radiateur le plus bas et le plus proche de la chaudière, finir par le plus éloigné en étage. Ouvrir jusqu'à ce que l'eau coule sans bulles. Rétablir la pression à la fin.",
     "if_skipped": "Radiateurs froids en partie haute, gargouillis, surconsommation",
     "legal": "no",
     "level": "recommended",
@@ -529,7 +529,7 @@
   {
     "id": "T-023",
     "equipment_type_id": "CH-11",
-    "title": "Depoussierage des radiateurs",
+    "title": "Dépoussiérage des radiateurs",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -543,8 +543,8 @@
     ],
     "duration_min": 20,
     "tools": "Aspirateur, goupillon long",
-    "procedure": "Aspirer les ailettes par le dessus et passer un goupillon entre les lames. La poussiere agit comme un isolant sur la surface d'echange.",
-    "if_skipped": "Jusqu'a 10% de rendement perdu",
+    "procedure": "Aspirer les ailettes par le dessus et passer un goupillon entre les lames. La poussière agit comme un isolant sur la surface d'échange.",
+    "if_skipped": "Jusqu'à 10% de rendement perdu",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -557,14 +557,14 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 108,
-      "label": "Tous les 8 a 10 ans"
+      "label": "Tous les 8 à 10 ans"
     },
     "season": "Hors saison de chauffe",
     "season_months": [],
     "duration_min": 240,
-    "tools": "Prestataire specialise",
-    "procedure": "Injection d'un desembouant, circulation, rincage et repose d'un inhibiteur de corrosion. Recommande d'installer un pot a boues magnetique a cette occasion.",
-    "if_skipped": "Boues = circulateur qui casse, echangeur bouche, jusqu'a 15% de rendement perdu",
+    "tools": "Prestataire spécialisé",
+    "procedure": "Injection d'un desembouant, circulation, rinçage et repose d'un inhibiteur de corrosion. Recommande d'installer un pot à boues magnétique à cette occasion.",
+    "if_skipped": "Boues = circulateur qui casse, échangeur bouché, jusqu'à 15% de rendement perdu",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -572,7 +572,7 @@
   {
     "id": "T-025",
     "equipment_type_id": "CH-14",
-    "title": "Depoussierage des convecteurs electriques",
+    "title": "Dépoussiérage des convecteurs électriques",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -585,8 +585,8 @@
     ],
     "duration_min": 15,
     "tools": "Aspirateur, brosse",
-    "procedure": "Appareil eteint et froid. Aspirer les grilles hautes et basses. Ne jamais poser de linge a secher dessus.",
-    "if_skipped": "Odeur de brule a la remise en route, risque d'incendie",
+    "procedure": "Appareil éteint et froid. Aspirer les grilles hautes et basses. Ne jamais poser de linge à sécher dessus.",
+    "if_skipped": "Odeur de brûlé à la remise en route, risque d'incendie",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -594,19 +594,19 @@
   {
     "id": "T-026",
     "equipment_type_id": "CH-15",
-    "title": "Controle et nettoyage de la cuve a fioul",
+    "title": "Contrôle et nettoyage de la cuve à fioul",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 84,
-      "label": "Tous les 5 a 10 ans"
+      "label": "Tous les 5 à 10 ans"
     },
     "season": "Cuve presque vide",
     "season_months": [],
     "duration_min": 180,
-    "tools": "Prestataire agree",
-    "procedure": "Pompage des boues de fond, controle de l'etancheite et de la cuvette de retention, verification de l'event et de la jauge.",
-    "if_skipped": "Fuite = depollution des sols a la charge du proprietaire (plusieurs dizaines de milliers d'euros)",
+    "tools": "Prestataire agréé",
+    "procedure": "Pompage des boues de fond, contrôle de l'étanchéité et de la cuvette de rétention, vérification de l'event et de la jauge.",
+    "if_skipped": "Fuite = depollution des sols à la charge du propriétaire (plusieurs dizaines de milliers d'euros)",
     "legal": "conditional",
     "level": "essential",
     "active_minutes": 0
@@ -614,19 +614,19 @@
   {
     "id": "T-027",
     "equipment_type_id": "ECS-01",
-    "title": "Manoeuvre du groupe de securite",
+    "title": "Manœuvre du groupe de sécurité",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
-    "procedure": "Tourner la manette du groupe de securite en position vidange quelques secondes jusqu'a ce que l'eau coule franchement, puis refermer. Cela evite que le clapet ne se bloque par le calcaire.",
-    "if_skipped": "Groupe grippe = surpression et risque d'eclatement du ballon",
+    "procedure": "Tourner la manette du groupe de sécurité en position vidange quelques secondes jusqu'à ce que l'eau coule franchement, puis refermer. Cela évite que le clapet ne se bloque par le calcaire.",
+    "if_skipped": "Groupe grippé = surpression et risque d'éclatement du ballon",
     "legal": "no",
     "level": "essential",
     "active_minutes": 2
@@ -634,19 +634,19 @@
   {
     "id": "T-028",
     "equipment_type_id": "ECS-01",
-    "title": "Detartrage et controle de l'anode magnesium",
+    "title": "Détartrage et contrôle de l'anode magnésium",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 24,
-      "label": "Tous les 2 ans (annuel en eau tres dure)"
+      "label": "Tous les 2 ans (annuel en eau très dure)"
     },
-    "season": "Hors periode de forte demande",
+    "season": "Hors période de forte demande",
     "season_months": [],
     "duration_min": 120,
     "tools": "Plombier",
-    "procedure": "Vidange du ballon, demontage de la platine, detartrage de la resistance et de la cuve, controle et remplacement de l'anode si elle est consommee a plus de 50%, remplacement du joint de bride.",
-    "if_skipped": "Anode consommee = cuve percee et remplacement complet (800 a 1500 EUR)",
+    "procedure": "Vidange du ballon, démontage de la platine, détartrage de la résistance et de la cuve, contrôle et remplacement de l'anode si elle est consommée à plus de 50%, remplacement du joint de bride.",
+    "if_skipped": "Anode consommée = cuve percée et remplacement complet (800 à 1500 EUR)",
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
@@ -654,19 +654,19 @@
   {
     "id": "T-029",
     "equipment_type_id": "ECS-01",
-    "title": "Reglage de la temperature de consigne",
+    "title": "Réglage de la température de consigne",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "A la mise en service",
+    "season": "À la mise en service",
     "season_months": [],
     "duration_min": 5,
     "tools": "Tournevis",
-    "procedure": "Regler entre 55 et 60 degres : en dessous, risque de legionelle ; au-dessus, entartrage accelere et brulures.",
-    "if_skipped": "Risque sanitaire ou entartrage premature",
+    "procedure": "Régler entre 55 et 60 degrés : en dessous, risque de legionelle ; au-dessus, entartrage accéléré et brûlures.",
+    "if_skipped": "Risque sanitaire ou entartrage prématuré",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -688,9 +688,9 @@
       5
     ],
     "duration_min": 90,
-    "tools": "Pro qualifie",
-    "procedure": "Nettoyage de l'evaporateur et du filtre d'air, controle du circuit frigorifique, de l'anode et des condensats.",
-    "if_skipped": "Obligation legale, bascule permanente sur la resistance electrique d'appoint",
+    "tools": "Pro qualifié",
+    "procedure": "Nettoyage de l'evaporateur et du filtre d'air, contrôle du circuit frigorifique, de l'anode et des condensats.",
+    "if_skipped": "Obligation légale, bascule permanente sur la résistance électrique d'appoint",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -698,19 +698,19 @@
   {
     "id": "T-031",
     "equipment_type_id": "ECS-02",
-    "title": "Nettoyage du filtre a air",
+    "title": "Nettoyage du filtre à air",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 3,
       "label": "Tous les 3 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
-    "tools": "Aspirateur, eau tiede",
-    "procedure": "Retirer le filtre a l'arriere ou au-dessus de l'appareil, aspirer puis rincer, secher avant remontage.",
-    "if_skipped": "COP degrade, appareil qui fonctionne en mode electrique pur",
+    "tools": "Aspirateur, eau tiède",
+    "procedure": "Retirer le filtre à l'arrière ou au-dessus de l'appareil, aspirer puis rincer, sécher avant remontage.",
+    "if_skipped": "COP dégradé, appareil qui fonctionne en mode électrique pur",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -718,7 +718,7 @@
   {
     "id": "T-032",
     "equipment_type_id": "ECS-04",
-    "title": "Controle du circuit solaire",
+    "title": "Contrôle du circuit solaire",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
@@ -732,8 +732,8 @@
       5
     ],
     "duration_min": 60,
-    "tools": "Pro qualifie",
-    "procedure": "Controle du pH et du point de congelation du glycol, de la pression du circuit primaire, de l'etat du vase d'expansion et de la sonde capteur.",
+    "tools": "Pro qualifié",
+    "procedure": "Contrôle du pH et du point de congélation du glycol, de la pression du circuit primaire, de l'état du vase d'expansion et de la sonde capteur.",
     "if_skipped": "Glycol acidifie = corrosion des capteurs et du ballon",
     "legal": "no",
     "level": "recommended",
@@ -742,19 +742,19 @@
   {
     "id": "T-033",
     "equipment_type_id": "ECS-06",
-    "title": "Remplissage du bac a sel",
+    "title": "Remplissage du bac à sel",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Sacs de sel pastilles",
-    "procedure": "Maintenir le niveau de sel au-dessus du niveau d'eau. Verifier l'absence de croute de sel agglomeree au fond : la casser si besoin.",
-    "if_skipped": "Pont de sel = adoucisseur inoperant sans alerte",
+    "procedure": "Maintenir le niveau de sel au-dessus du niveau d'eau. Vérifier l'absence de croûte de sel agglomérée au fond : la casser si besoin.",
+    "if_skipped": "Pont de sel = adoucisseur inopérant sans alerte",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -762,19 +762,19 @@
   {
     "id": "T-034",
     "equipment_type_id": "ECS-06",
-    "title": "Desinfection de l'adoucisseur et controle de la durete",
+    "title": "Désinfection de l'adoucisseur et contrôle de la dureté",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Desinfectant pour resine, bandelettes de test",
-    "procedure": "Lancer un cycle de desinfection selon la notice. Mesurer la durete en sortie avec les bandelettes : viser 8 a 12 degres francais, pas 0.",
-    "if_skipped": "Proliferation bacterienne dans la resine, eau trop douce et corrosive pour les canalisations",
+    "tools": "Désinfectant pour résine, bandelettes de test",
+    "procedure": "Lancer un cycle de désinfection selon la notice. Mesurer la dureté en sortie avec les bandelettes : viser 8 à 12 degrés français, pas 0.",
+    "if_skipped": "Prolifération bactérienne dans la résine, eau trop douce et corrosive pour les canalisations",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 30
@@ -796,8 +796,8 @@
     ],
     "duration_min": 30,
     "tools": "Eau savonneuse, brosse",
-    "procedure": "Deposer les bouches en les devissant, les faire tremper dans de l'eau chaude savonneuse, brosser, secher. Reperer leur position d'origine : les bouches de cuisine et de salle de bains ne sont pas interchangeables.",
-    "if_skipped": "Condensation, moisissures dans les pieces humides",
+    "procedure": "Déposer les bouches en les dévissant, les faire tremper dans de l'eau chaude savonneuse, brosser, sécher. Repérer leur position d'origine : les bouches de cuisine et de salle de bains ne sont pas interchangeables.",
+    "if_skipped": "Condensation, moisissures dans les pièces humides",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -805,7 +805,7 @@
   {
     "id": "T-036",
     "equipment_type_id": "VENT-01",
-    "title": "Nettoyage du caisson et controle du moteur",
+    "title": "Nettoyage du caisson et contrôle du moteur",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
@@ -816,8 +816,8 @@
     "season_months": [],
     "duration_min": 60,
     "tools": "Pro ou particulier bricoleur",
-    "procedure": "Couper l'alimentation. Depoussierer la turbine et le caisson, controler les fixations et l'etat des gaines souples (ecrasement, percements).",
-    "if_skipped": "Turbine desequilibree, bruit, debit effondre",
+    "procedure": "Couper l'alimentation. Dépoussiérer la turbine et le caisson, contrôler les fixations et l'état des gaines souples (écrasement, percements).",
+    "if_skipped": "Turbine déséquilibrée, bruit, débit effondré",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -830,14 +830,14 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 4,
-      "label": "Tous les 3 a 6 mois"
+      "label": "Tous les 3 à 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
-    "tools": "Jeu de filtres (G4 et F7 en general)",
-    "procedure": "Couper la centrale. Noter la date au feutre sur le filtre neuf. En zone pollinique ou proche d'un axe routier, passer a 3 mois.",
-    "if_skipped": "Filtres satures = debit nul, rendement de recuperation perdu, surconsommation du moteur",
+    "tools": "Jeu de filtres (G4 et F7 en général)",
+    "procedure": "Couper la centrale. Noter la date au feutre sur le filtre neuf. En zone pollinique ou proche d'un axe routier, passer à 3 mois.",
+    "if_skipped": "Filtres saturés = débit nul, rendement de récupération perdu, surconsommation du moteur",
     "legal": "no",
     "level": "essential",
     "active_minutes": 20
@@ -845,23 +845,23 @@
   {
     "id": "T-038",
     "equipment_type_id": "VENT-02",
-    "title": "Nettoyage de l'echangeur et du bac a condensats",
+    "title": "Nettoyage de l'échangeur et du bac à condensats",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Ete",
+    "season": "Été",
     "season_months": [
       6,
       7,
       8
     ],
     "duration_min": 45,
-    "tools": "Eau tiede savonneuse",
-    "procedure": "Extraire le bloc echangeur, le rincer a l'eau tiede, le laisser secher. Verifier que le siphon de condensats est amorce et non bouche.",
-    "if_skipped": "Echangeur colmate, eau stagnante, odeurs diffusees dans tout le logement",
+    "tools": "Eau tiède savonneuse",
+    "procedure": "Extraire le bloc échangeur, le rincer à l'eau tiède, le laisser sécher. Vérifier que le siphon de condensats est amorcé et non bouché.",
+    "if_skipped": "Échangeur colmaté, eau stagnante, odeurs diffusées dans tout le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 45
@@ -869,19 +869,19 @@
   {
     "id": "T-039",
     "equipment_type_id": "VENT-03",
-    "title": "Nettoyage du filtre a graisse de la hotte",
+    "title": "Nettoyage du filtre à graisse de la hotte",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Lave-vaisselle ou eau tres chaude + bicarbonate",
-    "procedure": "Les filtres metalliques passent au lave-vaisselle en cycle intensif. Bien secher avant remontage.",
-    "if_skipped": "Accumulation de graisse = cause frequente de depart de feu en cuisine",
+    "tools": "Lave-vaisselle ou eau très chaude + bicarbonate",
+    "procedure": "Les filtres métalliques passent au lave-vaisselle en cycle intensif. Bien sécher avant remontage.",
+    "if_skipped": "Accumulation de graisse = cause fréquente de départ de feu en cuisine",
     "legal": "no",
     "level": "essential",
     "active_minutes": 5
@@ -889,18 +889,18 @@
   {
     "id": "T-040",
     "equipment_type_id": "VENT-03",
-    "title": "Remplacement du filtre a charbon",
+    "title": "Remplacement du filtre à charbon",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "Tous les 6 mois (hotte recyclante)"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
-    "tools": "Filtre a charbon compatible",
-    "procedure": "Uniquement pour les hottes recyclantes (sans evacuation exterieure). Le charbon ne se lave pas, il se remplace.",
+    "tools": "Filtre à charbon compatible",
+    "procedure": "Uniquement pour les hottes recyclantes (sans évacuation extérieure). Le charbon ne se lave pas, il se remplace.",
     "if_skipped": "Odeurs de cuisine qui stagnent dans tout le logement",
     "legal": "no",
     "level": "recommended",
@@ -909,7 +909,7 @@
   {
     "id": "T-041",
     "equipment_type_id": "VENT-04",
-    "title": "Nettoyage des entrees d'air des fenetres",
+    "title": "Nettoyage des entrées d'air des fenêtres",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -923,8 +923,8 @@
     ],
     "duration_min": 15,
     "tools": "Aspirateur, chiffon humide",
-    "procedure": "Deposer le capot des reglettes en haut des fenetres, aspirer, essuyer. Ne jamais les obturer, meme en hiver.",
-    "if_skipped": "Sans air neuf entrant, la VMC n'extrait rien et les appareils a combustion tirent mal",
+    "procedure": "Déposer le capot des reglettes en haut des fenêtres, aspirer, essuyer. Ne jamais les obturer, même en hiver.",
+    "if_skipped": "Sans air neuf entrant, la VMC n'extrait rien et les appareils à combustion tirent mal",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -946,8 +946,8 @@
     ],
     "duration_min": 15,
     "tools": "Aspirateur avec brosse, goupillon",
-    "procedure": "Debrancher l'appareil, l'ecarter du mur, aspirer la grille noire a l'arriere ou la grille basse selon le modele. Laisser 5 cm de degagement a l'arriere.",
-    "if_skipped": "Condenseur empoussiere = jusqu'a 25% de surconsommation et compresseur en surchauffe",
+    "procedure": "Débrancher l'appareil, l'écarter du mur, aspirer la grille noire à l'arrière ou la grille basse selon le modèle. Laisser 5 cm de dégagement à l'arrière.",
+    "if_skipped": "Condenseur empoussiere = jusqu'à 25% de surconsommation et compresseur en surchauffe",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -955,7 +955,7 @@
   {
     "id": "T-043",
     "equipment_type_id": "FROID-01",
-    "title": "Controle et nettoyage des joints de porte",
+    "title": "Contrôle et nettoyage des joints de porte",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -969,8 +969,8 @@
     ],
     "duration_min": 10,
     "tools": "Eau savonneuse, coton-tige, feuille de papier",
-    "procedure": "Nettoyer la gorge du joint au coton-tige. Test : coincer une feuille de papier dans la porte fermee ; si elle glisse sans resistance, le joint est a remplacer.",
-    "if_skipped": "Joint use = compresseur en marche permanente, givre, facture d'electricite en hausse",
+    "procedure": "Nettoyer la gorge du joint au coton-tige. Test : coincer une feuille de papier dans la porte fermée ; si elle glisse sans résistance, le joint est à remplacer.",
+    "if_skipped": "Joint usé = compresseur en marche permanente, givre, facture d'électricité en hausse",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -978,7 +978,7 @@
   {
     "id": "T-044",
     "equipment_type_id": "FROID-01",
-    "title": "Debouchage de la gouttiere d'evacuation",
+    "title": "Debouchage de la gouttière d'évacuation",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -991,9 +991,9 @@
       10
     ],
     "duration_min": 10,
-    "tools": "Coton-tige, seringue d'eau tiede",
-    "procedure": "Localiser le petit orifice au fond de la paroi arriere du refrigerateur. Le degager delicatement et rincer a l'eau tiede.",
-    "if_skipped": "Eau stagnante dans le bac a legumes, odeurs, moisissures",
+    "tools": "Coton-tige, seringue d'eau tiède",
+    "procedure": "Localiser le petit orifice au fond de la paroi arrière du réfrigérateur. Le dégager délicatement et rincer à l'eau tiède.",
+    "if_skipped": "Eau stagnante dans le bac à légumes, odeurs, moisissures",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -1001,7 +1001,7 @@
   {
     "id": "T-045",
     "equipment_type_id": "FROID-02",
-    "title": "Degivrage du congelateur",
+    "title": "Dégivrage du congélateur",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -1013,8 +1013,8 @@
       1
     ],
     "duration_min": 180,
-    "tools": "Glaciere, serpillieres, bassine",
-    "procedure": "Transferer les denrees dans une glaciere, debrancher, laisser fondre porte ouverte avec des serpillieres au sol. Ne jamais gratter avec un objet metallique : perforer le circuit condamne l'appareil.",
+    "tools": "Glacière, serpillières, bassine",
+    "procedure": "Transférer les denrées dans une glacière, débrancher, laisser fondre porte ouverte avec des serpillières au sol. Ne jamais gratter avec un objet métallique : perforer le circuit condamné l'appareil.",
     "if_skipped": "3 mm de givre = environ 30% de surconsommation",
     "legal": "no",
     "level": "recommended",
@@ -1023,19 +1023,19 @@
   {
     "id": "T-046",
     "equipment_type_id": "FROID-03",
-    "title": "Remplacement du filtre a eau",
+    "title": "Remplacement du filtre à eau",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "Tous les 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Filtre d'origine compatible",
-    "procedure": "Localiser la cartouche (souvent en bas a droite ou dans le compartiment froid). Purger 2 a 3 litres apres remplacement avant consommation.",
-    "if_skipped": "Gout desagreable, developpement bacterien dans le circuit d'eau",
+    "procedure": "Localiser la cartouche (souvent en bas à droite ou dans le compartiment froid). Purger 2 à 3 litres après remplacement avant consommation.",
+    "if_skipped": "Goût désagréable, développement bactérien dans le circuit d'eau",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -1050,12 +1050,12 @@
       "months": 3,
       "label": "Tous les 3 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Recipient plat, serpilliere, chiffon",
-    "procedure": "Ouvrir la trappe en bas de l'appareil, placer un recipient, devisser lentement le bouchon. Retirer pieces, cheveux et peluches. Rincer et revisser fermement.",
-    "if_skipped": "Pompe de vidange forcee puis HS, eau stagnante et odeurs",
+    "tools": "Récipient plat, serpillière, chiffon",
+    "procedure": "Ouvrir la trappe en bas de l'appareil, placer un récipient, dévisser lentement le bouchon. Retirer pièces, cheveux et peluches. Rincer et revisser fermement.",
+    "if_skipped": "Pompe de vidange forcée puis HS, eau stagnante et odeurs",
     "legal": "no",
     "level": "essential",
     "active_minutes": 15
@@ -1070,12 +1070,12 @@
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Chiffon, vinaigre blanc ou bicarbonate",
-    "procedure": "Ecarter le pli du joint sur tout le tour et essuyer. Laisser le hublot entrouvert apres chaque lessive.",
-    "if_skipped": "Moisissure noire incrustee, odeur transmise au linge, joint a remplacer",
+    "procedure": "Écarter le pli du joint sur tout le tour et essuyer. Laisser le hublot entrouvert après chaque lessive.",
+    "if_skipped": "Moisissure noire incrustée, odeur transmise au linge, joint à remplacer",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -1083,19 +1083,19 @@
   {
     "id": "T-049",
     "equipment_type_id": "LAV-01",
-    "title": "Cycle de detartrage a vide",
+    "title": "Cycle de détartrage à vide",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "Tous les 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 120,
     "tools": "Acide citrique (100 g) ou vinaigre blanc (500 ml)",
-    "procedure": "Machine vide, cycle le plus chaud (90 degres), produit directement dans le tambour. Nettoyer ensuite le bac a lessive a l'eau chaude.",
-    "if_skipped": "Resistance entartree = surconsommation puis panne (cause n.1 de mise au rebut)",
+    "procedure": "Machine vide, cycle le plus chaud (90 degrés), produit directement dans le tambour. Nettoyer ensuite le bac à lessive à l'eau chaude.",
+    "if_skipped": "Résistance entartrée = surconsommation puis panne (cause n.1 de mise au rebut)",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1110,12 +1110,12 @@
       "months": 60,
       "label": "Tous les 5 ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
     "tools": "Tuyau neuf avec joints, pince multiprise",
-    "procedure": "Fermer l'arrivee d'eau, devisser, remplacer joints compris. Prevoir un tuyau aquastop si l'appareil est a l'etage.",
-    "if_skipped": "Rupture du tuyau = degat des eaux, premiere cause de sinistre habitation",
+    "procedure": "Fermer l'arrivée d'eau, dévisser, remplacer joints compris. Prévoir un tuyau aquastop si l'appareil est à l'étage.",
+    "if_skipped": "Rupture du tuyau = dégât des eaux, première cause de sinistre habitation",
     "legal": "no",
     "level": "essential",
     "active_minutes": 20
@@ -1123,19 +1123,19 @@
   {
     "id": "T-051",
     "equipment_type_id": "LAV-02",
-    "title": "Nettoyage du filtre a peluches",
+    "title": "Nettoyage du filtre à peluches",
     "performer": "diy",
     "frequency": {
       "rule": "per_use",
       "months": 0.03,
-      "label": "A chaque cycle"
+      "label": "À chaque cycle"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
-    "procedure": "Retirer le voile de peluches a la main apres chaque sechage. Rincer le filtre a l'eau une fois par mois pour eliminer le film d'adoucissant.",
-    "if_skipped": "Temps de sechage double, surchauffe, risque d'incendie",
+    "procedure": "Retirer le voile de peluches à la main après chaque séchage. Rincer le filtre à l'eau une fois par mois pour éliminer le film d'adoucissant.",
+    "if_skipped": "Temps de séchage double, surchauffe, risque d'incendie",
     "legal": "no",
     "level": "essential",
     "active_minutes": 2
@@ -1150,12 +1150,12 @@
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
     "tools": "Eau courante, brosse souple",
-    "procedure": "Deverrouiller la trappe basse, extraire le bloc condenseur, le rincer sous le robinet jusqu'a ce que l'eau ressorte claire, secher et remonter.",
-    "if_skipped": "Condenseur colmate = cycles interminables et surconsommation massive",
+    "procedure": "Déverrouiller la trappe basse, extraire le bloc condenseur, le rincer sous le robinet jusqu'à ce que l'eau ressorte claire, sécher et remonter.",
+    "if_skipped": "Condenseur colmaté = cycles interminables et surconsommation massive",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -1163,19 +1163,19 @@
   {
     "id": "T-053",
     "equipment_type_id": "LAV-02",
-    "title": "Nettoyage du filtre de la pompe a chaleur",
+    "title": "Nettoyage du filtre de la pompe à chaleur",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 3,
-      "label": "Tous les 3 mois (modeles PAC)"
+      "label": "Tous les 3 mois (modèles PAC)"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Aspirateur, eau tiede",
-    "procedure": "Filtre fin situe derriere le filtre principal. Aspirer puis rincer. Sur les seche-linge PAC, c'est la piece la plus souvent negligee.",
-    "if_skipped": "Evaporateur encrasse = panne du circuit frigorifique, reparation couteuse",
+    "tools": "Aspirateur, eau tiède",
+    "procedure": "Filtre fin situé derrière le filtre principal. Aspirer puis rincer. Sur les sèche-linge PAC, c'est la pièce la plus souvent négligée.",
+    "if_skipped": "Evaporateur encrassé = panne du circuit frigorifique, réparation coûteuse",
     "legal": "no",
     "level": "essential",
     "active_minutes": 15
@@ -1190,12 +1190,12 @@
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
-    "tools": "Brosse a vaisselle, eau chaude",
-    "procedure": "Deverrouiller le filtre cylindrique au fond de la cuve, retirer les residus, brosser la grille inox, rincer.",
-    "if_skipped": "Vaisselle qui ressort sale, odeurs, pompe bloquee",
+    "tools": "Brosse à vaisselle, eau chaude",
+    "procedure": "Déverrouiller le filtre cylindrique au fond de la cuve, retirer les résidus, brosser la grille inox, rincer.",
+    "if_skipped": "Vaisselle qui ressort sale, odeurs, pompe bloquée",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -1210,12 +1210,12 @@
       "months": 3,
       "label": "Tous les 3 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
     "tools": "Cure-dent, aiguille",
-    "procedure": "Deposer les bras (souvent un quart de tour), degager chaque buse avec un cure-dent, rincer, verifier qu'ils tournent librement une fois remontes.",
-    "if_skipped": "Buses obstruees = zones non lavees, cycles relances inutilement",
+    "procedure": "Déposer les bras (souvent un quart de tour), dégager chaque buse avec un cure-dent, rincer, vérifier qu'ils tournent librement une fois remontés.",
+    "if_skipped": "Buses obstruées = zones non lavées, cycles relancés inutilement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -1223,19 +1223,19 @@
   {
     "id": "T-056",
     "equipment_type_id": "LAV-03",
-    "title": "Controle du sel regenerant et du liquide de rincage",
+    "title": "Contrôle du sel régénérant et du liquide de rinçage",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 2,
       "label": "Tous les 2 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
-    "tools": "Sel regenerant specifique, liquide de rincage",
-    "procedure": "Remplir le reservoir de sel (jamais de sel de table). Regler la durete de l'appareil sur celle de l'eau du reseau, disponible sur la facture d'eau.",
-    "if_skipped": "Traces blanches, entartrage de la resistance",
+    "tools": "Sel régénérant spécifique, liquide de rinçage",
+    "procedure": "Remplir le réservoir de sel (jamais de sel de table). Régler la dureté de l'appareil sur celle de l'eau du réseau, disponible sur la facture d'eau.",
+    "if_skipped": "Traces blanches, entartrage de la résistance",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1243,19 +1243,19 @@
   {
     "id": "T-057",
     "equipment_type_id": "LAV-03",
-    "title": "Cycle de detartrage a vide",
+    "title": "Cycle de détartrage à vide",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "Tous les 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 90,
-    "tools": "Acide citrique ou produit specifique",
-    "procedure": "Appareil vide, cycle le plus chaud avec le produit dans le panier superieur.",
-    "if_skipped": "Resistance entartree, cycles qui n'atteignent plus la temperature",
+    "tools": "Acide citrique ou produit spécifique",
+    "procedure": "Appareil vide, cycle le plus chaud avec le produit dans le panier supérieur.",
+    "if_skipped": "Résistance entartrée, cycles qui n'atteignent plus la température",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1270,12 +1270,12 @@
       "months": 3,
       "label": "Tous les 3 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 150,
     "tools": "Aucun (retirer grilles et lechefrite)",
-    "procedure": "Retirer tous les accessoires non pyrolysables. Ventiler la piece. Sortir les animaux domestiques, en particulier les oiseaux, sensibles aux vapeurs.",
-    "if_skipped": "Graisses carbonisees = fumees a chaque cuisson, joint attaque",
+    "procedure": "Retirer tous les accessoires non pyrolysables. Ventiler la pièce. Sortir les animaux domestiques, en particulier les oiseaux, sensibles aux vapeurs.",
+    "if_skipped": "Graisses carbonisées = fumées à chaque cuisson, joint attaqué",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1283,19 +1283,19 @@
   {
     "id": "T-059",
     "equipment_type_id": "CUIS-01",
-    "title": "Controle du joint de porte du four",
+    "title": "Contrôle du joint de porte du four",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
-    "procedure": "Passer le doigt sur tout le pourtour : le joint doit etre souple et sans cassure. Un joint durci se remplace, piece disponible chez le fabricant.",
-    "if_skipped": "Perte de chaleur, cuissons irregulieres, surconsommation",
+    "procedure": "Passer le doigt sur tout le pourtour : le joint doit être souple et sans cassure. Un joint durci se remplace, pièce disponible chez le fabricant.",
+    "if_skipped": "Perte de chaleur, cuissons irrégulières, surconsommation",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1303,7 +1303,7 @@
   {
     "id": "T-060",
     "equipment_type_id": "CUIS-04",
-    "title": "Controle de la date de peremption du flexible gaz",
+    "title": "Contrôle de la date de péremption du flexible gaz",
     "performer": "diy",
     "frequency": {
       "rule": "threshold",
@@ -1311,11 +1311,11 @@
       "label": "Tous les ans",
       "threshold": "Expiry date printed on the gas hose"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 3,
     "tools": "Aucun",
-    "procedure": "Lire la date imprimee sur la bague du flexible. Remplacer imperativement a echeance, meme si le tuyau parait intact. Privilegier un flexible a duree de vie illimitee avec embouts vissables.",
+    "procedure": "Lire la date imprimée sur la bague du flexible. Remplacer impérativement à échéance, même si le tuyau paraît intact. Privilégier un flexible à durée de vie illimitée avec embouts vissables.",
     "if_skipped": "Fuite de gaz, explosion, non-couverture par l'assurance",
     "legal": "yes",
     "level": null,
@@ -1324,19 +1324,19 @@
   {
     "id": "T-061",
     "equipment_type_id": "CUIS-03",
-    "title": "Nettoyage des bruleurs et injecteurs",
+    "title": "Nettoyage des brûleurs et injecteurs",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Brosse metallique fine, aiguille, eau savonneuse",
-    "procedure": "Deposer chapeaux et couronnes, les faire tremper, degager chaque orifice a l'aiguille. Une flamme doit etre bleue et stable.",
-    "if_skipped": "Flamme jaune = combustion incomplete et production de monoxyde de carbone",
+    "tools": "Brosse métallique fine, aiguille, eau savonneuse",
+    "procedure": "Déposer chapeaux et couronnes, les faire tremper, dégager chaque orifice à l'aiguille. Une flamme doit être bleue et stable.",
+    "if_skipped": "Flamme jaune = combustion incomplète et production de monoxyde de carbone",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -1344,19 +1344,19 @@
   {
     "id": "T-062",
     "equipment_type_id": "CUIS-06",
-    "title": "Detartrage de la machine a cafe",
+    "title": "Détartrage de la machine à café",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 2,
-      "label": "Tous les 1 a 3 mois selon durete"
+      "label": "Tous les 1 à 3 mois selon dureté"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Detartrant specifique ou acide citrique",
-    "procedure": "Lancer le programme de detartrage de l'appareil. En eau dure (au-dela de 25 degres francais), passer a un detartrage mensuel ou installer un filtre.",
-    "if_skipped": "Entartrage de la pompe : premiere cause de panne definitive",
+    "tools": "Détartrant spécifique ou acide citrique",
+    "procedure": "Lancer le programme de détartrage de l'appareil. En eau dure (au-delà de 25 degrés français), passer à un détartrage mensuel ou installer un filtre.",
+    "if_skipped": "Entartrage de la pompe : première cause de panne définitive",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -1371,12 +1371,12 @@
       "months": 0.25,
       "label": "Hebdomadaire"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Eau tiede, pastilles degraissantes",
-    "procedure": "Rincer le groupe d'infusion amovible a l'eau claire sans detergent. Nettoyer le circuit lait apres chaque usage, imperativement le jour meme.",
-    "if_skipped": "Rancissement du circuit lait, gout altere, contamination",
+    "tools": "Eau tiède, pastilles degraissantes",
+    "procedure": "Rincer le groupe d'infusion amovible à l'eau claire sans détergent. Nettoyer le circuit lait après chaque usage, impérativement le jour même.",
+    "if_skipped": "Rancissement du circuit lait, goût altéré, contamination",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -1391,11 +1391,11 @@
       "months": 6,
       "label": "Tous les 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Filtre compatible",
-    "procedure": "Certains filtres sont lavables (rincer, secher 24 h), d'autres se remplacent. Verifier la notice : remonter un filtre humide endommage le moteur.",
+    "procedure": "Certains filtres sont lavables (rincer, sécher 24 h), d'autres se remplacent. Vérifier la notice : remonter un filtre humide endommage le moteur.",
     "if_skipped": "Perte d'aspiration, rejet de particules fines, moteur en surchauffe",
     "legal": "no",
     "level": "recommended",
@@ -1411,11 +1411,11 @@
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
     "tools": "Peigne coupe-fils, chiffon microfibre sec",
-    "procedure": "Demonter la brosse centrale et couper les cheveux enroules, nettoyer les brosses laterales, essuyer les capteurs de chute et la lentille de navigation.",
+    "procedure": "Démonter la brosse centrale et couper les cheveux enroulés, nettoyer les brosses latérales, essuyer les capteurs de chute et la lentille de navigation.",
     "if_skipped": "Moteur de brosse force, navigation erratique, chutes dans les escaliers",
     "legal": "no",
     "level": "recommended",
@@ -1424,19 +1424,19 @@
   {
     "id": "T-066",
     "equipment_type_id": "EAU-01",
-    "title": "Detartrage des mousseurs de robinet",
+    "title": "Détartrage des mousseurs de robinet",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "Tous les 6 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
     "tools": "Vinaigre blanc, pince, chiffon",
-    "procedure": "Devisser l'embout, le faire tremper une nuit dans du vinaigre blanc, rincer, remonter.",
-    "if_skipped": "Debit reduit, projections, eclaboussures",
+    "procedure": "Dévisser l'embout, le faire tremper une nuit dans du vinaigre blanc, rincer, remonter.",
+    "if_skipped": "Débit réduit, projections, éclaboussures",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -1444,19 +1444,19 @@
   {
     "id": "T-067",
     "equipment_type_id": "EAU-01",
-    "title": "Recherche de fuite par releve de compteur",
+    "title": "Recherche de fuite par relevé de compteur",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
     "tools": "Aucun",
-    "procedure": "Fermer tous les points d'eau, relever le compteur, attendre 2 h sans consommation, relever de nouveau. Toute difference signale une fuite. Commencer par les chasses d'eau.",
-    "if_skipped": "Une chasse d'eau qui fuit peut representer 200 m3 par an",
+    "procedure": "Fermer tous les points d'eau, relever le compteur, attendre 2 h sans consommation, relever de nouveau. Toute différence signale une fuite. Commencer par les chasses d'eau.",
+    "if_skipped": "Une chasse d'eau qui fuit peut représenter 200 m3 par an",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -1464,7 +1464,7 @@
   {
     "id": "T-068",
     "equipment_type_id": "EAU-03",
-    "title": "Controle du disconnecteur",
+    "title": "Contrôle du disconnecteur",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
@@ -1478,9 +1478,9 @@
       5
     ],
     "duration_min": 30,
-    "tools": "Pro habilite",
-    "procedure": "Obligatoire si le reseau d'arrosage ou un recuperateur d'eau de pluie est raccorde au reseau public. Controle du clapet et de la mise a l'air.",
-    "if_skipped": "Retour d'eau polluee dans le reseau public : responsabilite civile et penale engagee",
+    "tools": "Pro habilité",
+    "procedure": "Obligatoire si le réseau d'arrosage ou un récupérateur d'eau de pluie est raccordé au réseau public. Contrôle du clapet et de la mise à l'air.",
+    "if_skipped": "Retour d'eau polluée dans le réseau public : responsabilité civile et pénale engagée",
     "legal": "conditional",
     "level": "essential",
     "active_minutes": 0
@@ -1488,7 +1488,7 @@
   {
     "id": "T-069",
     "equipment_type_id": "EAU-06",
-    "title": "Nettoyage du filtre et de la cuve de recuperation",
+    "title": "Nettoyage du filtre et de la cuve de récupération",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1502,8 +1502,8 @@
     ],
     "duration_min": 45,
     "tools": "Brosse, jet d'eau",
-    "procedure": "Nettoyer le filtre en amont de la cuve, verifier le siphon anti-odeurs et le trop-plein. Tenir a jour le carnet sanitaire si l'eau alimente des WC ou un lave-linge.",
-    "if_skipped": "Eau chargee, colmatage de la pompe, non-conformite au controle",
+    "procedure": "Nettoyer le filtre en amont de la cuve, vérifier le siphon anti-odeurs et le trop-plein. Tenir à jour le carnet sanitaire si l'eau alimente des WC ou un lave-linge.",
+    "if_skipped": "Eau chargée, colmatage de la pompe, non-conformité au contrôle",
     "legal": "conditional",
     "level": "recommended",
     "active_minutes": 45
@@ -1511,7 +1511,7 @@
   {
     "id": "T-070",
     "equipment_type_id": "EAU-04",
-    "title": "Controle de la pompe de relevage",
+    "title": "Contrôle de la pompe de relevage",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -1526,7 +1526,7 @@
     ],
     "duration_min": 20,
     "tools": "Seau d'eau",
-    "procedure": "Verser de l'eau pour declencher le flotteur et verifier le demarrage. Nettoyer la crepine et controler le clapet anti-retour.",
+    "procedure": "Verser de l'eau pour déclencher le flotteur et vérifier le démarrage. Nettoyer la crépine et contrôler le clapet anti-retour.",
     "if_skipped": "Inondation du sous-sol le jour du premier gros orage",
     "legal": "no",
     "level": "essential",
@@ -1543,12 +1543,12 @@
       "label": "Des que les boues atteignent 50% du volume utile (environ 4 ans)",
       "threshold": "Sludge reaches 50% of the tank's useful volume"
     },
-    "season": "Hors periode de gel",
+    "season": "Hors période de gel",
     "season_months": [],
     "duration_min": 120,
-    "tools": "Vidangeur agree par le prefet",
-    "procedure": "Faire mesurer la hauteur de boues. Exiger le bordereau de suivi des matieres de vidange : c'est la piece que le SPANC reclame au controle. Ne jamais faire nettoyer au jet haute pression, cela detruit la flore bacterienne.",
-    "if_skipped": "Colmatage de l'epandage, remontees d'eaux usees, non-conformite au controle",
+    "tools": "Vidangeur agréé par le préfet",
+    "procedure": "Faire mesurer la hauteur de boues. Exiger le bordereau de suivi des matières de vidange : c'est la pièce que le SPANC réclame au contrôle. Ne jamais faire nettoyer au jet haute pression, cela détruit la flore bactérienne.",
+    "if_skipped": "Colmatage de l'épandage, remontées d'eaux usées, non-conformité au contrôle",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -1556,19 +1556,19 @@
   {
     "id": "T-072",
     "equipment_type_id": "ASS-01",
-    "title": "Preparation du controle periodique SPANC",
+    "title": "Préparation du contrôle périodique SPANC",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 120,
-      "label": "Au moins tous les 10 ans (souvent 4 a 8 selon la commune)"
+      "label": "Au moins tous les 10 ans (souvent 4 à 8 selon la commune)"
     },
     "season": "Sur convocation",
     "season_months": [],
     "duration_min": 60,
     "tools": "Plan de l'installation, bordereaux de vidange",
-    "procedure": "Degager les regards et tampons, rassembler le plan, les factures d'entretien et les bordereaux de vidange. Verifier la hauteur de boues avant la visite.",
-    "if_skipped": "Avis de non-conformite, travaux imposes sous 4 ans, majoration de redevance",
+    "procedure": "Dégager les regards et tampons, rassembler le plan, les factures d'entretien et les bordereaux de vidange. Vérifier la hauteur de boues avant la visite.",
+    "if_skipped": "Avis de non-conformité, travaux imposés sous 4 ans, majoration de redevance",
     "legal": "yes",
     "level": null,
     "active_minutes": 60
@@ -1576,7 +1576,7 @@
   {
     "id": "T-073",
     "equipment_type_id": "ASS-03",
-    "title": "Nettoyage du bac a graisse",
+    "title": "Nettoyage du bac à graisse",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1589,9 +1589,9 @@
       10
     ],
     "duration_min": 30,
-    "tools": "Gants, raclette, sac etanche",
-    "procedure": "Retirer la croute de graisse en surface, racler les parois, evacuer avec les ordures menageres (jamais dans les canalisations).",
-    "if_skipped": "Graisses qui colmatent le pretraitement et l'epandage",
+    "tools": "Gants, raclette, sac étanche",
+    "procedure": "Retirer la croûte de graisse en surface, racler les parois, évacuer avec les ordures ménagères (jamais dans les canalisations).",
+    "if_skipped": "Graisses qui colmatent le pretraitement et l'épandage",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -1613,8 +1613,8 @@
     ],
     "duration_min": 30,
     "tools": "Jet d'eau, gants",
-    "procedure": "Sortir les materiaux filtrants (pouzzolane), les rincer au jet au-dessus de la fosse, les remettre en place.",
-    "if_skipped": "Prefiltre colmate = passage de matieres vers l'epandage, qui se bouche definitivement",
+    "procedure": "Sortir les matériaux filtrants (pouzzolane), les rincer au jet au-dessus de la fosse, les remettre en place.",
+    "if_skipped": "Prefiltre colmaté = passage de matières vers l'épandage, qui se bouche définitivement",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -1629,12 +1629,12 @@
       "months": 12,
       "label": "Tous les ans (contrat)"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 60,
-    "tools": "Prestataire agree",
-    "procedure": "Controle du surpresseur, des diffuseurs d'air, de la recirculation des boues et mesure du taux de boues.",
-    "if_skipped": "Arret de la biomasse epuratoire, rejets non conformes, remise en route longue",
+    "tools": "Prestataire agréé",
+    "procedure": "Contrôle du surpresseur, des diffuseurs d'air, de la recirculation des boues et mesure du taux de boues.",
+    "if_skipped": "Arrêt de la biomasse epuratoire, rejets non conformes, remise en route longue",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -1642,7 +1642,7 @@
   {
     "id": "T-076",
     "equipment_type_id": "ENE-01",
-    "title": "Controle visuel de l'installation photovoltaique",
+    "title": "Contrôle visuel de l'installation photovoltaique",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1656,8 +1656,8 @@
     ],
     "duration_min": 15,
     "tools": "Jumelles depuis le sol",
-    "procedure": "Observer depuis le sol : salissures, fientes, mousses, ombrage nouveau (branche qui a pousse), modules deplaces apres une tempete. Ne jamais monter sur la toiture sans equipement.",
-    "if_skipped": "Ombrage partiel = perte disproportionnee sur toute la chaine de modules",
+    "procedure": "Observer depuis le sol : salissures, fientes, mousses, ombrage nouveau (branche qui a poussé), modules déplacés après une tempête. Ne jamais monter sur la toiture sans équipement.",
+    "if_skipped": "Ombrage partiel = perte disproportionnée sur toute la chaîne de modules",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -1670,18 +1670,18 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 18,
-      "label": "Tous les 1 a 2 ans"
+      "label": "Tous les 1 à 2 ans"
     },
-    "season": "Printemps, tot le matin",
+    "season": "Printemps, tôt le matin",
     "season_months": [
       3,
       4,
       5
     ],
     "duration_min": 90,
-    "tools": "Prestataire equipe (travail en hauteur)",
-    "procedure": "Eau demineralisee et brosse douce, jamais de haute pression ni de detergent. Modules froids imperativement, sinon choc thermique.",
-    "if_skipped": "Salissures = 5 a 15% de production perdue",
+    "tools": "Prestataire équipé (travail en hauteur)",
+    "procedure": "Eau demineralisee et brosse douce, jamais de haute pression ni de détergent. Modules froids impérativement, sinon choc thermique.",
+    "if_skipped": "Salissures = 5 à 15% de production perdue",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -1689,19 +1689,19 @@
   {
     "id": "T-078",
     "equipment_type_id": "ENE-02",
-    "title": "Releve mensuel de la production",
+    "title": "Relevé mensuel de la production",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Application du monitoring",
-    "procedure": "Comparer la production du mois a celle du meme mois l'an dernier. Un ecart superieur a 10% signale un probleme (onduleur, string hors service, salissure).",
-    "if_skipped": "Sous-production non detectee pendant des mois, perte seche sur la revente",
+    "procedure": "Comparer la production du mois à celle du même mois l'an dernier. Un écart supérieur à 10% signale un problème (onduleur, string hors service, salissure).",
+    "if_skipped": "Sous-production non détectée pendant des mois, perte sèche sur la revente",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -1709,19 +1709,19 @@
   {
     "id": "T-079",
     "equipment_type_id": "ENE-04",
-    "title": "Controle de la borne de recharge",
+    "title": "Contrôle de la borne de recharge",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 45,
-    "tools": "Pro qualifie IRVE",
-    "procedure": "Controle du serrage des connexions, de l'etat du cable et de la prise, test du differentiel dedie, verification de la mise a la terre.",
-    "if_skipped": "Echauffement des contacts, declenchements repetes, risque d'incendie",
+    "tools": "Pro qualifié IRVE",
+    "procedure": "Contrôle du serrage des connexions, de l'état du câble et de la prise, test du différentiel dédié, vérification de la mise à la terre.",
+    "if_skipped": "Échauffement des contacts, déclenchements répétés, risque d'incendie",
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
@@ -1729,19 +1729,19 @@
   {
     "id": "T-080",
     "equipment_type_id": "ENE-05",
-    "title": "Test des interrupteurs differentiels",
+    "title": "Test des interrupteurs différentiels",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
-    "procedure": "Appuyer sur le bouton Test de chaque differentiel : il doit declencher immediatement. Reenclencher. Prevenir les occupants avant (coupure des appareils).",
-    "if_skipped": "Un differentiel grippe ne protege plus contre l'electrocution",
+    "procedure": "Appuyer sur le bouton Test de chaque différentiel : il doit déclencher immédiatement. Reenclencher. Prévenir les occupants avant (coupure des appareils).",
+    "if_skipped": "Un différentiel grippé ne protège plus contre l'électrocution",
     "legal": "no",
     "level": "essential",
     "active_minutes": 5
@@ -1749,19 +1749,19 @@
   {
     "id": "T-081",
     "equipment_type_id": "ENE-07",
-    "title": "Demarrage de maintien du groupe electrogene",
+    "title": "Démarrage de maintien du groupe électrogène",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
-    "tools": "Carburant stabilise",
-    "procedure": "Faire tourner 15 minutes en charge. Vidanger le carburant ou utiliser un stabilisant si l'appareil reste inutilise plus de 3 mois.",
-    "if_skipped": "Carburateur encrasse : refus de demarrage le jour ou on en a besoin",
+    "tools": "Carburant stabilisé",
+    "procedure": "Faire tourner 15 minutes en charge. Vidanger le carburant ou utiliser un stabilisant si l'appareil reste inutilisé plus de 3 mois.",
+    "if_skipped": "Carburateur encrassé : refus de démarrage le jour ou on en à besoin",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -1769,19 +1769,19 @@
   {
     "id": "T-082",
     "equipment_type_id": "SEC-01",
-    "title": "Test du detecteur de fumee",
+    "title": "Test du détecteur de fumée",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
-    "procedure": "Appuyer sur le bouton test jusqu'au signal sonore. Depoussierer la grille a l'aspirateur tous les 6 mois.",
-    "if_skipped": "Un detecteur muet est un detecteur inutile",
+    "procedure": "Appuyer sur le bouton test jusqu'au signal sonore. Dépoussiérer la grille à l'aspirateur tous les 6 mois.",
+    "if_skipped": "Un détecteur muet est un détecteur inutile",
     "legal": "yes",
     "level": null,
     "active_minutes": 2
@@ -1789,20 +1789,20 @@
   {
     "id": "T-083",
     "equipment_type_id": "SEC-01",
-    "title": "Remplacement du detecteur de fumee (10 ans apres fabrication)",
+    "title": "Remplacement du détecteur de fumée (10 ans après fabrication)",
     "performer": "diy",
     "frequency": {
       "rule": "threshold",
       "months": 120,
-      "label": "10 ans apres la date de fabrication imprimee au dos",
+      "label": "10 ans après la date de fabrication imprimée au dos",
       "threshold": "Due date = manufacture date printed on the back of the detector + 10 years"
     },
-    "season": "Selon echeance",
+    "season": "Selon échéance",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Detecteur neuf certifie NF EN 14604",
-    "procedure": "Remplacer l'appareil complet 10 ans apres sa date de fabrication, ou des qu'il signale sa fin de vie. Les modeles recents ont une pile scellee de 10 ans : rien a changer entre-temps. Sur un ancien modele a pile remplacable, changer la pile chaque annee.",
-    "if_skipped": "Detecteur hors service sans que personne ne s'en apercoive",
+    "tools": "Détecteur neuf certifié NF EN 14604",
+    "procedure": "Remplacer l'appareil complet 10 ans après sa date de fabrication, ou dès qu'il signale sa fin de vie. Les modèles récents ont une pile scellée de 10 ans : rien à changer entre-temps. Sur un ancien modèle à pile remplaçable, changer la pile chaque année.",
+    "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
     "legal": "yes",
     "level": null,
     "active_minutes": 15
@@ -1810,19 +1810,19 @@
   {
     "id": "T-084",
     "equipment_type_id": "SEC-02",
-    "title": "Test du detecteur de monoxyde de carbone",
+    "title": "Test du détecteur de monoxyde de carbone",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 2,
     "tools": "Aucun",
-    "procedure": "Bouton test mensuel. Positionner l'appareil a hauteur de respiration, dans la piece ou se trouve l'appareil a combustion, a 1 a 3 m de celui-ci.",
-    "if_skipped": "Le CO est inodore et incolore : sans detecteur, aucun signe avant-coureur",
+    "procedure": "Bouton test mensuel. Positionner l'appareil à hauteur de respiration, dans la pièce où se trouve l'appareil à combustion, à 1 à 3 m de celui-ci.",
+    "if_skipped": "Le CO est inodore et incolore : sans détecteur, aucun signe avant-coureur",
     "legal": "no",
     "level": "essential",
     "active_minutes": 2
@@ -1837,12 +1837,12 @@
       "months": 12,
       "label": "Test mensuel / piles annuelles"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Piles lithium des detecteurs",
-    "procedure": "Passer en mode test, declencher chaque detecteur un par un, verifier la transmission vers la centrale et la sirene.",
-    "if_skipped": "Detecteur muet ou fausses alarmes a repetition",
+    "tools": "Piles lithium des détecteurs",
+    "procedure": "Passer en mode test, déclencher chaque détecteur un par un, vérifier la transmission vers la centrale et la sirène.",
+    "if_skipped": "Détecteur muet ou fausses alarmes à répétition",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 30
@@ -1857,12 +1857,12 @@
       "months": 1.5,
       "label": "Toutes les 6 semaines au maximum"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 60,
     "tools": "Ascensoriste sous contrat",
-    "procedure": "Obligation legale : contrat d'entretien et visite toutes les 6 semaines. Le carnet d'entretien doit etre tenu a jour et conservable.",
-    "if_skipped": "Responsabilite civile et penale du proprietaire en cas d'accident",
+    "procedure": "Obligation légale : contrat d'entretien et visite toutes les 6 semaines. Le carnet d'entretien doit être tenu à jour et conservable.",
+    "if_skipped": "Responsabilité civile et pénale du propriétaire en cas d'accident",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -1870,19 +1870,19 @@
   {
     "id": "T-087",
     "equipment_type_id": "SEC-07",
-    "title": "Controle technique quinquennal",
+    "title": "Contrôle technique quinquennal",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 60,
       "label": "Tous les 5 ans"
     },
-    "season": "Selon echeance",
+    "season": "Selon échéance",
     "season_months": [],
     "duration_min": 180,
-    "tools": "Organisme de controle agree",
-    "procedure": "Controle independant de l'installation et de l'etat de securite. Rapport a conserver et a annexer au carnet d'entretien.",
-    "if_skipped": "Non-conformite, mise a l'arret de l'appareil",
+    "tools": "Organisme de contrôle agréé",
+    "procedure": "Contrôle indépendant de l'installation et de l'état de sécurité. Rapport à conserver et à annexer au carnet d'entretien.",
+    "if_skipped": "Non-conformité, mise à l'arrêt de l'appareil",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -1890,7 +1890,7 @@
   {
     "id": "T-088",
     "equipment_type_id": "OUV-01",
-    "title": "Graissage et test des securites du portail",
+    "title": "Graissage et test des sécurités du portail",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1904,8 +1904,8 @@
     ],
     "duration_min": 30,
     "tools": "Graisse silicone, chiffon",
-    "procedure": "Nettoyer le rail ou les gonds, graisser les articulations. Tester l'anti-ecrasement en interposant un obstacle souple : le portail doit s'arreter et repartir en arriere.",
-    "if_skipped": "Cellules desalignees ou anti-ecrasement HS : risque d'accident grave, notamment pour un enfant",
+    "procedure": "Nettoyer le rail ou les gonds, graisser les articulations. Tester l'anti-écrasement en interposant un obstacle souple : le portail doit s'arrêter et repartir en arrière.",
+    "if_skipped": "Cellules desalignees ou anti-écrasement HS : risque d'accident grave, notamment pour un enfant",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -1913,7 +1913,7 @@
   {
     "id": "T-089",
     "equipment_type_id": "OUV-01",
-    "title": "Nettoyage des cellules photoelectriques",
+    "title": "Nettoyage des cellules photoélectriques",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1927,7 +1927,7 @@
     ],
     "duration_min": 10,
     "tools": "Chiffon microfibre",
-    "procedure": "Essuyer les deux lentilles, verifier l'alignement (voyant fixe) et l'absence de vegetation devant le faisceau.",
+    "procedure": "Essuyer les deux lentilles, vérifier l'alignement (voyant fixe) et l'absence de végétation devant le faisceau.",
     "if_skipped": "Portail qui refuse de se fermer ou se ferme sur un obstacle",
     "legal": "no",
     "level": "essential",
@@ -1936,7 +1936,7 @@
   {
     "id": "T-090",
     "equipment_type_id": "OUV-02",
-    "title": "Controle des ressorts et du cable de la porte de garage",
+    "title": "Contrôle des ressorts et du câble de la porte de garage",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1950,7 +1950,7 @@
     ],
     "duration_min": 20,
     "tools": "Lampe torche",
-    "procedure": "Inspecter visuellement les ressorts, cables et galets. En cas de fil casse ou de ressort detendu, ne pas intervenir soi-meme : la tension est mortelle.",
+    "procedure": "Inspecter visuellement les ressorts, câbles et galets. En cas de fil casse ou de ressort détendu, ne pas intervenir soi-même : la tension est mortelle.",
     "if_skipped": "Rupture de ressort, chute brutale du tablier",
     "legal": "no",
     "level": "essential",
@@ -1974,8 +1974,8 @@
     ],
     "duration_min": 30,
     "tools": "Aspirateur fin, lubrifiant silicone",
-    "procedure": "Aspirer les coulisses, pulveriser du silicone (jamais de graisse qui attire la poussiere), manoeuvrer plusieurs fois.",
-    "if_skipped": "Lames coincees, moteur force puis grille",
+    "procedure": "Aspirer les coulisses, pulvériser du silicone (jamais de graisse qui attire la poussière), manœuvrer plusieurs fois.",
+    "if_skipped": "Lames coincées, moteur forcé puis grille",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 30
@@ -1983,7 +1983,7 @@
   {
     "id": "T-092",
     "equipment_type_id": "OUV-04",
-    "title": "Entretien des joints et de la quincaillerie des fenetres",
+    "title": "Entretien des joints et de la quincaillerie des fenêtres",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -1998,8 +1998,8 @@
     ],
     "duration_min": 45,
     "tools": "Silicone, graisse pour quincaillerie, tournevis",
-    "procedure": "Nettoyer les joints et les nourrir au silicone. Graisser gaches et cremones. Regler la compression avec les excentriques si un courant d'air se fait sentir.",
-    "if_skipped": "Infiltrations, deperdition thermique, ferrure desaxee",
+    "procedure": "Nettoyer les joints et les nourrir au silicone. Graisser gâches et cremones. Régler la compression avec les excentriques si un courant d'air se fait sentir.",
+    "if_skipped": "Infiltrations, déperdition thermique, ferrure désaxée",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 45
@@ -2007,19 +2007,19 @@
   {
     "id": "T-093",
     "equipment_type_id": "PIS-01",
-    "title": "Controle du dispositif de securite reglementaire",
+    "title": "Contrôle du dispositif de sécurité réglementaire",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Aucun",
-    "procedure": "Verifier le bon etat et le fonctionnement du dispositif retenu (barriere, alarme, couverture ou abri) et conserver l'attestation de conformite.",
-    "if_skipped": "Amende jusqu'a 45 000 EUR et, surtout, risque de noyade",
+    "procedure": "Vérifier le bon état et le fonctionnement du dispositif retenu (barrière, alarme, couverture ou abri) et conserver l'attestation de conformité.",
+    "if_skipped": "Amende jusqu'à 45 000 EUR et, surtout, risque de noyade",
     "legal": "yes",
     "level": null,
     "active_minutes": 10
@@ -2027,14 +2027,14 @@
   {
     "id": "T-094",
     "equipment_type_id": "PIS-02",
-    "title": "Contre-lavage du filtre a sable",
+    "title": "Contre-lavage du filtre à sable",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 0.25,
       "label": "Toutes les semaines en saison"
     },
-    "season": "Mai a septembre",
+    "season": "Mai à septembre",
     "season_months": [
       5,
       6,
@@ -2044,8 +2044,8 @@
     ],
     "duration_min": 15,
     "tools": "Aucun (vanne 6 voies)",
-    "procedure": "Pompe a l'arret, vanne sur Backwash, relancer 2 minutes jusqu'a ce que l'eau du voyant soit claire, puis Rinse 30 secondes, puis retour en Filtration. Faire l'appoint d'eau ensuite.",
-    "if_skipped": "Filtre colmate = pression qui monte, filtration inefficace, eau trouble",
+    "procedure": "Pompe à l'arrêt, vanne sur Backwash, relancer 2 minutes jusqu'à ce que l'eau du voyant soit claire, puis Rinse 30 secondes, puis retour en Filtration. Faire l'appoint d'eau ensuite.",
+    "if_skipped": "Filtre colmaté = pression qui monte, filtration inefficace, eau trouble",
     "legal": "no",
     "level": "essential",
     "active_minutes": 15
@@ -2058,7 +2058,7 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 72,
-      "label": "Tous les 5 a 7 ans"
+      "label": "Tous les 5 à 7 ans"
     },
     "season": "Printemps",
     "season_months": [
@@ -2067,9 +2067,9 @@
       5
     ],
     "duration_min": 180,
-    "tools": "Sable de silice calibre ou verre filtrant",
-    "procedure": "Vidange du filtre, evacuation du sable agglomere, remplissage neuf en respectant la granulometrie et le volume prevus par le constructeur.",
-    "if_skipped": "Sable agglomere en blocs = filtration nulle malgre des contre-lavages",
+    "tools": "Sable de silice calibré ou verre filtrant",
+    "procedure": "Vidange du filtre, évacuation du sable aggloméré, remplissage neuf en respectant la granulometrie et le volume prévus par le constructeur.",
+    "if_skipped": "Sable aggloméré en blocs = filtration nulle malgré des contre-lavages",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -2084,7 +2084,7 @@
       "months": 0.25,
       "label": "Toutes les semaines en saison"
     },
-    "season": "Mai a septembre",
+    "season": "Mai à septembre",
     "season_months": [
       5,
       6,
@@ -2095,7 +2095,7 @@
     "duration_min": 10,
     "tools": "Aucun",
     "procedure": "Couper la pompe, fermer les vannes, ouvrir le couvercle transparent, vider le panier des feuilles et insectes, rincer, refermer sans trop serrer.",
-    "if_skipped": "Pompe desamorcee puis joint de turbine grille",
+    "if_skipped": "Pompe désamorcée puis joint de turbine grille",
     "legal": "no",
     "level": "essential",
     "active_minutes": 10
@@ -2110,13 +2110,13 @@
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Novembre (eau sous 12 degres)",
+    "season": "Novembre (eau sous 12 degrés)",
     "season_months": [
       11
     ],
     "duration_min": 120,
     "tools": "Bouchons d'hivernage, gizzmo, flotteurs, produit d'hivernage",
-    "procedure": "Baisser le niveau sous les buses, vidanger integralement pompe et filtre, poser les bouchons, proteger le skimmer avec un gizzmo, ajouter le produit d'hivernage.",
+    "procedure": "Baisser le niveau sous les buses, vidanger intégralement pompe et filtre, poser les bouchons, protéger le skimmer avec un gizzmo, ajouter le produit d'hivernage.",
     "if_skipped": "Gel = pompe et filtre fendus, plusieurs centaines d'euros de remplacement",
     "legal": "no",
     "level": "essential",
@@ -2132,15 +2132,15 @@
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Mars a avril (eau sous 15 degres)",
+    "season": "Mars à avril (eau sous 15 degrés)",
     "season_months": [
       3,
       4
     ],
     "duration_min": 180,
-    "tools": "Produits de traitement, epuisette, kit de test",
-    "procedure": "Retirer les bouchons, remonter le niveau, nettoyer le bassin, analyser l'eau, ajuster pH puis desinfectant, filtrer en continu 24 a 48 h.",
-    "if_skipped": "Demarrage trop tardif = eau verte et traitement de choc coûteux",
+    "tools": "Produits de traitement, épuisette, kit de test",
+    "procedure": "Retirer les bouchons, remonter le niveau, nettoyer le bassin, analyser l'eau, ajuster pH puis désinfectant, filtrer en continu 24 à 48 h.",
+    "if_skipped": "Démarrage trop tardif = eau verte et traitement de choc coûteux",
     "legal": "no",
     "level": "essential",
     "active_minutes": 90
@@ -2148,14 +2148,14 @@
   {
     "id": "T-099",
     "equipment_type_id": "PIS-04",
-    "title": "Controle et detartrage de la cellule d'electrolyse",
+    "title": "Contrôle et détartrage de la cellule d'électrolyse",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 3,
-      "label": "Mensuel (controle) / annuel (detartrage)"
+      "label": "Mensuel (contrôle) / annuel (détartrage)"
     },
-    "season": "Mai a septembre",
+    "season": "Mai à septembre",
     "season_months": [
       5,
       6,
@@ -2164,9 +2164,9 @@
       9
     ],
     "duration_min": 30,
-    "tools": "Vinaigre blanc ou acide dilue, gants",
-    "procedure": "Inspecter les plaques par transparence. Si le calcaire est visible, tremper la cellule dans une solution de detartrage, rincer abondamment a l'eau claire.",
-    "if_skipped": "Cellule entartree = production de chlore nulle et eau qui verdit en 48 h",
+    "tools": "Vinaigre blanc ou acide dilué, gants",
+    "procedure": "Inspecter les plaques par transparence. Si le calcaire est visible, tremper la cellule dans une solution de détartrage, rincer abondamment à l'eau claire.",
+    "if_skipped": "Cellule entartrée = production de chlore nulle et eau qui verdit en 48 h",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -2181,12 +2181,12 @@
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
-    "procedure": "Declencher volontairement le detecteur et verifier la sirene. Remplacer la pile chaque annee. C'est un equipement reglementaire, pas un accessoire.",
-    "if_skipped": "Dispositif de securite obligatoire inoperant : responsabilite penale engagee",
+    "procedure": "Déclencher volontairement le détecteur et vérifier la sirène. Remplacer la pile chaque année. C'est un équipement réglementaire, pas un accessoire.",
+    "if_skipped": "Dispositif de sécurité obligatoire inopérant : responsabilité pénale engagée",
     "legal": "yes",
     "level": null,
     "active_minutes": 5
@@ -2201,11 +2201,11 @@
       "months": 3,
       "label": "Filtres mensuels / vidange trimestrielle"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 90,
     "tools": "Filtre de rechange, nettoyant de canalisations",
-    "procedure": "Rincer les cartouches chaque mois et les faire tremper dans un degraissant. Vidanger tous les 3 mois en purgeant les canalisations avec un produit anti-biofilm.",
+    "procedure": "Rincer les cartouches chaque mois et les faire tremper dans un dégraissant. Vidanger tous les 3 mois en purgeant les canalisations avec un produit anti-biofilm.",
     "if_skipped": "Biofilm dans les canalisations, risque de legionelle",
     "legal": "no",
     "level": "essential",
@@ -2214,7 +2214,7 @@
   {
     "id": "T-102",
     "equipment_type_id": "JAR-01",
-    "title": "Revision annuelle de la tondeuse thermique",
+    "title": "Révision annuelle de la tondeuse thermique",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2226,9 +2226,9 @@
       3
     ],
     "duration_min": 60,
-    "tools": "Huile moteur, bougie, filtre a air, lime",
-    "procedure": "Vidanger l'huile moteur a chaud, remplacer la bougie et le filtre a air, affuter et equilibrer la lame, nettoyer le carter.",
-    "if_skipped": "Moteur grippe, lame emoussee qui arrache l'herbe au lieu de la couper",
+    "tools": "Huile moteur, bougie, filtre à air, lime",
+    "procedure": "Vidanger l'huile moteur à chaud, remplacer la bougie et le filtre à air, affûter et équilibrer la lame, nettoyer le carter.",
+    "if_skipped": "Moteur grippé, lame émoussée qui arraché l'herbe au lieu de la couper",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 60
@@ -2236,7 +2236,7 @@
   {
     "id": "T-103",
     "equipment_type_id": "JAR-01",
-    "title": "Preparation a l'hivernage",
+    "title": "Préparation à l'hivernage",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2249,8 +2249,8 @@
     ],
     "duration_min": 30,
     "tools": "Stabilisant carburant",
-    "procedure": "Vider le reservoir ou ajouter un stabilisant, faire tourner jusqu'a la panne seche, nettoyer le carter, stocker au sec.",
-    "if_skipped": "Carburateur encrasse par le carburant vieilli : refus de demarrage au printemps",
+    "procedure": "Vider le réservoir ou ajouter un stabilisant, faire tourner jusqu'à la panne sèche, nettoyer le carter, stocker au sec.",
+    "if_skipped": "Carburateur encrassé par le carburant vieilli : refus de démarrage au printemps",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 30
@@ -2263,9 +2263,9 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 2.5,
-      "label": "Tous les 2 a 3 mois"
+      "label": "Tous les 2 à 3 mois"
     },
-    "season": "Mars a octobre",
+    "season": "Mars à octobre",
     "season_months": [
       3,
       4,
@@ -2278,8 +2278,8 @@
     ],
     "duration_min": 15,
     "tools": "Jeu de lames et vis d'origine",
-    "procedure": "Retourner le robot, devisser les lames, les remplacer toutes en meme temps pour preserver l'equilibrage. Nettoyer le chassis a la brosse, jamais au jet.",
-    "if_skipped": "Lames emoussees = herbe dechiree, pelouse jaunissante, surconsommation",
+    "procedure": "Retourner le robot, dévisser les lames, les remplacer toutes en même temps pour préserver l'équilibrage. Nettoyer le châssis à la brosse, jamais au jet.",
+    "if_skipped": "Lames émoussées = herbe déchirée, pelouse jaunissante, surconsommation",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -2322,8 +2322,8 @@
     ],
     "duration_min": 60,
     "tools": "Compresseur ou vannes de purge",
-    "procedure": "Couper l'alimentation, ouvrir les purges de point bas, souffler les reseaux a l'air comprime si l'installation le permet, rentrer le programmateur.",
-    "if_skipped": "Canalisations et electrovannes eclatees par le gel",
+    "procedure": "Couper l'alimentation, ouvrir les purges de point bas, souffler les réseaux à l'air comprimé si l'installation le permet, rentrer le programmateur.",
+    "if_skipped": "Canalisations et electrovannes éclatées par le gel",
     "legal": "no",
     "level": "essential",
     "active_minutes": 60
@@ -2331,22 +2331,22 @@
   {
     "id": "T-107",
     "equipment_type_id": "JAR-05",
-    "title": "Controle de printemps des goutteurs et arroseurs",
+    "title": "Contrôle de printemps des goutteurs et arroseurs",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Mars a avril",
+    "season": "Mars à avril",
     "season_months": [
       3,
       4
     ],
     "duration_min": 45,
     "tools": "Aucun",
-    "procedure": "Remettre en eau progressivement, faire tourner chaque zone, reperer goutteurs bouches, tuyeres desaxees et fuites, reprogrammer selon la saison.",
-    "if_skipped": "Zones non arrosees et gaspillage d'eau ailleurs",
+    "procedure": "Remettre en eau progressivement, faire tourner chaque zone, repérer goutteurs bouches, tuyères désaxées et fuites, reprogrammer selon la saison.",
+    "if_skipped": "Zones non arrosées et gaspillage d'eau ailleurs",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 45
@@ -2354,7 +2354,7 @@
   {
     "id": "T-108",
     "equipment_type_id": "JAR-06",
-    "title": "Controle du flexible et des bruleurs du barbecue gaz",
+    "title": "Contrôle du flexible et des brûleurs du barbecue gaz",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2367,7 +2367,7 @@
     ],
     "duration_min": 20,
     "tools": "Eau savonneuse, brosse",
-    "procedure": "Verifier la date du flexible. Test de fuite : badigeonner les raccords d'eau savonneuse, des bulles signalent une fuite. Degager les orifices des bruleurs.",
+    "procedure": "Vérifier la date du flexible. Test de fuite : badigeonner les raccords d'eau savonneuse, des bulles signalent une fuite. Dégager les orifices des brûleurs.",
     "if_skipped": "Fuite de gaz, retour de flamme",
     "legal": "no",
     "level": "essential",
@@ -2376,22 +2376,22 @@
   {
     "id": "T-109",
     "equipment_type_id": "BAT-02",
-    "title": "Nettoyage des gouttieres",
+    "title": "Nettoyage des gouttières",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 6,
       "label": "2 fois par an"
     },
-    "season": "Novembre (apres la chute des feuilles) et avril",
+    "season": "Novembre (après la chute des feuilles) et avril",
     "season_months": [
       11,
       4
     ],
     "duration_min": 90,
-    "tools": "Echelle stabilisee, gants, seau, jet d'eau",
-    "procedure": "Retirer feuilles et mousses, rincer vers les descentes, verifier l'ecoulement et l'etat des crochets. Travail en hauteur : ne jamais operer seul.",
-    "if_skipped": "Debordement le long des murs, humidite en pied de facade, gel qui deforme les chenaux",
+    "tools": "Échelle stabilisée, gants, seau, jet d'eau",
+    "procedure": "Retirer feuilles et mousses, rincer vers les descentes, vérifier l'écoulement et l'état des crochets. Travail en hauteur : ne jamais opérer seul.",
+    "if_skipped": "Débordement le long des murs, humidité en pied de façade, gel qui déformé les chenaux",
     "legal": "no",
     "level": "essential",
     "active_minutes": 90
@@ -2399,14 +2399,14 @@
   {
     "id": "T-110",
     "equipment_type_id": "BAT-01",
-    "title": "Controle visuel de la toiture",
+    "title": "Contrôle visuel de la toiture",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Apres les tempetes d'automne",
+    "season": "Après les tempêtes d'automne",
     "season_months": [
       9,
       10,
@@ -2414,8 +2414,8 @@
     ],
     "duration_min": 30,
     "tools": "Jumelles",
-    "procedure": "Observer depuis le sol ou une fenetre en vis-a-vis : tuiles deplacees ou cassees, faitage, solins de cheminee, mousses. Ne jamais monter sur le toit sans securisation.",
-    "if_skipped": "Une tuile deplacee non vue = infiltration lente, charpente et isolant a reprendre",
+    "procedure": "Observer depuis le sol ou une fenêtre en vis-à-vis : tuiles déplacées ou cassées, faitage, solins de cheminée, mousses. Ne jamais monter sur le toit sans sécurisation.",
+    "if_skipped": "Une tuile déplacée non vue = infiltration lente, charpente et isolant à reprendre",
     "legal": "no",
     "level": "essential",
     "active_minutes": 30
@@ -2428,7 +2428,7 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 84,
-      "label": "Tous les 5 a 10 ans"
+      "label": "Tous les 5 à 10 ans"
     },
     "season": "Printemps ou automne",
     "season_months": [
@@ -2441,8 +2441,8 @@
     ],
     "duration_min": 480,
     "tools": "Entreprise de couverture",
-    "procedure": "Demoussage, traitement anti-mousse puis hydrofuge selon l'exposition. Verifier que l'entreprise est assuree pour le travail en hauteur.",
-    "if_skipped": "Mousses retenant l'humidite, tuiles gelives qui eclatent",
+    "procedure": "Demoussage, traitement anti-mousse puis hydrofuge selon l'exposition. Vérifier que l'entreprise est assurée pour le travail en hauteur.",
+    "if_skipped": "Mousses retenant l'humidité, tuiles gelives qui éclatent",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -2457,15 +2457,15 @@
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Avril a mai",
+    "season": "Avril à mai",
     "season_months": [
       4,
       5
     ],
     "duration_min": 240,
     "tools": "Degriseur, saturateur, brosse, pinceau",
-    "procedure": "Nettoyer au degriseur, rincer, laisser secher 48 h, appliquer le saturateur dans le sens des fibres. Jamais de nettoyeur haute pression, qui ouvre le bois.",
-    "if_skipped": "Grisaillement, echardes, lames qui se fendent et doivent etre remplacees",
+    "procedure": "Nettoyer au degriseur, rincer, laisser sécher 48 h, appliquer le saturateur dans le sens des fibres. Jamais de nettoyeur haute pression, qui ouvre le bois.",
+    "if_skipped": "Grisaillement, échardes, lames qui se fendent et doivent être remplacées",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 180
@@ -2473,19 +2473,19 @@
   {
     "id": "T-113",
     "equipment_type_id": "BAT-05",
-    "title": "Controle termites et insectes xylophages",
+    "title": "Contrôle termites et insectes xylophages",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 48,
-      "label": "Tous les 3 a 5 ans"
+      "label": "Tous les 3 à 5 ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 90,
     "tools": "Diagnostiqueur ou entreprise de traitement",
-    "procedure": "Inspection de la charpente, des bois en contact avec la maconnerie et des points d'humidite. Obligatoire au titre du diagnostic termites a la vente dans les zones classees par arrete prefectoral.",
-    "if_skipped": "Attaque detectee trop tard = reprise structurelle tres lourde",
+    "procedure": "Inspection de la charpente, des bois en contact avec la maçonnerie et des points d'humidité. Obligatoire au titre du diagnostic termites à la vente dans les zones classées par arrêté préfectoral.",
+    "if_skipped": "Attaque détectée trop tard = reprise structurelle très lourde",
     "legal": "conditional",
     "level": "recommended",
     "active_minutes": 0
@@ -2493,7 +2493,7 @@
   {
     "id": "T-114",
     "equipment_type_id": "BAT-06",
-    "title": "Controle des combles",
+    "title": "Contrôle des combles",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2508,8 +2508,8 @@
     ],
     "duration_min": 20,
     "tools": "Lampe torche",
-    "procedure": "Chercher traces d'humidite, isolant tasse ou deplace, dejections de rongeurs, jour visible au travers de la couverture.",
-    "if_skipped": "Isolant humide ou tasse : performance divisee par deux sans signe visible depuis l'interieur",
+    "procedure": "Chercher traces d'humidité, isolant tassé ou déplacé, déjections de rongeurs, jour visible au travers de la couverture.",
+    "if_skipped": "Isolant humide ou tassé : performance divisée par deux sans signe visible depuis l'intérieur",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -2517,7 +2517,7 @@
   {
     "id": "T-115",
     "equipment_type_id": "BAT-07",
-    "title": "Controle de l'humidite du sous-sol",
+    "title": "Contrôle de l'humidité du sous-sol",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2532,8 +2532,8 @@
     ],
     "duration_min": 15,
     "tools": "Hygrometre",
-    "procedure": "Mesurer l'hygrometrie, chercher salpetre, auréoles et odeur de moisi, verifier que les aerations basses ne sont pas obstruees.",
-    "if_skipped": "Remontees capillaires, planchers bois degrades, air vicie diffuse vers le logement",
+    "procedure": "Mesurer l'hygrometrie, chercher salpêtre, auréoles et odeur de moisi, vérifier que les aerations basses ne sont pas obstruées.",
+    "if_skipped": "Remontées capillaires, planchers bois dégradés, air vicié diffuse vers le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -2548,14 +2548,14 @@
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Decembre",
+    "season": "Décembre",
     "season_months": [
       12
     ],
     "duration_min": 30,
     "tools": "Scanner ou smartphone",
-    "procedure": "Numeriser attestations de chaudiere, certificats de ramonage, bordereaux de vidange, rapports de controle. Conserver au moins 5 ans : c'est ce que l'assureur reclame apres un sinistre.",
-    "if_skipped": "Sans justificatif, l'assureur peut reduire ou refuser l'indemnisation",
+    "procedure": "Numériser attestations de chaudière, certificats de ramonage, bordereaux de vidange, rapports de contrôle. Conserver au moins 5 ans : c'est ce que l'assureur réclame après un sinistre.",
+    "if_skipped": "Sans justificatif, l'assureur peut réduire ou refuser l'indemnisation",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 30
@@ -2563,14 +2563,14 @@
   {
     "id": "T-117",
     "equipment_type_id": "CLIM-01",
-    "title": "Nettoyage des filtres des unites interieures",
+    "title": "Nettoyage des filtres des unités intérieures",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois en saison"
     },
-    "season": "Mai a septembre",
+    "season": "Mai à septembre",
     "season_months": [
       5,
       6,
@@ -2579,9 +2579,9 @@
       9
     ],
     "duration_min": 10,
-    "tools": "Eau tiede savonneuse",
-    "procedure": "Clipser la facade, retirer les filtres, laver a l'eau tiede, secher completement a l'ombre. Un filtre remonte humide devient un nid a moisissures.",
-    "if_skipped": "Debit reduit, odeurs, allergenes rediffuses dans le logement",
+    "tools": "Eau tiède savonneuse",
+    "procedure": "Clipser la façade, retirer les filtres, laver à l'eau tiède, sécher complètement à l'ombre. Un filtre remonté humide devient un nid à moisissures.",
+    "if_skipped": "Débit réduit, odeurs, allergenes rediffusés dans le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -2601,9 +2601,9 @@
       4
     ],
     "duration_min": 90,
-    "tools": "Pro avec attestation de capacite fluides",
-    "procedure": "Controle d'etancheite du circuit, desinfection de l'echangeur et du bac a condensats, controle des pressions et du serrage electrique.",
-    "if_skipped": "Obligation legale ; fuite de fluide frigorigene a fort pouvoir rechauffant",
+    "tools": "Pro avec attestation de capacité fluides",
+    "procedure": "Contrôle d'étanchéité du circuit, désinfection de l'échangeur et du bac à condensats, contrôle des pressions et du serrage électrique.",
+    "if_skipped": "Obligation légale ; fuite de fluide frigorigene à fort pouvoir réchauffant",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -2611,7 +2611,7 @@
   {
     "id": "T-119",
     "equipment_type_id": "CLIM-01",
-    "title": "Debouchage de l'evacuation des condensats",
+    "title": "Debouchage de l'évacuation des condensats",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2624,8 +2624,8 @@
     ],
     "duration_min": 15,
     "tools": "Souffleur, eau claire",
-    "procedure": "Verifier que le tuyau de condensats s'ecoule librement. Un bouchon d'algues provoque un debordement dans le mur.",
-    "if_skipped": "Degat des eaux derriere l'unite interieure, taches au plafond de l'etage inferieur",
+    "procedure": "Vérifier que le tuyau de condensats s'écoulé librement. Un bouchon d'algues provoque un débordement dans le mur.",
+    "if_skipped": "Dégât des eaux derrière l'unité intérieure, taches au plafond de l'étage inférieur",
     "legal": "no",
     "level": "essential",
     "active_minutes": 15
@@ -2640,7 +2640,7 @@
       "months": 1,
       "label": "Tous les mois en usage"
     },
-    "season": "Juin a septembre",
+    "season": "Juin à septembre",
     "season_months": [
       6,
       7,
@@ -2648,9 +2648,9 @@
       9
     ],
     "duration_min": 10,
-    "tools": "Eau tiede",
-    "procedure": "Rincer le filtre, vider le bac de condensats, verifier que la gaine d'evacuation n'est pas pliee.",
-    "if_skipped": "Eau stagnante, odeurs, rendement de refroidissement divise",
+    "tools": "Eau tiède",
+    "procedure": "Rincer le filtre, vider le bac de condensats, vérifier que la gaine d'évacuation n'est pas pliée.",
+    "if_skipped": "Eau stagnante, odeurs, rendement de refroidissement divisé",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -2658,19 +2658,19 @@
   {
     "id": "T-121",
     "equipment_type_id": "CLIM-03",
-    "title": "Controle annuel d'etancheite du circuit frigorifique",
+    "title": "Contrôle annuel d'étanchéité du circuit frigorifique",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 60,
-    "tools": "Operateur certifie, detecteur de fuite",
-    "procedure": "Controle obligatoire des 5 t CO2 eq de charge. Le professionnel renseigne la fiche d'intervention CERFA 15497.",
-    "if_skipped": "Sanction administrative ; une fuite de R410A equivaut a plusieurs tonnes de CO2",
+    "tools": "Opérateur certifié, détecteur de fuite",
+    "procedure": "Contrôle obligatoire des 5 t CO2 eq de charge. Le professionnel renseigne la fiche d'intervention CERFA 15497.",
+    "if_skipped": "Sanction administrative ; une fuite de R410A équivaut à plusieurs tonnes de CO2",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -2692,9 +2692,9 @@
       5
     ],
     "duration_min": 120,
-    "tools": "Pro qualifie geothermie",
-    "procedure": "Controle du circuit de captage, de la pression et du taux de glycol, des echangeurs et du circulateur.",
-    "if_skipped": "Obligation legale ; deperdition du champ de captage difficile a diagnostiquer tardivement",
+    "tools": "Pro qualifié geothermie",
+    "procedure": "Contrôle du circuit de captage, de la pression et du taux de glycol, des échangeurs et du circulateur.",
+    "if_skipped": "Obligation légale ; déperdition du champ de captage difficile à diagnostiquer tardivement",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -2702,7 +2702,7 @@
   {
     "id": "T-123",
     "equipment_type_id": "CH-13",
-    "title": "Controle du collecteur de plancher chauffant",
+    "title": "Contrôle du collecteur de plancher chauffant",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -2714,9 +2714,9 @@
       9
     ],
     "duration_min": 20,
-    "tools": "Cle de purge, chiffon",
-    "procedure": "Purger le collecteur, verifier les debitmetres boucle par boucle et l'absence de suintement aux raccords.",
-    "if_skipped": "Boucles desequilibrees, zones froides, colmatage progressif",
+    "tools": "Clé de purge, chiffon",
+    "procedure": "Purger le collecteur, vérifier les debitmetres boucle par boucle et l'absence de suintement aux raccords.",
+    "if_skipped": "Boucles déséquilibrées, zones froides, colmatage progressif",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -2724,19 +2724,19 @@
   {
     "id": "T-124",
     "equipment_type_id": "CH-16",
-    "title": "Controle periodique de la citerne GPL",
+    "title": "Contrôle périodique de la citerne GPL",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 60,
       "label": "Selon le contrat de fourniture"
     },
-    "season": "Selon echeance",
+    "season": "Selon échéance",
     "season_months": [],
     "duration_min": 60,
-    "tools": "Distributeur agree",
-    "procedure": "Le controle est assure par le distributeur dans le cadre du contrat. Verifier que l'echeance figure bien au contrat et relancer si le passage n'a pas lieu.",
-    "if_skipped": "Risque d'explosion ; resiliation possible du contrat de fourniture",
+    "tools": "Distributeur agréé",
+    "procedure": "Le contrôle est assuré par le distributeur dans le cadre du contrat. Vérifier que l'échéance figure bien au contrat et relancer si le passage n'a pas lieu.",
+    "if_skipped": "Risque d'explosion ; résiliation possible du contrat de fourniture",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -2757,8 +2757,8 @@
     ],
     "duration_min": 5,
     "tools": "Piles alcalines",
-    "procedure": "Remplacer avant la saison de chauffe. Sur thermostat connecte, verifier aussi la liaison avec la chaudiere apres remplacement.",
-    "if_skipped": "Perte de liaison = chaudiere qui tourne en continu ou reste eteinte",
+    "procedure": "Remplacer avant la saison de chauffe. Sur thermostat connecté, vérifier aussi la liaison avec la chaudière après remplacement.",
+    "if_skipped": "Perte de liaison = chaudière qui tourne en continu ou reste éteinte",
     "legal": "no",
     "level": "essential",
     "active_minutes": 5
@@ -2773,15 +2773,15 @@
       "months": 12,
       "label": "Tous les 12 mois"
     },
-    "season": "Aout a octobre",
+    "season": "Août à octobre",
     "season_months": [
       8,
       9,
       10
     ],
     "duration_min": 60,
-    "tools": "Pro qualifie PG",
-    "procedure": "Nettoyage du bruleur et du corps de chauffe, controle du tirage et de l'evacuation des fumees, mesure du taux de CO.",
+    "tools": "Pro qualifié PG",
+    "procedure": "Nettoyage du brûleur et du corps de chauffe, contrôle du tirage et de l'évacuation des fumées, mesure du taux de CO.",
     "if_skipped": "Intoxication au monoxyde de carbone",
     "legal": "yes",
     "level": null,
@@ -2790,19 +2790,19 @@
   {
     "id": "T-127",
     "equipment_type_id": "ECS-05",
-    "title": "Remplacement du groupe de securite",
+    "title": "Remplacement du groupe de sécurité",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 60,
       "label": "Tous les 5 ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 45,
-    "tools": "Groupe de securite neuf, plombier",
-    "procedure": "Piece d'usure a remplacer preventivement, meme si elle fonctionne encore. A coupler avec le detartrage du ballon.",
-    "if_skipped": "Clapet grippe = surpression et risque d'eclatement du ballon",
+    "tools": "Groupe de sécurité neuf, plombier",
+    "procedure": "Pièce d'usure à remplacer préventivement, même si elle fonctionne encore. À coupler avec le détartrage du ballon.",
+    "if_skipped": "Clapet grippé = surpression et risque d'éclatement du ballon",
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
@@ -2810,7 +2810,7 @@
   {
     "id": "T-128",
     "equipment_type_id": "VENT-05",
-    "title": "Controle du puits canadien",
+    "title": "Contrôle du puits canadien",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
@@ -2824,9 +2824,9 @@
       5
     ],
     "duration_min": 45,
-    "tools": "Pro ou particulier equipe",
-    "procedure": "Verifier l'evacuation des condensats, nettoyer le filtre de la borne de prise d'air et controler l'absence d'eau stagnante dans le conduit.",
-    "if_skipped": "Eau stagnante = developpement microbien diffuse dans tout le logement",
+    "tools": "Pro ou particulier équipé",
+    "procedure": "Vérifier l'évacuation des condensats, nettoyer le filtre de la borne de prise d'air et contrôler l'absence d'eau stagnante dans le conduit.",
+    "if_skipped": "Eau stagnante = développement microbien diffuse dans tout le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -2834,18 +2834,18 @@
   {
     "id": "T-129",
     "equipment_type_id": "FROID-04",
-    "title": "Remplacement du filtre a charbon de la cave a vin",
+    "title": "Remplacement du filtre à charbon de la cave à vin",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Filtre compatible",
-    "procedure": "Le filtre assure le renouvellement d'air sans transmettre d'odeurs. Nettoyer egalement le bac de recuperation d'eau.",
+    "procedure": "Le filtre assure le renouvellement d'air sans transmettre d'odeurs. Nettoyer également le bac de récupération d'eau.",
     "if_skipped": "Hygrometrie instable, odeurs transmises aux bouchons",
     "legal": "no",
     "level": "recommended",
@@ -2854,19 +2854,19 @@
   {
     "id": "T-130",
     "equipment_type_id": "LAV-04",
-    "title": "Entretien combine du lave-linge sechant",
+    "title": "Entretien combiné du lave-linge séchant",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 3,
       "label": "Trimestriel"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 30,
     "tools": "Brosse, acide citrique",
-    "procedure": "Cumuler les gestes du lave-linge et du seche-linge : filtre de vidange, joint de hublot, condenseur et detartrage.",
-    "if_skipped": "Usure acceleree, cycles de sechage interminables",
+    "procedure": "Cumuler les gestes du lave-linge et du sèche-linge : filtre de vidange, joint de hublot, condenseur et détartrage.",
+    "if_skipped": "Usure accélérée, cycles de séchage interminables",
     "legal": "no",
     "level": "essential",
     "active_minutes": 20
@@ -2874,7 +2874,7 @@
   {
     "id": "T-131",
     "equipment_type_id": "CUIS-02",
-    "title": "Nettoyage de la ventilation de la plaque a induction",
+    "title": "Nettoyage de la ventilation de la plaque à induction",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -2887,9 +2887,9 @@
       10
     ],
     "duration_min": 15,
-    "tools": "Aspirateur a embout fin",
-    "procedure": "Aspirer la grille de ventilation sous le plan de travail ou en facade de meuble. L'electronique d'induction chauffe et doit respirer.",
-    "if_skipped": "Surchauffe de l'electronique, coupures en cours de cuisson, carte a remplacer",
+    "tools": "Aspirateur à embout fin",
+    "procedure": "Aspirer la grille de ventilation sous le plan de travail ou en façade de meuble. L'électronique d'induction chauffe et doit respirer.",
+    "if_skipped": "Surchauffe de l'électronique, coupures en cours de cuisson, carte à remplacer",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -2897,19 +2897,19 @@
   {
     "id": "T-132",
     "equipment_type_id": "CUIS-05",
-    "title": "Controle du joint de porte du micro-ondes",
+    "title": "Contrôle du joint de porte du micro-ondes",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
     "tools": "Aucun",
-    "procedure": "Inspecter le pourtour de la porte et la grille : ni deformation, ni corrosion, ni jeu a la fermeture.",
-    "if_skipped": "Fuite de micro-ondes si le joint ou la charniere est abime",
+    "procedure": "Inspecter le pourtour de la porte et la grille : ni déformation, ni corrosion, ni jeu à la fermeture.",
+    "if_skipped": "Fuite de micro-ondes si le joint ou la charnière est abîmé",
     "legal": "no",
     "level": "essential",
     "active_minutes": 5
@@ -2922,14 +2922,14 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 9,
-      "label": "Tous les 6 a 12 mois"
+      "label": "Tous les 6 à 12 mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 10,
     "tools": "Jeu de filtres d'origine",
     "procedure": "Noter la date au feutre sur le filtre neuf. Le prefiltre lavable se rince tous les mois, le HEPA se remplace.",
-    "if_skipped": "Filtre sature = rejet des particules accumulees dans la piece",
+    "if_skipped": "Filtre saturé = rejet des particules accumulées dans la pièce",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -2937,14 +2937,14 @@
   {
     "id": "T-134",
     "equipment_type_id": "PEM-04",
-    "title": "Nettoyage du reservoir et du filtre du deshumidificateur",
+    "title": "Nettoyage du réservoir et du filtre du deshumidificateur",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois en usage"
     },
-    "season": "Octobre a mars",
+    "season": "Octobre à mars",
     "season_months": [
       10,
       11,
@@ -2955,8 +2955,8 @@
     ],
     "duration_min": 10,
     "tools": "Eau savonneuse",
-    "procedure": "Vider et laver le reservoir, rincer le filtre a l'entree d'air, verifier que la sonde d'hygrometrie n'est pas encrassee.",
-    "if_skipped": "Developpement bacterien dans le bac, air rejete vicie",
+    "procedure": "Vider et laver le réservoir, rincer le filtre à l'entrée d'air, vérifier que la sonde d'hygrometrie n'est pas encrassée.",
+    "if_skipped": "Développement bactérien dans le bac, air rejeté vicié",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -2964,19 +2964,19 @@
   {
     "id": "T-135",
     "equipment_type_id": "PEM-05",
-    "title": "Detartrage de la centrale vapeur",
+    "title": "Détartrage de la centrale vapeur",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 2,
-      "label": "Tous les 1 a 3 mois selon durete"
+      "label": "Tous les 1 à 3 mois selon dureté"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 20,
-    "tools": "Eau demineralisee, detartrant",
-    "procedure": "Lancer le cycle de rincage de la chaudiere prevu par le fabricant. Utiliser de l'eau demineralisee si l'eau du reseau depasse 25 degres francais.",
-    "if_skipped": "Projection de calcaire sur le linge puis panne de la chaudiere",
+    "tools": "Eau demineralisee, détartrant",
+    "procedure": "Lancer le cycle de rinçage de la chaudière prévu par le fabricant. Utiliser de l'eau demineralisee si l'eau du réseau dépasse 25 degrés français.",
+    "if_skipped": "Projection de calcaire sur le linge puis panne de la chaudière",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 10
@@ -2984,19 +2984,19 @@
   {
     "id": "T-136",
     "equipment_type_id": "EAU-02",
-    "title": "Releve mensuel du compteur d'eau",
+    "title": "Relevé mensuel du compteur d'eau",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
       "label": "Tous les mois"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 5,
     "tools": "Photo du compteur",
-    "procedure": "Photographier l'index chaque mois. Un ecart inexplique signale une fuite bien avant la facture de regularisation.",
-    "if_skipped": "Fuite enterree facturee au plein tarif pendant des mois",
+    "procedure": "Photographier l'index chaque mois. Un écart inexpliqué signale une fuite bien avant la facture de régularisation.",
+    "if_skipped": "Fuite enterrée facturée au plein tarif pendant des mois",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 5
@@ -3004,19 +3004,19 @@
   {
     "id": "T-137",
     "equipment_type_id": "EAU-05",
-    "title": "Declaration et controle du puits ou forage",
+    "title": "Déclaration et contrôle du puits ou forage",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
       "months": 120,
-      "label": "Declaration unique ; controle selon la commune"
+      "label": "Déclaration unique ; contrôle selon la commune"
     },
-    "season": "A la mise en service",
+    "season": "À la mise en service",
     "season_months": [],
     "duration_min": 60,
     "tools": "CERFA 13837",
-    "procedure": "Declarer l'ouvrage en mairie. Si le puits alimente le reseau interieur, un controle du service des eaux est requis et une separation stricte des reseaux est obligatoire.",
-    "if_skipped": "Amende ; obligation de deconnexion du reseau interieur",
+    "procedure": "Déclarer l'ouvrage en mairie. Si le puits alimente le réseau intérieur, un contrôle du service des eaux est requis et une séparation stricte des réseaux est obligatoire.",
+    "if_skipped": "Amende ; obligation de déconnexion du réseau intérieur",
     "legal": "yes",
     "level": null,
     "active_minutes": 60
@@ -3024,7 +3024,7 @@
   {
     "id": "T-138",
     "equipment_type_id": "EAU-07",
-    "title": "Controle de la pression du surpresseur",
+    "title": "Contrôle de la pression du surpresseur",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -3038,9 +3038,9 @@
       5
     ],
     "duration_min": 20,
-    "tools": "Manometre, pompe a velo",
-    "procedure": "Couper la pompe, vidanger, controler la pression de gonflage du vase (generalement 0,2 bar sous la pression d'enclenchement) et regonfler.",
-    "if_skipped": "Cycles courts a repetition = usure rapide de la pompe et du contacteur",
+    "tools": "Manomètre, pompe à vélo",
+    "procedure": "Couper la pompe, vidanger, contrôler la pression de gonflage du vase (généralement 0,2 bar sous la pression d'enclenchement) et regonfler.",
+    "if_skipped": "Cycles courts à répétition = usure rapide de la pompe et du contacteur",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -3048,18 +3048,18 @@
   {
     "id": "T-139",
     "equipment_type_id": "EAU-08",
-    "title": "Controle du ballon tampon",
+    "title": "Contrôle du ballon tampon",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 24,
       "label": "Tous les 2 ans"
     },
-    "season": "Pendant l'entretien de la chaudiere",
+    "season": "Pendant l'entretien de la chaudière",
     "season_months": [],
     "duration_min": 30,
-    "tools": "Pro qualifie",
-    "procedure": "Controle de la pression, de l'isolation et de l'anode si le ballon en est equipe.",
+    "tools": "Pro qualifié",
+    "procedure": "Contrôle de la pression, de l'isolation et de l'anode si le ballon en est équipé.",
     "if_skipped": "Corrosion interne, perte de stratification et donc de rendement",
     "legal": "no",
     "level": "recommended",
@@ -3068,19 +3068,19 @@
   {
     "id": "T-140",
     "equipment_type_id": "ASS-05",
-    "title": "Curage preventif des canalisations",
+    "title": "Curage préventif des canalisations",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 30,
-      "label": "Tous les 2 a 3 ans"
+      "label": "Tous les 2 à 3 ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 90,
     "tools": "Entreprise de curage",
-    "procedure": "Hydrocurage des collecteurs depuis les regards. Profiter du passage pour faire inspecter a la camera si la maison a plus de 40 ans.",
-    "if_skipped": "Bouchon, refoulement d'eaux usees dans le logement",
+    "procedure": "Hydrocurage des collecteurs depuis les regards. Profiter du passage pour faire inspecter à la caméra si la maison à plus de 40 ans.",
+    "if_skipped": "Bouchon, refoulement d'eaux usées dans le logement",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 0
@@ -3088,19 +3088,19 @@
   {
     "id": "T-141",
     "equipment_type_id": "ENE-03",
-    "title": "Controle de la batterie de stockage",
+    "title": "Contrôle de la batterie de stockage",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 45,
-    "tools": "Pro qualifie",
-    "procedure": "Releve de l'etat de sante (SOH), controle de la ventilation du local et des connexions de puissance, mise a jour du firmware.",
-    "if_skipped": "Perte de capacite non detectee, risque thermique en cas de defaut cellule",
+    "tools": "Pro qualifié",
+    "procedure": "Relevé de l'état de santé (SOH), contrôle de la ventilation du local et des connexions de puissance, mise à jour du firmware.",
+    "if_skipped": "Perte de capacité non détectée, risque thermique en cas de défaut cellule",
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
@@ -3108,19 +3108,19 @@
   {
     "id": "T-142",
     "equipment_type_id": "ENE-06",
-    "title": "Diagnostic de l'installation interieure de gaz",
+    "title": "Diagnostic de l'installation intérieure de gaz",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 36,
-      "label": "A la vente (3 ans) ou a la mise en location (6 ans)"
+      "label": "À la vente (3 ans) ou à la mise en location (6 ans)"
     },
     "season": "Avant signature",
     "season_months": [],
     "duration_min": 90,
-    "tools": "Diagnostiqueur certifie",
-    "procedure": "Obligatoire si l'installation a plus de 15 ans. Controle de la tuyauterie fixe, du raccordement des appareils, de la ventilation et de l'evacuation des produits de combustion.",
-    "if_skipped": "Vente bloquee ; responsabilite du vendeur pour vice cache",
+    "tools": "Diagnostiqueur certifié",
+    "procedure": "Obligatoire si l'installation à plus de 15 ans. Contrôle de la tuyauterie fixe, du raccordement des appareils, de la ventilation et de l'évacuation des produits de combustion.",
+    "if_skipped": "Vente bloquée ; responsabilité du vendeur pour vice caché",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -3128,19 +3128,19 @@
   {
     "id": "T-143",
     "equipment_type_id": "SEC-03",
-    "title": "Verification annuelle de l'extincteur",
+    "title": "Vérification annuelle de l'extincteur",
     "performer": "pro",
     "frequency": {
       "rule": "every_n_months",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Toute l'annee",
+    "season": "Toute l'année",
     "season_months": [],
     "duration_min": 15,
-    "tools": "Societe de maintenance incendie",
-    "procedure": "Controle de la pression, de la goupille et de l'etat du flexible, apposition de l'etiquette datee. Requalification complete tous les 10 ans.",
-    "if_skipped": "Extincteur inoperant au moment ou il sert",
+    "tools": "Société de maintenance incendie",
+    "procedure": "Contrôle de la pression, de la goupille et de l'état du flexible, apposition de l'étiquette datée. Requalification complète tous les 10 ans.",
+    "if_skipped": "Extincteur inopérant au moment ou il sert",
     "legal": "conditional",
     "level": "recommended",
     "active_minutes": 0
@@ -3148,7 +3148,7 @@
   {
     "id": "T-144",
     "equipment_type_id": "SEC-05",
-    "title": "Nettoyage et controle des cameras",
+    "title": "Nettoyage et contrôle des caméras",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -3162,8 +3162,8 @@
     ],
     "duration_min": 20,
     "tools": "Chiffon microfibre",
-    "procedure": "Nettoyer les optiques et les capteurs infrarouges, verifier le cadrage apres les tempetes, purger les enregistrements anciens conformement au RGPD.",
-    "if_skipped": "Images inexploitables au moment ou on en a besoin",
+    "procedure": "Nettoyer les optiques et les capteurs infrarouges, vérifier le cadrage après les tempêtes, purger les enregistrements anciens conformément au RGPD.",
+    "if_skipped": "Images inexploitables au moment ou on en à besoin",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 20
@@ -3186,7 +3186,7 @@
     ],
     "duration_min": 15,
     "tools": "Chiffon, graisse silicone pour joints",
-    "procedure": "Nettoyer l'objectif et le clavier, verifier l'etancheite du capot et graisser le joint. La platine est exposee en permanence aux intemperies.",
+    "procedure": "Nettoyer l'objectif et le clavier, vérifier l'étanchéité du capot et graisser le joint. La platine est exposée en permanence aux intempéries.",
     "if_skipped": "Corrosion des contacts, platine muette",
     "legal": "no",
     "level": "recommended",
@@ -3208,8 +3208,8 @@
     ],
     "duration_min": 45,
     "tools": "Brosse douce, savon neutre, graisse silicone",
-    "procedure": "Brosser la toile deployee et seche, graisser les articulations des bras. Ne jamais enrouler une toile humide.",
-    "if_skipped": "Toile moisie a remplacer, bras bloques, casse au premier coup de vent",
+    "procedure": "Brosser la toile déployée et sèche, graisser les articulations des bras. Ne jamais enrouler une toile humide.",
+    "if_skipped": "Toile moisie à remplacer, bras bloqués, casse au premier coup de vent",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 45
@@ -3224,14 +3224,14 @@
       "months": 24,
       "label": "Tous les 2 ans"
     },
-    "season": "Avril, a la remise en service",
+    "season": "Avril, à la remise en service",
     "season_months": [
       4
     ],
     "duration_min": 60,
-    "tools": "Pro qualifie",
-    "procedure": "Controle d'etancheite du circuit frigorifique, nettoyage de l'evaporateur, controle du debit d'eau et du condenseur.",
-    "if_skipped": "Obligation legale ; echangeur entartre et fuite de fluide",
+    "tools": "Pro qualifié",
+    "procedure": "Contrôle d'étanchéité du circuit frigorifique, nettoyage de l'evaporateur, contrôle du débit d'eau et du condenseur.",
+    "if_skipped": "Obligation légale ; échangeur entartré et fuite de fluide",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -3244,9 +3244,9 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 1,
-      "label": "Apres chaque usage (filtre) / annuel (brosses)"
+      "label": "Après chaque usage (filtre) / annuel (brosses)"
     },
-    "season": "Mai a septembre",
+    "season": "Mai à septembre",
     "season_months": [
       5,
       6,
@@ -3256,8 +3256,8 @@
     ],
     "duration_min": 15,
     "tools": "Jet d'eau claire",
-    "procedure": "Rincer le filtre a l'eau claire apres chaque session, verifier les brosses et les chenilles, stocker a l'ombre et hors gel.",
-    "if_skipped": "Moteur encrasse, courroies rompues, appareil rarement reparable",
+    "procedure": "Rincer le filtre à l'eau claire après chaque session, vérifier les brosses et les chenilles, stocker à l'ombre et hors gel.",
+    "if_skipped": "Moteur encrassé, courroies rompues, appareil rarement réparable",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 15
@@ -3265,7 +3265,7 @@
   {
     "id": "T-149",
     "equipment_type_id": "JAR-03",
-    "title": "Revision du taille-haie et de la debroussailleuse",
+    "title": "Révision du taille-haie et de la debroussailleuse",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
@@ -3277,9 +3277,9 @@
       3
     ],
     "duration_min": 45,
-    "tools": "Lime, huile de lame, filtre a air, bougie",
-    "procedure": "Affuter et huiler les lames, remplacer le filtre a air et la bougie, verifier le fil ou la lame de coupe.",
-    "if_skipped": "Lames grippees, moteur noye, coupe qui dechire la vegetation",
+    "tools": "Lime, huile de lame, filtre à air, bougie",
+    "procedure": "Affûter et huiler les lames, remplacer le filtre à air et la bougie, vérifier le fil ou la lame de coupe.",
+    "if_skipped": "Lames grippées, moteur noyé, coupe qui déchiré la végétation",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 45
@@ -3292,17 +3292,17 @@
     "frequency": {
       "rule": "every_n_months",
       "months": 30,
-      "label": "Tous les 2 a 3 ans"
+      "label": "Tous les 2 à 3 ans"
     },
-    "season": "Mai a juin, par temps sec",
+    "season": "Mai à juin, par temps sec",
     "season_months": [
       5,
       6
     ],
     "duration_min": 240,
     "tools": "Lasure ou saturateur, brosse, ponceuse",
-    "procedure": "Poncer legerement, depoussierer, appliquer deux couches. Traiter en priorite les lisses basses et les pieds de poteaux, au contact du sol.",
-    "if_skipped": "Pourrissement des pieds de poteaux et de la toiture, structure a remplacer",
+    "procedure": "Poncer légèrement, dépoussiérer, appliquer deux couches. Traiter en priorité les lisses basses et les pieds de poteaux, au contact du sol.",
+    "if_skipped": "Pourrissement des pieds de poteaux et de la toiture, structure à remplacer",
     "legal": "no",
     "level": "recommended",
     "active_minutes": 180
@@ -3310,14 +3310,14 @@
   {
     "id": "T-151",
     "equipment_type_id": "BAT-03",
-    "title": "Controle de la facade et des points singuliers",
+    "title": "Contrôle de la façade et des points singuliers",
     "performer": "diy",
     "frequency": {
       "rule": "season_anchor",
       "months": 12,
       "label": "Tous les ans"
     },
-    "season": "Apres l'hiver",
+    "season": "Après l'hiver",
     "season_months": [
       3,
       4,
@@ -3325,8 +3325,8 @@
     ],
     "duration_min": 30,
     "tools": "Jumelles",
-    "procedure": "Chercher fissures, cloques d'enduit, joints degrades autour des menuiseries et traces de ruissellement sous les appuis de fenetre.",
-    "if_skipped": "Infiltration par microfissure ; ravalement pouvant etre impose par arrete municipal",
+    "procedure": "Chercher fissures, cloques d'enduit, joints dégradés autour des menuiseries et traces de ruissellement sous les appuis de fenêtre.",
+    "if_skipped": "Infiltration par microfissure ; ravalement pouvant être imposé par arrêté municipal",
     "legal": "conditional",
     "level": "recommended",
     "active_minutes": 30
@@ -3334,7 +3334,7 @@
   {
     "id": "T-152",
     "equipment_type_id": "VEH-01",
-    "title": "Controle technique de la voiture",
+    "title": "Contrôle technique de la voiture",
     "performer": "pro",
     "frequency": {
       "rule": "threshold",
@@ -3342,12 +3342,12 @@
       "label": "Tous les 2 ans (1er dans les 6 mois avant le 4e anniversaire)",
       "threshold": "Due date computed from the first registration date (registration certificate, field B): first check within 6 months before the 4th anniversary, then every 2 years"
     },
-    "season": "Selon echeance",
+    "season": "Selon échéance",
     "season_months": [],
     "duration_min": 60,
-    "tools": "Centre de controle agree, carte grise",
-    "procedure": "La date de premiere immatriculation figure sur la carte grise (champ B) : l'echeance en decoule. Prendre rendez-vous dans le mois qui precede. En cas de contre-visite, les reparations doivent etre controlees dans les 2 mois.",
-    "if_skipped": "Amende de 135 EUR, immobilisation possible, difficultes avec l'assureur apres un sinistre",
+    "tools": "Centre de contrôle agréé, carte grise",
+    "procedure": "La date de première immatriculation figure sur la carte grise (champ B) : l'échéance en découle. Prendre rendez-vous dans le mois qui précède. En cas de contre-visite, les réparations doivent être contrôlées dans les 2 mois.",
+    "if_skipped": "Amende de 135 EUR, immobilisation possible, difficultés avec l'assureur après un sinistre",
     "legal": "yes",
     "level": null,
     "active_minutes": 0
@@ -3355,19 +3355,19 @@
   {
     "id": "T-153",
     "equipment_type_id": "VEH-02",
-    "title": "Controle technique du deux-roues",
+    "title": "Contrôle technique du deux-roues",
     "performer": "pro",
     "frequency": {
       "rule": "threshold",
       "months": 36,
-      "label": "Tous les 3 ans (1er entre 4,5 et 5 ans apres la 1re immatriculation)",
+      "label": "Tous les 3 ans (1er entre 4,5 et 5 ans après la 1re immatriculation)",
       "threshold": "Due date computed from the first registration date (registration certificate, field B): first check 4.5 to 5 years after first registration, then every 3 years"
     },
-    "season": "Selon echeance",
+    "season": "Selon échéance",
     "season_months": [],
     "duration_min": 45,
-    "tools": "Centre de controle agree categorie L, carte grise",
-    "procedure": "L'echeance depend de la date de premiere immatriculation (carte grise, champ B). Les vehicules immatricules avant 2022 suivent un calendrier transitoire. Choisir un centre agree pour la categorie L.",
+    "tools": "Centre de contrôle agréé catégorie L, carte grise",
+    "procedure": "L'échéance dépend de la date de première immatriculation (carte grise, champ B). Les véhicules immatriculés avant 2022 suivent un calendrier transitoire. Choisir un centre agréé pour la catégorie L.",
     "if_skipped": "Amende de 135 EUR",
     "legal": "yes",
     "level": null,
@@ -3376,7 +3376,7 @@
   {
     "id": "T-154",
     "equipment_type_id": "VEH-03",
-    "title": "Revision annuelle du velo electrique",
+    "title": "Révision annuelle du vélo électrique",
     "performer": "pro",
     "frequency": {
       "rule": "season_anchor",
@@ -3390,9 +3390,9 @@
       5
     ],
     "duration_min": 60,
-    "tools": "Reparateur velo",
-    "procedure": "Controle des freins, de la transmission et des pneus, mise a jour du moteur si le fabricant la propose. Entre deux periodes d'usage, stocker la batterie a mi-charge, au sec et a temperature ambiante.",
-    "if_skipped": "Freinage degrade, usure acceleree de la transmission, batterie qui perd de sa capacite",
+    "tools": "Réparateur vélo",
+    "procedure": "Contrôle des freins, de la transmission et des pneus, mise à jour du moteur si le fabricant la propose. Entre deux périodes d'usage, stocker la batterie à mi-charge, au sec et à température ambiante.",
+    "if_skipped": "Freinage dégradé, usure accélérée de la transmission, batterie qui perd de sa capacité",
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
