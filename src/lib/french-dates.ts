@@ -36,6 +36,23 @@ export function currentMonthKey(): string {
   return `${year}-${month}`;
 }
 
+// "YYYY-MM" shifted by `delta` calendar months — "Reporter" moves a task's guidance
+// forward one month at a time.
+export function addMonthsToKey(monthKey: string, delta: number): string {
+  const [year, month] = monthKey.split("-").map(Number);
+  const total = year * 12 + (month - 1) + delta;
+  const newYear = Math.floor(total / 12);
+  const newMonth = (total % 12) + 1;
+  return `${newYear}-${String(newMonth).padStart(2, "0")}`;
+}
+
+// Whole calendar months from `a` to `b` ("YYYY-MM" each), b - a.
+export function monthsBetweenKeys(a: string, b: string): number {
+  const [ay, am] = a.split("-").map(Number);
+  const [by, bm] = b.split("-").map(Number);
+  return by * 12 + (bm - 1) - (ay * 12 + (am - 1));
+}
+
 // A past date (last service, manufacture...): from 30 years ago to the current month.
 export function pastYearOptions(): number[] {
   const currentYear = new Date().getFullYear();

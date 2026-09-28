@@ -10,7 +10,8 @@ import { comparePlacesByPropertyType } from "@/lib/place-types";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getObligationCountsForAppliances, type ObligationCounts } from "@/lib/obligations";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
-import { getMaintenanceGuidanceForAppliances, filterPendingGuidance } from "@/lib/maintenance-guidance";
+import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
+import { getMaintenanceGuidanceForAppliances, filterPendingGuidance, applyDeferrals } from "@/lib/maintenance-guidance";
 import { currentMonthKey } from "@/lib/french-dates";
 import { touchAccountActivity } from "@/lib/account-activity";
 import { auth } from "@/lib/auth/server";
@@ -68,14 +69,18 @@ export default async function Home() {
   const placesData = await Promise.all(
     orderedPlaces.map(async (place) => {
       const placeAppliances = appliances.filter((a) => a.placeId === place.id);
-      const [obligationRecords, completions] = await Promise.all([
+      const [obligationRecords, completions, deferrals] = await Promise.all([
         getObligationRecordsForPlace(place.id),
         getMaintenanceCompletionsForPlace(place.id, month),
+        getMaintenanceDeferralsForPlace(place.id),
       ]);
       const counts = getObligationCountsForAppliances(placeAppliances, obligationRecords);
-      const maintenanceDueCount = filterPendingGuidance(
-        getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel),
-        completions
+      const maintenanceDueCount = applyDeferrals(
+        filterPendingGuidance(getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel), completions),
+        placeAppliances,
+        place.maintenanceLevel,
+        deferrals,
+        month
       ).length;
       return { place, appliances: placeAppliances, obligationRecords, counts, maintenanceDueCount };
     })

@@ -13,9 +13,12 @@ import {
 } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
 import { recordMaintenanceCompletion } from "@/lib/maintenance-completions";
-import { currentMonthKey } from "@/lib/french-dates";
+import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
+import { canDeferMaintenanceTask } from "@/lib/maintenance-guidance";
+import { currentMonthKey, addMonthsToKey } from "@/lib/french-dates";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
 import { getEquipmentType } from "@/lib/equipment-types";
+import { getMaintenanceTask } from "@/lib/maintenance-tasks";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
 import { MAINTENANCE_LEVELS, type MaintenanceLevel } from "@/lib/maintenance-levels";
 import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
@@ -186,6 +189,25 @@ export async function markObligationDone(
 // current month (spec's "Lifespan maintenance, in the app only").
 export async function markMaintenanceTaskDone(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {
   await recordMaintenanceCompletion({ applianceId, maintenanceTaskId, doneMonth: currentMonthKey() });
+  // Resets the deferral cycle: a later new occurrence must not inherit this one's
+  // origin_month (canDeferMaintenanceTask's cap would otherwise start already spent).
+  await clearMaintenanceDeferral(applianceId, maintenanceTaskId);
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
+}
+
+export async function deferMaintenanceTaskAction(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {
+  const task = getMaintenanceTask(maintenanceTaskId);
+  if (!task) return;
+  const now = currentMonthKey();
+  const existing = await getMaintenanceDeferral(applianceId, maintenanceTaskId);
+  if (!canDeferMaintenanceTask(task, existing, now)) return;
+  await deferMaintenanceTask({
+    applianceId,
+    maintenanceTaskId,
+    originMonth: existing?.originMonth ?? now,
+    deferredToMonth: addMonthsToKey(now, 1),
+  });
   revalidatePath("/");
   revalidatePath(`/places/${placeId}`);
 }

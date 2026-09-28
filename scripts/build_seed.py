@@ -12,6 +12,12 @@ Sheets are read by header name, so reordering columns is safe.
 """
 import json
 import re
+import unicodedata
+
+
+def plain(text):
+    """Strip accents, so text rules read 'Août à octobre' like 'Aout a octobre'."""
+    return "".join(c for c in unicodedata.normalize("NFD", text or "") if unicodedata.category(c) != "Mn")
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -100,10 +106,16 @@ MONTH_NUM = {"janvier": 1, "fevrier": 2, "mars": 3, "avril": 4, "mai": 5, "juin"
 SEASON_NUM = {"printemps": [3, 4, 5], "ete": [6, 7, 8], "automne": [9, 10, 11], "hiver": [12, 1, 2]}
 
 
+# Text-keyed tables are read accent-insensitively: keys and looked-up values both go through plain().
+CAT_KEY, PHOTO_TARGET, QUESTION_BLOCKS, ANSWER_TYPES, DATE_KINDS = (
+    {plain(k): v for k, v in table.items()}
+    for table in (CAT_KEY, PHOTO_TARGET, QUESTION_BLOCKS, ANSWER_TYPES, DATE_KINDS))
+
+
 def season_months(text):
     """Months (1-12) when a task applies, parsed from the workbook's season text.
     'Aout a octobre' -> [8, 9, 10]; 'Octobre a avril' wraps; seasons expand; [] = all year."""
-    t = re.sub(r"\(.*?\)", " ", (text or "").lower())
+    t = re.sub(r"\(.*?\)", " ", plain(text).lower())
     if "hors" in t:  # 'Hors hiver', 'Hors saison de chauffe' : tout sauf une periode -> toute l'annee
         return []
     tok = re.findall(r"[a-z]+", t)
@@ -158,7 +170,7 @@ def frequency(task_id, months, season):
         return "threshold"
     if months is not None and months < 0.1:
         return "per_use"
-    s = (season or "").lower()
+    s = plain(season).lower()
     if months == 12 and any(w in s for w in MONTH_WORDS):
         return "season_anchor"
     return "every_n_months"
@@ -168,7 +180,7 @@ def expand_ids(text):
     """'CH-01 a CH-03, ECS-03' -> ['CH-01', 'CH-02', 'CH-03', 'ECS-03']."""
     text = text or ""
     ids = []
-    for pre, a, b in re.findall(r"\b([A-Z]{2,5})-(\d{2}) a \1-(\d{2})\b", text):
+    for pre, a, b in re.findall(r"\b([A-Z]{2,5})-(\d{2}) [aà] \1-(\d{2})\b", text):
         ids += [f"{pre}-{n:02d}" for n in range(int(a), int(b) + 1)]
     ids += re.findall(r"\b[A-Z]{2,5}-\d{2}\b", text)
     return sorted(set(ids), key=ids.index)
@@ -176,7 +188,7 @@ def expand_ids(text):
 
 def status_key(text):
     for prefix, key in SOURCE_STATUS:
-        if (text or "").startswith(prefix):
+        if plain(text).startswith(prefix):
             return key
     return "to_document"
 
@@ -197,7 +209,7 @@ def main():
         assert r["Categorie"] in CAT_KEY, f"{r['ID']}: unknown category {r['Categorie']!r}"
         equipment.append({
             "id": r["ID"],
-            "category": CAT_KEY[r["Categorie"]],
+            "category": CAT_KEY[plain(r["Categorie"])],
             "technical_group": r["Groupe technique"],
             "label": r["Equipement"],
             "lifespan": r["Duree de vie"],
@@ -209,7 +221,7 @@ def main():
             "indicative_pro_cost": r["Cout pro indicatif"],
             "risk_if_neglected": r["Enjeu si neglige"],
             "mvp_priority": r["Priorite MVP"],
-            "nameplate": {"photo_target": PHOTO_TARGET[r["Cible photo"]],
+            "nameplate": {"photo_target": PHOTO_TARGET[plain(r["Cible photo"])],
                           "location": r["Ou trouver la plaque (generique)"],
                           "fields": r["Champs a lire"], "tip": r["Astuce / alternative"]},
         })
@@ -269,8 +281,8 @@ def main():
         if r["ID"] not in by_id:
             skip = [{"question": part.split(" = ", 1)[0], "answer": part.split(" = ", 1)[1]}
                     for part in split(r["Ne pas poser si"], " ; ")]
-            by_id[r["ID"]] = {"id": r["ID"], "block": QUESTION_BLOCKS[r["Bloc"]], "order": r["Ordre"],
-                              "question": r["Question"], "answer_type": ANSWER_TYPES[r["Type de reponse"]],
+            by_id[r["ID"]] = {"id": r["ID"], "block": QUESTION_BLOCKS[plain(r["Bloc"])], "order": r["Ordre"],
+                              "question": r["Question"], "answer_type": ANSWER_TYPES[plain(r["Type de reponse"])],
                               "skip_if": skip or None, "answers": []}
             questionnaire["questions"].append(by_id[r["ID"]])
         follow_up = None
@@ -291,7 +303,7 @@ def main():
     date_questions = []
     for r in rows(wb["Questions de date"]):
         date_questions.append({"key": r["Cle"], "tasks": split(r["Taches"], ", "), "appliance": r["Appareil"],
-                               "question": r["Question"], "kind": DATE_KINDS[r["Type"]],
+                               "question": r["Question"], "kind": DATE_KINDS[plain(r["Type"])],
                                "interval_label": r["Delai"], "note": r["Note"]})
 
     brands = []

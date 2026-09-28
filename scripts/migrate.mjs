@@ -249,6 +249,39 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON maintenance_completions TO authenticated`);
 
+  // "Reporter" (spec's monthly guidance): defers a lifespan task's guidance by one
+  // calendar month at a time. origin_month is fixed at the first defer of a cycle
+  // (untouched by the ON CONFLICT below) so canDeferMaintenanceTask can cap the total
+  // shift at under one full frequency interval away from where the task was actually
+  // due — cleared on completion (src/app/actions.ts markMaintenanceTaskDone) so a later
+  // occurrence starts its own cycle instead of inheriting a spent one.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS maintenance_deferrals (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      origin_month TEXT NOT NULL,
+      deferred_to_month TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id)
+    )
+  `);
+  await client.query(`ALTER TABLE maintenance_deferrals ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS maintenance_deferrals_isolation ON maintenance_deferrals`);
+  await client.query(`
+    CREATE POLICY maintenance_deferrals_isolation ON maintenance_deferrals
+      FOR ALL
+      USING (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_deferrals.appliance_id AND p.account_id = auth.uid()
+      ))
+      WITH CHECK (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_deferrals.appliance_id AND p.account_id = auth.uid()
+      ))
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON maintenance_deferrals TO authenticated`);
+
   // --- One-time data conversions (journaled in schema_migrations, run at most once) ---
 
   // T-083 changed meaning (chantier 1): it used to be the annual battery check, it is
