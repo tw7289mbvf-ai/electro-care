@@ -34,7 +34,7 @@ export function ApplianceEntretienSection({
         <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Entretien</h3>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           Aucun geste indispensable pour cet appareil. Passez au niveau {upgradeLevelLabel} pour voir{" "}
-          {upgradeTaskCount === 1 ? "son" : "ses"} {upgradeTaskCount} geste{upgradeTaskCount > 1 ? "s" : ""} d&apos;entretien.
+          {upgradeTaskCount === 1 ? "son geste d'entretien" : `ses ${upgradeTaskCount} gestes d'entretien`}.
         </p>
       </section>
     );
