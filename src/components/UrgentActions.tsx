@@ -16,7 +16,7 @@ export function UrgentActions({ placesData }: { placesData: PlaceData[] }) {
         .flatMap((appliance) => {
           if (!appliance.equipmentTypeId) return [];
           const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
-          return getObligationsForAppliance(appliance.equipmentTypeId, records)
+          return getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw)
             .filter((o) => o.status === "overdue")
             .map((o) => ({ appliance, ...o }));
         })

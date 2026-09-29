@@ -17,7 +17,7 @@ export function ObligationsBlock({
     .flatMap((appliance) => {
       if (!appliance.equipmentTypeId) return [];
       const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
-      return getObligationsForAppliance(appliance.equipmentTypeId, records).map((obligation) => ({
+      return getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw).map((obligation) => ({
         appliance,
         ...obligation,
       }));

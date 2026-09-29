@@ -3,14 +3,23 @@ import { getEquipmentType } from "@/lib/equipment-types";
 import { getMaintenanceTask, getTrackedLegalTasks, type MaintenanceTask } from "@/lib/maintenance-tasks";
 import { getLegalObligationsForType, type LegalObligation } from "@/lib/legal-obligations";
 
-export type ObligationStatus = "up_to_date" | "to_schedule" | "overdue" | "to_confirm";
+// "not_applicable" (spec's "Actions and colours"): a power-conditional obligation
+// (climatisation fixe, PAC air-air, chauffe-eau thermodynamique, PAC piscine) whose
+// appliance is below the 4 kW threshold — grey, and left out of the compliance count,
+// same as "to_schedule".
+export type ObligationStatus = "up_to_date" | "to_schedule" | "overdue" | "to_confirm" | "not_applicable";
 
 export const OBLIGATION_STATUS_LABELS: Record<ObligationStatus, string> = {
   up_to_date: "À jour",
   to_schedule: "À planifier",
   overdue: "En retard",
   to_confirm: "À confirmer",
+  not_applicable: "Non concerné",
 };
+
+// Below this, a conditional obligation (climatisation fixe, PAC air-air, chauffe-eau
+// thermodynamique, PAC piscine) doesn't apply at all (spec's "Actions and colours").
+export const CONDITIONAL_POWER_THRESHOLD_KW = 4;
 
 // REGLE-01's graded answer to a date question when there is no exact date: 'recent'
 // (fait recemment / date inconnue, a confirmer), 'old' (plus ancien que le delai, ou une
@@ -61,7 +70,8 @@ function computeStatusAndDueDate(
   equipmentType: EquipmentType,
   task: MaintenanceTask,
   record: ApplianceObligationRecord | undefined,
-  today: string
+  today: string,
+  powerKw: number | null
 ): {
   status: ObligationStatus;
   dueDate: string | null;
@@ -70,8 +80,16 @@ function computeStatusAndDueDate(
   completedOn: string | null;
   providerName: string | null;
 } {
+  // Power known: below the threshold the obligation doesn't apply at all; at or above
+  // it, the appliance is treated exactly like a legalStatus "yes" one from here on
+  // (falls through to the checks below instead of returning).
   if (equipmentType.legalStatus === "conditional") {
-    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold", completedOn: null, providerName: null };
+    if (powerKw === null) {
+      return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold", completedOn: null, providerName: null };
+    }
+    if (powerKw < CONDITIONAL_POWER_THRESHOLD_KW) {
+      return { status: "not_applicable", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
+    }
   }
   if (record?.knownDueDate) {
     return {
@@ -112,6 +130,7 @@ function computeStatusAndDueDate(
 export function getObligationsForAppliance(
   equipmentTypeId: string,
   records: ApplianceObligationRecord[],
+  powerKw: number | null = null,
   today: string = getTodayInFrance()
 ): ObligationView[] {
   const tasks = getTrackedLegalTasks(equipmentTypeId);
@@ -124,7 +143,8 @@ export function getObligationsForAppliance(
       equipmentType,
       task,
       record,
-      today
+      today,
+      powerKw
     );
     return {
       task,
@@ -146,7 +166,8 @@ const STATUS_URGENCY: Record<ObligationStatus, number> = {
   overdue: 0,
   to_confirm: 1,
   to_schedule: 2,
-  up_to_date: 3,
+  not_applicable: 3,
+  up_to_date: 4,
 };
 
 export function compareObligationsByUrgency(a: ObligationView, b: ObligationView): number {
@@ -174,7 +195,7 @@ export function countObligationsByStatus(obligations: ObligationView[]): Obligat
 // place's or every place's. An appliance with no equipment_type_id has no tracked
 // obligations and is skipped, same as countObligationsByStatus's caller does elsewhere.
 export function getObligationCountsForAppliances(
-  appliances: { id: string; equipmentTypeId: string | null }[],
+  appliances: { id: string; equipmentTypeId: string | null; powerKw: number | null }[],
   obligationRecords: ApplianceObligationRecord[],
   today: string = getTodayInFrance()
 ): ObligationCounts {
@@ -182,7 +203,9 @@ export function getObligationCountsForAppliances(
   for (const appliance of appliances) {
     if (!appliance.equipmentTypeId) continue;
     const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
-    const c = countObligationsByStatus(getObligationsForAppliance(appliance.equipmentTypeId, records, today));
+    const c = countObligationsByStatus(
+      getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw, today)
+    );
     counts.overdue += c.overdue;
     counts.toConfirm += c.toConfirm;
     counts.upToDate += c.upToDate;

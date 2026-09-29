@@ -24,6 +24,7 @@ import { MaintenanceLevelOptions } from "@/components/MaintenanceLevelOptions";
 import { InvoiceImportFlow } from "@/components/InvoiceImportFlow";
 import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
 import type { InvoiceImportMode } from "@/lib/invoice-extraction";
+import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
 
 type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireAnswer };
 // REGLE-03: a hearth appliance (poele, insert, chaudiere) created alongside its flue
@@ -31,10 +32,6 @@ type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireA
 type PendingDateAsk =
   | { kind: "single"; taskId: string; equipmentTypeId: string; dq: DateQuestion }
   | { kind: "combined"; taskIds: [string, string]; dq: DateQuestion };
-// A date question's answer: a precise date (last_service_date), a fixed due date
-// (known_due_date — an expiry, or a vehicle's registration + threshold), or (REGLE-01)
-// a graded answer with no exact date.
-type DateAnswerResult = { date: string } | { dueDate: string } | { confidence: "recent" | "old" | "never" | "compliant" };
 
 // Nothing is written to the database until the final recap confirmation (see spec's
 // "Back button and recap"). Each fully-answered question becomes one entry here; "Précédent"
@@ -119,14 +116,6 @@ function withLevelGate(
   return next;
 }
 
-// The "jamais, elle/il a moins de N ans" branch (vehicle_inspection): wording and
-// threshold are seed-authored (seed/date_questions.json's note field), copied here
-// since the seed has no structured field for either.
-const VEHICLE_YOUNG_OPTION: Record<string, { label: string; years: number }> = {
-  "T-152": { label: "Jamais, elle a moins de 4 ans", years: 4 },
-  "T-153": { label: "Jamais, il a moins de 5 ans", years: 5 },
-};
-
 function isSkipped(
   question: QuestionnaireQuestion,
   answers: Record<string, string[]>,
@@ -188,11 +177,6 @@ function describeDateAnswer(d: QuestionnaireStepEffects["dateAnswers"][number]):
   if (d.confidence === "old") return kind === "yes_no" ? "non déclaré" : "fait, il y a plus longtemps que le délai";
   if (d.confidence === "recent") return kind === "yes_no" ? "à confirmer" : "date à préciser plus tard";
   return "jamais fait ou inconnu";
-}
-
-function addYearsIso(isoDate: string, years: number): string {
-  const [y, m, d] = isoDate.split("-");
-  return `${Number(y) + years}-${m}-${d}`;
 }
 
 const CARD_CLASS =
