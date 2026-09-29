@@ -154,6 +154,26 @@ export async function updateAppliance(
   return toAppliance(rows[0]);
 }
 
+// The orange "Mettre à jour" power-threshold window (spec's "Actions and colours") only
+// ever resolves the power, so it writes just that column — never the full replace
+// `updateAppliance` does, which would blank out brand/model/etc. left unset by this
+// narrower form. Has the same effect as entering the power in the appliance card
+// (spec: "entering the power in the appliance card has the same effect").
+export async function setAppliancePowerKw(id: string, powerKw: number): Promise<Appliance> {
+  const { sql } = await getAuthedContext();
+  const [existing] = (await sql`
+    SELECT field_sources FROM appliances WHERE id = ${id}
+  `) as { field_sources: Record<string, string> }[];
+  const fieldSources: Record<string, string> = { ...(existing?.field_sources ?? {}), power_kw: "manual" };
+  const rows = (await sql`
+    UPDATE appliances
+    SET power_kw = ${powerKw}, field_sources = ${JSON.stringify(fieldSources)}
+    WHERE id = ${id}
+    RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
+  `) as ApplianceRow[];
+  return toAppliance(rows[0]);
+}
+
 // The onboarding questionnaire never duplicates an appliance already in the place: if
 // one of this exact equipment type exists there, it's reused (and its obligations, if
 // any, are left untouched) rather than creating a second record. A plain

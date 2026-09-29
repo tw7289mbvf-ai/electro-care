@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useRef, useState, useTransition } from "react";
-import { markObligationDone } from "@/app/actions";
+import { markObligationDone, resolveObligationDate, resolveObligationThreshold } from "@/app/actions";
 import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions } from "@/lib/french-dates";
+import { ObligationDateResolver } from "@/components/ObligationDateResolver";
+import type { DateAnswerResult } from "@/lib/date-answer";
 import type { ObligationStatus } from "@/lib/obligations";
 
 function currentMonthValue() {
@@ -12,10 +13,73 @@ function currentMonthValue() {
   return { month: String(now.getMonth() + 1).padStart(2, "0"), year: String(now.getFullYear()) };
 }
 
-// Spec "Actions by status": green shows no button; red (or "à planifier", no data yet)
-// shows "C'est fait"; orange shows "Mettre à jour" — a date picker when the obligation
-// is missing a date, or a link to the appliance card when it's missing the power/
-// threshold that would resolve legalStatus "conditional".
+const BUTTON_CLASS =
+  "rounded-md bg-emerald-600 px-2 py-0.5 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-60";
+const GHOST_BUTTON_CLASS =
+  "rounded-md border border-zinc-300 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
+const INPUT_CLASS =
+  "rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900 outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+const WINDOW_CLASS =
+  "flex w-full flex-col gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 text-xs dark:border-zinc-700 dark:bg-zinc-900";
+
+// Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): "Moins de
+// 4 kW" and "4 kW ou plus" store a nominal figure on the safe side of the 4 kW
+// threshold (3.9 / 4) rather than the appliance's real, unknown wattage — the appliance
+// card can always be corrected later with the exact figure. "Je ne sais pas" leaves the
+// power unset and simply closes the window (nothing to save: same as before).
+function PowerThresholdForm({ applianceId, onDone, onCancel }: { applianceId: string; onDone: () => void; onCancel: () => void }) {
+  const [figure, setFigure] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const figureNum = Number(figure);
+  const figureValid = figure.trim() !== "" && Number.isFinite(figureNum) && figureNum > 0;
+
+  function submit(powerKw: number) {
+    startTransition(async () => {
+      await resolveObligationThreshold(applianceId, powerKw);
+      onDone();
+    });
+  }
+
+  return (
+    <div className={WINDOW_CLASS}>
+      <p className="text-zinc-700 dark:text-zinc-300">
+        Quelle est la puissance du groupe extérieur ? (inscrite sur sa plaque ; pour un multisplit, c&apos;est la
+        puissance de l&apos;unité extérieure qui compte.)
+      </p>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" disabled={isPending} className={GHOST_BUTTON_CLASS} onClick={() => submit(3.9)}>
+          Moins de 4 kW
+        </button>
+        <button type="button" disabled={isPending} className={GHOST_BUTTON_CLASS} onClick={() => submit(4)}>
+          4 kW ou plus
+        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2">
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          value={figure}
+          onChange={(e) => setFigure(e.target.value)}
+          placeholder="Puissance (kW)"
+          className={INPUT_CLASS}
+        />
+        <button type="button" disabled={isPending || !figureValid} className={BUTTON_CLASS} onClick={() => submit(figureNum)}>
+          {isPending ? "…" : "Valider"}
+        </button>
+      </div>
+      <button type="button" onClick={onCancel} className="self-start text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+        Je ne sais pas
+      </button>
+    </div>
+  );
+}
+
+// Spec "Actions and colours": green shows no button, red shows "C'est fait", orange
+// shows "Mettre à jour" — a window aimed at exactly what's missing, never the generic
+// appliance form: the obligation's own date question when it's a date, or the power
+// question when it's a threshold. "Non concerné" (power below the threshold), like "À
+// jour", shows no button.
 export function MarkDoneButton({
   applianceId,
   maintenanceTaskId,
@@ -35,7 +99,7 @@ export function MarkDoneButton({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  if (status === "up_to_date") return null;
+  if (status === "up_to_date" || status === "not_applicable") return null;
 
   const isToConfirm = status === "to_confirm";
   const label = isToConfirm ? "Mettre à jour" : "C'est fait";
@@ -43,19 +107,30 @@ export function MarkDoneButton({
     ? "shrink-0 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950"
     : "shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950";
 
-  if (isToConfirm && toConfirmReason === "threshold") {
-    return (
-      <Link href={`/appliances/${applianceId}`} className={closedButtonClass}>
-        {label}
-      </Link>
-    );
-  }
-
   if (!open) {
     return (
       <button type="button" onClick={() => setOpen(true)} className={closedButtonClass}>
         {label}
       </button>
+    );
+  }
+
+  if (isToConfirm && toConfirmReason === "threshold") {
+    return <PowerThresholdForm applianceId={applianceId} onDone={() => setOpen(false)} onCancel={() => setOpen(false)} />;
+  }
+
+  if (isToConfirm && toConfirmReason === "date") {
+    const handleAnswer = (result: DateAnswerResult) => {
+      startTransition(async () => {
+        await resolveObligationDate(applianceId, maintenanceTaskId, result);
+        setOpen(false);
+      });
+    };
+    return (
+      <div className={WINDOW_CLASS}>
+        <ObligationDateResolver taskId={maintenanceTaskId} onAnswer={handleAnswer} onCancel={() => setOpen(false)} />
+        {isPending && <p className="text-zinc-400 dark:text-zinc-500">…</p>}
+      </div>
     );
   }
 
@@ -71,7 +146,7 @@ export function MarkDoneButton({
           setOpen(false);
         });
       }}
-      className="flex w-full flex-col gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 text-xs dark:border-zinc-700 dark:bg-zinc-900"
+      className={WINDOW_CLASS}
     >
       <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
       <input
@@ -79,14 +154,14 @@ export function MarkDoneButton({
         value={providerName}
         onChange={(e) => setProviderName(e.target.value)}
         placeholder="Prestataire (facultatif)"
-        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900 outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+        className={INPUT_CLASS}
       />
       <input
         type="text"
         value={providerContact}
         onChange={(e) => setProviderContact(e.target.value)}
         placeholder="E-mail ou téléphone du prestataire (facultatif)"
-        className="rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900 outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+        className={INPUT_CLASS}
       />
       <div className="flex flex-col gap-1">
         {/* Mock: opens the file picker, but nothing is ever read from or sent with this
@@ -108,11 +183,7 @@ export function MarkDoneButton({
         )}
       </div>
       <div className="flex items-center gap-2">
-        <button
-          type="submit"
-          disabled={isPending || !iso}
-          className="rounded-md bg-emerald-600 px-2 py-0.5 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
-        >
+        <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}
         </button>
         <button

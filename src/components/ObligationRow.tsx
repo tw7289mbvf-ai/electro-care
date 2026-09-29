@@ -9,6 +9,7 @@ export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
   to_schedule: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300",
   overdue: "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300",
   to_confirm: "bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300",
+  not_applicable: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
 };
 
 // Shared by ObligationsBlock (a place's or an appliance's full list) and UrgentActions
@@ -24,6 +25,11 @@ export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & 
           {getApplianceDisplayName(appliance)}
         </span>
         <span className="text-sm text-zinc-500 dark:text-zinc-400">— {row.task.title}</span>
+        {row.status === "not_applicable" && (
+          <span className="text-sm text-zinc-400 dark:text-zinc-500">
+            (puissance sous le seuil de 4 kW)
+          </span>
+        )}
         {row.dueDate && (
           <span className="text-sm text-zinc-500 dark:text-zinc-400">
             ({row.status === "overdue" ? "depuis" : "prochaine échéance :"} {formatFrenchMonthYear(row.dueDate)})

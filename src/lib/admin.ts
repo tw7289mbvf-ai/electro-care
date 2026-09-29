@@ -138,15 +138,20 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
   const rows = (await sql`SELECT * FROM admin_obligation_rows()`) as {
     appliance_id: string;
     equipment_type_id: string;
+    power_kw: string | number | null;
     maintenance_task_id: string | null;
     last_service_date: string | Date | null;
     known_due_date: string | Date | null;
     service_confidence: string | null;
   }[];
 
-  const byAppliance = new Map<string, { equipmentTypeId: string; records: ApplianceObligationRecord[] }>();
+  const byAppliance = new Map<string, { equipmentTypeId: string; powerKw: number | null; records: ApplianceObligationRecord[] }>();
   for (const row of rows) {
-    const entry = byAppliance.get(row.appliance_id) ?? { equipmentTypeId: row.equipment_type_id, records: [] };
+    const entry = byAppliance.get(row.appliance_id) ?? {
+      equipmentTypeId: row.equipment_type_id,
+      powerKw: row.power_kw === null ? null : Number(row.power_kw),
+      records: [],
+    };
     if (row.maintenance_task_id) {
       entry.records.push({
         applianceId: row.appliance_id,
@@ -165,8 +170,8 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
   }
 
   const totals: ObligationCounts = { overdue: 0, toConfirm: 0, upToDate: 0 };
-  for (const { equipmentTypeId, records } of byAppliance.values()) {
-    const c = countObligationsByStatus(getObligationsForAppliance(equipmentTypeId, records));
+  for (const { equipmentTypeId, powerKw, records } of byAppliance.values()) {
+    const c = countObligationsByStatus(getObligationsForAppliance(equipmentTypeId, records, powerKw));
     totals.overdue += c.overdue;
     totals.toConfirm += c.toConfirm;
     totals.upToDate += c.upToDate;

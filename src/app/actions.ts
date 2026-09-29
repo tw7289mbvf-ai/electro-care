@@ -7,6 +7,7 @@ import {
   deleteAppliance,
   getAppliance,
   importApplianceFromInvoice,
+  setAppliancePowerKw,
   updateAppliance as updateApplianceRecord,
 } from "@/lib/appliances";
 import {
@@ -19,6 +20,7 @@ import {
   updatePlaceMaintenanceLevel,
 } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
+import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
 import { recordMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
 import { canDeferMaintenanceTask } from "@/lib/maintenance-guidance";
@@ -223,6 +225,35 @@ export async function markObligationDone(
     providerName: providerName?.trim() || null,
     providerContact: providerContact?.trim() || null,
   });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): resolves
+// every conditional obligation on this appliance at once, the same as entering the
+// power directly in the appliance card.
+export async function resolveObligationThreshold(applianceId: string, powerKw: number): Promise<void> {
+  if (!Number.isFinite(powerKw) || powerKw <= 0) {
+    throw new Error("Puissance invalide");
+  }
+  const appliance = await setAppliancePowerKw(applianceId, powerKw);
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// Orange "Mettre à jour" — a date to pin down (spec's "Actions and colours"): re-asks
+// the obligation's own date question, never the plain last-service month "C'est fait"
+// uses (a different question, e.g. yes_no or an expiry date rather than "when did you
+// last do it").
+export async function resolveObligationDate(
+  applianceId: string,
+  maintenanceTaskId: string,
+  result: DateAnswerResult
+): Promise<void> {
+  await setApplianceObligation({ applianceId, maintenanceTaskId, ...dateAnswerToObligationFields(result) });
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);

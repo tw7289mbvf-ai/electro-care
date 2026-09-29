@@ -537,15 +537,23 @@ try {
   await client.query(`REVOKE ALL ON FUNCTION admin_account_activity() FROM PUBLIC`);
   await client.query(`GRANT EXECUTE ON FUNCTION admin_account_activity() TO authenticated`);
 
-  // Anonymous obligation rows (appliance id, equipment type, task dates/confidence —
-  // no name, brand, room, place or account) for every account at once, so the app can
-  // recompute "obligations by status" with the exact same getObligationsForAppliance
-  // logic the dashboard already uses, instead of duplicating that logic in SQL.
+  // Anonymous obligation rows (appliance id, equipment type, power, task dates/
+  // confidence — no name, brand, room, place or account) for every account at once, so
+  // the app can recompute "obligations by status" with the exact same
+  // getObligationsForAppliance logic the dashboard already uses, instead of duplicating
+  // that logic in SQL. power_kw is a technical spec figure, not the provider contact
+  // details barred from admin_obligation_rows() by the comment above (appliance_obligations
+  // table) — it's needed here too, to resolve a conditional obligation's threshold the
+  // same way the dashboard does.
+  //
+  // DROP first: CREATE OR REPLACE can't change a function's RETURNS TABLE columns.
+  await client.query(`DROP FUNCTION IF EXISTS admin_obligation_rows()`);
   await client.query(`
-    CREATE OR REPLACE FUNCTION admin_obligation_rows()
+    CREATE FUNCTION admin_obligation_rows()
     RETURNS TABLE (
       appliance_id UUID,
       equipment_type_id TEXT,
+      power_kw NUMERIC,
       maintenance_task_id TEXT,
       last_service_date DATE,
       known_due_date DATE,
@@ -554,7 +562,7 @@ try {
     BEGIN
       PERFORM _require_admin();
       RETURN QUERY
-      SELECT a.id, a.equipment_type_id, o.maintenance_task_id, o.last_service_date,
+      SELECT a.id, a.equipment_type_id, a.power_kw, o.maintenance_task_id, o.last_service_date,
              o.known_due_date, o.service_confidence
       FROM appliances a
       LEFT JOIN appliance_obligations o ON o.appliance_id = a.id
