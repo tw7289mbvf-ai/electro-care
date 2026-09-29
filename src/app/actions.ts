@@ -21,7 +21,7 @@ import {
 } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
 import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
-import { recordMaintenanceCompletion } from "@/lib/maintenance-completions";
+import { recordMaintenanceCompletion, editMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
 import { canDeferMaintenanceTask } from "@/lib/maintenance-guidance";
 import { currentMonthKey, addMonthsToKey } from "@/lib/french-dates";
@@ -231,6 +231,32 @@ export async function markObligationDone(
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
 }
 
+// "Modifier" on a past legal intervention (spec's "Managing Appliances"): same fields as
+// "C'est fait", but stamps modified_at so the fiche shows "modifiée le …".
+export async function editObligation(
+  applianceId: string,
+  maintenanceTaskId: string,
+  month: string,
+  providerName: string | null,
+  providerContact: string | null
+): Promise<void> {
+  if (!MONTH_PATTERN.test(month)) {
+    throw new Error("Mois invalide");
+  }
+  await setApplianceObligation({
+    applianceId,
+    maintenanceTaskId,
+    lastServiceDate: `${month}-01`,
+    providerName: providerName?.trim() || null,
+    providerContact: providerContact?.trim() || null,
+    modified: true,
+  });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
 // Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): resolves
 // every conditional obligation on this appliance at once, the same as entering the
 // power directly in the appliance card.
@@ -269,6 +295,32 @@ export async function markMaintenanceTaskDone(applianceId: string, maintenanceTa
   await clearMaintenanceDeferral(applianceId, maintenanceTaskId);
   revalidatePath("/");
   revalidatePath(`/places/${placeId}`);
+}
+
+// "Modifier" on a past realisation (spec's "Managing Appliances" / "Fiche de tâche"):
+// corrects the month of an existing completion, stamping modified_at.
+export async function editMaintenanceCompletionAction(input: {
+  id: string;
+  applianceId: string;
+  maintenanceTaskId: string;
+  month: string;
+  placeId: string;
+}): Promise<{ error?: string }> {
+  if (!MONTH_PATTERN.test(input.month)) {
+    return { error: "Mois invalide" };
+  }
+  const result = await editMaintenanceCompletion({
+    id: input.id,
+    applianceId: input.applianceId,
+    maintenanceTaskId: input.maintenanceTaskId,
+    doneMonth: input.month,
+  });
+  if (result.error) return result;
+  revalidatePath("/");
+  revalidatePath(`/appliances/${input.applianceId}`);
+  revalidatePath(`/appliances/${input.applianceId}/tasks/${input.maintenanceTaskId}`);
+  revalidatePath(`/places/${input.placeId}`);
+  return {};
 }
 
 export async function deferMaintenanceTaskAction(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {

@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { getAppliance } from "@/lib/appliances";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { getMaintenanceTask, PERFORMER_LABELS } from "@/lib/maintenance-tasks";
-import { isMaintenanceTaskDoneThisMonth } from "@/lib/maintenance-completions";
-import { currentMonthKey } from "@/lib/french-dates";
+import { getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
+import { formatFrenchMonthYear, currentMonthKey } from "@/lib/french-dates";
 import { MarkMaintenanceDoneButton } from "@/components/MarkMaintenanceDoneButton";
+import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -30,20 +31,22 @@ export default async function MaintenanceTaskPage({
     notFound();
   }
   // Fiche de tâche only covers "Entretien" (non-legal) tasks — legal obligations live on
-  // the place page via ObligationsBlock/MarkDoneButton instead.
+  // the appliance card via ObligationsBlock/MarkDoneButton instead.
   const task = getMaintenanceTask(taskId);
   if (!task || task.legal === "yes" || task.equipmentTypeId !== appliance.equipmentTypeId) {
     notFound();
   }
 
-  const done = await isMaintenanceTaskDoneThisMonth(appliance.id, task.id, currentMonthKey());
+  const latestCompletions = await getLatestMaintenanceCompletionsForAppliance(appliance.id);
+  const latest = latestCompletions.find((c) => c.maintenanceTaskId === task.id) ?? null;
+  const doneThisMonth = latest?.doneMonth === currentMonthKey();
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
         <header>
           <Link
-            href={`/places/${appliance.placeId}`}
+            href={`/appliances/${appliance.id}`}
             className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
           >
             ← Retour
@@ -53,6 +56,33 @@ export default async function MaintenanceTaskPage({
           </h1>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{getApplianceDisplayName(appliance)}</p>
         </header>
+
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Dernière réalisation
+          </h2>
+          {latest ? (
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-zinc-700 dark:text-zinc-300">Fait en {formatFrenchMonthYear(latest.doneMonth)}</span>
+              <ModifyMaintenanceCompletionButton
+                completionId={latest.id}
+                applianceId={appliance.id}
+                maintenanceTaskId={task.id}
+                doneMonth={latest.doneMonth}
+                modifiedAt={latest.modifiedAt}
+                placeId={appliance.placeId}
+              />
+            </div>
+          ) : (
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">Jamais réalisée pour l&apos;instant.</p>
+          )}
+          <MarkMaintenanceDoneButton
+            applianceId={appliance.id}
+            maintenanceTaskId={task.id}
+            placeId={appliance.placeId}
+            done={doneThisMonth}
+          />
+        </section>
 
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
           <span className={`w-fit rounded-md px-2 py-0.5 text-xs font-medium ${PERFORMER_STYLES[task.performer]}`}>
@@ -72,13 +102,6 @@ export default async function MaintenanceTaskPage({
             </p>
           )}
         </section>
-
-        <MarkMaintenanceDoneButton
-          applianceId={appliance.id}
-          maintenanceTaskId={task.id}
-          placeId={appliance.placeId}
-          done={done}
-        />
       </main>
     </div>
   );

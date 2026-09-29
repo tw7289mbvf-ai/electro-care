@@ -29,7 +29,7 @@ export function MarkMaintenanceDoneButton({
       onClick={() =>
         startTransition(async () => {
           await markMaintenanceTaskDone(applianceId, maintenanceTaskId, placeId);
-          router.push(`/places/${placeId}`);
+          router.push(`/appliances/${applianceId}`);
         })
       }
       className="self-start rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"

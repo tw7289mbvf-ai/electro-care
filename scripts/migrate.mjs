@@ -220,6 +220,10 @@ try {
   // policy: "Jamais le contenu de vos lieux").
   await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS provider_name TEXT`);
   await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS provider_contact TEXT`);
+  // "Modifier" on a past intervention (spec's "Managing Appliances"): set only by the
+  // edit flow, never by the original "C'est fait"/"Mettre à jour" write, so the fiche can
+  // show "modifiée le …" solely for a record someone went back and corrected.
+  await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS modified_at TIMESTAMPTZ`);
   await client.query(`ALTER TABLE appliance_obligations ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS appliance_obligations_isolation ON appliance_obligations`);
   await client.query(`
@@ -249,6 +253,9 @@ try {
       UNIQUE (appliance_id, maintenance_task_id, done_month)
     )
   `);
+  // "Modifier" on a past realisation (spec's "Managing Appliances"): same rule as
+  // appliance_obligations.modified_at above — set only by the edit flow.
+  await client.query(`ALTER TABLE maintenance_completions ADD COLUMN IF NOT EXISTS modified_at TIMESTAMPTZ`);
   await client.query(`ALTER TABLE maintenance_completions ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS maintenance_completions_isolation ON maintenance_completions`);
   await client.query(`

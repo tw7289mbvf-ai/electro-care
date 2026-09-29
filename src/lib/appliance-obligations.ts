@@ -9,6 +9,7 @@ type ObligationRow = {
   service_confidence: string | null;
   provider_name: string | null;
   provider_contact: string | null;
+  modified_at: string | Date | null;
 };
 
 function toDateOnlyOrNull(value: string | Date | null): string | null {
@@ -20,6 +21,11 @@ function toDateOnlyOrNull(value: string | Date | null): string | null {
   return `${year}-${month}-${day}`;
 }
 
+function toIsoDateTimeOrNull(value: string | Date | null): string | null {
+  if (value === null) return null;
+  return typeof value === "string" ? value : value.toISOString();
+}
+
 function toRecord(row: ObligationRow): ApplianceObligationRecord {
   return {
     applianceId: row.appliance_id,
@@ -29,6 +35,7 @@ function toRecord(row: ObligationRow): ApplianceObligationRecord {
     serviceConfidence: row.service_confidence as ApplianceObligationRecord["serviceConfidence"],
     providerName: row.provider_name,
     providerContact: row.provider_contact,
+    modifiedAt: toIsoDateTimeOrNull(row.modified_at),
   };
 }
 
@@ -36,7 +43,7 @@ export async function getObligationRecordsForPlace(placeId: string): Promise<App
   const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT ao.appliance_id, ao.maintenance_task_id, ao.last_service_date, ao.known_due_date,
-           ao.service_confidence, ao.provider_name, ao.provider_contact
+           ao.service_confidence, ao.provider_name, ao.provider_contact, ao.modified_at
     FROM appliance_obligations ao
     JOIN appliances a ON a.id = ao.appliance_id
     WHERE a.place_id = ${placeId}
@@ -48,7 +55,7 @@ export async function getObligationRecordsForAppliance(applianceId: string): Pro
   const { sql } = await getAuthedContext();
   const rows = (await sql`
     SELECT appliance_id, maintenance_task_id, last_service_date, known_due_date,
-           service_confidence, provider_name, provider_contact
+           service_confidence, provider_name, provider_contact, modified_at
     FROM appliance_obligations
     WHERE appliance_id = ${applianceId}
   `) as ObligationRow[];
@@ -70,22 +77,28 @@ export async function setApplianceObligation(input: {
   serviceConfidence?: "recent" | "old" | "never" | "compliant" | null;
   providerName?: string | null;
   providerContact?: string | null;
+  // "Modifier" (spec's "Managing Appliances"): true only for the edit flow, so
+  // modified_at ("modifiée le …") stays unset for a fresh "C'est fait"/"Mettre à jour"
+  // answer, including one that overwrites a previously modified record for a new cycle.
+  modified?: boolean;
 }): Promise<void> {
   const { sql } = await getAuthedContext();
+  const modifiedAt = input.modified ? new Date().toISOString() : null;
   await sql`
     INSERT INTO appliance_obligations (
       appliance_id, maintenance_task_id, last_service_date, known_due_date, service_confidence,
-      provider_name, provider_contact
+      provider_name, provider_contact, modified_at
     )
     VALUES (
       ${input.applianceId}, ${input.maintenanceTaskId}, ${input.lastServiceDate ?? null}, ${input.knownDueDate ?? null},
-      ${input.serviceConfidence ?? null}, ${input.providerName ?? null}, ${input.providerContact ?? null}
+      ${input.serviceConfidence ?? null}, ${input.providerName ?? null}, ${input.providerContact ?? null}, ${modifiedAt}
     )
     ON CONFLICT (appliance_id, maintenance_task_id) DO UPDATE SET
       last_service_date = EXCLUDED.last_service_date,
       known_due_date = EXCLUDED.known_due_date,
       service_confidence = EXCLUDED.service_confidence,
       provider_name = EXCLUDED.provider_name,
-      provider_contact = EXCLUDED.provider_contact
+      provider_contact = EXCLUDED.provider_contact,
+      modified_at = EXCLUDED.modified_at
   `;
 }
