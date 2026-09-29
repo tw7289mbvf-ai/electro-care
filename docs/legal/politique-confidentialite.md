@@ -1,6 +1,6 @@
 # Politique de confidentialité
 
-*Dernière mise à jour : 28 septembre 2026*
+*Dernière mise à jour : 29 septembre 2026*
 
 Electro Care vous aide à suivre les obligations d'entretien de votre logement. Cette page explique quelles données nous utilisons, pourquoi, et comment exercer vos droits.
 
@@ -13,6 +13,7 @@ Mathieu Decrop, éditeur d'Electro Care, 43 rue Rosa Bonheur, 33000 Bordeaux. Co
 - **Votre compte** : adresse e-mail et mot de passe. Le mot de passe n'est conservé que sous forme d'empreinte chiffrée : personne ne peut le lire, pas même nous. Ces données servent à créer et sécuriser votre compte.
 - **Vos lieux** : nom, adresse postale (facultative), code postal, commune, type de logement et niveau d'entretien choisi. La commune et le type de logement déterminent vos obligations ; l'adresse sert à préremplir vos demandes d'intervention.
 - **Vos appareils et leur suivi** : type d'appareil, marque et modèle s'ils sont renseignés, dates d'entretien, réponses au questionnaire. Ils servent à calculer vos échéances et votre entretien.
+- **Vos prestataires** : le nom et, si vous les indiquez, l'e-mail ou le téléphone des professionnels qui interviennent chez vous. Ils servent à garder l'historique de vos interventions.
 - **Votre activité** : la date de votre dernière connexion, enregistrée au plus une fois par jour, pour mesurer l'usage du service.
 - **Vos demandes** : les messages envoyés avec « Contacter l'administrateur » et les demandes de suppression de compte, pour y répondre.
 

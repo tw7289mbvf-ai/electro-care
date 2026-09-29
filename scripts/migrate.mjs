@@ -147,6 +147,11 @@ try {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
+  // Warranty end date (spec "Import from Invoices (planned)"): an invoice provides it
+  // directly, so it's tracked in field_sources like purchase_date rather than derived
+  // from purchase_date + a guessed duration.
+  await client.query(`ALTER TABLE appliances ADD COLUMN IF NOT EXISTS warranty_end DATE`);
+
   // Each value must be a JSON string from enums.field_source: jsonb_typeof rejects
   // null, numbers, booleans, objects and arrays before the enum-membership check runs.
   await client.query(`
@@ -208,6 +213,13 @@ try {
     ALTER TABLE appliance_obligations ADD CONSTRAINT appliance_obligations_service_confidence_check
       CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never', 'compliant'))
   `);
+  // "C'est fait" window (spec's "Managing Appliances"): who did the intervention, for the
+  // household's own history ("Fait en octobre 2026 par Chauffage Dupont"). Deliberately
+  // never selected by admin_obligation_rows() below or any other admin-facing query —
+  // the admin surface stays limited to counts and account-level metadata (spec/privacy
+  // policy: "Jamais le contenu de vos lieux").
+  await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS provider_name TEXT`);
+  await client.query(`ALTER TABLE appliance_obligations ADD COLUMN IF NOT EXISTS provider_contact TEXT`);
   await client.query(`ALTER TABLE appliance_obligations ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS appliance_obligations_isolation ON appliance_obligations`);
   await client.query(`

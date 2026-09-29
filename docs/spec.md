@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 44). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 45). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -141,9 +141,21 @@ What a signed-in user sees first.
 Tapping an appliance opens its card.
 
 - **Edit**: brand, model, power, purchase date, room, and the fields that resolve an orange status, without going back through the questionnaire.
-- **Mark as done**: from the appliance card, or straight from an obligation on the dashboard ("C'est fait"). The user gives the month of the intervention, defaulting to the current month; the status turns green and the next due date is recalculated. Proof can be attached once documents exist.
+- **Mark a legal obligation as done**: "C'est fait" opens a window with the month and year of the intervention (current month by default), the provider's name and, optionally, their email or phone, and "Ajouter l'attestation". Until document storage exists, the attestation button is a mock: it opens the file picker but sends and stores nothing, and says document upload is coming soon. The obligation then shows "Fait en octobre 2026 par Chauffage Dupont", also in the expanded "À jour" group. Each provider entered is a tradesperson the platform can later invite.
+- **Mark a maintenance task as done**: one tap, no window.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
+
+## Import from Invoices (planned)
+
+An invoice or a photo of it fills in appliances automatically, instead of entering them one by one.
+
+- **What it reads**: each appliance on the document, matched to an equipment type of the reference data, with brand, exact model, purchase date and warranty end.
+- **The user confirms**: "Nous avons trouvé 6 appareils", each line ticked or not before being added; existing appliances of the same type are completed rather than duplicated.
+- **Where it is offered**: in the questionnaire, just before the appliance checklist, and from the dashboard or a place page to complete or add appliances.
+- **Nothing is stored**: the file is read, then deleted; only the confirmed appliance data is kept.
+- **Reading is done by an AI service** (Anthropic API), paid per use with a spending cap set by the owner. It must be listed in the privacy policy, since invoices carry names and addresses.
+- **Test case**: a Boulanger invoice listing six appliances (oven, fridge-freezer, washing machine, dishwasher, dryer, microwave) with their exact references.
 
 ## Reminders
 

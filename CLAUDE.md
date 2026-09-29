@@ -61,12 +61,25 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   plaintext in any output — mask it (e.g. keep host/user, replace the password segment)
   before printing, or redirect straight to a scratch file the same way.
 - `neonctl branches create` prints a `connection_uris` block with the new branch's
-  `neondb_owner` password by default — always redirect its output (e.g. `> /dev/null`
-  or to a scratch file never read back) instead of letting it print. A branch also
-  inherits its parent's role passwords at creation time, so a leaked branch password is
-  also the parent's password at that moment — rotating the parent afterward doesn't
+  `neondb_owner` password by default. Never rely on a text filter (`grep -v`, `sed`) to
+  strip it before printing — a header's exact wording/casing can miss the filter and
+  the password prints anyway (found 2026-09-29: `grep -v -i "connection_uri"` didn't
+  match the actual "Connection Uri" header). Always pass `-o json` and pipe through
+  `jq` keeping only the fields you need (e.g. `jq '{id: .branch.id, name:
+  .branch.name}'`), never a field holding a connection string or password — this is a
+  structural guarantee (the field is never selected) rather than a hope that a pattern
+  matches. The same rule applies to any other command whose output can carry a secret,
+  including a role's `reset_password` call below: prefer discarding the whole response
+  (`> /dev/null`) over filtering it, since with only a status code to report there is
+  nothing a filter needs to remove in the first place. A branch also inherits its
+  parent's role passwords at creation time, so a leaked branch password is also the
+  parent's password at that moment — rotating the parent afterward doesn't
   retroactively protect the branch, which still answers to the old password until its
-  own is separately reset or the branch is deleted (found 2026-09-27, chantier 3).
+  own is separately reset (`POST
+  /projects/{project_id}/branches/{branch_id}/roles/{role_name}/reset_password` via
+  `neonctl api`, output discarded the same way) or the branch is deleted (found
+  2026-09-27, chantier 3; both passwords rotated 2026-09-29 after the filter miss
+  above).
 - Always test schema/data changes on a disposable Neon branch (or, for a structural
   change like adding RLS to a table, a disposable project) first — see the
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —

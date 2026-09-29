@@ -24,6 +24,8 @@ export type ApplianceObligationRecord = {
   lastServiceDate: string | null;
   knownDueDate: string | null;
   serviceConfidence: ServiceConfidence;
+  providerName: string | null;
+  providerContact: string | null;
 };
 
 export type ObligationView = {
@@ -36,6 +38,11 @@ export type ObligationView = {
   // — this says which, so the button can route to the right place. Null otherwise.
   toConfirmReason: "date" | "threshold" | null;
   legalObligations: LegalObligation[];
+  // "Fait en {mois} par {prestataire}" (spec's "Managing Appliances"): only set when the
+  // status comes from an actual recorded service (last_service_date), never from a fixed
+  // known_due_date or a REGLE-01 confidence grade — those aren't "an intervention we did".
+  completedOn: string | null;
+  providerName: string | null;
 };
 
 // Due dates are calendar dates with no time component; comparing them against a UTC
@@ -55,9 +62,16 @@ function computeStatusAndDueDate(
   task: MaintenanceTask,
   record: ApplianceObligationRecord | undefined,
   today: string
-): { status: ObligationStatus; dueDate: string | null; priority: boolean; toConfirmReason: "date" | "threshold" | null } {
+): {
+  status: ObligationStatus;
+  dueDate: string | null;
+  priority: boolean;
+  toConfirmReason: "date" | "threshold" | null;
+  completedOn: string | null;
+  providerName: string | null;
+} {
   if (equipmentType.legalStatus === "conditional") {
-    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold" };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold", completedOn: null, providerName: null };
   }
   if (record?.knownDueDate) {
     return {
@@ -65,25 +79,34 @@ function computeStatusAndDueDate(
       dueDate: record.knownDueDate,
       priority: false,
       toConfirmReason: null,
+      completedOn: null,
+      providerName: null,
     };
   }
   if (record?.serviceConfidence === "compliant") {
-    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null };
+    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
   }
   if (record?.serviceConfidence === "recent") {
-    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date" };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date", completedOn: null, providerName: null };
   }
   if (record?.serviceConfidence === "old") {
-    return { status: "overdue", dueDate: null, priority: false, toConfirmReason: null };
+    return { status: "overdue", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
   }
   if (record?.serviceConfidence === "never") {
-    return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null };
+    return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null, completedOn: null, providerName: null };
   }
   if (!record?.lastServiceDate) {
-    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null };
+    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
   }
   const dueDate = addMonths(record.lastServiceDate, task.frequency.months);
-  return { status: dueDate < today ? "overdue" : "up_to_date", dueDate, priority: false, toConfirmReason: null };
+  return {
+    status: dueDate < today ? "overdue" : "up_to_date",
+    dueDate,
+    priority: false,
+    toConfirmReason: null,
+    completedOn: record.lastServiceDate,
+    providerName: record.providerName,
+  };
 }
 
 export function getObligationsForAppliance(
@@ -97,13 +120,20 @@ export function getObligationsForAppliance(
 
   return tasks.map((task) => {
     const record = records.find((r) => r.maintenanceTaskId === task.id);
-    const { status, dueDate, priority, toConfirmReason } = computeStatusAndDueDate(equipmentType, task, record, today);
+    const { status, dueDate, priority, toConfirmReason, completedOn, providerName } = computeStatusAndDueDate(
+      equipmentType,
+      task,
+      record,
+      today
+    );
     return {
       task,
       status,
       dueDate,
       priority,
       toConfirmReason,
+      completedOn,
+      providerName,
       legalObligations: getLegalObligationsForType(equipmentTypeId),
     };
   });

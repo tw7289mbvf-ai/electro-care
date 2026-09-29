@@ -14,6 +14,8 @@ import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import { getMaintenanceGuidanceForAppliances, filterPendingGuidance, applyDeferrals } from "@/lib/maintenance-guidance";
 import { currentMonthKey } from "@/lib/french-dates";
 import { touchAccountActivity } from "@/lib/account-activity";
+import { getInvoiceImportMode } from "@/lib/invoice-extraction";
+import { requireAdminRoute } from "@/lib/admin";
 import { auth } from "@/lib/auth/server";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -76,6 +78,8 @@ export default async function Home() {
   }
 
   await touchAccountActivity();
+  const isAdmin = (await requireAdminRoute()) !== null;
+  const invoiceImportMode = getInvoiceImportMode(isAdmin);
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
   const orderedPlaces = [...places].sort(comparePlacesByPropertyType);
   const month = currentMonthKey();
@@ -122,6 +126,16 @@ export default async function Home() {
             </p>
           </div>
           <div className="flex items-center gap-4">
+            {invoiceImportMode === "disabled" ? (
+              <span className="text-sm text-zinc-400 dark:text-zinc-500">Import de factures : bientôt disponible</span>
+            ) : (
+              <Link
+                href="/import-invoice"
+                className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+              >
+                Importer une facture
+              </Link>
+            )}
             <Link
               href="/settings"
               className="text-sm font-medium text-zinc-500 underline-offset-2 hover:underline dark:text-zinc-400"

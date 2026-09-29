@@ -16,6 +16,8 @@ import {
 } from "@/lib/maintenance-guidance";
 import { estimateMaintenanceMinutesForAllLevels } from "@/lib/maintenance-levels";
 import { currentMonthKey } from "@/lib/french-dates";
+import { getInvoiceImportMode } from "@/lib/invoice-extraction";
+import { requireAdminRoute } from "@/lib/admin";
 import { ObligationsBlock } from "@/components/ObligationsBlock";
 import { MaintenanceGuidanceList } from "@/components/MaintenanceGuidanceList";
 import { MaintenanceLevelPicker } from "@/components/MaintenanceLevelPicker";
@@ -62,6 +64,8 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   const levelEstimates = estimateMaintenanceMinutesForAllLevels(
     appliances.map((a) => a.equipmentTypeId).filter((typeId): typeId is string => typeId !== null)
   );
+  const isAdmin = (await requireAdminRoute()) !== null;
+  const invoiceImportMode = getInvoiceImportMode(isAdmin);
 
   const byCategory = CATEGORIES.map((category) => ({
     category,
@@ -114,12 +118,26 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
               Appareils
             </h2>
-            <Link
-              href={`/places/${place.id}/appliances/new`}
-              className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              Ajouter un appareil
-            </Link>
+            <div className="flex items-baseline gap-3">
+              {invoiceImportMode === "disabled" ? (
+                <span className="text-sm text-zinc-400 dark:text-zinc-500">
+                  Import de factures : bientôt disponible
+                </span>
+              ) : (
+                <Link
+                  href={`/places/${place.id}/import-invoice`}
+                  className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                >
+                  Importer une facture
+                </Link>
+              )}
+              <Link
+                href={`/places/${place.id}/appliances/new`}
+                className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+              >
+                Ajouter un appareil
+              </Link>
+            </div>
           </div>
 
           {byCategory.length === 0 ? (
