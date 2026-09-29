@@ -85,6 +85,13 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
   and delete that branch/project once it's served its purpose: one created before a
   password rotation still answers to the old password after the rotation.
+- No test — manual browser QA, `scripts/test-isolation.mjs`, a one-off debug script,
+  anything — ever writes to a real account, including mine, even on `main` (the only
+  database there is): always sign up a fresh throwaway account for the run and delete
+  it afterward (`neonctl neon-auth user delete <id>`, cascades everything), the same
+  pattern `scripts/test-isolation.mjs` already uses. Only touch a real account's data
+  on my explicit request, and only ever by reading it, never by writing, unless I
+  explicitly ask for a write too.
 - `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
   tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
