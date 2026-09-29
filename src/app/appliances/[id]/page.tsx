@@ -19,7 +19,12 @@ import {
   canDeferMaintenanceTask,
 } from "@/lib/maintenance-guidance";
 import { getRoutineMaintenanceTasks } from "@/lib/maintenance-tasks";
-import { isTaskIncludedAtLevel } from "@/lib/maintenance-levels";
+import {
+  isTaskIncludedAtLevel,
+  countMaintenanceTasksAtLevel,
+  MAX_MAINTENANCE_LEVEL,
+  MAINTENANCE_LEVEL_LABELS,
+} from "@/lib/maintenance-levels";
 import { currentMonthKey } from "@/lib/french-dates";
 import { updateAppliance } from "@/app/actions";
 
@@ -70,6 +75,14 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
     ? getRoutineMaintenanceTasks(appliance.equipmentTypeId).filter((t) => isTaskIncludedAtLevel(t.level, place.maintenanceLevel))
     : [];
 
+  const currentLevelTaskCount = appliance.equipmentTypeId
+    ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, place.maintenanceLevel)
+    : 0;
+  const upgradeTaskCount =
+    appliance.equipmentTypeId && currentLevelTaskCount === 0 && place.maintenanceLevel !== MAX_MAINTENANCE_LEVEL
+      ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, MAX_MAINTENANCE_LEVEL)
+      : 0;
+
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
@@ -100,6 +113,8 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
           pending={guidance}
           realised={realised}
           deferrableTaskKeys={deferrableTaskKeys}
+          upgradeTaskCount={upgradeTaskCount || undefined}
+          upgradeLevelLabel={upgradeTaskCount > 0 ? MAINTENANCE_LEVEL_LABELS[MAX_MAINTENANCE_LEVEL] : undefined}
         />
 
         <ApplianceRoutinesSection applianceId={appliance.id} routines={routines} />

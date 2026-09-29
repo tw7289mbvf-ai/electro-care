@@ -1,5 +1,5 @@
 import enumsSeed from "../../seed/enums.json";
-import { getLifespanMaintenanceTasks, type MaintenanceTask } from "@/lib/maintenance-tasks";
+import { getLifespanMaintenanceTasks, getRoutineMaintenanceTasks, type MaintenanceTask } from "@/lib/maintenance-tasks";
 
 export const MAINTENANCE_LEVELS = enumsSeed.maintenance_level.map((l) => l.key) as [string, ...string[]];
 
@@ -45,4 +45,15 @@ export function estimateMaintenanceMinutesForAllLevels(equipmentTypeIds: string[
   return Object.fromEntries(
     MAINTENANCE_LEVELS.map((level) => [level, estimateMaintenanceMinutesPerMonth(equipmentTypeIds, level)])
   ) as Record<MaintenanceLevel, number>;
+}
+
+export const MAX_MAINTENANCE_LEVEL: MaintenanceLevel = MAINTENANCE_LEVELS[MAINTENANCE_LEVELS.length - 1];
+
+// Total "gestes d'entretien" (lifespan tasks + routines, legal obligations tracked
+// separately) an equipment type carries at a level. Used by the appliance fiche's empty
+// state (spec "Managing Appliances": "Aucun geste indispensable pour cet appareil.
+// Passez au niveau Recommandé pour voir ses N gestes d'entretien.").
+export function countMaintenanceTasksAtLevel(equipmentTypeId: string, level: MaintenanceLevel): number {
+  const tasks = [...getLifespanMaintenanceTasks(equipmentTypeId), ...getRoutineMaintenanceTasks(equipmentTypeId)];
+  return tasks.filter((t) => isTaskIncludedAtLevel(t.level, level)).length;
 }

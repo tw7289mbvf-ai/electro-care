@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 45). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 49). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -78,7 +78,7 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 - **Orange covers two cases**: a threshold to settle (is the air conditioner 4 kW or more?), or a date to pin down (recent, but which month?).
 - **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); and last, a single "never or I don't know" button (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
 - **Dates in French**: picked from two lists (month in words, year) and shown as "septembre 2026", never with a day.
-- **Actions and colours**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", whether a date or the power is missing. Status badges use the three status colours, "À confirmer" in orange like its status. Buttons keep one colour everywhere: "C'est fait" in green, "Mettre à jour" in orange like the status it resolves, and "Reporter" in orange; the two orange buttons never appear side by side, one in obligations, the other in the monthly maintenance.
+- **Actions and colours**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", which opens a window aimed at what is missing, never the generic appliance form. For a power threshold, it asks "Quelle est la puissance du groupe extérieur ?" (read on its nameplate; for a multisplit, the outdoor unit's power is what counts), with "Moins de 4 kW", "4 kW ou plus", a figure, or "Je ne sais pas". For a date, it asks the obligation's own date question. Below the threshold, the obligation becomes "Non concerné", shown in grey and left out of the compliance count; entering the power in the appliance card has the same effect. Status badges use the three status colours, "À confirmer" in orange like its status. Buttons keep one colour everywhere: "C'est fait" in green, "Mettre à jour" in orange like the status it resolves, and "Reporter" in orange; the two orange buttons never appear side by side, one in obligations, the other in the monthly maintenance.
 - **Bridge to professionals**: most obligations need a professional, so an obligation coming due offers the ready-to-send request today, and booking a listed professional once the professional side exists.
 
 ## Onboarding Questionnaire
@@ -140,9 +140,11 @@ What a signed-in user sees first.
 
 Tapping an appliance opens its card.
 
-- **Edit**: brand, model, power, purchase date, room, and the fields that resolve an orange status, without going back through the questionnaire.
+- **Every line opens a card**: tapping any obligation or maintenance task, whatever its status, up to date included, opens its card.
+- **Top of the appliance card, everything about its upkeep**: first its legal obligations, each with its status, next due date and last intervention (month, provider, contact, attestation); then its maintenance tasks at the place's level, split into "À faire" (due this month or overdue, with "C'est fait" and "Reporter") and "Réalisé" (last completion and next date); then its routines, more frequent than monthly. An appliance without legal obligations, such as a washing machine, shows its maintenance directly. An appliance with no task at the place's level shows "Aucun geste indispensable pour cet appareil. Passez au niveau Recommandé pour voir ses 2 gestes d'entretien.", with the actual count, rather than an empty block. "Modifier" on a past intervention or completion makes it editable behind a warning, "Attention : vous modifiez une intervention déjà enregistrée. Le statut et la prochaine échéance seront recalculés.", then a confirmation. A modified entry shows "modifiée le …", so the record stays credible as proof.
+- **Bottom of the appliance card, the product**: brand, model, power, purchase date, warranty end and room, editable.
 - **Mark a legal obligation as done**: "C'est fait" opens a window with the month and year of the intervention (current month by default), the provider's name and, optionally, their email or phone, and "Ajouter l'attestation". Until document storage exists, the attestation button is a mock: it opens the file picker but sends and stores nothing, and says document upload is coming soon. The obligation then shows "Fait en octobre 2026 par Chauffage Dupont", also in the expanded "À jour" group. Each provider entered is a tradesperson the platform can later invite.
-- **Mark a maintenance task as done**: one tap, no window.
+- **Mark a maintenance task as done**: one tap, no window. The task card shows the last completion at the top, editable behind the same warning, and the procedure below.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
 
