@@ -8,59 +8,57 @@ import type { MaintenanceDeferral } from "@/lib/maintenance-deferrals";
 
 export type MaintenanceGuidanceItem = { appliance: Appliance; task: MaintenanceTask };
 
-export type RealisedMaintenanceItem = {
+export type UpcomingMaintenanceItem = {
   task: MaintenanceTask;
-  completion: MaintenanceCompletion;
+  completion: MaintenanceCompletion | null;
   nextDate: string;
 };
 
-// "Réalisé" (spec's "Managing Appliances"): one appliance's lifespan tasks, at the
-// place's level, that already have a completion and aren't in this month's "À faire"
-// (pendingTaskIds) — the last completion plus the date it's next due, "last date +
-// frequency", the same arithmetic a legal obligation's due date uses.
-export function getRealisedMaintenanceForAppliance(
+// The month (1-12) after `month`, wrapping into next year past December — used below to
+// find a seasonal task's next occurrence, never the same month as "today" (a task not in
+// "À faire" this month either isn't seasoned for it, or was just completed for it: either
+// way its next occurrence is strictly later, not now).
+function nextSeasonOccurrence(seasonMonths: number[], monthKey: string): string {
+  // An all-year task (seasonMonths: []) is always "due" per isTaskDueInMonth, so a never-
+  // completed one is always in "À faire" already — this branch is defensive, not a real
+  // path, since Math.min(...[]) would otherwise be Infinity.
+  if (seasonMonths.length === 0) return monthKey;
+  const [yearStr, monthStr] = monthKey.split("-");
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const upcomingThisYear = seasonMonths.filter((m) => m > month);
+  if (upcomingThisYear.length > 0) {
+    return `${year}-${String(Math.min(...upcomingThisYear)).padStart(2, "0")}`;
+  }
+  return `${year + 1}-${String(Math.min(...seasonMonths)).padStart(2, "0")}`;
+}
+
+// Appliance fiche's "À venir" (spec's "Managing Appliances", revision 51): every lifespan
+// task at the place's level not already in "À faire" (pendingTaskIds — this month's due-
+// or-overdue set, same engine as the place page's "Entretien du mois", so the two never
+// disagree), each shown exactly once. A task with a completion carries it plus its next
+// date ("last date + frequency", the same arithmetic a legal obligation's due date uses);
+// a task never completed at all — e.g. FROID-01's T-042, seasoned to April/October —
+// carries no completion but still its next seasonal occurrence, so it stays visible
+// instead of silently waiting for its window with no trace on the appliance's own fiche.
+export function getUpcomingApplianceTasks(
   appliance: Appliance,
   level: MaintenanceLevel,
   latestCompletions: MaintenanceCompletion[],
-  pendingTaskIds: Set<string>
-): RealisedMaintenanceItem[] {
+  pendingTaskIds: Set<string>,
+  monthKey: string
+): UpcomingMaintenanceItem[] {
   if (!appliance.equipmentTypeId) return [];
   const completionByTask = new Map(latestCompletions.map((c) => [c.maintenanceTaskId, c]));
   return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
     .filter((task) => isTaskIncludedAtLevel(task.level, level) && !pendingTaskIds.has(task.id))
-    .flatMap((task) => {
-      const completion = completionByTask.get(task.id);
-      if (!completion) return [];
-      return [{ task, completion, nextDate: addMonths(`${completion.doneMonth}-01`, task.frequency.months) }];
+    .map((task) => {
+      const completion = completionByTask.get(task.id) ?? null;
+      const nextDate = completion
+        ? addMonths(`${completion.doneMonth}-01`, task.frequency.months)
+        : nextSeasonOccurrence(task.seasonMonths, monthKey);
+      return { task, completion, nextDate };
     });
-}
-
-// Appliance fiche's "À faire", on top of getMaintenanceGuidanceForAppliances: a task
-// that has never been completed at all, even outside its season_months window. The
-// place's own monthly list stays scoped to this month's actionable items by design
-// (spec's "Reminders": "timed by each task's frequency and the months it applies to"),
-// but the fiche is the appliance's whole upkeep picture — a never-done essential task
-// (e.g. FROID-01's T-042, seasoned to April/October) must not silently wait for its
-// next window to even be visible, the way ObligationRow never hides a legal obligation
-// just because its due date isn't close. A task that already has a completion is
-// excluded here regardless of month: it belongs to "Réalisé" instead, which already
-// computes its own next date and shows unconditionally of season.
-export function getNeverCompletedApplianceTasks(
-  appliance: Appliance,
-  level: MaintenanceLevel,
-  latestCompletions: MaintenanceCompletion[],
-  alreadyPendingTaskIds: Set<string>
-): MaintenanceGuidanceItem[] {
-  if (!appliance.equipmentTypeId) return [];
-  const completedTaskIds = new Set(latestCompletions.map((c) => c.maintenanceTaskId));
-  return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
-    .filter(
-      (task) =>
-        isTaskIncludedAtLevel(task.level, level) &&
-        !completedTaskIds.has(task.id) &&
-        !alreadyPendingTaskIds.has(task.id)
-    )
-    .map((task) => ({ appliance, task }));
 }
 
 // "Entretien" section: non-legal maintenance tasks (getLifespanMaintenanceTasks already
