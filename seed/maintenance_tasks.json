@@ -949,7 +949,7 @@
     "procedure": "Débrancher l'appareil, l'écarter du mur, aspirer la grille noire à l'arrière ou la grille basse selon le modèle. Laisser 5 cm de dégagement à l'arrière.",
     "if_skipped": "Condenseur empoussiere = jusqu'à 25% de surconsommation et compresseur en surchauffe",
     "legal": "no",
-    "level": "recommended",
+    "level": "essential",
     "active_minutes": 15
   },
   {
@@ -1017,7 +1017,7 @@
     "procedure": "Transférer les denrées dans une glacière, débrancher, laisser fondre porte ouverte avec des serpillières au sol. Ne jamais gratter avec un objet métallique : perforer le circuit condamné l'appareil.",
     "if_skipped": "3 mm de givre = environ 30% de surconsommation",
     "legal": "no",
-    "level": "recommended",
+    "level": "essential",
     "active_minutes": 30
   },
   {
@@ -2891,7 +2891,7 @@
     "procedure": "Aspirer la grille de ventilation sous le plan de travail ou en façade de meuble. L'électronique d'induction chauffe et doit respirer.",
     "if_skipped": "Surchauffe de l'électronique, coupures en cours de cuisson, carte à remplacer",
     "legal": "no",
-    "level": "recommended",
+    "level": "essential",
     "active_minutes": 15
   },
   {

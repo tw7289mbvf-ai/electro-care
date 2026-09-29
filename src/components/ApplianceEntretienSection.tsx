@@ -14,14 +14,31 @@ export function ApplianceEntretienSection({
   pending,
   realised,
   deferrableTaskKeys,
+  upgradeTaskCount,
+  upgradeLevelLabel,
 }: {
   applianceId: string;
   placeId: string;
   pending: MaintenanceGuidanceItem[];
   realised: RealisedMaintenanceItem[];
   deferrableTaskKeys: Set<string>;
+  // Set when this appliance has zero tasks at the place's current level but some at the
+  // top level, so the section can point the user there instead of rendering nothing.
+  upgradeTaskCount?: number;
+  upgradeLevelLabel?: string;
 }) {
-  if (pending.length === 0 && realised.length === 0) return null;
+  if (pending.length === 0 && realised.length === 0) {
+    if (!upgradeTaskCount || !upgradeLevelLabel) return null;
+    return (
+      <section className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Entretien</h3>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+          Aucun geste indispensable pour cet appareil. Passez au niveau {upgradeLevelLabel} pour voir{" "}
+          {upgradeTaskCount === 1 ? "son" : "ses"} {upgradeTaskCount} geste{upgradeTaskCount > 1 ? "s" : ""} d&apos;entretien.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
