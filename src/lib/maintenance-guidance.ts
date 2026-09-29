@@ -35,6 +35,34 @@ export function getRealisedMaintenanceForAppliance(
     });
 }
 
+// Appliance fiche's "À faire", on top of getMaintenanceGuidanceForAppliances: a task
+// that has never been completed at all, even outside its season_months window. The
+// place's own monthly list stays scoped to this month's actionable items by design
+// (spec's "Reminders": "timed by each task's frequency and the months it applies to"),
+// but the fiche is the appliance's whole upkeep picture — a never-done essential task
+// (e.g. FROID-01's T-042, seasoned to April/October) must not silently wait for its
+// next window to even be visible, the way ObligationRow never hides a legal obligation
+// just because its due date isn't close. A task that already has a completion is
+// excluded here regardless of month: it belongs to "Réalisé" instead, which already
+// computes its own next date and shows unconditionally of season.
+export function getNeverCompletedApplianceTasks(
+  appliance: Appliance,
+  level: MaintenanceLevel,
+  latestCompletions: MaintenanceCompletion[],
+  alreadyPendingTaskIds: Set<string>
+): MaintenanceGuidanceItem[] {
+  if (!appliance.equipmentTypeId) return [];
+  const completedTaskIds = new Set(latestCompletions.map((c) => c.maintenanceTaskId));
+  return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
+    .filter(
+      (task) =>
+        isTaskIncludedAtLevel(task.level, level) &&
+        !completedTaskIds.has(task.id) &&
+        !alreadyPendingTaskIds.has(task.id)
+    )
+    .map((task) => ({ appliance, task }));
+}
+
 // "Entretien" section: non-legal maintenance tasks (getLifespanMaintenanceTasks already
 // excludes legal obligations and routines more frequent than monthly) due this month per
 // their season_months window, and included at the place's chosen maintenance level.
