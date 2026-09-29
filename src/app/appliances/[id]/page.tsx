@@ -3,9 +3,24 @@ import { notFound } from "next/navigation";
 import { ApplianceEditForm } from "@/components/ApplianceEditForm";
 import { DeleteApplianceButton } from "@/components/DeleteApplianceButton";
 import { ObligationsBlock } from "@/components/ObligationsBlock";
+import { ApplianceEntretienSection } from "@/components/ApplianceEntretienSection";
+import { ApplianceRoutinesSection } from "@/components/ApplianceRoutinesSection";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { getAppliance } from "@/lib/appliances";
+import { getPlace } from "@/lib/places";
 import { getObligationRecordsForAppliance } from "@/lib/appliance-obligations";
+import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
+import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
+import {
+  getMaintenanceGuidanceForAppliances,
+  getRealisedMaintenanceForAppliance,
+  filterPendingGuidance,
+  applyDeferrals,
+  canDeferMaintenanceTask,
+} from "@/lib/maintenance-guidance";
+import { getRoutineMaintenanceTasks } from "@/lib/maintenance-tasks";
+import { isTaskIncludedAtLevel } from "@/lib/maintenance-levels";
+import { currentMonthKey } from "@/lib/french-dates";
 import { updateAppliance } from "@/app/actions";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +36,39 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
   if (!appliance) {
     notFound();
   }
-  const obligationRecords = await getObligationRecordsForAppliance(id);
+  const place = await getPlace(appliance.placeId);
+  if (!place) {
+    notFound();
+  }
+
+  const month = currentMonthKey();
+  const [obligationRecords, placeCompletions, placeDeferrals, latestCompletions] = await Promise.all([
+    getObligationRecordsForAppliance(id),
+    getMaintenanceCompletionsForPlace(appliance.placeId, month),
+    getMaintenanceDeferralsForPlace(appliance.placeId),
+    getLatestMaintenanceCompletionsForAppliance(id),
+  ]);
+  const completions = placeCompletions.filter((c) => c.applianceId === id);
+  const deferrals = placeDeferrals.filter((d) => d.applianceId === id);
+
+  const guidance = applyDeferrals(
+    filterPendingGuidance(getMaintenanceGuidanceForAppliances([appliance], place.maintenanceLevel), completions),
+    [appliance],
+    place.maintenanceLevel,
+    deferrals,
+    month
+  );
+  const deferralByTask = new Map(deferrals.map((d) => [d.maintenanceTaskId, d]));
+  const deferrableTaskKeys = new Set(
+    guidance
+      .filter(({ task }) => canDeferMaintenanceTask(task, deferralByTask.get(task.id) ?? null, month))
+      .map(({ task }) => task.id)
+  );
+  const pendingTaskIds = new Set(guidance.map(({ task }) => task.id));
+  const realised = getRealisedMaintenanceForAppliance(appliance, place.maintenanceLevel, latestCompletions, pendingTaskIds);
+  const routines = appliance.equipmentTypeId
+    ? getRoutineMaintenanceTasks(appliance.equipmentTypeId).filter((t) => isTaskIncludedAtLevel(t.level, place.maintenanceLevel))
+    : [];
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -46,6 +93,16 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
         </header>
 
         <ObligationsBlock appliances={[appliance]} obligationRecords={obligationRecords} placeChecks={[]} />
+
+        <ApplianceEntretienSection
+          applianceId={appliance.id}
+          placeId={appliance.placeId}
+          pending={guidance}
+          realised={realised}
+          deferrableTaskKeys={deferrableTaskKeys}
+        />
+
+        <ApplianceRoutinesSection applianceId={appliance.id} routines={routines} />
 
         <ApplianceEditForm appliance={appliance} action={updateAppliance.bind(null, appliance.id)} />
       </main>

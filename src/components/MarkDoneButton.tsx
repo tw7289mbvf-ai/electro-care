@@ -1,10 +1,12 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { markObligationDone, resolveObligationDate, resolveObligationThreshold } from "@/app/actions";
 import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions } from "@/lib/french-dates";
 import { ObligationDateResolver } from "@/components/ObligationDateResolver";
+import { AttestationMockButton } from "@/components/AttestationMockButton";
+import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS } from "@/components/inline-form-styles";
 import type { DateAnswerResult } from "@/lib/date-answer";
 import type { ObligationStatus } from "@/lib/obligations";
 
@@ -12,15 +14,6 @@ function currentMonthValue() {
   const now = new Date();
   return { month: String(now.getMonth() + 1).padStart(2, "0"), year: String(now.getFullYear()) };
 }
-
-const BUTTON_CLASS =
-  "rounded-md bg-emerald-600 px-2 py-0.5 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-60";
-const GHOST_BUTTON_CLASS =
-  "rounded-md border border-zinc-300 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
-const INPUT_CLASS =
-  "rounded-md border border-zinc-300 bg-white px-2 py-1 text-xs text-zinc-900 outline-none focus:border-emerald-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
-const WINDOW_CLASS =
-  "flex w-full flex-col gap-2 rounded-lg border border-zinc-200 bg-zinc-50 p-2.5 text-xs dark:border-zinc-700 dark:bg-zinc-900";
 
 // Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): "Moins de
 // 4 kW" and "4 kW ou plus" store a nominal figure on the safe side of the 4 kW
@@ -95,8 +88,6 @@ export function MarkDoneButton({
   const [value, setValue] = useState(currentMonthValue);
   const [providerName, setProviderName] = useState("");
   const [providerContact, setProviderContact] = useState("");
-  const [showUploadNotice, setShowUploadNotice] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
 
   if (status === "up_to_date" || status === "not_applicable") return null;
@@ -163,25 +154,7 @@ export function MarkDoneButton({
         placeholder="E-mail ou téléphone du prestataire (facultatif)"
         className={INPUT_CLASS}
       />
-      <div className="flex flex-col gap-1">
-        {/* Mock: opens the file picker, but nothing is ever read from or sent with this
-            input (no name attribute, value never inspected) — document storage doesn't
-            exist yet (spec's "Managing Appliances"). */}
-        <input ref={fileInputRef} type="file" className="hidden" tabIndex={-1} aria-hidden="true" />
-        <button
-          type="button"
-          onClick={() => {
-            fileInputRef.current?.click();
-            setShowUploadNotice(true);
-          }}
-          className="self-start text-xs font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-        >
-          Ajouter l&apos;attestation
-        </button>
-        {showUploadNotice && (
-          <p className="text-xs text-zinc-400 dark:text-zinc-500">Le dépôt des documents arrive bientôt.</p>
-        )}
-      </div>
+      <AttestationMockButton />
       <div className="flex items-center gap-2">
         <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}

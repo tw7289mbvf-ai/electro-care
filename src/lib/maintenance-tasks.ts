@@ -70,6 +70,13 @@ export function getLifespanMaintenanceTasks(equipmentTypeId: string): Maintenanc
   return ALL_TASKS.filter((t) => t.equipmentTypeId === equipmentTypeId && t.legal !== "yes" && t.frequency.months >= 1);
 }
 
+// "Routines" on the appliance card (spec's "Managing Appliances"): non-legal tasks more
+// frequent than monthly (weekly, per use) — the complement of getLifespanMaintenanceTasks
+// among non-legal tasks, informational only (no due date, no place-page guidance).
+export function getRoutineMaintenanceTasks(equipmentTypeId: string): MaintenanceTask[] {
+  return ALL_TASKS.filter((t) => t.equipmentTypeId === equipmentTypeId && t.legal !== "yes" && t.frequency.months < 1);
+}
+
 export function isTaskDueInMonth(task: MaintenanceTask, month: number): boolean {
   return task.seasonMonths.length === 0 || task.seasonMonths.includes(month);
 }

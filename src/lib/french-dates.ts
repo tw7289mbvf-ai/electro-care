@@ -21,6 +21,18 @@ export function formatFrenchMonthYear(isoDate: string): string {
   return `${FRENCH_MONTHS[Number(month) - 1]} ${year}`;
 }
 
+// An edit timestamp ("modifiée le …", spec's "Managing Appliances"), shown with the day
+// since it records when the correction was made, not the intervention's own month/year.
+export function formatFrenchDate(isoDateTime: string): string {
+  const date = new Date(isoDateTime);
+  const day = new Intl.DateTimeFormat("fr-FR", { timeZone: "Europe/Paris", day: "numeric" }).format(date);
+  const month = Number(
+    new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", month: "numeric" }).format(date)
+  );
+  const year = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric" }).format(date);
+  return `${day} ${FRENCH_MONTHS[month - 1]} ${year}`;
+}
+
 // Maintenance guidance is scheduled by calendar month in France (Europe/Paris), same
 // timezone reasoning as obligations.ts's getTodayInFrance.
 export function getCurrentMonthInFrance(): number {

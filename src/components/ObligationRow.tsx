@@ -1,7 +1,9 @@
+import Link from "next/link";
 import type { Appliance } from "@/lib/appliance-types";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { OBLIGATION_STATUS_LABELS, type ObligationStatus, type ObligationView } from "@/lib/obligations";
 import { MarkDoneButton } from "@/components/MarkDoneButton";
+import { ModifyObligationButton } from "@/components/ModifyObligationButton";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 
 export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
@@ -14,39 +16,55 @@ export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
 
 // Shared by ObligationsBlock (a place's or an appliance's full list) and UrgentActions
 // (the dashboard's overdue-only, grouped-by-place view) so both render the same row.
+// Spec "Managing Appliances": every line opens the appliance's fiche, whatever its
+// status — so the informational part is a Link, and the action buttons stay outside it
+// as siblings (a button nested in an anchor would fire both on one click).
 export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & ObligationView) {
   return (
     <li className="flex flex-col gap-1">
       <div className="flex flex-wrap items-center gap-2">
-        <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${OBLIGATION_STATUS_STYLES[row.status]}`}>
-          {OBLIGATION_STATUS_LABELS[row.status]}
-        </span>
-        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-          {getApplianceDisplayName(appliance)}
-        </span>
-        <span className="text-sm text-zinc-500 dark:text-zinc-400">— {row.task.title}</span>
-        {row.status === "not_applicable" && (
-          <span className="text-sm text-zinc-400 dark:text-zinc-500">
-            (puissance sous le seuil de 4 kW)
+        <Link href={`/appliances/${appliance.id}`} className="flex flex-wrap items-center gap-2 hover:underline">
+          <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${OBLIGATION_STATUS_STYLES[row.status]}`}>
+            {OBLIGATION_STATUS_LABELS[row.status]}
           </span>
-        )}
-        {row.dueDate && (
-          <span className="text-sm text-zinc-500 dark:text-zinc-400">
-            ({row.status === "overdue" ? "depuis" : "prochaine échéance :"} {formatFrenchMonthYear(row.dueDate)})
+          <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            {getApplianceDisplayName(appliance)}
           </span>
-        )}
-        {row.completedOn && (
-          <span className="text-sm text-zinc-500 dark:text-zinc-400">
-            Fait en {formatFrenchMonthYear(row.completedOn)}
-            {row.providerName ? ` par ${row.providerName}` : ""}
-          </span>
-        )}
+          <span className="text-sm text-zinc-500 dark:text-zinc-400">— {row.task.title}</span>
+          {row.status === "not_applicable" && (
+            <span className="text-sm text-zinc-400 dark:text-zinc-500">
+              (puissance sous le seuil de 4 kW)
+            </span>
+          )}
+          {row.dueDate && (
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              ({row.status === "overdue" ? "depuis" : "prochaine échéance :"} {formatFrenchMonthYear(row.dueDate)})
+            </span>
+          )}
+          {row.completedOn && (
+            <span className="text-sm text-zinc-500 dark:text-zinc-400">
+              Fait en {formatFrenchMonthYear(row.completedOn)}
+              {row.providerName ? ` par ${row.providerName}` : ""}
+              {row.providerContact ? ` (${row.providerContact})` : ""}
+            </span>
+          )}
+        </Link>
         <MarkDoneButton
           applianceId={appliance.id}
           maintenanceTaskId={row.task.id}
           status={row.status}
           toConfirmReason={row.toConfirmReason}
         />
+        {row.completedOn && (
+          <ModifyObligationButton
+            applianceId={appliance.id}
+            maintenanceTaskId={row.task.id}
+            completedOn={row.completedOn}
+            providerName={row.providerName}
+            providerContact={row.providerContact}
+            modifiedAt={row.modifiedAt}
+          />
+        )}
       </div>
       {row.legalObligations.map((obligation) =>
         obligation.risks ? (

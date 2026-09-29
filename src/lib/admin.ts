@@ -164,6 +164,7 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
         // true even if ObligationView's shape changes later.
         providerName: null,
         providerContact: null,
+        modifiedAt: null,
       });
     }
     byAppliance.set(row.appliance_id, entry);

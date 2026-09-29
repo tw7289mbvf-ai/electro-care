@@ -35,6 +35,7 @@ export type ApplianceObligationRecord = {
   serviceConfidence: ServiceConfidence;
   providerName: string | null;
   providerContact: string | null;
+  modifiedAt: string | null;
 };
 
 export type ObligationView = {
@@ -52,6 +53,10 @@ export type ObligationView = {
   // known_due_date or a REGLE-01 confidence grade — those aren't "an intervention we did".
   completedOn: string | null;
   providerName: string | null;
+  providerContact: string | null;
+  // "modifiée le …" (spec's "Managing Appliances"): set only once someone edits this
+  // recorded intervention, never on the original "C'est fait"/"Mettre à jour" answer.
+  modifiedAt: string | null;
 };
 
 // Due dates are calendar dates with no time component; comparing them against a UTC
@@ -60,7 +65,9 @@ export function getTodayInFrance(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris" }).format(new Date());
 }
 
-function addMonths(isoDate: string, months: number): string {
+// Exported for maintenance-guidance.ts's "Réalisé" next-date computation, which needs
+// the same "last date + frequency" arithmetic as a legal obligation's due date.
+export function addMonths(isoDate: string, months: number): string {
   const [year, month, day] = isoDate.split("-").map(Number);
   const date = new Date(year, month - 1 + Math.round(months), day);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -79,16 +86,19 @@ function computeStatusAndDueDate(
   toConfirmReason: "date" | "threshold" | null;
   completedOn: string | null;
   providerName: string | null;
+  providerContact: string | null;
+  modifiedAt: string | null;
 } {
+  const none = { completedOn: null, providerName: null, providerContact: null, modifiedAt: null };
   // Power known: below the threshold the obligation doesn't apply at all; at or above
   // it, the appliance is treated exactly like a legalStatus "yes" one from here on
   // (falls through to the checks below instead of returning).
   if (equipmentType.legalStatus === "conditional") {
     if (powerKw === null) {
-      return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold", completedOn: null, providerName: null };
+      return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "threshold", ...none };
     }
     if (powerKw < CONDITIONAL_POWER_THRESHOLD_KW) {
-      return { status: "not_applicable", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
+      return { status: "not_applicable", dueDate: null, priority: false, toConfirmReason: null, ...none };
     }
   }
   if (record?.knownDueDate) {
@@ -97,24 +107,23 @@ function computeStatusAndDueDate(
       dueDate: record.knownDueDate,
       priority: false,
       toConfirmReason: null,
-      completedOn: null,
-      providerName: null,
+      ...none,
     };
   }
   if (record?.serviceConfidence === "compliant") {
-    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
+    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null, ...none };
   }
   if (record?.serviceConfidence === "recent") {
-    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date", completedOn: null, providerName: null };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date", ...none };
   }
   if (record?.serviceConfidence === "old") {
-    return { status: "overdue", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
+    return { status: "overdue", dueDate: null, priority: false, toConfirmReason: null, ...none };
   }
   if (record?.serviceConfidence === "never") {
-    return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null, completedOn: null, providerName: null };
+    return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null, ...none };
   }
   if (!record?.lastServiceDate) {
-    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null, completedOn: null, providerName: null };
+    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null, ...none };
   }
   const dueDate = addMonths(record.lastServiceDate, task.frequency.months);
   return {
@@ -124,6 +133,8 @@ function computeStatusAndDueDate(
     toConfirmReason: null,
     completedOn: record.lastServiceDate,
     providerName: record.providerName,
+    providerContact: record.providerContact,
+    modifiedAt: record.modifiedAt,
   };
 }
 
@@ -139,13 +150,8 @@ export function getObligationsForAppliance(
 
   return tasks.map((task) => {
     const record = records.find((r) => r.maintenanceTaskId === task.id);
-    const { status, dueDate, priority, toConfirmReason, completedOn, providerName } = computeStatusAndDueDate(
-      equipmentType,
-      task,
-      record,
-      today,
-      powerKw
-    );
+    const { status, dueDate, priority, toConfirmReason, completedOn, providerName, providerContact, modifiedAt } =
+      computeStatusAndDueDate(equipmentType, task, record, today, powerKw);
     return {
       task,
       status,
@@ -154,6 +160,8 @@ export function getObligationsForAppliance(
       toConfirmReason,
       completedOn,
       providerName,
+      providerContact,
+      modifiedAt,
       legalObligations: getLegalObligationsForType(equipmentTypeId),
     };
   });

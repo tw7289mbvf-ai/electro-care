@@ -2,10 +2,38 @@ import type { Appliance } from "@/lib/appliance-types";
 import { getLifespanMaintenanceTasks, getMaintenanceTask, isTaskDueInMonth, type MaintenanceTask } from "@/lib/maintenance-tasks";
 import { isTaskIncludedAtLevel, type MaintenanceLevel } from "@/lib/maintenance-levels";
 import { getCurrentMonthInFrance, addMonthsToKey, monthsBetweenKeys } from "@/lib/french-dates";
+import { addMonths } from "@/lib/obligations";
 import type { MaintenanceCompletion } from "@/lib/maintenance-completions";
 import type { MaintenanceDeferral } from "@/lib/maintenance-deferrals";
 
 export type MaintenanceGuidanceItem = { appliance: Appliance; task: MaintenanceTask };
+
+export type RealisedMaintenanceItem = {
+  task: MaintenanceTask;
+  completion: MaintenanceCompletion;
+  nextDate: string;
+};
+
+// "Réalisé" (spec's "Managing Appliances"): one appliance's lifespan tasks, at the
+// place's level, that already have a completion and aren't in this month's "À faire"
+// (pendingTaskIds) — the last completion plus the date it's next due, "last date +
+// frequency", the same arithmetic a legal obligation's due date uses.
+export function getRealisedMaintenanceForAppliance(
+  appliance: Appliance,
+  level: MaintenanceLevel,
+  latestCompletions: MaintenanceCompletion[],
+  pendingTaskIds: Set<string>
+): RealisedMaintenanceItem[] {
+  if (!appliance.equipmentTypeId) return [];
+  const completionByTask = new Map(latestCompletions.map((c) => [c.maintenanceTaskId, c]));
+  return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
+    .filter((task) => isTaskIncludedAtLevel(task.level, level) && !pendingTaskIds.has(task.id))
+    .flatMap((task) => {
+      const completion = completionByTask.get(task.id);
+      if (!completion) return [];
+      return [{ task, completion, nextDate: addMonths(`${completion.doneMonth}-01`, task.frequency.months) }];
+    });
+}
 
 // "Entretien" section: non-legal maintenance tasks (getLifespanMaintenanceTasks already
 // excludes legal obligations and routines more frequent than monthly) due this month per
