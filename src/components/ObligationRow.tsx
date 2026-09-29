@@ -29,6 +29,12 @@ export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & 
             ({row.status === "overdue" ? "depuis" : "prochaine échéance :"} {formatFrenchMonthYear(row.dueDate)})
           </span>
         )}
+        {row.completedOn && (
+          <span className="text-sm text-zinc-500 dark:text-zinc-400">
+            Fait en {formatFrenchMonthYear(row.completedOn)}
+            {row.providerName ? ` par ${row.providerName}` : ""}
+          </span>
+        )}
         <MarkDoneButton
           applianceId={appliance.id}
           maintenanceTaskId={row.task.id}

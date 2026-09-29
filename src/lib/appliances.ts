@@ -8,6 +8,7 @@ type ApplianceRow = {
   model: string | null;
   category: string;
   purchase_date: string | Date | null;
+  warranty_end: string | Date | null;
   created_at: string | Date;
   place_id: string;
   room: string | null;
@@ -33,6 +34,7 @@ function toAppliance(row: ApplianceRow): Appliance {
     model: row.model,
     category: row.category as Category,
     purchaseDate: row.purchase_date === null ? null : toDateOnlyString(row.purchase_date),
+    warrantyEnd: row.warranty_end === null ? null : toDateOnlyString(row.warranty_end),
     createdAt:
       typeof row.created_at === "string" ? row.created_at : row.created_at.toISOString(),
     placeId: row.place_id,
@@ -42,7 +44,7 @@ function toAppliance(row: ApplianceRow): Appliance {
   };
 }
 
-const APPLIANCE_COLUMNS = `id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id, power_kw`;
+const APPLIANCE_COLUMNS = `id, name, brand, model, category, purchase_date, warranty_end, created_at, place_id, room, equipment_type_id, power_kw`;
 
 export async function getAppliances(): Promise<Appliance[]> {
   const { sql } = await getAuthedContext();
@@ -98,7 +100,7 @@ export async function addAppliance(input: {
       ${input.model ?? null}, ${input.purchaseDate ?? null}, ${input.room ?? null},
       ${input.equipmentTypeId ?? null}, ${JSON.stringify(fieldSources)}
     )
-    RETURNING id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+    RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
   `) as ApplianceRow[];
   return toAppliance(rows[0]);
 }
@@ -120,6 +122,7 @@ export async function updateAppliance(
     model: string | null;
     powerKw: number | null;
     purchaseDate: string | null;
+    warrantyEnd: string | null;
     room: string | null;
   }
 ): Promise<Appliance> {
@@ -133,6 +136,7 @@ export async function updateAppliance(
     ["model", input.model],
     ["power_kw", input.powerKw],
     ["purchase_date", input.purchaseDate],
+    ["warranty_end", input.warrantyEnd],
   ];
   for (const [key, value] of tracked) {
     if (value === null) delete fieldSources[key];
@@ -142,7 +146,7 @@ export async function updateAppliance(
   const rows = (await sql`
     UPDATE appliances
     SET brand = ${input.brand}, model = ${input.model}, power_kw = ${input.powerKw},
-        purchase_date = ${input.purchaseDate}, room = ${input.room},
+        purchase_date = ${input.purchaseDate}, warranty_end = ${input.warrantyEnd}, room = ${input.room},
         field_sources = ${JSON.stringify(fieldSources)}
     WHERE id = ${id}
     RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
@@ -174,10 +178,10 @@ export async function findOrCreateApplianceByType(input: {
       WHERE NOT EXISTS (
         SELECT 1 FROM appliances WHERE place_id = ${input.placeId} AND equipment_type_id = ${input.equipmentTypeId}
       )
-      RETURNING id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+      RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
     `,
     sql`
-      SELECT id, name, brand, model, category, purchase_date, created_at, place_id, room, equipment_type_id
+      SELECT ${sql.unsafe(APPLIANCE_COLUMNS)}
       FROM appliances
       WHERE place_id = ${input.placeId} AND equipment_type_id = ${input.equipmentTypeId}
       LIMIT 1
@@ -188,4 +192,44 @@ export async function findOrCreateApplianceByType(input: {
     return { appliance: toAppliance(inserted[0]), created: true };
   }
   return { appliance: toAppliance(existing[0]), created: false };
+}
+
+// Invoice import ("Complete, don't duplicate", CLAUDE.md): reuses
+// findOrCreateApplianceByType's race-safe find-or-create for the (place, equipment
+// type) pair, then fills only the columns still empty. COALESCE keeps whatever the
+// appliance already had (e.g. a brand typed by hand) rather than overwriting it, and
+// the field_sources CASEs read the pre-update row (Postgres evaluates every SET
+// expression against the row as it was before this statement), so a field is stamped
+// "invoice" only when this call is the one that actually filled it.
+export async function importApplianceFromInvoice(input: {
+  placeId: string;
+  equipmentTypeId: string;
+  category: Category;
+  brand: string | null;
+  model: string | null;
+  purchaseDate: string | null;
+  warrantyEnd: string | null;
+}): Promise<{ appliance: Appliance; created: boolean }> {
+  const { appliance: base, created } = await findOrCreateApplianceByType({
+    placeId: input.placeId,
+    equipmentTypeId: input.equipmentTypeId,
+    category: input.category,
+  });
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    UPDATE appliances SET
+      brand = COALESCE(brand, ${input.brand}),
+      model = COALESCE(model, ${input.model}),
+      purchase_date = COALESCE(purchase_date, ${input.purchaseDate}),
+      warranty_end = COALESCE(warranty_end, ${input.warrantyEnd}),
+      field_sources = field_sources || jsonb_strip_nulls(jsonb_build_object(
+        'brand', CASE WHEN brand IS NULL AND ${input.brand}::text IS NOT NULL THEN 'invoice' END,
+        'model', CASE WHEN model IS NULL AND ${input.model}::text IS NOT NULL THEN 'invoice' END,
+        'purchase_date', CASE WHEN purchase_date IS NULL AND ${input.purchaseDate}::date IS NOT NULL THEN 'invoice' END,
+        'warranty_end', CASE WHEN warranty_end IS NULL AND ${input.warrantyEnd}::date IS NOT NULL THEN 'invoice' END
+      ))
+    WHERE id = ${base.id}
+    RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
+  `) as ApplianceRow[];
+  return { appliance: toAppliance(rows[0]), created };
 }

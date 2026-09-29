@@ -1,6 +1,8 @@
 import { notFound, redirect } from "next/navigation";
 import { getPlace } from "@/lib/places";
 import { getAppliances } from "@/lib/appliances";
+import { getInvoiceImportMode } from "@/lib/invoice-extraction";
+import { requireAdminRoute } from "@/lib/admin";
 import { QuestionnaireWizard } from "@/components/QuestionnaireWizard";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +28,8 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
   const existingEquipmentTypeIds = appliances
     .filter((a) => a.placeId === place.id && a.equipmentTypeId)
     .map((a) => a.equipmentTypeId as string);
+  const isAdmin = (await requireAdminRoute()) !== null;
+  const invoiceImportMode = getInvoiceImportMode(isAdmin);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -44,6 +48,7 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
           existingEquipmentTypeIds={existingEquipmentTypeIds}
           existingPropertyType={place.propertyType}
           existingMaintenanceLevel={place.maintenanceLevel}
+          invoiceImportMode={invoiceImportMode}
         />
       </main>
     </div>

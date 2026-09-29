@@ -154,6 +154,11 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
         lastServiceDate: row.last_service_date === null ? null : toIso(row.last_service_date).slice(0, 10),
         knownDueDate: row.known_due_date === null ? null : toIso(row.known_due_date).slice(0, 10),
         serviceConfidence: row.service_confidence as ApplianceObligationRecord["serviceConfidence"],
+        // admin_obligation_rows() never selects these (spec: provider contact details are
+        // never visible in admin) — hardcoded null rather than optional, so this stays
+        // true even if ObligationView's shape changes later.
+        providerName: null,
+        providerContact: null,
       });
     }
     byAppliance.set(row.appliance_id, entry);

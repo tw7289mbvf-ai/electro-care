@@ -17,6 +17,7 @@ export type Appliance = {
   model: string | null;
   category: Category;
   purchaseDate: string | null;
+  warrantyEnd: string | null;
   createdAt: string;
   placeId: string;
   room: string | null;

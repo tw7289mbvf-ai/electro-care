@@ -21,6 +21,9 @@ import {
   type MaintenanceLevel,
 } from "@/lib/maintenance-levels";
 import { MaintenanceLevelOptions } from "@/components/MaintenanceLevelOptions";
+import { InvoiceImportFlow } from "@/components/InvoiceImportFlow";
+import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
+import type { InvoiceImportMode } from "@/lib/invoice-extraction";
 
 type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireAnswer };
 // REGLE-03: a hearth appliance (poele, insert, chaudiere) created alongside its flue
@@ -63,6 +66,35 @@ const LEVEL_QUESTION: QuestionnaireQuestion = {
 // Only these two are offered here: Aucun is already handled by Q19 ("Non, plus tard"),
 // which never reaches this step at all.
 const QUESTIONNAIRE_LEVEL_CHOICES: readonly MaintenanceLevel[] = ["essential", "recommended"];
+
+// Synthetic step inserted right before Q20 (spec: "in the questionnaire, just before
+// the appliance checklist"). Order only needs to sit before Q20 (order 20) and after
+// Q19 (order 19).
+const IMPORT_QUESTION: QuestionnaireQuestion = {
+  id: "IMPORT",
+  block: "context",
+  order: 19.5,
+  question: "Importer une facture",
+  answerType: "single",
+  skipIf: null,
+  answers: [],
+};
+
+const IMPORT_FLOW_EQUIPMENT_TYPES = EQUIPMENT_TYPES.map((t) => ({ id: t.id, category: t.category, label: t.label }));
+
+// Inserted once, right before Q20 is reached — never again once an IMPORT entry sits
+// in history (e.g. reached again via "Précédent" from the recap). The "Non, plus tard"
+// branch of Q19 skips Q20 entirely via skip_if, so nextQuestion never returns "Q20"
+// there and this gate is a no-op on that path.
+function withImportGate(
+  next: QuestionnaireQuestion | null,
+  historyForCheck: AnsweredStep[]
+): QuestionnaireQuestion | null {
+  if (next?.id === "Q20" && !historyForCheck.some((s) => s.question.id === "IMPORT")) {
+    return IMPORT_QUESTION;
+  }
+  return next;
+}
 
 const LEVEL_LABEL_TO_KEY: Record<string, MaintenanceLevel> = Object.fromEntries(
   Object.entries(MAINTENANCE_LEVEL_LABELS).map(([key, label]) => [label, key as MaintenanceLevel])
@@ -187,11 +219,13 @@ export function QuestionnaireWizard({
   existingEquipmentTypeIds,
   existingPropertyType,
   existingMaintenanceLevel,
+  invoiceImportMode,
 }: {
   placeId: string;
   existingEquipmentTypeIds: string[];
   existingPropertyType: PropertyType | null;
   existingMaintenanceLevel: MaintenanceLevel;
+  invoiceImportMode: InvoiceImportMode;
 }) {
   const propertyTypeAlreadyKnown = existingPropertyType !== null;
   // REGLE-04: when Q01 is skipped, its answer is deduced from the place's property
@@ -214,7 +248,7 @@ export function QuestionnaireWizard({
 
   const [history, setHistory] = useState<AnsweredStep[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState<QuestionnaireQuestion | null>(
-    withLevelGate(nextQuestion(mergedAnswers([]), 0, propertyTypeAlreadyKnown), [])
+    withLevelGate(withImportGate(nextQuestion(mergedAnswers([]), 0, propertyTypeAlreadyKnown), []), [])
   );
   const [selected, setSelected] = useState<string[]>([]);
   const [pendingFollowUps, setPendingFollowUps] = useState<PendingFollowUp[]>([]);
@@ -291,7 +325,10 @@ export function QuestionnaireWizard({
     const newHistory = [...history, { question: currentQuestion!, answerLabels, effects: finalEffects }];
     setHistory(newHistory);
     const merged = mergedAnswers(newHistory);
-    const next = withLevelGate(nextQuestion(merged, currentQuestion!.order, propertyTypeAlreadyKnown), newHistory);
+    const next = withLevelGate(
+      withImportGate(nextQuestion(merged, currentQuestion!.order, propertyTypeAlreadyKnown), newHistory),
+      newHistory
+    );
     setCurrentQuestion(next);
     // A checklist shows what's already there as a starting point (never auto-removed
     // if unchecked: confirming only ever finds-or-creates the boxes left checked).
@@ -495,6 +532,44 @@ export function QuestionnaireWizard({
     const questionText = answer.followUp!.question;
     const title = subjectLabel ? `${subjectLabel} : ${questionText}` : questionText;
     return <YesNoCard question={title} onAnswer={handleFollowUpYesNo} onBack={handleBack} />;
+  }
+
+  if (currentQuestion.id === "IMPORT") {
+    return (
+      <div className="flex flex-col gap-3">
+        {history.length > 0 && <BackLink onClick={handleBack} />}
+        {invoiceImportMode === "disabled" ? (
+          <div className={CARD_CLASS}>
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Import de factures : bientôt disponible.
+            </p>
+            <button className={BUTTON_CLASS} onClick={() => completeCurrentStep(emptyStepEffects(placeId), ["Passer"])}>
+              Continuer
+            </button>
+          </div>
+        ) : (
+          <InvoiceImportFlow
+            placeId={placeId}
+            mode={invoiceImportMode}
+            equipmentTypes={IMPORT_FLOW_EQUIPMENT_TYPES}
+            onImported={({ importedEquipmentTypeIds }) =>
+              completeCurrentStep(
+                { ...emptyStepEffects(placeId), createEquipmentTypeIds: importedEquipmentTypeIds },
+                [`${importedEquipmentTypeIds.length} appareil(s) importé(s)`]
+              )
+            }
+          />
+        )}
+        {invoiceImportMode !== "disabled" && (
+          <button
+            className={GHOST_BUTTON_CLASS}
+            onClick={() => completeCurrentStep(emptyStepEffects(placeId), ["Passer"])}
+          >
+            Continuer sans importer
+          </button>
+        )}
+      </div>
+    );
   }
 
   if (currentQuestion.id === "LEVEL") {

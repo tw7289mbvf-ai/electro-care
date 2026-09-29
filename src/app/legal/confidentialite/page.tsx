@@ -16,7 +16,7 @@ export default function ConfidentialitePage() {
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Politique de confidentialité
           </h1>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 28 septembre 2026</p>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 29 septembre 2026</p>
         </div>
 
         <p className="text-sm text-zinc-700 dark:text-zinc-300">
@@ -49,6 +49,11 @@ export default function ConfidentialitePage() {
               <strong>Vos appareils et leur suivi</strong> : type d&apos;appareil, marque et modèle s&apos;ils sont
               renseignés, dates d&apos;entretien, réponses au questionnaire. Ils servent à calculer vos échéances et
               votre entretien.
+            </li>
+            <li>
+              <strong>Vos prestataires</strong> : le nom et, si vous les indiquez, l&apos;e-mail ou le téléphone des
+              professionnels qui interviennent chez vous. Ils servent à garder l&apos;historique de vos
+              interventions.
             </li>
             <li>
               <strong>Votre activité</strong> : la date de votre dernière connexion, enregistrée au plus une fois par

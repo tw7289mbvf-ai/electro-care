@@ -2,10 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { addAppliance, deleteAppliance, getAppliance, updateAppliance as updateApplianceRecord } from "@/lib/appliances";
+import {
+  addAppliance,
+  deleteAppliance,
+  getAppliance,
+  importApplianceFromInvoice,
+  updateAppliance as updateApplianceRecord,
+} from "@/lib/appliances";
 import {
   addPlace,
   deletePlace,
+  getPlace,
   getPlaces,
   markPlaceOnboarded,
   updatePlace as updatePlaceRecord,
@@ -24,6 +31,13 @@ import { MAINTENANCE_LEVELS, type MaintenanceLevel } from "@/lib/maintenance-lev
 import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
 import { createDeletionRequest, createContactMessage } from "@/lib/account-requests";
 import { auth } from "@/lib/auth/server";
+import { requireAdminRoute } from "@/lib/admin";
+import {
+  extractAppliancesFromInvoice,
+  DEMO_INVOICE_APPLIANCES,
+  getInvoiceImportMode,
+  type ExtractedApplianceCandidate,
+} from "@/lib/invoice-extraction";
 
 export type FormState = {
   error?: string;
@@ -98,10 +112,14 @@ export async function updateAppliance(
   const model = optionalTrimmed(formData, "model");
   const room = optionalTrimmed(formData, "room");
   const purchaseDate = optionalTrimmed(formData, "purchaseDate");
+  const warrantyEnd = optionalTrimmed(formData, "warrantyEnd");
   const powerKwRaw = optionalTrimmed(formData, "powerKw");
 
   if (purchaseDate && Number.isNaN(Date.parse(purchaseDate))) {
     return { error: "Veuillez saisir une date d'achat valide." };
+  }
+  if (warrantyEnd && Number.isNaN(Date.parse(warrantyEnd))) {
+    return { error: "Veuillez saisir une fin de garantie valide." };
   }
   let powerKw: number | null = null;
   if (powerKwRaw) {
@@ -111,7 +129,7 @@ export async function updateAppliance(
     }
   }
 
-  await updateApplianceRecord(id, { brand, model, powerKw, purchaseDate, room });
+  await updateApplianceRecord(id, { brand, model, powerKw, purchaseDate, warrantyEnd, room });
   revalidatePath("/");
   revalidatePath(`/appliances/${id}`);
   redirect(`/appliances/${id}`);
@@ -191,12 +209,20 @@ const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 export async function markObligationDone(
   applianceId: string,
   maintenanceTaskId: string,
-  month: string
+  month: string,
+  providerName: string | null = null,
+  providerContact: string | null = null
 ): Promise<void> {
   if (!MONTH_PATTERN.test(month)) {
     throw new Error("Mois invalide");
   }
-  await setApplianceObligation({ applianceId, maintenanceTaskId, lastServiceDate: `${month}-01` });
+  await setApplianceObligation({
+    applianceId,
+    maintenanceTaskId,
+    lastServiceDate: `${month}-01`,
+    providerName: providerName?.trim() || null,
+    providerContact: providerContact?.trim() || null,
+  });
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
@@ -272,4 +298,83 @@ export async function submitContactMessage(_prevState: FormState, formData: Form
   await createContactMessage(email, message);
   revalidatePath("/settings");
   return {};
+}
+
+export type InvoiceExtractionState = {
+  error?: string;
+  rows?: ExtractedApplianceCandidate[];
+  demo?: boolean;
+};
+
+// Mode is always recomputed here from the session and the env var, never trusted from
+// the client: a request that reaches this action with the flag off and a non-admin
+// session is refused, whatever form field it was submitted with (see
+// src/lib/invoice-extraction.ts, "Import from Invoices (planned)").
+export async function extractInvoiceAppliances(
+  _prevState: InvoiceExtractionState,
+  formData: FormData
+): Promise<InvoiceExtractionState> {
+  const isAdmin = (await requireAdminRoute()) !== null;
+  const mode = getInvoiceImportMode(isAdmin);
+  if (mode === "disabled") {
+    return { error: "Import de factures : bientôt disponible." };
+  }
+  if (mode === "demo") {
+    return { rows: DEMO_INVOICE_APPLIANCES, demo: true };
+  }
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Veuillez déposer une facture (PDF ou photo)." };
+  }
+  try {
+    const rows = await extractAppliancesFromInvoice(file);
+    return { rows, demo: false };
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Lecture de la facture impossible." };
+  }
+}
+
+export type InvoiceImportRow = {
+  equipmentTypeId: string;
+  brand: string | null;
+  model: string | null;
+  purchaseDate: string | null;
+  warrantyEnd: string | null;
+};
+
+export type InvoiceImportResult = { importedEquipmentTypeIds: string[] } | { error: string };
+
+// The confirmation screen's own submit ("Nous avons trouvé N appareils", each line
+// ticked or not): completes an existing appliance of the same type rather than
+// duplicating it (CLAUDE.md, "Complete, don't duplicate").
+export async function confirmInvoiceImport(placeId: string, rows: InvoiceImportRow[]): Promise<InvoiceImportResult> {
+  const isAdmin = (await requireAdminRoute()) !== null;
+  if (getInvoiceImportMode(isAdmin) === "disabled") {
+    return { error: "Import de factures : bientôt disponible." };
+  }
+  const place = await getPlace(placeId);
+  if (!place) {
+    return { error: "Lieu introuvable." };
+  }
+
+  const importedEquipmentTypeIds: string[] = [];
+  for (const row of rows) {
+    const type = getEquipmentType(row.equipmentTypeId);
+    if (!type) continue;
+    await importApplianceFromInvoice({
+      placeId,
+      equipmentTypeId: row.equipmentTypeId,
+      category: type.category,
+      brand: row.brand,
+      model: row.model,
+      purchaseDate: row.purchaseDate,
+      warrantyEnd: row.warrantyEnd,
+    });
+    importedEquipmentTypeIds.push(row.equipmentTypeId);
+  }
+
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
+  return { importedEquipmentTypeIds };
 }

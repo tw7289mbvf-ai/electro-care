@@ -89,6 +89,19 @@ export function ApplianceEditForm({
         />
       </div>
 
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="warrantyEnd" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          Fin de garantie <span className="font-normal text-zinc-400">(facultatif)</span>
+        </label>
+        <input
+          id="warrantyEnd"
+          name="warrantyEnd"
+          type="date"
+          defaultValue={appliance.warrantyEnd ?? ""}
+          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+        />
+      </div>
+
       <div className="flex flex-col gap-1.5 sm:col-span-2">
         <label htmlFor="room" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Pièce <span className="font-normal text-zinc-400">(facultatif)</span>
