@@ -1,18 +1,20 @@
 import Link from "next/link";
-import type { MaintenanceGuidanceItem, RealisedMaintenanceItem } from "@/lib/maintenance-guidance";
+import type { MaintenanceGuidanceItem, UpcomingMaintenanceItem } from "@/lib/maintenance-guidance";
 import { MaintenanceGuidanceActions } from "@/components/MaintenanceGuidanceActions";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 
 // Appliance fiche's "entretien courant, au niveau choisi pour le lieu" (spec's "Managing
-// Appliances"): "À faire" (this month's pending guidance, same engine as the place
-// page's "Entretien du mois") and "Réalisé" (last completion + next date), for one
-// appliance only.
+// Appliances", revision 51): every lifespan task of the place's level, shown exactly
+// once — "À faire" when due this month or overdue (same engine as the place page's
+// "Entretien du mois", so the two never disagree), "À venir" otherwise, with its next
+// month. Each line shows its last completion when there is one; there is no separate
+// "Réalisé" group.
 export function ApplianceEntretienSection({
   applianceId,
   placeId,
   pending,
-  realised,
+  upcoming,
   deferrableTaskKeys,
   upgradeTaskCount,
   upgradeLevelLabel,
@@ -20,14 +22,14 @@ export function ApplianceEntretienSection({
   applianceId: string;
   placeId: string;
   pending: MaintenanceGuidanceItem[];
-  realised: RealisedMaintenanceItem[];
+  upcoming: UpcomingMaintenanceItem[];
   deferrableTaskKeys: Set<string>;
   // Set when this appliance has zero tasks at the place's current level but some at the
   // top level, so the section can point the user there instead of rendering nothing.
   upgradeTaskCount?: number;
   upgradeLevelLabel?: string;
 }) {
-  if (pending.length === 0 && realised.length === 0) {
+  if (pending.length === 0 && upcoming.length === 0) {
     if (!upgradeTaskCount || !upgradeLevelLabel) return null;
     return (
       <section className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
@@ -71,11 +73,11 @@ export function ApplianceEntretienSection({
         </div>
       )}
 
-      {realised.length > 0 && (
+      {upcoming.length > 0 && (
         <div className="flex flex-col gap-2">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">Réalisé</h4>
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">À venir</h4>
           <ul className="flex flex-col gap-2">
-            {realised.map(({ task, completion, nextDate }) => (
+            {upcoming.map(({ task, completion, nextDate }) => (
               <li
                 key={task.id}
                 className="flex flex-wrap items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
@@ -84,16 +86,19 @@ export function ApplianceEntretienSection({
                   {task.title}
                 </Link>
                 <span className="text-zinc-500 dark:text-zinc-400">
-                  Fait en {formatFrenchMonthYear(completion.doneMonth)} · prochaine : {formatFrenchMonthYear(nextDate)}
+                  {completion && `Fait en ${formatFrenchMonthYear(completion.doneMonth)} · `}
+                  Prévu en {formatFrenchMonthYear(nextDate)}
                 </span>
-                <ModifyMaintenanceCompletionButton
-                  completionId={completion.id}
-                  applianceId={applianceId}
-                  maintenanceTaskId={task.id}
-                  doneMonth={completion.doneMonth}
-                  modifiedAt={completion.modifiedAt}
-                  placeId={placeId}
-                />
+                {completion && (
+                  <ModifyMaintenanceCompletionButton
+                    completionId={completion.id}
+                    applianceId={applianceId}
+                    maintenanceTaskId={task.id}
+                    doneMonth={completion.doneMonth}
+                    modifiedAt={completion.modifiedAt}
+                    placeId={placeId}
+                  />
+                )}
               </li>
             ))}
           </ul>

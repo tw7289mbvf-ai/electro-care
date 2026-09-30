@@ -13,7 +13,7 @@ import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAp
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
   getMaintenanceGuidanceForAppliances,
-  getRealisedMaintenanceForAppliance,
+  getUpcomingApplianceTasks,
   filterPendingGuidance,
   applyDeferrals,
   canDeferMaintenanceTask,
@@ -70,7 +70,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       .map(({ task }) => task.id)
   );
   const pendingTaskIds = new Set(guidance.map(({ task }) => task.id));
-  const realised = getRealisedMaintenanceForAppliance(appliance, place.maintenanceLevel, latestCompletions, pendingTaskIds);
+  const upcoming = getUpcomingApplianceTasks(appliance, place.maintenanceLevel, latestCompletions, pendingTaskIds, month);
   const routines = appliance.equipmentTypeId
     ? getRoutineMaintenanceTasks(appliance.equipmentTypeId).filter((t) => isTaskIncludedAtLevel(t.level, place.maintenanceLevel))
     : [];
@@ -111,7 +111,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
           applianceId={appliance.id}
           placeId={appliance.placeId}
           pending={guidance}
-          realised={realised}
+          upcoming={upcoming}
           deferrableTaskKeys={deferrableTaskKeys}
           upgradeTaskCount={upgradeTaskCount || undefined}
           upgradeLevelLabel={upgradeTaskCount > 0 ? MAINTENANCE_LEVEL_LABELS[MAX_MAINTENANCE_LEVEL] : undefined}
