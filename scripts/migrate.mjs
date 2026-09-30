@@ -277,6 +277,39 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON obligation_completions TO authenticated`);
 
+  // "Rendez-vous pris" (spec's "Managing Appliances"): one pending appointment per
+  // (appliance, task), replacing itself on reschedule rather than accumulating history —
+  // unlike obligation_completions above, this isn't a proof, just a future plan. Deleted
+  // once resolved (the "a-t-il eu lieu ?" flow answers yes, by handing off to
+  // markObligationDone, or no+annuler) or replaced (no+reprogrammer).
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS obligation_appointments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      appointment_date DATE NOT NULL,
+      provider_name TEXT NOT NULL,
+      provider_contact TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id)
+    )
+  `);
+  await client.query(`ALTER TABLE obligation_appointments ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS obligation_appointments_isolation ON obligation_appointments`);
+  await client.query(`
+    CREATE POLICY obligation_appointments_isolation ON obligation_appointments
+      FOR ALL
+      USING (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = obligation_appointments.appliance_id AND p.account_id = auth.uid()
+      ))
+      WITH CHECK (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = obligation_appointments.appliance_id AND p.account_id = auth.uid()
+      ))
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON obligation_appointments TO authenticated`);
+
   // Lifespan maintenance is app-only (no email, no legal deadline): one row per
   // (appliance, task, calendar month) marks it done for that month. done_month in the
   // unique key means re-doing the same task next month is a new row, not an overwrite.

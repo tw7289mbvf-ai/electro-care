@@ -2,17 +2,20 @@ import type { Appliance } from "@/lib/appliance-types";
 import { compareObligationsByUrgency, getObligationsForAppliance, type ApplianceObligationRecord } from "@/lib/obligations";
 import type { PlaceCheck } from "@/lib/place-checks";
 import type { ObligationCompletion } from "@/lib/obligation-completions";
+import type { ObligationAppointment } from "@/lib/obligation-appointments";
 import { ObligationRow } from "@/components/ObligationRow";
 import { UpToDateObligationsGroup } from "@/components/UpToDateObligationsGroup";
 
 export function ObligationsBlock({
   appliances,
   obligationRecords,
+  appointments,
   placeChecks,
   completionsByTaskId,
 }: {
   appliances: Appliance[];
   obligationRecords: ApplianceObligationRecord[];
+  appointments?: ObligationAppointment[];
   placeChecks: PlaceCheck[];
   // Full "C'est fait" history, keyed by maintenance task id, most recent first — passed
   // only from the appliance fiche (a single appliance) so "Modifier" and the history
@@ -27,6 +30,8 @@ export function ObligationsBlock({
         appliance,
         ...obligation,
         history: completionsByTaskId?.get(obligation.task.id) ?? undefined,
+        appointment:
+          appointments?.find((a) => a.applianceId === appliance.id && a.maintenanceTaskId === obligation.task.id) ?? null,
       }));
     })
     .sort(compareObligationsByUrgency);

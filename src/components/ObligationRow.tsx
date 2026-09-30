@@ -6,7 +6,9 @@ import type { ObligationCompletion } from "@/lib/obligation-completions";
 import { MarkDoneButton } from "@/components/MarkDoneButton";
 import { ModifyObligationButton } from "@/components/ModifyObligationButton";
 import { ObligationHistoryList } from "@/components/ObligationHistoryList";
+import { AppointmentButton } from "@/components/AppointmentButton";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
+import type { ObligationAppointment } from "@/lib/obligation-appointments";
 
 export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
   up_to_date: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
@@ -29,8 +31,13 @@ export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
 export function ObligationRow({
   appliance,
   history,
+  appointment = null,
   ...row
-}: { appliance: Appliance; history?: ObligationCompletion[] | null } & ObligationView) {
+}: {
+  appliance: Appliance;
+  history?: ObligationCompletion[] | null;
+  appointment?: ObligationAppointment | null;
+} & ObligationView) {
   const latest = history?.[0];
   const olderEntries = history?.slice(1) ?? [];
   return (
@@ -62,11 +69,19 @@ export function ObligationRow({
             </span>
           )}
         </Link>
-        <MarkDoneButton
+        {!appointment && (
+          <MarkDoneButton
+            applianceId={appliance.id}
+            maintenanceTaskId={row.task.id}
+            status={row.status}
+            toConfirmReason={row.toConfirmReason}
+          />
+        )}
+        <AppointmentButton
           applianceId={appliance.id}
           maintenanceTaskId={row.task.id}
           status={row.status}
-          toConfirmReason={row.toConfirmReason}
+          appointment={appointment}
         />
         {row.completedOn && latest && (
           <ModifyObligationButton

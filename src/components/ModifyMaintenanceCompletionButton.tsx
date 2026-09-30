@@ -78,7 +78,7 @@ export function ModifyMaintenanceCompletionButton({
       className={EDIT_WINDOW_CLASS}
     >
       <p className="text-orange-800 dark:text-orange-300">{MODIFY_WARNING}</p>
-      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
       {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
       <div className="flex items-center gap-2">
         <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>

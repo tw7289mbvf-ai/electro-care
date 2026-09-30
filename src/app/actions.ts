@@ -25,6 +25,8 @@ import {
   editObligationCompletion,
   getLatestObligationCompletion,
 } from "@/lib/obligation-completions";
+import { setObligationAppointment, deleteObligationAppointment } from "@/lib/obligation-appointments";
+import { getTodayInFrance } from "@/lib/obligations";
 import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
 import { recordMaintenanceCompletion, editMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
@@ -209,6 +211,12 @@ export async function removePlace(id: string): Promise<void> {
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
+// "C'est fait"/"Modifier": current month or a past one, never a future one — a done
+// intervention is a proof (spec's "Managing Appliances"). `month` is "YYYY-MM".
+function isFutureMonth(month: string): boolean {
+  return month > currentMonthKey();
+}
+
 // appliance_obligations (the "current status" record obligations.ts computes from) is
 // always re-derived from obligation_completions' own latest row after a history write,
 // rather than from the value that write just submitted — an edit can make an older
@@ -236,7 +244,7 @@ export async function markObligationDone(
   providerName: string | null = null,
   providerContact: string | null = null
 ): Promise<void> {
-  if (!MONTH_PATTERN.test(month)) {
+  if (!MONTH_PATTERN.test(month) || isFutureMonth(month)) {
     throw new Error("Mois invalide");
   }
   await recordObligationCompletion({
@@ -247,6 +255,50 @@ export async function markObligationDone(
     providerContact: providerContact?.trim() || null,
   });
   await syncObligationFromHistory(applianceId, maintenanceTaskId);
+  // "Le rendez-vous a-t-il eu lieu ? Oui" (spec's "Managing Appliances") funnels into
+  // this same action, prefilled — and any other "C'est fait" on a task that happened to
+  // have a pending appointment resolves it the same way. No-op when there was none.
+  await deleteObligationAppointment(applianceId, maintenanceTaskId);
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// "Rendez-vous pris" (spec's "Managing Appliances"): only on a red or orange obligation,
+// a future date to the day and a provider — replaces any appointment already pending for
+// this task (also used by "Reprogrammer").
+export async function bookObligationAppointment(
+  applianceId: string,
+  maintenanceTaskId: string,
+  appointmentDate: string,
+  providerName: string,
+  providerContact: string | null = null
+): Promise<{ error?: string }> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(appointmentDate) || appointmentDate <= getTodayInFrance()) {
+    return { error: "Date invalide" };
+  }
+  if (!providerName.trim()) {
+    return { error: "Le prestataire est requis" };
+  }
+  await setObligationAppointment({
+    applianceId,
+    maintenanceTaskId,
+    appointmentDate,
+    providerName: providerName.trim(),
+    providerContact: providerContact?.trim() || null,
+  });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+  return {};
+}
+
+// "Non" + "Annuler" (spec's "Managing Appliances"): the obligation returns to its
+// ordinary status.
+export async function cancelObligationAppointment(applianceId: string, maintenanceTaskId: string): Promise<void> {
+  await deleteObligationAppointment(applianceId, maintenanceTaskId);
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
@@ -264,7 +316,7 @@ export async function editObligation(
   providerName: string | null,
   providerContact: string | null
 ): Promise<{ error?: string }> {
-  if (!MONTH_PATTERN.test(month)) {
+  if (!MONTH_PATTERN.test(month) || isFutureMonth(month)) {
     return { error: "Mois invalide" };
   }
   const result = await editObligationCompletion({
@@ -333,7 +385,7 @@ export async function editMaintenanceCompletionAction(input: {
   month: string;
   placeId: string;
 }): Promise<{ error?: string }> {
-  if (!MONTH_PATTERN.test(input.month)) {
+  if (!MONTH_PATTERN.test(input.month) || isFutureMonth(input.month)) {
     return { error: "Mois invalide" };
   }
   const result = await editMaintenanceCompletion({

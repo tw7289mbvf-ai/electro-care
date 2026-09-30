@@ -492,15 +492,7 @@ export function QuestionnaireWizard({
           />
         );
       case "manufacture_date":
-        return (
-          <SimpleDateOrUnknownCard
-            title={ask.dq.question!}
-            resultKind="date"
-            unknownLabel="Je ne la trouve pas"
-            onAnswer={handleDateAskAnswer}
-            onBack={handleBack}
-          />
-        );
+        return <ManufactureOrExpiryCard dq={ask.dq} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
       case "vehicle_inspection":
         return <VehicleInspectionCard dq={ask.dq} taskId={ask.taskId} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
       case "yes_no":
@@ -757,7 +749,7 @@ function GradedMonthCard({
       <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
 
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} />
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
           Valider
         </button>
@@ -809,7 +801,7 @@ function SimpleDateOrUnknownCard({
       <BackLink onClick={onBack} />
       <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} />
+        <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} disableFutureMonths={!futureYears} />
         <button
           className={BUTTON_CLASS}
           disabled={!iso}
@@ -821,6 +813,63 @@ function SimpleDateOrUnknownCard({
       <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
         {unknownLabel}
       </button>
+    </div>
+  );
+}
+
+// manufacture_date (T-083, le detecteur de fumee) : deux dates possibles sont imprimees
+// au dos, au choix de l'utilisateur — date de fabrication (echeance = date + 10 ans,
+// jamais future) ou date limite de remplacement, imprimee telle quelle (echeance = cette
+// date, qui peut etre future, d'ou wideYearOptions ici et non pastYearOptions).
+function ManufactureOrExpiryCard({
+  dq,
+  onAnswer,
+  onBack,
+}: {
+  dq: DateQuestion;
+  onAnswer: (result: DateAnswerResult) => void;
+  onBack: () => void;
+}) {
+  const [mode, setMode] = useState<"choice" | "manufacture" | "expiry">("choice");
+
+  if (mode === "manufacture") {
+    return (
+      <SimpleDateOrUnknownCard
+        title={dq.question!}
+        resultKind="date"
+        unknownLabel="Je ne la trouve pas"
+        onAnswer={onAnswer}
+        onBack={() => setMode("choice")}
+      />
+    );
+  }
+  if (mode === "expiry") {
+    return (
+      <SimpleDateOrUnknownCard
+        title="Quelle est la date limite de remplacement imprimée au dos du détecteur ?"
+        resultKind="dueDate"
+        unknownLabel="Je ne la trouve pas"
+        futureYears
+        onAnswer={onAnswer}
+        onBack={() => setMode("choice")}
+      />
+    );
+  }
+  return (
+    <div className={CARD_CLASS}>
+      <BackLink onClick={onBack} />
+      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
+      <div className="flex flex-wrap gap-2">
+        <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("manufacture")}>
+          Date de fabrication
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("expiry")}>
+          Date limite de remplacement
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+          Je ne la trouve pas
+        </button>
+      </div>
     </div>
   );
 }
@@ -852,7 +901,7 @@ function VehicleInspectionCard({
         <BackLink onClick={() => setShowYoung(false)} />
         <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Date de première immatriculation ?</h2>
         <div className="flex flex-wrap items-center gap-2">
-          <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} />
+          <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} disableFutureMonths />
           <button
             className={BUTTON_CLASS}
             disabled={!regIso}
@@ -874,7 +923,7 @@ function VehicleInspectionCard({
       <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
 
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} />
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
           Valider
         </button>

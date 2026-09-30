@@ -139,7 +139,7 @@ export function MarkDoneButton({
       }}
       className={WINDOW_CLASS}
     >
-      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
       <input
         type="text"
         value={providerName}

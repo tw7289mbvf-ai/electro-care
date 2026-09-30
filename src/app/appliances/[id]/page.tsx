@@ -10,6 +10,7 @@ import { getAppliance } from "@/lib/appliances";
 import { getPlace } from "@/lib/places";
 import { getObligationRecordsForAppliance } from "@/lib/appliance-obligations";
 import { getObligationCompletionsForAppliance } from "@/lib/obligation-completions";
+import { getAppointmentsForAppliance } from "@/lib/obligation-appointments";
 import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
@@ -48,13 +49,15 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
   }
 
   const month = currentMonthKey();
-  const [obligationRecords, obligationCompletions, placeCompletions, placeDeferrals, latestCompletions] = await Promise.all([
-    getObligationRecordsForAppliance(id),
-    getObligationCompletionsForAppliance(id),
-    getMaintenanceCompletionsForPlace(appliance.placeId, month),
-    getMaintenanceDeferralsForPlace(appliance.placeId),
-    getLatestMaintenanceCompletionsForAppliance(id),
-  ]);
+  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions] =
+    await Promise.all([
+      getObligationRecordsForAppliance(id),
+      getObligationCompletionsForAppliance(id),
+      getAppointmentsForAppliance(id),
+      getMaintenanceCompletionsForPlace(appliance.placeId, month),
+      getMaintenanceDeferralsForPlace(appliance.placeId),
+      getLatestMaintenanceCompletionsForAppliance(id),
+    ]);
   const completions = placeCompletions.filter((c) => c.applianceId === id);
   const deferrals = placeDeferrals.filter((d) => d.applianceId === id);
   const obligationCompletionsByTaskId = new Map<string, typeof obligationCompletions>();
@@ -116,6 +119,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
         <ObligationsBlock
           appliances={[appliance]}
           obligationRecords={obligationRecords}
+          appointments={appointments}
           placeChecks={[]}
           completionsByTaskId={obligationCompletionsByTaskId}
         />

@@ -77,7 +77,7 @@ export function ModifyObligationButton({
       className={EDIT_WINDOW_CLASS}
     >
       <p className="text-orange-800 dark:text-orange-300">{MODIFY_WARNING}</p>
-      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
       <input
         type="text"
         value={name}
