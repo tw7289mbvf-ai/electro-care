@@ -2,8 +2,10 @@ import Link from "next/link";
 import type { Appliance } from "@/lib/appliance-types";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { OBLIGATION_STATUS_LABELS, type ObligationStatus, type ObligationView } from "@/lib/obligations";
+import type { ObligationCompletion } from "@/lib/obligation-completions";
 import { MarkDoneButton } from "@/components/MarkDoneButton";
 import { ModifyObligationButton } from "@/components/ModifyObligationButton";
+import { ObligationHistoryList } from "@/components/ObligationHistoryList";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 
 export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
@@ -19,7 +21,18 @@ export const OBLIGATION_STATUS_STYLES: Record<ObligationStatus, string> = {
 // Spec "Managing Appliances": every line opens the appliance's fiche, whatever its
 // status — so the informational part is a Link, and the action buttons stay outside it
 // as siblings (a button nested in an anchor would fire both on one click).
-export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & ObligationView) {
+//
+// `history` (full "C'est fait" history, most recent first) is only ever passed by
+// ObligationsBlock on the appliance fiche — never on the dashboard or a place page — so
+// "Modifier" and the collapsed history list only ever render there, per spec: "Modifier
+// appears only on the appliance card, never in the dashboard or place page lists".
+export function ObligationRow({
+  appliance,
+  history,
+  ...row
+}: { appliance: Appliance; history?: ObligationCompletion[] | null } & ObligationView) {
+  const latest = history?.[0];
+  const olderEntries = history?.slice(1) ?? [];
   return (
     <li className="flex flex-col gap-1">
       <div className="flex flex-wrap items-center gap-2">
@@ -55,8 +68,9 @@ export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & 
           status={row.status}
           toConfirmReason={row.toConfirmReason}
         />
-        {row.completedOn && (
+        {row.completedOn && latest && (
           <ModifyObligationButton
+            completionId={latest.id}
             applianceId={appliance.id}
             maintenanceTaskId={row.task.id}
             completedOn={row.completedOn}
@@ -66,6 +80,9 @@ export function ObligationRow({ appliance, ...row }: { appliance: Appliance } & 
           />
         )}
       </div>
+      {history && (
+        <ObligationHistoryList olderEntries={olderEntries} applianceId={appliance.id} maintenanceTaskId={row.task.id} />
+      )}
       {row.legalObligations.map((obligation) =>
         obligation.risks ? (
           <p key={obligation.id} className="pl-1 text-xs text-zinc-500 dark:text-zinc-400">

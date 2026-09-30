@@ -20,6 +20,11 @@ import {
   updatePlaceMaintenanceLevel,
 } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
+import {
+  recordObligationCompletion,
+  editObligationCompletion,
+  getLatestObligationCompletion,
+} from "@/lib/obligation-completions";
 import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
 import { recordMaintenanceCompletion, editMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
@@ -204,10 +209,26 @@ export async function removePlace(id: string): Promise<void> {
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
+// appliance_obligations (the "current status" record obligations.ts computes from) is
+// always re-derived from obligation_completions' own latest row after a history write,
+// rather than from the value that write just submitted — an edit can make an older
+// entry the new latest one, or make a previously-latest one no longer the latest.
+async function syncObligationFromHistory(applianceId: string, maintenanceTaskId: string): Promise<void> {
+  const latest = await getLatestObligationCompletion(applianceId, maintenanceTaskId);
+  if (!latest) return;
+  await setApplianceObligation({
+    applianceId,
+    maintenanceTaskId,
+    lastServiceDate: latest.serviceDate,
+    providerName: latest.providerName,
+    providerContact: latest.providerContact,
+    modified: latest.modifiedAt !== null,
+  });
+}
+
 // "C'est fait": the user only gives a month (input type="month", MM/AAAA on screen),
-// stored as day 1 of that month. Clears any stale known_due_date so the status is
-// recomputed from this new last_service_date going forward (setApplianceObligation
-// overwrites known_due_date to null when it isn't passed).
+// stored as day 1 of that month. Appends a history entry (spec's "Managing Appliances",
+// "History, never overwritten") and resyncs the current-status record from it.
 export async function markObligationDone(
   applianceId: string,
   maintenanceTaskId: string,
@@ -218,43 +239,49 @@ export async function markObligationDone(
   if (!MONTH_PATTERN.test(month)) {
     throw new Error("Mois invalide");
   }
-  await setApplianceObligation({
+  await recordObligationCompletion({
     applianceId,
     maintenanceTaskId,
-    lastServiceDate: `${month}-01`,
+    serviceDate: `${month}-01`,
     providerName: providerName?.trim() || null,
     providerContact: providerContact?.trim() || null,
   });
+  await syncObligationFromHistory(applianceId, maintenanceTaskId);
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
 }
 
-// "Modifier" on a past legal intervention (spec's "Managing Appliances"): same fields as
-// "C'est fait", but stamps modified_at so the fiche shows "modifiée le …".
+// "Modifier" on a past legal intervention (spec's "Managing Appliances"): corrects one
+// history entry (identified by id, since there can now be several), stamping
+// modified_at so the fiche shows "modifiée le …".
 export async function editObligation(
+  id: string,
   applianceId: string,
   maintenanceTaskId: string,
   month: string,
   providerName: string | null,
   providerContact: string | null
-): Promise<void> {
+): Promise<{ error?: string }> {
   if (!MONTH_PATTERN.test(month)) {
-    throw new Error("Mois invalide");
+    return { error: "Mois invalide" };
   }
-  await setApplianceObligation({
+  const result = await editObligationCompletion({
+    id,
     applianceId,
     maintenanceTaskId,
-    lastServiceDate: `${month}-01`,
+    serviceDate: `${month}-01`,
     providerName: providerName?.trim() || null,
     providerContact: providerContact?.trim() || null,
-    modified: true,
   });
+  if (result.error) return result;
+  await syncObligationFromHistory(applianceId, maintenanceTaskId);
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+  return {};
 }
 
 // Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): resolves

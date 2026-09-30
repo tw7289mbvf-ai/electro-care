@@ -1,6 +1,7 @@
 import type { Appliance } from "@/lib/appliance-types";
 import { compareObligationsByUrgency, getObligationsForAppliance, type ApplianceObligationRecord } from "@/lib/obligations";
 import type { PlaceCheck } from "@/lib/place-checks";
+import type { ObligationCompletion } from "@/lib/obligation-completions";
 import { ObligationRow } from "@/components/ObligationRow";
 import { UpToDateObligationsGroup } from "@/components/UpToDateObligationsGroup";
 
@@ -8,10 +9,15 @@ export function ObligationsBlock({
   appliances,
   obligationRecords,
   placeChecks,
+  completionsByTaskId,
 }: {
   appliances: Appliance[];
   obligationRecords: ApplianceObligationRecord[];
   placeChecks: PlaceCheck[];
+  // Full "C'est fait" history, keyed by maintenance task id, most recent first — passed
+  // only from the appliance fiche (a single appliance) so "Modifier" and the history
+  // list stay off the dashboard and place page (spec's "Managing Appliances").
+  completionsByTaskId?: Map<string, ObligationCompletion[]>;
 }) {
   const rows = appliances
     .flatMap((appliance) => {
@@ -20,6 +26,7 @@ export function ObligationsBlock({
       return getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw).map((obligation) => ({
         appliance,
         ...obligation,
+        history: completionsByTaskId?.get(obligation.task.id) ?? undefined,
       }));
     })
     .sort(compareObligationsByUrgency);

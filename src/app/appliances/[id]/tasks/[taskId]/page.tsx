@@ -3,10 +3,11 @@ import { notFound } from "next/navigation";
 import { getAppliance } from "@/lib/appliances";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { getMaintenanceTask, PERFORMER_LABELS } from "@/lib/maintenance-tasks";
-import { getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
+import { getMaintenanceCompletionHistory } from "@/lib/maintenance-completions";
 import { formatFrenchMonthYear, currentMonthKey } from "@/lib/french-dates";
 import { MarkMaintenanceDoneButton } from "@/components/MarkMaintenanceDoneButton";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
+import { MaintenanceHistoryList } from "@/components/MaintenanceHistoryList";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +38,9 @@ export default async function MaintenanceTaskPage({
     notFound();
   }
 
-  const latestCompletions = await getLatestMaintenanceCompletionsForAppliance(appliance.id);
-  const latest = latestCompletions.find((c) => c.maintenanceTaskId === task.id) ?? null;
+  const history = await getMaintenanceCompletionHistory(appliance.id, task.id);
+  const latest = history[0] ?? null;
+  const olderEntries = history.slice(1);
   const doneThisMonth = latest?.doneMonth === currentMonthKey();
 
   return (
@@ -76,6 +78,12 @@ export default async function MaintenanceTaskPage({
           ) : (
             <p className="text-sm text-zinc-500 dark:text-zinc-400">Jamais réalisée pour l&apos;instant.</p>
           )}
+          <MaintenanceHistoryList
+            olderEntries={olderEntries}
+            applianceId={appliance.id}
+            maintenanceTaskId={task.id}
+            placeId={appliance.placeId}
+          />
           <MarkMaintenanceDoneButton
             applianceId={appliance.id}
             maintenanceTaskId={task.id}

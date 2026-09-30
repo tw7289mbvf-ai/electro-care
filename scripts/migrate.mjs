@@ -240,6 +240,43 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON appliance_obligations TO authenticated`);
 
+  // History, never overwritten (spec's "Managing Appliances"): every "C'est fait" for a
+  // legal obligation appends its own row here instead of replacing the last one —
+  // appliance_obligations above stays the *current* status the app computes from (kept
+  // in sync with this table's latest row by src/app/actions.ts after every write), while
+  // this table is what the fiche's history list actually reads. One row per calendar
+  // month per (appliance, task): resubmitting the same month updates that month's own
+  // row (e.g. a provider correction without going through "Modifier") rather than
+  // duplicating it, same shape as maintenance_completions below.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS obligation_completions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      service_date DATE NOT NULL,
+      provider_name TEXT,
+      provider_contact TEXT,
+      modified_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id, service_date)
+    )
+  `);
+  await client.query(`ALTER TABLE obligation_completions ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS obligation_completions_isolation ON obligation_completions`);
+  await client.query(`
+    CREATE POLICY obligation_completions_isolation ON obligation_completions
+      FOR ALL
+      USING (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = obligation_completions.appliance_id AND p.account_id = auth.uid()
+      ))
+      WITH CHECK (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = obligation_completions.appliance_id AND p.account_id = auth.uid()
+      ))
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON obligation_completions TO authenticated`);
+
   // Lifespan maintenance is app-only (no email, no legal deadline): one row per
   // (appliance, task, calendar month) marks it done for that month. done_month in the
   // unique key means re-doing the same task next month is a new row, not an overwrite.
@@ -324,6 +361,28 @@ try {
     `);
     await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [T083_MIGRATION]);
     console.log(`T-083 data migration: ${rowCount} row(s) moved to orange (manufacture date to confirm).`);
+  }
+
+  // Chantier "historique des interventions": every already-recorded legal obligation
+  // becomes the first entry of its new obligation_completions history instead of
+  // starting that history empty. ON CONFLICT DO NOTHING makes this re-runnable, but it
+  // is still journaled so a later "C'est fait" that legitimately reuses the same month
+  // (unlikely, but possible right after this migration runs) is never mistaken for an
+  // already-seeded row on a second run.
+  const OBLIGATION_HISTORY_SEED = "2026-09-30-obligation-completions-seed-history";
+  const [{ exists: obligationHistorySeeded }] = (
+    await client.query(`SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE name = $1) AS exists`, [OBLIGATION_HISTORY_SEED])
+  ).rows;
+  if (!obligationHistorySeeded) {
+    const { rowCount } = await client.query(`
+      INSERT INTO obligation_completions (appliance_id, maintenance_task_id, service_date, provider_name, provider_contact, modified_at)
+      SELECT appliance_id, maintenance_task_id, last_service_date, provider_name, provider_contact, modified_at
+      FROM appliance_obligations
+      WHERE last_service_date IS NOT NULL
+      ON CONFLICT (appliance_id, maintenance_task_id, service_date) DO NOTHING
+    `);
+    await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [OBLIGATION_HISTORY_SEED]);
+    console.log(`Obligation history seed: ${rowCount} row(s) became each task's first history entry.`);
   }
 
   // A "to check" item from a "Je ne sais pas" answer (REGLE-02). question_label and
