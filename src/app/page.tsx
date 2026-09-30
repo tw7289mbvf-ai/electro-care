@@ -8,6 +8,7 @@ import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
 import { comparePlacesByPropertyType } from "@/lib/place-types";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
+import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
 import { getObligationCountsForAppliances, type ObligationCounts } from "@/lib/obligations";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
@@ -86,8 +87,9 @@ export default async function Home() {
   const placesData = await Promise.all(
     orderedPlaces.map(async (place) => {
       const placeAppliances = appliances.filter((a) => a.placeId === place.id);
-      const [obligationRecords, completions, deferrals] = await Promise.all([
+      const [obligationRecords, appointments, completions, deferrals] = await Promise.all([
         getObligationRecordsForPlace(place.id),
+        getAppointmentsForPlace(place.id),
         getMaintenanceCompletionsForPlace(place.id, month),
         getMaintenanceDeferralsForPlace(place.id),
       ]);
@@ -99,7 +101,7 @@ export default async function Home() {
         deferrals,
         month
       ).length;
-      return { place, appliances: placeAppliances, obligationRecords, counts, maintenanceDueCount };
+      return { place, appliances: placeAppliances, obligationRecords, appointments, counts, maintenanceDueCount };
     })
   );
 

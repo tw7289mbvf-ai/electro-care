@@ -16,6 +16,7 @@ function isoToMonthYear(isoDate: string): MonthYearValue {
 // shown once a legal obligation already has a recorded intervention, whatever its
 // current status — separate from MarkDoneButton, which records a brand new one.
 export function ModifyObligationButton({
+  completionId,
   applianceId,
   maintenanceTaskId,
   completedOn,
@@ -23,6 +24,7 @@ export function ModifyObligationButton({
   providerContact,
   modifiedAt,
 }: {
+  completionId: string;
   applianceId: string;
   maintenanceTaskId: string;
   completedOn: string;
@@ -34,6 +36,7 @@ export function ModifyObligationButton({
   const [value, setValue] = useState<MonthYearValue>(() => isoToMonthYear(completedOn));
   const [name, setName] = useState(providerName ?? "");
   const [contact, setContact] = useState(providerContact ?? "");
+  const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   if (!open) {
@@ -62,14 +65,19 @@ export function ModifyObligationButton({
         if (!iso) return;
         if (!window.confirm("Confirmer la modification de cette intervention ?")) return;
         startTransition(async () => {
-          await editObligation(applianceId, maintenanceTaskId, iso.slice(0, 7), name, contact);
+          const result = await editObligation(completionId, applianceId, maintenanceTaskId, iso.slice(0, 7), name, contact);
+          if (result.error) {
+            setError(result.error);
+            return;
+          }
+          setError(null);
           setOpen(false);
         });
       }}
       className={EDIT_WINDOW_CLASS}
     >
       <p className="text-orange-800 dark:text-orange-300">{MODIFY_WARNING}</p>
-      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+      <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
       <input
         type="text"
         value={name}
@@ -85,6 +93,7 @@ export function ModifyObligationButton({
         className={INPUT_CLASS}
       />
       <AttestationMockButton />
+      {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
       <div className="flex items-center gap-2">
         <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}

@@ -3,10 +3,11 @@
 import { useState } from "react";
 import type { Appliance } from "@/lib/appliance-types";
 import type { ObligationView } from "@/lib/obligations";
+import type { ObligationCompletion } from "@/lib/obligation-completions";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 import { ObligationRow } from "@/components/ObligationRow";
 
-type Row = { appliance: Appliance } & ObligationView;
+type Row = { appliance: Appliance; history?: ObligationCompletion[] } & ObligationView;
 
 // Spec "Page du lieu": a collapsed "À jour" group with the count and the next action
 // date, expanding on tap to the same rows as the red/orange obligations above it.

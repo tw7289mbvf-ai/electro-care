@@ -34,7 +34,7 @@ export function ObligationDateResolver({
         <SimpleDateCard title={dq.question!} resultKind="dueDate" futureYears onAnswer={onAnswer} onCancel={onCancel} />
       );
     case "manufacture_date":
-      return <SimpleDateCard title={dq.question!} resultKind="date" onAnswer={onAnswer} onCancel={onCancel} />;
+      return <ManufactureOrExpiryResolver dq={dq} onAnswer={onAnswer} onCancel={onCancel} />;
     case "vehicle_inspection":
       return <VehicleInspectionResolver dq={dq} taskId={taskId} onAnswer={onAnswer} onCancel={onCancel} />;
     case "yes_no":
@@ -70,7 +70,7 @@ function GradedMonthResolver({
     <div className="flex flex-col gap-2">
       <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
           Valider
         </button>
@@ -113,7 +113,7 @@ function SimpleDateCard({
     <div className="flex flex-col gap-2">
       <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</p>
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} small />
+        <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} small disableFutureMonths={!futureYears} />
         <button
           className={BUTTON_CLASS}
           disabled={!iso}
@@ -125,6 +125,54 @@ function SimpleDateCard({
       <div className="flex flex-wrap gap-2">
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
           Je ne trouve pas la date
+        </button>
+        <CancelLink onCancel={onCancel} />
+      </div>
+    </div>
+  );
+}
+
+// manufacture_date (T-083, le détecteur de fumée): deux dates possibles sont imprimées
+// au dos, au choix de l'utilisateur — la date de fabrication (échéance = date + 10 ans,
+// jamais future) ou la date limite de remplacement, imprimée telle quelle (échéance =
+// cette date, qui peut être future, d'où wideYearOptions ici et non pastYearOptions).
+function ManufactureOrExpiryResolver({
+  dq,
+  onAnswer,
+  onCancel,
+}: {
+  dq: DateQuestion;
+  onAnswer: (result: DateAnswerResult) => void;
+  onCancel: () => void;
+}) {
+  const [mode, setMode] = useState<"choice" | "manufacture" | "expiry">("choice");
+
+  if (mode === "manufacture") {
+    return <SimpleDateCard title={dq.question!} resultKind="date" onAnswer={onAnswer} onCancel={() => setMode("choice")} />;
+  }
+  if (mode === "expiry") {
+    return (
+      <SimpleDateCard
+        title="Quelle est la date limite de remplacement imprimée au dos du détecteur ?"
+        resultKind="dueDate"
+        futureYears
+        onAnswer={onAnswer}
+        onCancel={() => setMode("choice")}
+      />
+    );
+  }
+  return (
+    <div className="flex flex-col gap-2">
+      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
+      <div className="flex flex-wrap gap-2">
+        <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("manufacture")}>
+          Date de fabrication
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("expiry")}>
+          Date limite de remplacement
+        </button>
+        <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
+          Je ne la trouve pas
         </button>
         <CancelLink onCancel={onCancel} />
       </div>
@@ -188,7 +236,7 @@ function VehicleInspectionResolver({
       <div className="flex flex-col gap-2">
         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Date de première immatriculation ?</p>
         <div className="flex flex-wrap items-center gap-2">
-          <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} small />
+          <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} small disableFutureMonths />
           <button
             className={BUTTON_CLASS}
             disabled={!regIso}
@@ -211,7 +259,7 @@ function VehicleInspectionResolver({
     <div className="flex flex-col gap-2">
       <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
       <div className="flex flex-wrap items-center gap-2">
-        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small />
+        <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
           Valider
         </button>

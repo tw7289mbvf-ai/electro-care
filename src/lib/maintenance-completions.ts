@@ -56,6 +56,23 @@ export async function getLatestMaintenanceCompletionsForAppliance(applianceId: s
   return rows.map(toCompletion);
 }
 
+// Full history for one task on one appliance, most recent month first (spec's
+// "Managing Appliances", "History, never overwritten" — "same principle for maintenance
+// tasks"): the task's fiche shows the latest here, older entries collapsed below it.
+export async function getMaintenanceCompletionHistory(
+  applianceId: string,
+  maintenanceTaskId: string
+): Promise<MaintenanceCompletion[]> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    SELECT id, appliance_id, maintenance_task_id, done_month, modified_at
+    FROM maintenance_completions
+    WHERE appliance_id = ${applianceId} AND maintenance_task_id = ${maintenanceTaskId}
+    ORDER BY done_month DESC, created_at DESC
+  `) as CompletionRow[];
+  return rows.map(toCompletion);
+}
+
 export async function isMaintenanceTaskDoneThisMonth(
   applianceId: string,
   maintenanceTaskId: string,

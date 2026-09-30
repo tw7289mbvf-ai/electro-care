@@ -9,6 +9,8 @@ import { getApplianceDisplayName } from "@/lib/appliance-display";
 import { getAppliance } from "@/lib/appliances";
 import { getPlace } from "@/lib/places";
 import { getObligationRecordsForAppliance } from "@/lib/appliance-obligations";
+import { getObligationCompletionsForAppliance } from "@/lib/obligation-completions";
+import { getAppointmentsForAppliance } from "@/lib/obligation-appointments";
 import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
@@ -47,14 +49,23 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
   }
 
   const month = currentMonthKey();
-  const [obligationRecords, placeCompletions, placeDeferrals, latestCompletions] = await Promise.all([
-    getObligationRecordsForAppliance(id),
-    getMaintenanceCompletionsForPlace(appliance.placeId, month),
-    getMaintenanceDeferralsForPlace(appliance.placeId),
-    getLatestMaintenanceCompletionsForAppliance(id),
-  ]);
+  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions] =
+    await Promise.all([
+      getObligationRecordsForAppliance(id),
+      getObligationCompletionsForAppliance(id),
+      getAppointmentsForAppliance(id),
+      getMaintenanceCompletionsForPlace(appliance.placeId, month),
+      getMaintenanceDeferralsForPlace(appliance.placeId),
+      getLatestMaintenanceCompletionsForAppliance(id),
+    ]);
   const completions = placeCompletions.filter((c) => c.applianceId === id);
   const deferrals = placeDeferrals.filter((d) => d.applianceId === id);
+  const obligationCompletionsByTaskId = new Map<string, typeof obligationCompletions>();
+  for (const entry of obligationCompletions) {
+    const list = obligationCompletionsByTaskId.get(entry.maintenanceTaskId);
+    if (list) list.push(entry);
+    else obligationCompletionsByTaskId.set(entry.maintenanceTaskId, [entry]);
+  }
 
   const guidance = applyDeferrals(
     filterPendingGuidance(getMaintenanceGuidanceForAppliances([appliance], place.maintenanceLevel), completions),
@@ -105,7 +116,13 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
           />
         </header>
 
-        <ObligationsBlock appliances={[appliance]} obligationRecords={obligationRecords} placeChecks={[]} />
+        <ObligationsBlock
+          appliances={[appliance]}
+          obligationRecords={obligationRecords}
+          appointments={appointments}
+          placeChecks={[]}
+          completionsByTaskId={obligationCompletionsByTaskId}
+        />
 
         <ApplianceEntretienSection
           applianceId={appliance.id}

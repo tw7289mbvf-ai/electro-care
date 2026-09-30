@@ -2,22 +2,34 @@ import Link from "next/link";
 import type { Appliance } from "@/lib/appliance-types";
 import type { Place } from "@/lib/place-types";
 import { compareObligationsByUrgency, getObligationsForAppliance, type ApplianceObligationRecord } from "@/lib/obligations";
+import type { ObligationAppointment } from "@/lib/obligation-appointments";
 import { ObligationRow } from "@/components/ObligationRow";
 
-type PlaceData = { place: Place; appliances: Appliance[]; obligationRecords: ApplianceObligationRecord[] };
+type PlaceData = {
+  place: Place;
+  appliances: Appliance[];
+  obligationRecords: ApplianceObligationRecord[];
+  appointments: ObligationAppointment[];
+};
 
 // Dashboard "À faire maintenant": only overdue (red) obligations, grouped under each
 // place's name, each with its "C'est fait" button — everything else waits for the
-// place page.
+// place page. A pending "Rendez-vous pris" leaves this list entirely (spec's "Managing
+// Appliances"), whether or not its date has already passed — the "a-t-il eu lieu ?"
+// question only makes sense on the place page or the appliance fiche.
 export function UrgentActions({ placesData }: { placesData: PlaceData[] }) {
   const groups = placesData
-    .map(({ place, appliances, obligationRecords }) => {
+    .map(({ place, appliances, obligationRecords, appointments }) => {
       const rows = appliances
         .flatMap((appliance) => {
           if (!appliance.equipmentTypeId) return [];
           const records = obligationRecords.filter((r) => r.applianceId === appliance.id);
           return getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw)
-            .filter((o) => o.status === "overdue")
+            .filter(
+              (o) =>
+                o.status === "overdue" &&
+                !appointments.some((a) => a.applianceId === appliance.id && a.maintenanceTaskId === o.task.id)
+            )
             .map((o) => ({ appliance, ...o }));
         })
         .sort(compareObligationsByUrgency);

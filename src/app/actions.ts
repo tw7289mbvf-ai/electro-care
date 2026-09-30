@@ -20,6 +20,13 @@ import {
   updatePlaceMaintenanceLevel,
 } from "@/lib/places";
 import { setApplianceObligation } from "@/lib/appliance-obligations";
+import {
+  recordObligationCompletion,
+  editObligationCompletion,
+  getLatestObligationCompletion,
+} from "@/lib/obligation-completions";
+import { setObligationAppointment, deleteObligationAppointment } from "@/lib/obligation-appointments";
+import { getTodayInFrance } from "@/lib/obligations";
 import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
 import { recordMaintenanceCompletion, editMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
@@ -204,10 +211,32 @@ export async function removePlace(id: string): Promise<void> {
 
 const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
 
+// "C'est fait"/"Modifier": current month or a past one, never a future one — a done
+// intervention is a proof (spec's "Managing Appliances"). `month` is "YYYY-MM".
+function isFutureMonth(month: string): boolean {
+  return month > currentMonthKey();
+}
+
+// appliance_obligations (the "current status" record obligations.ts computes from) is
+// always re-derived from obligation_completions' own latest row after a history write,
+// rather than from the value that write just submitted — an edit can make an older
+// entry the new latest one, or make a previously-latest one no longer the latest.
+async function syncObligationFromHistory(applianceId: string, maintenanceTaskId: string): Promise<void> {
+  const latest = await getLatestObligationCompletion(applianceId, maintenanceTaskId);
+  if (!latest) return;
+  await setApplianceObligation({
+    applianceId,
+    maintenanceTaskId,
+    lastServiceDate: latest.serviceDate,
+    providerName: latest.providerName,
+    providerContact: latest.providerContact,
+    modified: latest.modifiedAt !== null,
+  });
+}
+
 // "C'est fait": the user only gives a month (input type="month", MM/AAAA on screen),
-// stored as day 1 of that month. Clears any stale known_due_date so the status is
-// recomputed from this new last_service_date going forward (setApplianceObligation
-// overwrites known_due_date to null when it isn't passed).
+// stored as day 1 of that month. Appends a history entry (spec's "Managing Appliances",
+// "History, never overwritten") and resyncs the current-status record from it.
 export async function markObligationDone(
   applianceId: string,
   maintenanceTaskId: string,
@@ -215,46 +244,96 @@ export async function markObligationDone(
   providerName: string | null = null,
   providerContact: string | null = null
 ): Promise<void> {
-  if (!MONTH_PATTERN.test(month)) {
+  if (!MONTH_PATTERN.test(month) || isFutureMonth(month)) {
     throw new Error("Mois invalide");
   }
-  await setApplianceObligation({
+  await recordObligationCompletion({
     applianceId,
     maintenanceTaskId,
-    lastServiceDate: `${month}-01`,
+    serviceDate: `${month}-01`,
     providerName: providerName?.trim() || null,
     providerContact: providerContact?.trim() || null,
   });
+  await syncObligationFromHistory(applianceId, maintenanceTaskId);
+  // "Le rendez-vous a-t-il eu lieu ? Oui" (spec's "Managing Appliances") funnels into
+  // this same action, prefilled — and any other "C'est fait" on a task that happened to
+  // have a pending appointment resolves it the same way. No-op when there was none.
+  await deleteObligationAppointment(applianceId, maintenanceTaskId);
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
 }
 
-// "Modifier" on a past legal intervention (spec's "Managing Appliances"): same fields as
-// "C'est fait", but stamps modified_at so the fiche shows "modifiée le …".
-export async function editObligation(
+// "Rendez-vous pris" (spec's "Managing Appliances"): only on a red or orange obligation,
+// a future date to the day and a provider — replaces any appointment already pending for
+// this task (also used by "Reprogrammer").
+export async function bookObligationAppointment(
   applianceId: string,
   maintenanceTaskId: string,
-  month: string,
-  providerName: string | null,
-  providerContact: string | null
-): Promise<void> {
-  if (!MONTH_PATTERN.test(month)) {
-    throw new Error("Mois invalide");
+  appointmentDate: string,
+  providerName: string,
+  providerContact: string | null = null
+): Promise<{ error?: string }> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(appointmentDate) || appointmentDate <= getTodayInFrance()) {
+    return { error: "Date invalide" };
   }
-  await setApplianceObligation({
+  if (!providerName.trim()) {
+    return { error: "Le prestataire est requis" };
+  }
+  await setObligationAppointment({
     applianceId,
     maintenanceTaskId,
-    lastServiceDate: `${month}-01`,
-    providerName: providerName?.trim() || null,
+    appointmentDate,
+    providerName: providerName.trim(),
     providerContact: providerContact?.trim() || null,
-    modified: true,
   });
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+  return {};
+}
+
+// "Non" + "Annuler" (spec's "Managing Appliances"): the obligation returns to its
+// ordinary status.
+export async function cancelObligationAppointment(applianceId: string, maintenanceTaskId: string): Promise<void> {
+  await deleteObligationAppointment(applianceId, maintenanceTaskId);
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// "Modifier" on a past legal intervention (spec's "Managing Appliances"): corrects one
+// history entry (identified by id, since there can now be several), stamping
+// modified_at so the fiche shows "modifiée le …".
+export async function editObligation(
+  id: string,
+  applianceId: string,
+  maintenanceTaskId: string,
+  month: string,
+  providerName: string | null,
+  providerContact: string | null
+): Promise<{ error?: string }> {
+  if (!MONTH_PATTERN.test(month) || isFutureMonth(month)) {
+    return { error: "Mois invalide" };
+  }
+  const result = await editObligationCompletion({
+    id,
+    applianceId,
+    maintenanceTaskId,
+    serviceDate: `${month}-01`,
+    providerName: providerName?.trim() || null,
+    providerContact: providerContact?.trim() || null,
+  });
+  if (result.error) return result;
+  await syncObligationFromHistory(applianceId, maintenanceTaskId);
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  const appliance = await getAppliance(applianceId);
+  if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+  return {};
 }
 
 // Orange "Mettre à jour" — power threshold (spec's "Actions and colours"): resolves
@@ -306,7 +385,7 @@ export async function editMaintenanceCompletionAction(input: {
   month: string;
   placeId: string;
 }): Promise<{ error?: string }> {
-  if (!MONTH_PATTERN.test(input.month)) {
+  if (!MONTH_PATTERN.test(input.month) || isFutureMonth(input.month)) {
     return { error: "Mois invalide" };
   }
   const result = await editMaintenanceCompletion({

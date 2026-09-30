@@ -5,6 +5,7 @@ import { PROPERTY_TYPE_LABELS } from "@/lib/place-types";
 import { getPlace } from "@/lib/places";
 import { getAppliances } from "@/lib/appliances";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
+import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
 import { getPlaceChecks } from "@/lib/place-checks";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
@@ -38,9 +39,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   }
 
   const month = currentMonthKey();
-  const [allAppliances, obligationRecords, placeChecks, completions, deferrals] = await Promise.all([
+  const [allAppliances, obligationRecords, appointments, placeChecks, completions, deferrals] = await Promise.all([
     getAppliances(),
     getObligationRecordsForPlace(id),
+    getAppointmentsForPlace(id),
     getPlaceChecks(id),
     getMaintenanceCompletionsForPlace(id, month),
     getMaintenanceDeferralsForPlace(id),
@@ -109,7 +111,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
 
         <MaintenanceLevelPicker placeId={place.id} level={place.maintenanceLevel} estimates={levelEstimates} />
 
-        <ObligationsBlock appliances={appliances} obligationRecords={obligationRecords} placeChecks={placeChecks} />
+        <ObligationsBlock
+          appliances={appliances}
+          obligationRecords={obligationRecords}
+          appointments={appointments}
+          placeChecks={placeChecks}
+        />
 
         <MaintenanceGuidanceList items={guidance} placeId={id} deferrableTaskKeys={deferrableTaskKeys} />
 

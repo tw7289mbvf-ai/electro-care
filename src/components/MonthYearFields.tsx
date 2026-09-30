@@ -18,19 +18,27 @@ export function MonthYearFields({
   onChange,
   years,
   small = false,
+  disableFutureMonths = false,
 }: {
   value: MonthYearValue;
   onChange: (value: MonthYearValue) => void;
   years: number[];
   small?: boolean;
+  // A done intervention is a proof (spec's "Mark a legal obligation as done"): current
+  // month or a past one, never a future one. Only meaningful when `years` already stops
+  // at the current year — the month list still shows all 12 for a past year.
+  disableFutureMonths?: boolean;
 }) {
   const className = small ? `${SELECT_CLASS} px-2 py-1 text-xs` : SELECT_CLASS;
+  const now = new Date();
+  const isCurrentYearSelected = disableFutureMonths && Number(value.year) === now.getFullYear();
+  const maxMonth = isCurrentYearSelected ? now.getMonth() + 1 : 12;
   return (
     <div className="flex gap-2">
       <select value={value.month} onChange={(e) => onChange({ ...value, month: e.target.value })} className={className}>
         <option value="">Mois</option>
         {FRENCH_MONTHS.map((label, i) => (
-          <option key={label} value={String(i + 1).padStart(2, "0")}>
+          <option key={label} value={String(i + 1).padStart(2, "0")} disabled={i + 1 > maxMonth}>
             {label}
           </option>
         ))}
