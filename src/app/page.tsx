@@ -18,6 +18,9 @@ import { touchAccountActivity } from "@/lib/account-activity";
 import { getInvoiceImportMode } from "@/lib/invoice-extraction";
 import { requireAdminRoute } from "@/lib/admin";
 import { auth } from "@/lib/auth/server";
+import { logProductEvent } from "@/lib/product-events";
+import { getAccountPreferences, shouldShowSatisfactionSurvey, markSatisfactionSurveyShown } from "@/lib/account-preferences";
+import { SatisfactionSurveyModal } from "@/components/SatisfactionSurveyModal";
 
 // Every page here reads user data straight from Postgres: it must never be served
 // from a static/ISR cache, or edits made outside the app (migrations, other users)
@@ -79,6 +82,19 @@ export default async function Home() {
   }
 
   await touchAccountActivity();
+  // Idempotent (unique per account) — re-run every visit, harmless after the first,
+  // and logged server-side rather than reacting to the sign-up form's result.
+  await logProductEvent("account_created");
+  const preferences = await getAccountPreferences();
+  const showSatisfactionSurvey = shouldShowSatisfactionSurvey(
+    new Date(session.user.createdAt).toISOString(),
+    preferences.satisfactionShownAt
+  );
+  if (showSatisfactionSurvey) {
+    // Marked at render time, not at response time: "shown once" means displayed once,
+    // whether or not the account answers (spec's "Measuring the MVP").
+    await markSatisfactionSurveyShown();
+  }
   const isAdmin = (await requireAdminRoute()) !== null;
   const invoiceImportMode = getInvoiceImportMode(isAdmin);
   const [places, appliances] = await Promise.all([getPlaces(), getAppliances()]);
@@ -181,6 +197,7 @@ export default async function Home() {
           </>
         )}
       </main>
+      {showSatisfactionSurvey && <SatisfactionSurveyModal />}
     </div>
   );
 }

@@ -19,6 +19,13 @@ if (connectionRole === "neondb_owner") {
   );
 }
 
+// For src/lib/cron-auth.ts: the cron job's connection still goes through this one
+// centralized place that calls the raw neon() constructor, same as every other
+// connection in the app — scripts/test-isolation.mjs greps for exactly that invariant.
+export function getSqlForToken(token: string) {
+  return neon(process.env.DATABASE_URL!, { authToken: token });
+}
+
 export async function getAuthedContext() {
   const { data: session } = await auth.getSession();
   if (!session?.user) {

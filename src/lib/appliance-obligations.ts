@@ -12,7 +12,7 @@ type ObligationRow = {
   modified_at: string | Date | null;
 };
 
-function toDateOnlyOrNull(value: string | Date | null): string | null {
+export function toDateOnlyOrNull(value: string | Date | null): string | null {
   if (value === null) return null;
   if (typeof value === "string") return value;
   const year = value.getFullYear();

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminActionLog, getAdminRequests } from "@/lib/admin";
+import { getKpiIndicators, getMultiHomeBreakdown } from "@/lib/admin-metrics";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
 import { AdminRequestRow } from "@/components/AdminRequestRow";
 
@@ -32,10 +33,12 @@ function StatTile({ label, value }: { label: string; value: number }) {
 export default async function AdminPage() {
   const adminAccountId = await requireAdminPage();
   const { stats, accounts } = await getAdminOverview();
-  const [obligationCounts, actionLog, requests] = await Promise.all([
+  const [obligationCounts, actionLog, requests, kpiIndicators, multiHomeBreakdown] = await Promise.all([
     getAdminObligationCounts(),
     getAdminActionLog(accounts),
     getAdminRequests(),
+    getKpiIndicators(),
+    getMultiHomeBreakdown(),
   ]);
 
   return (
@@ -51,6 +54,9 @@ export default async function AdminPage() {
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Vue globale, sans accès au contenu des comptes.
           </p>
+          <Link href="/admin/reminders" className="mt-2 inline-block text-sm font-medium text-emerald-700 hover:underline dark:text-emerald-400">
+            Aperçu des rappels par e-mail →
+          </Link>
         </header>
 
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -62,6 +68,52 @@ export default async function AdminPage() {
           <StatTile label="Questionnaires terminés" value={stats.questionnairesCompleted} />
           <StatTile label="Obligations en retard" value={obligationCounts.overdue} />
           <StatTile label="Obligations à confirmer" value={obligationCounts.toConfirm} />
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Mesure du MVP</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {kpiIndicators.map((indicator) => (
+              <div key={indicator.key} className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
+                <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+                  {indicator.ratio === null ? "—" : `${Math.round(indicator.ratio * 100)} %`}
+                </p>
+                <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">{indicator.label}</p>
+                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{indicator.detail}</p>
+              </div>
+            ))}
+            <div className="rounded-xl border border-dashed border-zinc-300 p-4 dark:border-zinc-700">
+              <p className="text-xl font-semibold text-zinc-400 dark:text-zinc-500">—</p>
+              <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">Modèle économique</p>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Suivi manuel (prestataires prêts à payer).</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Multi-logements</h2>
+          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+            <table className="w-full min-w-[420px] text-sm">
+              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Logements</th>
+                  <th className="px-4 py-2 font-medium">Comptes</th>
+                  <th className="px-4 py-2 font-medium">Engagement</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+                {multiHomeBreakdown.map((bucket) => (
+                  <tr key={bucket.label}>
+                    <td className="px-4 py-2 text-zinc-900 dark:text-zinc-50">{bucket.label}</td>
+                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">{bucket.accounts}</td>
+                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">
+                      {bucket.accounts === 0 ? "—" : `${Math.round((bucket.engagedAccounts / bucket.accounts) * 100)} %`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
 
         <section className="flex flex-col gap-3">

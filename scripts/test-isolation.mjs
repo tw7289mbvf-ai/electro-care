@@ -144,6 +144,20 @@ async function main() {
   const [document] = await owner`INSERT INTO documents (account_id, document_type, storage_path) VALUES (${a.accountId}, 'invoice', '/test.pdf') RETURNING id`;
   await owner`INSERT INTO document_appliances (document_id, appliance_id) VALUES (${document.id}, ${appliance.id})`;
   const [request] = await owner`INSERT INTO account_requests (account_id, kind, email, message) VALUES (${a.accountId}, 'contact', 'a@example.com', 'A message') RETURNING id`;
+  const [preferences] = await owner`INSERT INTO account_preferences (account_id) VALUES (${a.accountId}) RETURNING account_id, unsubscribe_token`;
+  const reminderPayload = JSON.stringify([
+    { applianceId: appliance.id, equipmentLabel: "Test", brand: null, model: null, taskTitle: "Test", legalBasis: null, placeAddress: null, providerEmail: null },
+  ]);
+  const [reminderLog] = await owner`
+    INSERT INTO reminder_logs (account_id, sent_date, subject, html_body, payload)
+    VALUES (${a.accountId}, '2026-10-01', 'Test', '<p>Test</p>', ${reminderPayload})
+    RETURNING id
+  `;
+  const [scheduleSent] = await owner`
+    INSERT INTO reminder_schedule_sent (appliance_id, maintenance_task_id, due_date, milestone)
+    VALUES (${appliance.id}, 'T-TEST', '2026-10-01', 'due_date')
+    RETURNING id
+  `;
 
   // B's own legitimate resources, for the injection/reattachment tests
   const [placeB] = await sqlB`INSERT INTO places (account_id, name) VALUES (auth.uid(), 'B place') RETURNING id`;
@@ -177,6 +191,25 @@ async function main() {
   const ownRequestRead = await sqlA`SELECT id FROM account_requests WHERE id = ${request.id}`;
   record("SELECT own account_requests row (A → A's row, must succeed)", ownRequestRead.length === 1, `${ownRequestRead.length} row(s)`);
 
+  // account_preferences has no own `id` column (PK is account_id), so it's checked
+  // separately rather than folded into the generic `targets` loop above.
+  const apSel = await refused(() => sqlB.query("SELECT * FROM account_preferences WHERE account_id = $1", [preferences.account_id]));
+  record("SELECT account_preferences (B → A's row)", apSel.ok, apSel.rows !== undefined ? `${apSel.rows} row(s)` : apSel.code);
+  const apUpd = await refused(() =>
+    sqlB.query("UPDATE account_preferences SET email_reminders_enabled = false WHERE account_id = $1", [preferences.account_id])
+  );
+  record("UPDATE account_preferences (B → A's row)", apUpd.ok, apUpd.rows !== undefined ? `${apUpd.rows} row(s)` : apUpd.code);
+  const ownPrefRead = await sqlA`SELECT account_id FROM account_preferences WHERE account_id = ${preferences.account_id}`;
+  record("SELECT own account_preferences row (A → A's row, must succeed)", ownPrefRead.length === 1, `${ownPrefRead.length} row(s)`);
+
+  // reminder_logs / reminder_schedule_sent have no GRANT at all (deny-all, same
+  // pattern as admin_actions) — any authenticated query against them must fail
+  // regardless of row ownership, not just rows belonging to a different account.
+  const rlSel = await refused(() => sqlB.query("SELECT * FROM reminder_logs WHERE id = $1", [reminderLog.id]));
+  record("SELECT reminder_logs (B, no grant at all)", rlSel.ok, rlSel.rows !== undefined ? `${rlSel.rows} row(s)` : rlSel.code);
+  const rssSel = await refused(() => sqlB.query("SELECT * FROM reminder_schedule_sent WHERE id = $1", [scheduleSent.id]));
+  record("SELECT reminder_schedule_sent (B, no grant at all)", rssSel.ok, rssSel.rows !== undefined ? `${rssSel.rows} row(s)` : rssSel.code);
+
   const daSel = await refused(() => sqlB`SELECT * FROM document_appliances WHERE document_id = ${document.id}`);
   record("SELECT document_appliances (B → A's link)", daSel.ok);
   const daDel = await refused(() => sqlB`DELETE FROM document_appliances WHERE document_id = ${document.id}`);
@@ -194,6 +227,7 @@ async function main() {
     ["INSERT maintenance_deferrals on A's appliance", () => sqlB.query("INSERT INTO maintenance_deferrals (appliance_id, maintenance_task_id, origin_month, deferred_to_month) VALUES ($1, 'x', '2026-09', '2026-10')", [appliance.id])],
     ["INSERT document_appliances linking A's document to B's appliance", () => sqlB.query("INSERT INTO document_appliances (document_id, appliance_id) VALUES ($1, $2)", [document.id, applianceB.id])],
     ["INSERT account_requests with A's account_id", () => sqlB.query("INSERT INTO account_requests (account_id, kind, email) VALUES ($1, 'deletion', 'pirate@example.com')", [a.accountId])],
+    ["INSERT product_events with A's account_id", () => sqlB.query("INSERT INTO product_events (account_id, event_type) VALUES ($1, 'obligation_done')", [a.accountId])],
     ["UPDATE B's own appliance to attach it to A's place", () => sqlB.query("UPDATE appliances SET place_id = $1 WHERE id = $2", [place.id, applianceB.id])],
     // Dashboard actions (src/app/actions.ts): "Supprimer ce lieu" and "C'est fait",
     // attempted by B against A's rows. DELETE places is already covered generically
@@ -259,7 +293,7 @@ async function main() {
   record("SELECT A's document after injection attempt", stillHidden.ok);
 
   // --- 3. No session at all ------------------------------------------------
-  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "account_requests"]) {
+  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "account_requests", "account_preferences", "product_events", "reminder_logs", "reminder_schedule_sent"]) {
     const res = await refused(() => sqlAs(undefined).query(`SELECT * FROM ${table}`));
     record(`SELECT ${table} with no session token`, res.ok, res.code);
   }
@@ -296,6 +330,36 @@ async function main() {
   for (const [label, fn] of adminFunctionCalls) {
     const res = await refused(fn);
     record(`${label} (B, not admin)`, res.ok, res.rows !== undefined ? `${res.rows} row(s)` : res.code);
+  }
+
+  // --- 6b. Cron-only SECURITY DEFINER functions, called directly as B (non-cron) -----
+  // Includes get_reminder_log_payload/log_reminder_link_click/unsubscribe_by_token:
+  // despite backing *public* routes (src/app/go/[logId], src/app/api/unsubscribe/
+  // [token]), they gate on _require_cron() too — this Neon Auth instance's `anonymous`
+  // role needs real credentials this app doesn't have for a genuinely sessionless
+  // connection (found during this chantier's rollout), so those routes authenticate as
+  // the `cron` account instead (src/lib/cron-auth.ts); the capability is still the
+  // unguessable id/token itself, not this account, but the only thing provable here
+  // without the real cron account's password is that a non-cron caller is refused —
+  // same depth the admin_* checks below already test for admin.
+  const cronFunctionCalls = [
+    ["cron_due_reminders(false)", () => sqlB`SELECT * FROM cron_due_reminders(false)`],
+    [
+      "cron_save_reminder_log(...)",
+      () => sqlB`SELECT cron_save_reminder_log(${reminderLog.id}, ${a.accountId}, '2026-10-01', 'x', 'x', '[]'::jsonb, false)`,
+    ],
+    [
+      "cron_mark_milestones_sent(...)",
+      () => sqlB`SELECT cron_mark_milestones_sent(${appliance.id}, 'T-TEST', '2026-10-01', ARRAY['due_date'], ${reminderLog.id})`,
+    ],
+    ["cron_purge_old_reminder_logs()", () => sqlB`SELECT cron_purge_old_reminder_logs()`],
+    ["get_reminder_log_payload(...)", () => sqlB`SELECT get_reminder_log_payload(${reminderLog.id}, 0)`],
+    ["log_reminder_link_click(...)", () => sqlB`SELECT log_reminder_link_click(${reminderLog.id}, 0, 'fiche')`],
+    ["unsubscribe_by_token(...)", () => sqlB`SELECT unsubscribe_by_token(${preferences.unsubscribe_token})`],
+  ];
+  for (const [label, fn] of cronFunctionCalls) {
+    const res = await refused(fn);
+    record(`${label} (B, not cron)`, res.ok, res.rows !== undefined ? `${res.rows} row(s)` : res.code);
   }
 
   // --- 7. /admin and its actions over real HTTP, for a non-admin session and for no

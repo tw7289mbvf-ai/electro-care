@@ -85,16 +85,29 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
   and delete that branch/project once it's served its purpose: one created before a
   password rotation still answers to the old password after the rotation.
+- A migration never starts in the same command as its backup branch: create the
+  backup in one command, confirm in a separate one that it exists (`neonctl branches
+  list -o json | jq` on its name, state `ready`), and only then run
+  `scripts/migrate.mjs`. A `&&` chain is not enough: `neonctl … -o json | jq` exits 0
+  even when creation failed (found 2026-10-05: "branches limit exceeded" went unseen
+  and a migration ran without its backup).
+- At most three backup branches at a time. Delete the oldest once their chantier is
+  verified in production — the project's branch limit otherwise blocks the next
+  backup.
 - `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
   tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
   `account_id` makes the very next statement (`CREATE POLICY ... USING (account_id =
   auth.uid())`) fail — safely, inside the transaction, rolled back — but only once you
-  are sure that's what you're pointed at. Never run this script against the old
-  pre-auth production database (`neon-beige-feather` / `curly-base-57056864`,
-  `us-east-1`) expecting it to add the account_id/RLS layer in place: that database's
-  existing rows have no account to attach to, by design (see `docs/spec.md`, "Empty
-  start") — it is being retired, not migrated in place.
+  are sure that's what you're pointed at. Never run it against a legacy pre-auth
+  database expecting it to add the account_id/RLS layer in place: such rows have no
+  account to attach to, by design (see `docs/spec.md`, "Empty start").
+- Only one Neon project exists: `electro-care-eu` / `icy-union-72562625`
+  (`eu-central-1`). The old pre-auth US project (`neon-beige-feather` /
+  `curly-base-57056864`, `us-east-1`) and its Vercel integration store were deleted
+  on 2026-10-05, without migration. The org is Vercel-managed: `neonctl projects
+  delete` is refused ("organization is managed by Vercel"); a Neon project is deleted
+  by deleting its Vercel storage store.
 - `scripts/test-isolation.mjs` cannot run on a disposable branch of the EU project
   (`electro-care-eu` / `icy-union-72562625`): this project has a legacy web access
   role, so schema-only branches are refused outright, and a normal (data-copying)
