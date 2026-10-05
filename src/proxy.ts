@@ -63,6 +63,9 @@ export default async function proxy(request: NextRequest) {
 // Every route calls into Neon Auth except the auth pages themselves, the legal pages
 // (never touch the session) and the auth API proxy — those stay untouched so the
 // sign-in/sign-up flow and static assets never depend on this proxy running first.
+// The reminder job and the two email-link routes (/go, /api/unsubscribe) are excluded
+// too: they never read the visitor's session (src/lib/cron-auth.ts), and Vercel Cron or
+// a signed-out click from an email would otherwise be redirected to the login page.
 export const config = {
-  matcher: ["/((?!auth|legal|api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!auth|legal|api/auth|api/cron/|api/unsubscribe/|go/|_next/static|_next/image|favicon.ico).*)"],
 };

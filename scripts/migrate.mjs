@@ -973,10 +973,15 @@ try {
       -- function reads unsubscribe_token below — a footer link needs a real token, not
       -- a null one, and getAccountPreferences()'s own lazy-create only runs when that
       -- account happens to visit Settings, which isn't guaranteed before its first
-      -- reminder email.
+      -- reminder email. Same preview-only filter as the query below: while sending is
+      -- off, a real account must not even get this row written.
       INSERT INTO account_preferences (account_id)
       SELECT DISTINCT p.account_id FROM places p
-      ON CONFLICT (account_id) DO NOTHING;
+      JOIN neon_auth."user" u ON u.id = p.account_id
+      WHERE NOT p_preview_only OR u.role IN ('admin', 'test')
+      -- By constraint name: a bare (account_id) is ambiguous with this function's own
+      -- RETURNS TABLE column of the same name (42702).
+      ON CONFLICT ON CONSTRAINT account_preferences_pkey DO NOTHING;
       RETURN QUERY
       SELECT
         p.account_id, u.email, p.id, p.name, p.street_address, p.address_complement, p.commune, p.postcode,

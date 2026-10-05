@@ -7,6 +7,7 @@ import { getLegalObligationsForType } from "@/lib/legal-obligations";
 import { chooseMilestoneToSend, type Milestone } from "@/lib/reminder-milestones";
 import { buildReminderEmail, buildReminderPayload, type ReminderObligationInput } from "@/lib/email/reminder-email";
 import { sendTransactionalEmail } from "@/lib/email/brevo";
+import { toDateOnlyOrNull } from "@/lib/appliance-obligations";
 
 // Vercel Cron, once a day (not guaranteed — see src/lib/reminder-milestones.ts). This
 // route is the only caller of the `cron`-role SQL functions in scripts/migrate.mjs.
@@ -28,8 +29,8 @@ type DueRow = {
   equipment_type_id: string;
   power_kw: string | number | null;
   maintenance_task_id: string;
-  last_service_date: string | null;
-  known_due_date: string | null;
+  last_service_date: string | Date | null;
+  known_due_date: string | Date | null;
   service_confidence: ApplianceObligationRecord["serviceConfidence"];
   provider_contact: string | null;
   has_pending_appointment: boolean;
@@ -68,8 +69,8 @@ export async function GET(request: Request) {
     const record: ApplianceObligationRecord = {
       applianceId: row.appliance_id,
       maintenanceTaskId: row.maintenance_task_id,
-      lastServiceDate: row.last_service_date,
-      knownDueDate: row.known_due_date,
+      lastServiceDate: toDateOnlyOrNull(row.last_service_date),
+      knownDueDate: toDateOnlyOrNull(row.known_due_date),
       serviceConfidence: row.service_confidence,
       providerName: null,
       providerContact: row.provider_contact,
