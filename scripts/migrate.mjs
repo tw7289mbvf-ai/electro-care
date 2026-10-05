@@ -836,13 +836,22 @@ try {
   // The cron account is the one legitimate case of an account inserting an event on
   // behalf of a *different* account_id (reminder_sent, for the account that received
   // it) — allowed by the role check, never by auth.uid() = account_id for that case.
+  // The check goes through a SECURITY DEFINER function: a policy runs as the caller, and
+  // `authenticated` has no SELECT on neon_auth."user", so reading it inline made every
+  // insert fail with "permission denied for table user", own events included.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION _is_cron() RETURNS boolean AS $func$
+      SELECT auth.uid() IS NOT NULL AND EXISTS (
+        SELECT 1 FROM neon_auth."user" WHERE id = auth.uid() AND role = 'cron'
+      );
+    $func$ LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION _is_cron() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION _is_cron() TO authenticated`);
   await client.query(`
     CREATE POLICY product_events_insert_only ON product_events
       FOR INSERT
-      WITH CHECK (
-        account_id = auth.uid()
-        OR EXISTS (SELECT 1 FROM neon_auth."user" WHERE id = auth.uid() AND role = 'cron')
-      )
+      WITH CHECK (account_id = auth.uid() OR _is_cron())
   `);
   await client.query(`GRANT INSERT ON product_events TO authenticated`);
 
