@@ -1,6 +1,11 @@
 import Link from "next/link";
 
+// The Brevo line below reflects a live env var, not a build-time constant: it must
+// flip the moment EMAIL_REMINDERS_SENDING_ENABLED does, without waiting for a rebuild.
+export const dynamic = "force-dynamic";
+
 export default function ConfidentialitePage() {
+  const sendingEnabled = process.env.EMAIL_REMINDERS_SENDING_ENABLED === "true";
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
@@ -16,7 +21,7 @@ export default function ConfidentialitePage() {
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Politique de confidentialité
           </h1>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 29 septembre 2026</p>
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 30 septembre 2026</p>
         </div>
 
         <p className="text-sm text-zinc-700 dark:text-zinc-300">
@@ -57,7 +62,18 @@ export default function ConfidentialitePage() {
             </li>
             <li>
               <strong>Votre activité</strong> : la date de votre dernière connexion, enregistrée au plus une fois par
-              jour, pour mesurer l&apos;usage du service.
+              jour, et les principales actions dans l&apos;app (questionnaire terminé, intervention enregistrée,
+              rendez-vous pris), pour mesurer l&apos;usage du service. Ces mesures sont faites dans notre propre
+              base, sans cookie ni outil tiers, et ne sont consultées que sous forme de statistiques.
+            </li>
+            <li>
+              <strong>Vos rappels</strong> : nous vous envoyons des rappels d&apos;échéance par e-mail. Nous savons si
+              vous cliquez sur un lien d&apos;un rappel, mais pas si vous l&apos;ouvrez. Vous pouvez désactiver ces
+              rappels à tout moment dans Paramètres, ou depuis le lien en bas de chaque e-mail.
+            </li>
+            <li>
+              <strong>Votre avis</strong> : si vous répondez au court questionnaire de satisfaction proposé dans
+              l&apos;app, votre réponse et votre commentaire éventuel.
             </li>
             <li>
               <strong>Vos demandes</strong> : les messages envoyés avec « Contacter l&apos;administrateur » et les
@@ -104,6 +120,9 @@ export default function ConfidentialitePage() {
                   Neon, Inc. (États-Unis) : base de données hébergée dans l&apos;Union européenne, à Francfort, sur
                   l&apos;infrastructure d&apos;Amazon Web Services ; Neon fournit aussi le service de connexion.
                 </li>
+                {sendingEnabled && (
+                  <li>Brevo (Sendinblue SAS, France) : envoi des e-mails de rappel et des e-mails de connexion.</li>
+                )}
               </ul>
             </li>
           </ul>

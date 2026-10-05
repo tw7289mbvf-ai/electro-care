@@ -41,6 +41,10 @@ import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/
 import { createDeletionRequest, createContactMessage } from "@/lib/account-requests";
 import { auth } from "@/lib/auth/server";
 import { requireAdminRoute } from "@/lib/admin";
+import { logProductEvent } from "@/lib/product-events";
+import { setEmailRemindersEnabled, recordSatisfactionResponse, type SatisfactionResponse } from "@/lib/account-preferences";
+import { getObligationRecordsForAppliance } from "@/lib/appliance-obligations";
+import { getObligationsForAppliance, type ObligationStatus } from "@/lib/obligations";
 import {
   extractAppliancesFromInvoice,
   DEMO_INVOICE_APPLIANCES,
@@ -67,6 +71,16 @@ function isMaintenanceLevel(value: string): value is MaintenanceLevel {
 function optionalTrimmed(formData: FormData, key: string): string | null {
   const value = String(formData.get(key) ?? "").trim();
   return value || null;
+}
+
+// For the "promise kept" KPI (spec's "Measuring the MVP"): the obligation's status
+// just before/after a write, so obligation_status_changed only logs an actual flip.
+async function getObligationStatus(applianceId: string, maintenanceTaskId: string): Promise<ObligationStatus | null> {
+  const appliance = await getAppliance(applianceId);
+  if (!appliance?.equipmentTypeId) return null;
+  const records = await getObligationRecordsForAppliance(applianceId);
+  const views = getObligationsForAppliance(appliance.equipmentTypeId, records, appliance.powerKw);
+  return views.find((v) => v.task.id === maintenanceTaskId)?.status ?? null;
 }
 
 export async function createAppliance(
@@ -247,6 +261,7 @@ export async function markObligationDone(
   if (!MONTH_PATTERN.test(month) || isFutureMonth(month)) {
     throw new Error("Mois invalide");
   }
+  const statusBefore = await getObligationStatus(applianceId, maintenanceTaskId);
   await recordObligationCompletion({
     applianceId,
     maintenanceTaskId,
@@ -259,6 +274,16 @@ export async function markObligationDone(
   // this same action, prefilled — and any other "C'est fait" on a task that happened to
   // have a pending appointment resolves it the same way. No-op when there was none.
   await deleteObligationAppointment(applianceId, maintenanceTaskId);
+  await logProductEvent("obligation_done", { applianceId, maintenanceTaskId });
+  const statusAfter = await getObligationStatus(applianceId, maintenanceTaskId);
+  if (statusBefore && statusAfter && statusBefore !== statusAfter) {
+    await logProductEvent("obligation_status_changed", {
+      applianceId,
+      maintenanceTaskId,
+      fromStatus: statusBefore,
+      toStatus: statusAfter,
+    });
+  }
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
@@ -288,6 +313,7 @@ export async function bookObligationAppointment(
     providerName: providerName.trim(),
     providerContact: providerContact?.trim() || null,
   });
+  await logProductEvent("appointment_booked", { applianceId, maintenanceTaskId });
   revalidatePath("/");
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
@@ -424,6 +450,7 @@ export async function submitQuestionnaireStep(effects: QuestionnaireStepEffects)
 
 export async function completeQuestionnaire(placeId: string): Promise<void> {
   await markPlaceOnboarded(placeId);
+  await logProductEvent("questionnaire_completed");
   revalidatePath("/");
   redirect("/");
 }
@@ -449,6 +476,23 @@ export async function requestAccountDeletion(): Promise<void> {
   const email = await requireSessionEmail();
   await createDeletionRequest(email);
   revalidatePath("/settings");
+}
+
+export async function updateEmailRemindersPreferenceAction(enabled: boolean): Promise<void> {
+  await setEmailRemindersEnabled(enabled);
+  revalidatePath("/settings");
+}
+
+// "Offre multi-logements : bientôt disponible" (chantier extension): a one-off signal
+// of interest, unique per account (enforced in scripts/migrate.mjs).
+export async function logMultiHomeInterestAction(): Promise<void> {
+  await logProductEvent("multi_home_interest_clicked");
+  revalidatePath("/settings");
+}
+
+export async function submitSatisfactionSurveyAction(response: SatisfactionResponse, comment: string): Promise<void> {
+  await recordSatisfactionResponse(response, comment.trim() || null);
+  revalidatePath("/");
 }
 
 export async function submitContactMessage(_prevState: FormState, formData: FormData): Promise<FormState> {

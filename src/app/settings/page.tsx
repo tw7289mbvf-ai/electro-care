@@ -2,9 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { hasPendingDeletionRequest } from "@/lib/account-requests";
+import { getAccountPreferences } from "@/lib/account-preferences";
+import { hasLoggedEvent } from "@/lib/product-events";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 import { RequestAccountDeletionButton } from "@/components/RequestAccountDeletionButton";
 import { ContactAdminForm } from "@/components/ContactAdminForm";
+import { EmailRemindersToggle } from "@/components/EmailRemindersToggle";
+import { MultiHomeInterestButton } from "@/components/MultiHomeInterestButton";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +18,8 @@ export default async function SettingsPage() {
     redirect("/auth/sign-in");
   }
   const alreadyRequestedDeletion = await hasPendingDeletionRequest();
+  const preferences = await getAccountPreferences();
+  const alreadyClickedMultiHome = await hasLoggedEvent("multi_home_interest_clicked");
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
@@ -31,6 +37,19 @@ export default async function SettingsPage() {
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Modifier mon compte</h2>
           <ChangePasswordForm />
+        </section>
+
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Rappels</h2>
+          <EmailRemindersToggle initialEnabled={preferences.emailRemindersEnabled} />
+        </section>
+
+        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
+          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Offre multi-logements : bientôt disponible</h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Vous gérez plusieurs logements ? Dites-nous si cela vous intéresse.
+          </p>
+          <MultiHomeInterestButton alreadyClicked={alreadyClickedMultiHome} />
         </section>
 
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">

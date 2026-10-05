@@ -43,6 +43,7 @@ type NeonAuthUser = {
   email: string;
   createdAt: string | Date;
   banned?: boolean | null;
+  role?: string | null;
 };
 
 export type AdminAccount = {
@@ -81,7 +82,12 @@ async function fetchNeonAuthUsers(): Promise<{ users: NeonAuthUser[]; total: num
   if (error || !data) {
     throw new Error(`Neon Auth: impossible de lister les comptes (${error?.message ?? "réponse vide"})`);
   }
-  return { users: data.users as NeonAuthUser[], total: data.total ?? data.users.length };
+  // The cron account (chantier "rappels par e-mail") is a robot account, not a real
+  // user or the admin checking the product — it must never appear in these figures.
+  // The admin's own account is deliberately left in, exactly as it already was.
+  const users = (data.users as NeonAuthUser[]).filter((u) => u.role !== "cron");
+  const total = (data.total ?? data.users.length) - (data.users.length - users.length);
+  return { users, total };
 }
 
 type StatsRow = {
@@ -270,6 +276,43 @@ export async function getAdminRequests(): Promise<AdminRequest[]> {
 export async function markRequestHandled(requestId: string): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`SELECT admin_mark_request_handled(${requestId})`;
+}
+
+// Reminder-email preview (spec: built but switched off until the Brevo domain/account
+// exist — "l'admin peut prévisualiser chaque e-mail dans /admin, sans l'envoyer").
+// admin_list_recent_reminder_logs() itself only ever returns admin/test accounts'
+// rows — real accounts' content never reaches here, independently of whether sending
+// is on (see scripts/migrate.mjs).
+export type AdminReminderLogPreview = {
+  id: string;
+  accountId: string;
+  sentDate: string;
+  subject: string;
+  htmlBody: string;
+  actuallySent: boolean;
+  createdAt: string;
+};
+
+export async function getAdminRecentReminderLogs(): Promise<AdminReminderLogPreview[]> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`SELECT * FROM admin_list_recent_reminder_logs()`) as {
+    id: string;
+    account_id: string;
+    sent_date: string | Date;
+    subject: string;
+    html_body: string;
+    actually_sent: boolean;
+    created_at: string | Date;
+  }[];
+  return rows.map((r) => ({
+    id: r.id,
+    accountId: r.account_id,
+    sentDate: toIso(r.sent_date).slice(0, 10),
+    subject: r.subject,
+    htmlBody: r.html_body,
+    actuallySent: r.actually_sent,
+    createdAt: toIso(r.created_at),
+  }));
 }
 
 export async function sendPasswordResetLink(accountId: string): Promise<void> {

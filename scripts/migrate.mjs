@@ -759,6 +759,516 @@ try {
   await client.query(`REVOKE ALL ON FUNCTION admin_mark_request_handled(UUID) FROM PUBLIC`);
   await client.query(`GRANT EXECUTE ON FUNCTION admin_mark_request_handled(UUID) TO authenticated`);
 
+  // --- Reminder emails & measurement (chantier "rappels par e-mail et mesure du MVP") ---
+
+  // Per-account opt-out for reminder emails (spec's "Reminder Emails", "Opt-out") and
+  // the one-time satisfaction survey state. unsubscribe_token is the capability used by
+  // the footer link in every reminder email: it must resolve for a signed-out click, so
+  // it is looked up directly by value (unsubscribe_by_token below), never through
+  // auth.uid(). A row only exists once an account has either touched its reminder
+  // preference or received a reminder; getAccountPreferences() lazily creates it with
+  // defaults on first read — see cron_due_reminders's COALESCE below, which treats a
+  // missing row as "on" to match the spec's "on by default" without depending on that.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS account_preferences (
+      account_id UUID PRIMARY KEY REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      email_reminders_enabled BOOLEAN NOT NULL DEFAULT true,
+      unsubscribe_token UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,
+      satisfaction_response TEXT,
+      satisfaction_comment TEXT,
+      satisfaction_shown_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await client.query(`ALTER TABLE account_preferences DROP CONSTRAINT IF EXISTS account_preferences_satisfaction_response_check`);
+  await client.query(`
+    ALTER TABLE account_preferences ADD CONSTRAINT account_preferences_satisfaction_response_check
+      CHECK (satisfaction_response IS NULL OR satisfaction_response IN ('very_disappointed', 'somewhat_disappointed', 'not_disappointed'))
+  `);
+  await client.query(`ALTER TABLE account_preferences ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS account_preferences_isolation ON account_preferences`);
+  await client.query(`
+    CREATE POLICY account_preferences_isolation ON account_preferences
+      FOR ALL
+      USING (account_id = auth.uid())
+      WITH CHECK (account_id = auth.uid())
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE ON account_preferences TO authenticated`);
+
+  // Product events for the "Measuring the MVP" KPI panel (spec's "Instrumentation"):
+  // account_created, questionnaire_completed and multi_home_interest_clicked each mean
+  // something exactly once per account — the partial unique indexes below make a retry
+  // or an odd render timing a harmless no-op instead of inflating a count past 1.
+  // INSERT-only: no account has a UI need to read its own events, and every read this
+  // app needs goes through the admin/KPI SECURITY DEFINER functions further down,
+  // always aggregated, never raw rows tied to an email.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS product_events (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      event_type TEXT NOT NULL,
+      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )
+  `);
+  await client.query(`ALTER TABLE product_events DROP CONSTRAINT IF EXISTS product_events_event_type_check`);
+  await client.query(`
+    ALTER TABLE product_events ADD CONSTRAINT product_events_event_type_check
+      CHECK (event_type IN (
+        'account_created', 'questionnaire_completed', 'obligation_done', 'appointment_booked',
+        'reminder_sent', 'reminder_link_clicked', 'obligation_status_changed', 'multi_home_interest_clicked'
+      ))
+  `);
+  await client.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS product_events_account_created_once
+      ON product_events (account_id) WHERE event_type = 'account_created'
+  `);
+  await client.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS product_events_questionnaire_completed_once
+      ON product_events (account_id) WHERE event_type = 'questionnaire_completed'
+  `);
+  await client.query(`
+    CREATE UNIQUE INDEX IF NOT EXISTS product_events_multi_home_interest_once
+      ON product_events (account_id) WHERE event_type = 'multi_home_interest_clicked'
+  `);
+  await client.query(`ALTER TABLE product_events ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS product_events_insert_only ON product_events`);
+  // The cron account is the one legitimate case of an account inserting an event on
+  // behalf of a *different* account_id (reminder_sent, for the account that received
+  // it) — allowed by the role check, never by auth.uid() = account_id for that case.
+  await client.query(`
+    CREATE POLICY product_events_insert_only ON product_events
+      FOR INSERT
+      WITH CHECK (
+        account_id = auth.uid()
+        OR EXISTS (SELECT 1 FROM neon_auth."user" WHERE id = auth.uid() AND role = 'cron')
+      )
+  `);
+  await client.query(`GRANT INSERT ON product_events TO authenticated`);
+
+  // The one self-scoped read product_events needs outside admin: "has my own account
+  // already logged event X" (e.g. the Settings "Ça m'intéresse" button, so it can show
+  // "merci" instead of the button again after a reload). Scoped to auth.uid() only —
+  // not a general-purpose read, still no way for an account to browse another's events.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION has_logged_event(p_event_type TEXT) RETURNS BOOLEAN AS $func$
+    BEGIN
+      RETURN auth.uid() IS NOT NULL AND EXISTS (
+        SELECT 1 FROM product_events WHERE account_id = auth.uid() AND event_type = p_event_type
+      );
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION has_logged_event(TEXT) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION has_logged_event(TEXT) TO authenticated`);
+
+  // One row per account per calendar day an email was (or would have been) sent —
+  // UNIQUE (account_id, sent_date) is what "one e-mail par jour et par utilisateur au
+  // plus" actually enforces. Deny-all + no GRANT at all (same pattern as admin_actions):
+  // every access goes through the SECURITY DEFINER functions below, never a direct
+  // query, so there is no direct path to try in the first place.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS reminder_logs (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
+      sent_date DATE NOT NULL,
+      subject TEXT NOT NULL,
+      html_body TEXT NOT NULL,
+      payload JSONB NOT NULL,
+      actually_sent BOOLEAN NOT NULL DEFAULT false,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (account_id, sent_date)
+    )
+  `);
+  await client.query(`ALTER TABLE reminder_logs ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS reminder_logs_no_direct_access ON reminder_logs`);
+  await client.query(`CREATE POLICY reminder_logs_no_direct_access ON reminder_logs FOR ALL USING (false) WITH CHECK (false)`);
+
+  // Idempotency for the milestone schedule: UNIQUE (appliance_id, maintenance_task_id,
+  // due_date, milestone) means once a cycle resolves (a later "C'est fait" moves the
+  // due date forward), the old due date's milestones simply never match again — no
+  // explicit invalidation needed. reminder_log_id is only set when the milestone was
+  // actually folded into a sent/previewed email (see cron_mark_milestones_sent).
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS reminder_schedule_sent (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      due_date DATE NOT NULL,
+      milestone TEXT NOT NULL,
+      reminder_log_id UUID REFERENCES reminder_logs(id) ON DELETE SET NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id, due_date, milestone)
+    )
+  `);
+  await client.query(`ALTER TABLE reminder_schedule_sent DROP CONSTRAINT IF EXISTS reminder_schedule_sent_milestone_check`);
+  await client.query(`
+    ALTER TABLE reminder_schedule_sent ADD CONSTRAINT reminder_schedule_sent_milestone_check
+      CHECK (milestone IN ('three_months', 'one_month', 'due_date', 'overdue_1', 'overdue_2', 'overdue_3'))
+  `);
+  await client.query(`ALTER TABLE reminder_schedule_sent ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS reminder_schedule_sent_no_direct_access ON reminder_schedule_sent`);
+  await client.query(`CREATE POLICY reminder_schedule_sent_no_direct_access ON reminder_schedule_sent FOR ALL USING (false) WITH CHECK (false)`);
+
+  // "cron" means exactly one thing, the same way "admin" does: the `role` column Neon
+  // Auth manages on neon_auth.user, set once on one dedicated account via `neonctl
+  // neon-auth user set-role`. No id is hardcoded here or anywhere else in this file.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION _require_cron() RETURNS void AS $func$
+    BEGIN
+      IF auth.uid() IS NULL OR NOT EXISTS (
+        SELECT 1 FROM neon_auth."user" WHERE id = auth.uid() AND role = 'cron'
+      ) THEN
+        RAISE EXCEPTION 'not authorized' USING ERRCODE = '42501';
+      END IF;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION _require_cron() FROM PUBLIC`);
+
+  // Candidate rows for the daily reminder job: one per tracked legal obligation that
+  // has at least one history entry (no entry means no due date to count down from, so
+  // it can never be a reminder candidate anyway). Due dates themselves are computed in
+  // TypeScript from last_service_date/known_due_date/service_confidence, reusing
+  // getObligationsForAppliance exactly like getAdminObligationCounts() already does —
+  // duplicating that logic in SQL would mean duplicating the maintenance-task frequency
+  // and conditional-power-threshold data that only exists in the app's seed files.
+  // p_preview_only restricts to admin/test accounts (see the chantier's "while sending
+  // is off" rule) — real accounts are neither read nor rendered anywhere until sending
+  // is actually enabled. Returns the account's email (needed to actually call Brevo):
+  // unlike the admin_* functions, which deliberately never expose it (spec: the admin
+  // never sees account content), this is the automated cron job's own trust boundary,
+  // not the admin's — the one human-facing exception, the /admin preview, reads from
+  // admin_list_recent_reminder_logs() instead, which never selects an email at all.
+  await client.query(`DROP FUNCTION IF EXISTS cron_due_reminders(BOOLEAN)`);
+  await client.query(`
+    CREATE FUNCTION cron_due_reminders(p_preview_only BOOLEAN)
+    RETURNS TABLE (
+      account_id UUID,
+      account_email TEXT,
+      place_id UUID,
+      place_name TEXT,
+      street_address TEXT,
+      address_complement TEXT,
+      commune TEXT,
+      postcode TEXT,
+      appliance_id UUID,
+      appliance_name TEXT,
+      brand TEXT,
+      model TEXT,
+      equipment_type_id TEXT,
+      power_kw NUMERIC,
+      maintenance_task_id TEXT,
+      last_service_date DATE,
+      known_due_date DATE,
+      service_confidence TEXT,
+      provider_contact TEXT,
+      has_pending_appointment BOOLEAN,
+      prior_milestones JSONB,
+      unsubscribe_token UUID
+    ) AS $func$
+    BEGIN
+      PERFORM _require_cron();
+      -- Every account with at least one place gets a preferences row before this
+      -- function reads unsubscribe_token below — a footer link needs a real token, not
+      -- a null one, and getAccountPreferences()'s own lazy-create only runs when that
+      -- account happens to visit Settings, which isn't guaranteed before its first
+      -- reminder email.
+      INSERT INTO account_preferences (account_id)
+      SELECT DISTINCT p.account_id FROM places p
+      ON CONFLICT (account_id) DO NOTHING;
+      RETURN QUERY
+      SELECT
+        p.account_id, u.email, p.id, p.name, p.street_address, p.address_complement, p.commune, p.postcode,
+        a.id, a.name, a.brand, a.model, a.equipment_type_id, a.power_kw,
+        o.maintenance_task_id, o.last_service_date, o.known_due_date, o.service_confidence,
+        (SELECT oc.provider_contact FROM obligation_completions oc
+           WHERE oc.appliance_id = a.id AND oc.maintenance_task_id = o.maintenance_task_id
+           ORDER BY oc.service_date DESC, oc.created_at DESC LIMIT 1),
+        EXISTS (SELECT 1 FROM obligation_appointments oa
+           WHERE oa.appliance_id = a.id AND oa.maintenance_task_id = o.maintenance_task_id),
+        (SELECT COALESCE(jsonb_agg(rs.milestone), '[]'::jsonb) FROM reminder_schedule_sent rs
+           WHERE rs.appliance_id = a.id AND rs.maintenance_task_id = o.maintenance_task_id),
+        ap.unsubscribe_token
+      FROM appliance_obligations o
+      JOIN appliances a ON a.id = o.appliance_id
+      JOIN places p ON p.id = a.place_id
+      JOIN neon_auth."user" u ON u.id = p.account_id
+      JOIN account_preferences ap ON ap.account_id = p.account_id
+      WHERE ap.email_reminders_enabled
+        AND (NOT p_preview_only OR u.role IN ('admin', 'test'));
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION cron_due_reminders(BOOLEAN) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION cron_due_reminders(BOOLEAN) TO authenticated`);
+
+  // p_id is generated in TypeScript (crypto.randomUUID()), not by the table's own
+  // DEFAULT: the email body built just before this call already embeds /go/[logId]
+  // links, so the id must be known before the row exists. On the rare case of two cron
+  // runs landing on the same account+day, the row's id moves to the newer call's id
+  // (the content is fully regenerated anyway); an already-delivered email's old links
+  // would 404 via the 90-day/unknown-id check, same as any other expired link.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION cron_save_reminder_log(
+      p_id UUID, p_account_id UUID, p_sent_date DATE, p_subject TEXT, p_html_body TEXT, p_payload JSONB, p_actually_sent BOOLEAN
+    ) RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_cron();
+      INSERT INTO reminder_logs (id, account_id, sent_date, subject, html_body, payload, actually_sent)
+      VALUES (p_id, p_account_id, p_sent_date, p_subject, p_html_body, p_payload, p_actually_sent)
+      ON CONFLICT (account_id, sent_date) DO UPDATE SET
+        id = EXCLUDED.id, subject = EXCLUDED.subject, html_body = EXCLUDED.html_body,
+        payload = EXCLUDED.payload, actually_sent = EXCLUDED.actually_sent;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION cron_save_reminder_log(UUID, UUID, DATE, TEXT, TEXT, JSONB, BOOLEAN) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION cron_save_reminder_log(UUID, UUID, DATE, TEXT, TEXT, JSONB, BOOLEAN) TO authenticated`);
+
+  // Only called when EMAIL_REMINDERS_SENDING_ENABLED is actually "true" (see the cron
+  // route): while sending is off, nothing here is ever marked sent, so a tester's
+  // already-overdue obligations don't have their relances silently consumed during the
+  // disabled period — see this chantier's "while sending is off" rule.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION cron_mark_milestones_sent(
+      p_appliance_id UUID, p_maintenance_task_id TEXT, p_due_date DATE, p_milestones TEXT[], p_reminder_log_id UUID
+    ) RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_cron();
+      INSERT INTO reminder_schedule_sent (appliance_id, maintenance_task_id, due_date, milestone, reminder_log_id)
+      SELECT p_appliance_id, p_maintenance_task_id, p_due_date, m, p_reminder_log_id
+      FROM unnest(p_milestones) AS m
+      ON CONFLICT (appliance_id, maintenance_task_id, due_date, milestone) DO NOTHING;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION cron_mark_milestones_sent(UUID, TEXT, DATE, TEXT[], UUID) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION cron_mark_milestones_sent(UUID, TEXT, DATE, TEXT[], UUID) TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION cron_purge_old_reminder_logs() RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_cron();
+      DELETE FROM reminder_logs WHERE created_at < now() - interval '90 days';
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION cron_purge_old_reminder_logs() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION cron_purge_old_reminder_logs() TO authenticated`);
+
+  // The two public, capability-token routes behind every link in a reminder email
+  // (src/app/go/[logId], src/app/api/unsubscribe/[token]): the unguessable id/token
+  // itself is the capability, exactly like a password-reset link — these functions
+  // never check which *account* is calling. They still run under the `cron`-role
+  // session (src/lib/cron-auth.ts, reused by both routes): this Neon Auth instance's
+  // `anonymous` Postgres role turned out to need real credentials this app doesn't
+  // have for a genuinely sessionless connection (found during this chantier's
+  // rollout — connecting as `anonymous@<host>` with no authToken fails with "missing
+  // authentication credentials"), so `_require_cron()` is reused here as the
+  // authorization gate for "a trusted server-side caller, not a specific account" —
+  // the same role already used for the daily job, not a new concept.
+  // get_reminder_log_payload returns only the one requested task's entry, never the
+  // whole payload array, and only inside a 90-day window; past that or for an unknown
+  // id it returns NULL either way, so nothing is leaked about whether an id existed.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION get_reminder_log_payload(p_id UUID, p_task_index INT) RETURNS JSONB AS $func$
+    DECLARE
+      v_payload JSONB;
+    BEGIN
+      PERFORM _require_cron();
+      SELECT payload -> p_task_index INTO v_payload
+      FROM reminder_logs WHERE id = p_id AND created_at > now() - interval '90 days';
+      RETURN v_payload;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION get_reminder_log_payload(UUID, INT) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION get_reminder_log_payload(UUID, INT) TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION log_reminder_link_click(p_id UUID, p_task_index INT, p_target TEXT) RETURNS void AS $func$
+    DECLARE
+      v_account_id UUID;
+    BEGIN
+      PERFORM _require_cron();
+      SELECT account_id INTO v_account_id FROM reminder_logs
+      WHERE id = p_id AND created_at > now() - interval '90 days';
+      IF v_account_id IS NOT NULL THEN
+        INSERT INTO product_events (account_id, event_type, metadata)
+        VALUES (v_account_id, 'reminder_link_clicked',
+                jsonb_build_object('reminder_log_id', p_id, 'task_index', p_task_index, 'target', p_target));
+      END IF;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION log_reminder_link_click(UUID, INT, TEXT) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION log_reminder_link_click(UUID, INT, TEXT) TO authenticated`);
+
+  await client.query(`
+    CREATE OR REPLACE FUNCTION unsubscribe_by_token(p_token UUID) RETURNS void AS $func$
+    BEGIN
+      PERFORM _require_cron();
+      UPDATE account_preferences SET email_reminders_enabled = false WHERE unsubscribe_token = p_token;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION unsubscribe_by_token(UUID) FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION unsubscribe_by_token(UUID) TO authenticated`);
+
+  // Admin preview of reminder emails (spec: built but switched off until the Brevo
+  // domain/account exist — "l'admin peut prévisualiser chaque e-mail dans /admin, sans
+  // l'envoyer"). Permanently scoped to admin/test accounts, independently of
+  // cron_due_reminders's own preview-only filter: the spec's "l'administrateur ne voit
+  // jamais le contenu des comptes" must hold even once real sending is enabled and
+  // reminder_logs starts getting written for real accounts too.
+  await client.query(`
+    CREATE OR REPLACE FUNCTION admin_list_recent_reminder_logs()
+    RETURNS TABLE (
+      id UUID, account_id UUID, sent_date DATE, subject TEXT, html_body TEXT,
+      actually_sent BOOLEAN, created_at TIMESTAMPTZ
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT r.id, r.account_id, r.sent_date, r.subject, r.html_body, r.actually_sent, r.created_at
+      FROM reminder_logs r
+      JOIN neon_auth."user" u ON u.id = r.account_id
+      WHERE u.role IN ('admin', 'test')
+      ORDER BY r.created_at DESC LIMIT 50;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_list_recent_reminder_logs() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_list_recent_reminder_logs() TO authenticated`);
+
+  // Multi-home breakdown (spec extension for this chantier): places-per-account for the
+  // 1/2/3/>3 bucketing, together with the same "engaged within 30 days of
+  // account_created" flag the activation/engagement KPI uses, so src/lib/admin-metrics.ts
+  // can compute each bucket's own engagement rate without a second per-account query.
+  // Excludes admin/test/cron so they never skew the distribution.
+  await client.query(`DROP FUNCTION IF EXISTS admin_account_engagement()`);
+  await client.query(`
+    CREATE FUNCTION admin_account_engagement()
+    RETURNS TABLE (account_id UUID, places_count BIGINT, engaged BOOLEAN) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT p.account_id, COUNT(DISTINCT p.id),
+        EXISTS (
+          SELECT 1 FROM product_events created
+          JOIN product_events action ON action.account_id = created.account_id
+          WHERE created.account_id = p.account_id AND created.event_type = 'account_created'
+            AND action.event_type IN ('obligation_done', 'appointment_booked')
+            AND action.created_at <= created.created_at + interval '30 days'
+        )
+      FROM places p
+      JOIN neon_auth."user" u ON u.id = p.account_id
+      WHERE u.role NOT IN ('admin', 'test', 'cron')
+      GROUP BY p.account_id;
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_account_engagement() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_account_engagement() TO authenticated`);
+
+  // Raw counts for the "Measuring the MVP" KPI panel (spec's six measurable
+  // indicators — the seventh, business model, is tracked by hand). Percentages are
+  // computed in TypeScript (src/lib/admin-metrics.ts) from these counts, the same way
+  // admin.ts already composes getAdminObligationCounts() — not duplicated in SQL.
+  // Every count below excludes role IN ('admin', 'test', 'cron') so neither the
+  // admin's own account nor a leftover test account can skew a percentage.
+  await client.query(`DROP FUNCTION IF EXISTS admin_kpi_counts()`);
+  await client.query(`
+    CREATE FUNCTION admin_kpi_counts()
+    RETURNS TABLE (
+      accounts_total BIGINT,
+      accounts_questionnaire_completed BIGINT,
+      accounts_engaged_30d BIGINT,
+      accounts_eligible_for_retention BIGINT,
+      accounts_retained_second_month BIGINT,
+      reminders_sent BIGINT,
+      reminders_followed_by_action_30d BIGINT,
+      obligations_overdue_resolved_60d BIGINT,
+      obligations_overdue_more_than_60d BIGINT,
+      survey_responses_total BIGINT,
+      survey_very_disappointed BIGINT
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT
+        (SELECT COUNT(*) FROM neon_auth."user" WHERE role NOT IN ('admin', 'test', 'cron')),
+        (SELECT COUNT(DISTINCT pe.account_id) FROM product_events pe
+           JOIN neon_auth."user" u ON u.id = pe.account_id
+           WHERE pe.event_type = 'questionnaire_completed' AND u.role NOT IN ('admin', 'test', 'cron')),
+        (SELECT COUNT(DISTINCT created.account_id) FROM product_events created
+           JOIN neon_auth."user" u ON u.id = created.account_id
+           WHERE created.event_type = 'account_created' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND EXISTS (
+               SELECT 1 FROM product_events action
+               WHERE action.account_id = created.account_id
+                 AND action.event_type IN ('obligation_done', 'appointment_booked')
+                 AND action.created_at <= created.created_at + interval '30 days'
+             )),
+        -- "Eligible for retention" = account is at least 60 days old, so its second
+        -- month has fully elapsed and isn't still in progress.
+        (SELECT COUNT(*) FROM product_events created
+           JOIN neon_auth."user" u ON u.id = created.account_id
+           WHERE created.event_type = 'account_created' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND created.created_at <= now() - interval '60 days'),
+        -- Approximation: account_activity keeps only the single most recent visit, not
+        -- a full visit history, so "returned in the second month" is read as "most
+        -- recent visit is at least 30 days after account creation" rather than a
+        -- precise days-31-60 window.
+        (SELECT COUNT(*) FROM product_events created
+           JOIN neon_auth."user" u ON u.id = created.account_id
+           JOIN account_activity aa ON aa.account_id = created.account_id
+           WHERE created.event_type = 'account_created' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND created.created_at <= now() - interval '60 days'
+             AND aa.last_seen_at >= created.created_at + interval '30 days'),
+        (SELECT COUNT(*) FROM product_events pe
+           JOIN neon_auth."user" u ON u.id = pe.account_id
+           WHERE pe.event_type = 'reminder_sent' AND u.role NOT IN ('admin', 'test', 'cron')),
+        (SELECT COUNT(*) FROM product_events reminder
+           JOIN neon_auth."user" u ON u.id = reminder.account_id
+           WHERE reminder.event_type = 'reminder_sent' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND EXISTS (
+               SELECT 1 FROM product_events action
+               WHERE action.account_id = reminder.account_id
+                 AND action.event_type IN ('obligation_done', 'appointment_booked', 'obligation_status_changed')
+                 AND action.created_at > reminder.created_at
+                 AND action.created_at <= reminder.created_at + interval '30 days'
+             )),
+        (SELECT COUNT(*) FROM product_events pe
+           JOIN neon_auth."user" u ON u.id = pe.account_id
+           WHERE pe.event_type = 'obligation_status_changed' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND pe.metadata ->> 'fromStatus' = 'overdue' AND pe.metadata ->> 'toStatus' != 'overdue'
+             AND pe.created_at >= now() - interval '60 days'),
+        -- Still-overdue obligations known red for more than 60 days (via their last
+        -- reminder_sent for that exact appliance/task): the "failed to keep the
+        -- promise" side of the same ratio. Computed from reminder_sent metadata rather
+        -- than a live status re-check, since this function must not join appliance
+        -- content for every account (admin never sees appliance content).
+        (SELECT COUNT(*) FROM (
+           SELECT DISTINCT pe.metadata ->> 'applianceId' AS appliance_id, pe.metadata ->> 'maintenanceTaskId' AS task_id
+           FROM product_events pe
+           JOIN neon_auth."user" u ON u.id = pe.account_id
+           WHERE pe.event_type = 'reminder_sent' AND u.role NOT IN ('admin', 'test', 'cron')
+             AND pe.created_at <= now() - interval '60 days'
+         ) AS old_reminders),
+        (SELECT COUNT(*) FROM account_preferences ap
+           JOIN neon_auth."user" u ON u.id = ap.account_id
+           WHERE ap.satisfaction_response IS NOT NULL AND u.role NOT IN ('admin', 'test', 'cron')),
+        (SELECT COUNT(*) FROM account_preferences ap
+           JOIN neon_auth."user" u ON u.id = ap.account_id
+           WHERE ap.satisfaction_response = 'very_disappointed' AND u.role NOT IN ('admin', 'test', 'cron'));
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_kpi_counts() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_kpi_counts() TO authenticated`);
+
   await client.query("COMMIT");
   console.log("Migration complete: schema, RLS policies and grants ready.");
 } catch (err) {
