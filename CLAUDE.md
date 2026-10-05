@@ -85,6 +85,15 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   `schema_migrations` journal pattern and the RLS policies in `scripts/migrate.mjs` —
   and delete that branch/project once it's served its purpose: one created before a
   password rotation still answers to the old password after the rotation.
+- A migration never starts in the same command as its backup branch: create the
+  backup in one command, confirm in a separate one that it exists (`neonctl branches
+  list -o json | jq` on its name, state `ready`), and only then run
+  `scripts/migrate.mjs`. A `&&` chain is not enough: `neonctl … -o json | jq` exits 0
+  even when creation failed (found 2026-10-05: "branches limit exceeded" went unseen
+  and a migration ran without its backup).
+- At most three backup branches at a time. Delete the oldest once their chantier is
+  verified in production — the project's branch limit otherwise blocks the next
+  backup.
 - `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
   tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
