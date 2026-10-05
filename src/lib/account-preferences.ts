@@ -66,13 +66,30 @@ export function shouldShowSatisfactionSurvey(accountCreatedAt: string, shownAt: 
   return new Date(accountCreatedAt).getTime() <= thirtyDaysAgo;
 }
 
+// Render-time read: a preferences failure must not break the page showing them. Null
+// means "unknown" — callers fall back to the defaults and show no survey.
+export async function getAccountPreferencesOrNull(): Promise<AccountPreferences | null> {
+  try {
+    return await getAccountPreferences();
+  } catch (error) {
+    console.error("account preferences unavailable", error);
+    return null;
+  }
+}
+
+// Called at render time (the home page), so it never throws: a failed mark is logged
+// and the page still renders.
 export async function markSatisfactionSurveyShown(): Promise<void> {
-  const { sql, accountId } = await getAuthedContext();
-  await sql`
-    INSERT INTO account_preferences (account_id, satisfaction_shown_at) VALUES (${accountId}, now())
-    ON CONFLICT (account_id) DO UPDATE SET
-      satisfaction_shown_at = COALESCE(account_preferences.satisfaction_shown_at, now())
-  `;
+  try {
+    const { sql, accountId } = await getAuthedContext();
+    await sql`
+      INSERT INTO account_preferences (account_id, satisfaction_shown_at) VALUES (${accountId}, now())
+      ON CONFLICT (account_id) DO UPDATE SET
+        satisfaction_shown_at = COALESCE(account_preferences.satisfaction_shown_at, now())
+    `;
+  } catch (error) {
+    console.error("satisfaction survey not marked as shown", error);
+  }
 }
 
 export async function recordSatisfactionResponse(response: SatisfactionResponse, comment: string | null): Promise<void> {
