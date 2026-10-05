@@ -19,7 +19,7 @@ import { getInvoiceImportMode } from "@/lib/invoice-extraction";
 import { requireAdminRoute } from "@/lib/admin";
 import { auth } from "@/lib/auth/server";
 import { logProductEvent } from "@/lib/product-events";
-import { getAccountPreferences, shouldShowSatisfactionSurvey, markSatisfactionSurveyShown } from "@/lib/account-preferences";
+import { getAccountPreferencesOrNull, shouldShowSatisfactionSurvey, markSatisfactionSurveyShown } from "@/lib/account-preferences";
 import { SatisfactionSurveyModal } from "@/components/SatisfactionSurveyModal";
 
 // Every page here reads user data straight from Postgres: it must never be served
@@ -85,11 +85,10 @@ export default async function Home() {
   // Idempotent (unique per account) — re-run every visit, harmless after the first,
   // and logged server-side rather than reacting to the sign-up form's result.
   await logProductEvent("account_created");
-  const preferences = await getAccountPreferences();
-  const showSatisfactionSurvey = shouldShowSatisfactionSurvey(
-    new Date(session.user.createdAt).toISOString(),
-    preferences.satisfactionShownAt
-  );
+  const preferences = await getAccountPreferencesOrNull();
+  const showSatisfactionSurvey =
+    preferences !== null &&
+    shouldShowSatisfactionSurvey(new Date(session.user.createdAt).toISOString(), preferences.satisfactionShownAt);
   if (showSatisfactionSurvey) {
     // Marked at render time, not at response time: "shown once" means displayed once,
     // whether or not the account answers (spec's "Measuring the MVP").

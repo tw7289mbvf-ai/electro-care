@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { hasPendingDeletionRequest } from "@/lib/account-requests";
-import { getAccountPreferences } from "@/lib/account-preferences";
+import { getAccountPreferencesOrNull } from "@/lib/account-preferences";
 import { hasLoggedEvent } from "@/lib/product-events";
 import { ChangePasswordForm } from "@/components/ChangePasswordForm";
 import { RequestAccountDeletionButton } from "@/components/RequestAccountDeletionButton";
@@ -18,7 +18,7 @@ export default async function SettingsPage() {
     redirect("/auth/sign-in");
   }
   const alreadyRequestedDeletion = await hasPendingDeletionRequest();
-  const preferences = await getAccountPreferences();
+  const preferences = await getAccountPreferencesOrNull();
   const alreadyClickedMultiHome = await hasLoggedEvent("multi_home_interest_clicked");
 
   return (
@@ -41,7 +41,7 @@ export default async function SettingsPage() {
 
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
           <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Rappels</h2>
-          <EmailRemindersToggle initialEnabled={preferences.emailRemindersEnabled} />
+          <EmailRemindersToggle initialEnabled={preferences?.emailRemindersEnabled ?? true} />
         </section>
 
         <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900">
