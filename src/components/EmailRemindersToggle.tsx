@@ -28,9 +28,12 @@ export function EmailRemindersToggle({ initialEnabled }: { initialEnabled: boole
           enabled ? "bg-emerald-600" : "bg-zinc-300 dark:bg-zinc-700"
         }`}
       >
+        {/* Anchored with left-0.5: an absolute child's default position inside a
+            <button> follows the button's own content centering. Track 44px, knob 20px:
+            2px margin on every side, off (left 2px) and on (2 + 20 = 22px, 2px right). */}
         <span
-          className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
-            enabled ? "translate-x-5" : "translate-x-0.5"
+          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+            enabled ? "translate-x-5" : "translate-x-0"
           }`}
         />
       </button>
