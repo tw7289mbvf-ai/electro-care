@@ -90,11 +90,15 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
   `account_id` makes the very next statement (`CREATE POLICY ... USING (account_id =
   auth.uid())`) fail — safely, inside the transaction, rolled back — but only once you
-  are sure that's what you're pointed at. Never run this script against the old
-  pre-auth production database (`neon-beige-feather` / `curly-base-57056864`,
-  `us-east-1`) expecting it to add the account_id/RLS layer in place: that database's
-  existing rows have no account to attach to, by design (see `docs/spec.md`, "Empty
-  start") — it is being retired, not migrated in place.
+  are sure that's what you're pointed at. Never run it against a legacy pre-auth
+  database expecting it to add the account_id/RLS layer in place: such rows have no
+  account to attach to, by design (see `docs/spec.md`, "Empty start").
+- Only one Neon project exists: `electro-care-eu` / `icy-union-72562625`
+  (`eu-central-1`). The old pre-auth US project (`neon-beige-feather` /
+  `curly-base-57056864`, `us-east-1`) and its Vercel integration store were deleted
+  on 2026-10-05, without migration. The org is Vercel-managed: `neonctl projects
+  delete` is refused ("organization is managed by Vercel"); a Neon project is deleted
+  by deleting its Vercel storage store.
 - `scripts/test-isolation.mjs` cannot run on a disposable branch of the EU project
   (`electro-care-eu` / `icy-union-72562625`): this project has a legacy web access
   role, so schema-only branches are refused outright, and a normal (data-copying)
