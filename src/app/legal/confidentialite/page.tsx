@@ -17,7 +17,7 @@ export default function ConfidentialitePage() {
           <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Politique de confidentialité
           </h1>
-          <p className="mt-1 text-sm text-ink-2">Dernière mise à jour : 6 octobre 2026</p>
+          <p className="mt-1 text-sm text-ink-2">Dernière mise à jour : 7 octobre 2026</p>
         </div>
 
         <p className="text-sm text-ink">
@@ -102,8 +102,10 @@ export default function ConfidentialitePage() {
             </li>
             <li>
               <strong>L&apos;administrateur</strong> voit la liste des comptes : e-mail, dates de création et de
-              dernière connexion, nombre de lieux et d&apos;appareils. Jamais le contenu de vos lieux, ni vos
-              adresses.
+              dernière connexion, nombre de lieux et d&apos;appareils, et, pour le support, le nombre
+              d&apos;obligations à jour, à confirmer et en retard de chaque compte. Jamais le détail de vos appareils
+              ou de vos lieux, ni vos adresses. Chaque consultation est enregistrée dans le journal
+              d&apos;administration.
             </li>
             <li>
               <strong>Nos prestataires techniques</strong>, qui traitent les données pour notre compte :

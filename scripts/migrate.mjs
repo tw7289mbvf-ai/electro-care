@@ -547,10 +547,18 @@ try {
     CREATE TABLE IF NOT EXISTS admin_actions (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       actor_account_id UUID NOT NULL REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
-      action TEXT NOT NULL CHECK (action IN ('suspend', 'reactivate', 'delete', 'send_reset_link')),
+      action TEXT NOT NULL CHECK (action IN ('suspend', 'reactivate', 'delete', 'send_reset_link', 'view_compliance')),
       target_account_id UUID REFERENCES neon_auth."user"(id) ON DELETE CASCADE,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
+  `);
+  // 'view_compliance' (spec, "Compliance per account, for support"): each display of the
+  // per-account compliance table, with no target — the journal records who looked, never
+  // the emails on screen. Re-added for a database whose table predates this action.
+  await client.query(`ALTER TABLE admin_actions DROP CONSTRAINT IF EXISTS admin_actions_action_check`);
+  await client.query(`
+    ALTER TABLE admin_actions ADD CONSTRAINT admin_actions_action_check
+      CHECK (action IN ('suspend', 'reactivate', 'delete', 'send_reset_link', 'view_compliance'))
   `);
   await client.query(`ALTER TABLE admin_actions ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS admin_actions_no_direct_access ON admin_actions`);
@@ -671,6 +679,44 @@ try {
   `);
   await client.query(`REVOKE ALL ON FUNCTION admin_obligation_rows() FROM PUBLIC`);
   await client.query(`GRANT EXECUTE ON FUNCTION admin_obligation_rows() TO authenticated`);
+
+  // Compliance per account, for support (spec, "Measuring the MVP"): the same anonymous
+  // rows as admin_obligation_rows(), tagged with their account id, plus each account's
+  // places count — one row per account even with no place or appliance, so every
+  // account gets a line. Never a name, brand, room, address or email: the app turns
+  // these rows into per-account status counts server-side (same logic as the dashboard
+  // gauge) and only those counts ever reach the page. Excludes admin/test/cron accounts.
+  await client.query(`DROP FUNCTION IF EXISTS admin_account_compliance_rows()`);
+  await client.query(`
+    CREATE FUNCTION admin_account_compliance_rows()
+    RETURNS TABLE (
+      account_id UUID,
+      places_count BIGINT,
+      appliance_id UUID,
+      equipment_type_id TEXT,
+      power_kw NUMERIC,
+      maintenance_task_id TEXT,
+      last_service_date DATE,
+      known_due_date DATE,
+      service_confidence TEXT
+    ) AS $func$
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      SELECT u.id,
+        (SELECT COUNT(*) FROM places pc WHERE pc.account_id = u.id),
+        a.id, a.equipment_type_id, a.power_kw, o.maintenance_task_id, o.last_service_date,
+        o.known_due_date, o.service_confidence
+      FROM neon_auth."user" u
+      LEFT JOIN places p ON p.account_id = u.id
+      LEFT JOIN appliances a ON a.place_id = p.id AND a.equipment_type_id IS NOT NULL
+      LEFT JOIN appliance_obligations o ON o.appliance_id = a.id
+      WHERE COALESCE(u.role, '') NOT IN ('admin', 'test', 'cron');
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_account_compliance_rows() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_account_compliance_rows() TO authenticated`);
 
   await client.query(`
     CREATE OR REPLACE FUNCTION admin_log_action(p_action TEXT, p_target_account_id UUID)

@@ -1,6 +1,6 @@
 # Politique de confidentialité
 
-*Dernière mise à jour : 6 octobre 2026*
+*Dernière mise à jour : 7 octobre 2026*
 
 Electro Care vous aide à suivre les obligations d'entretien de votre logement. Cette page explique quelles données nous utilisons, pourquoi, et comment exercer vos droits.
 
@@ -29,7 +29,7 @@ Nous ne collectons aucune donnée de paiement.
 ## Qui y a accès ?
 
 - **Vous seul voyez vos lieux et vos appareils** : chaque compte est cloisonné techniquement, au niveau de la base de données.
-- **L'administrateur** voit la liste des comptes : e-mail, dates de création et de dernière connexion, nombre de lieux et d'appareils. Jamais le contenu de vos lieux, ni vos adresses.
+- **L'administrateur** voit la liste des comptes : e-mail, dates de création et de dernière connexion, nombre de lieux et d'appareils, et, pour le support, le nombre d'obligations à jour, à confirmer et en retard de chaque compte. Jamais le détail de vos appareils ou de vos lieux, ni vos adresses. Chaque consultation est enregistrée dans le journal d'administration.
 - **Nos prestataires techniques**, qui traitent les données pour notre compte :
   - Vercel Inc. (États-Unis) : hébergement et exécution de l'application, sur des serveurs situés dans l'Union européenne, à Francfort.
   - Neon, Inc. (États-Unis) : base de données hébergée dans l'Union européenne, à Francfort, sur l'infrastructure d'Amazon Web Services ; Neon fournit aussi le service de connexion.
