@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { currentMonthKey, addMonthsToKey } from "@/lib/french-dates";
 import { getAuthedContext } from "@/lib/db";
 import {
   countObligationsByStatus,
@@ -186,13 +187,57 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
   return totals;
 }
 
+// One month of activity. overdueResolved is null before STATUS_EVENTS_SINCE_MONTH:
+// status changes weren't recorded yet, so "0" would be a false reading.
+export type MonthlyActivity = {
+  month: string;
+  interventions: number;
+  maintenanceDone: number;
+  overdueResolved: number | null;
+};
+
+// obligation_status_changed events exist since 2026-10-05 (spec, "Monthly activity").
+const STATUS_EVENTS_SINCE_MONTH = "2026-10";
+const ACTIVITY_MONTHS = 12;
+
 export type AdminAccountCompliance = {
   id: string;
   email: string;
   createdAt: string;
   placesCount: number;
   counts: ObligationCounts;
+  // Oldest first, last ACTIVITY_MONTHS months, the current one last.
+  activity: MonthlyActivity[];
 };
+
+type ActivityRowRaw = {
+  account_id: string;
+  month: string;
+  interventions: string | number;
+  maintenance_done: string | number;
+  overdue_resolved: string | number;
+};
+
+function emptyActivity(): MonthlyActivity[] {
+  const current = currentMonthKey();
+  return Array.from({ length: ACTIVITY_MONTHS }, (_, i) => {
+    const month = addMonthsToKey(current, i - (ACTIVITY_MONTHS - 1));
+    return {
+      month,
+      interventions: 0,
+      maintenanceDone: 0,
+      overdueResolved: month >= STATUS_EVENTS_SINCE_MONTH ? 0 : null,
+    };
+  });
+}
+
+function addActivity(target: MonthlyActivity[], row: ActivityRowRaw): void {
+  const slot = target.find((m) => m.month === row.month);
+  if (!slot) return;
+  slot.interventions += Number(row.interventions);
+  slot.maintenanceDone += Number(row.maintenance_done);
+  if (slot.overdueResolved !== null) slot.overdueResolved += Number(row.overdue_resolved);
+}
 
 type ComplianceRow = {
   account_id: string;
@@ -212,10 +257,29 @@ type ComplianceRow = {
 // the email and sign-up date come from `accounts` (the Neon Auth list) and are attached
 // to the final counts just before display. Each call is written to admin_actions first,
 // with no target, so a viewing that fails halfway is still journaled.
-export async function getAdminComplianceByAccount(accounts: AdminAccount[]): Promise<AdminAccountCompliance[]> {
+// Monthly activity comes from admin_monthly_activity(), already aggregated per account
+// and month in the database; the global chart is the sum of the same rows, so the two
+// views can never disagree.
+export async function getAdminComplianceByAccount(
+  accounts: AdminAccount[]
+): Promise<{ rows: AdminAccountCompliance[]; globalActivity: MonthlyActivity[] }> {
   await logAdminAction("view_compliance", null);
   const { sql } = await getAuthedContext();
-  const rows = (await sql`SELECT * FROM admin_account_compliance_rows()`) as ComplianceRow[];
+  const [rowsRaw, activityRaw] = await Promise.all([
+    sql`SELECT * FROM admin_account_compliance_rows()`,
+    sql`SELECT * FROM admin_monthly_activity()`,
+  ]);
+  const rows = rowsRaw as ComplianceRow[];
+  const activityRows = activityRaw as ActivityRowRaw[];
+
+  const globalActivity = emptyActivity();
+  const activityByAccount = new Map<string, MonthlyActivity[]>();
+  for (const row of activityRows) {
+    addActivity(globalActivity, row);
+    const own = activityByAccount.get(row.account_id) ?? emptyActivity();
+    addActivity(own, row);
+    activityByAccount.set(row.account_id, own);
+  }
 
   const byAccount = new Map<
     string,
@@ -260,9 +324,16 @@ export async function getAdminComplianceByAccount(accounts: AdminAccount[]): Pro
       counts.toConfirm += c.toConfirm;
       counts.upToDate += c.upToDate;
     }
-    result.push({ id: accountId, email: account.email, createdAt: account.createdAt, placesCount, counts });
+    result.push({
+      id: accountId,
+      email: account.email,
+      createdAt: account.createdAt,
+      placesCount,
+      counts,
+      activity: activityByAccount.get(accountId) ?? emptyActivity(),
+    });
   }
-  return result.sort((a, b) => b.counts.overdue - a.counts.overdue);
+  return { rows: result.sort((a, b) => b.counts.overdue - a.counts.overdue), globalActivity };
 }
 
 export type AdminActionEntry = {

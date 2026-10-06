@@ -29,6 +29,11 @@
   --neutral-soft: #f3f6f9;
   --overlay: rgb(21 32 43 / 0.45);
   --knob: #ffffff;
+  /* Chart series (admin "Activité par mois"): categorical slots, validated for CVD
+     separation on each theme's surface — never the status bar colors above. */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
 }
 
 :root[data-theme="dark"] {
@@ -56,6 +61,9 @@
   --neutral-text: #c3cfd8;
   --neutral-soft: #1d2a36;
   --overlay: rgb(0 0 0 / 0.6);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -84,6 +92,9 @@
     --neutral-text: #c3cfd8;
     --neutral-soft: #1d2a36;
     --overlay: rgb(0 0 0 / 0.6);
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
   }
 }
 
@@ -112,6 +123,9 @@
   --color-neutral-soft: var(--neutral-soft);
   --color-overlay: var(--overlay);
   --color-knob: var(--knob);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
   --font-sans: var(--font-figtree), system-ui, sans-serif;
   --font-display: var(--font-bricolage), system-ui, sans-serif;
 }

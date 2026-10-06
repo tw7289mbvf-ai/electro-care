@@ -718,6 +718,68 @@ try {
   await client.query(`REVOKE ALL ON FUNCTION admin_account_compliance_rows() FROM PUBLIC`);
   await client.query(`GRANT EXECUTE ON FUNCTION admin_account_compliance_rows() TO authenticated`);
 
+  // Monthly activity (spec, "Monthly activity, aggregated" and "Compliance and activity
+  // per account"): per account and per month over the last twelve, counts only —
+  // legal interventions recorded ("C'est fait", obligation_completions), maintenance
+  // tasks done (maintenance_completions) and overdue obligations brought up to date
+  // (obligation_status_changed events, recorded since 2026-10-05). Bucketed on the date
+  // the user recorded it (created_at, Paris time), never the month they declared.
+  // The questionnaire never writes to either history table nor logs a status change, so
+  // it is out by construction; the history seed's rows share its schema_migrations
+  // applied_at exactly (same transaction's now()), which is how they're left out.
+  // Excludes admin/test/cron accounts.
+  await client.query(`DROP FUNCTION IF EXISTS admin_monthly_activity()`);
+  await client.query(`
+    CREATE FUNCTION admin_monthly_activity()
+    RETURNS TABLE (
+      account_id UUID,
+      month TEXT,
+      interventions BIGINT,
+      maintenance_done BIGINT,
+      overdue_resolved BIGINT
+    ) AS $func$
+    DECLARE
+      since TIMESTAMPTZ := (date_trunc('month', now() AT TIME ZONE 'Europe/Paris') - interval '11 months')
+        AT TIME ZONE 'Europe/Paris';
+    BEGIN
+      PERFORM _require_admin();
+      RETURN QUERY
+      WITH ev AS (
+        SELECT p.account_id AS acc, oc.created_at AS ts, 'intervention' AS kind
+        FROM obligation_completions oc
+        JOIN appliances a ON a.id = oc.appliance_id
+        JOIN places p ON p.id = a.place_id
+        WHERE oc.created_at >= since
+          AND NOT EXISTS (
+            SELECT 1 FROM schema_migrations sm
+            WHERE sm.name = '2026-09-30-obligation-completions-seed-history' AND sm.applied_at = oc.created_at
+          )
+        UNION ALL
+        SELECT p.account_id, mc.created_at, 'maintenance'
+        FROM maintenance_completions mc
+        JOIN appliances a ON a.id = mc.appliance_id
+        JOIN places p ON p.id = a.place_id
+        WHERE mc.created_at >= since
+        UNION ALL
+        SELECT pe.account_id, pe.created_at, 'resolved'
+        FROM product_events pe
+        WHERE pe.event_type = 'obligation_status_changed' AND pe.created_at >= since
+          AND pe.metadata ->> 'fromStatus' = 'overdue' AND pe.metadata ->> 'toStatus' = 'up_to_date'
+      )
+      SELECT ev.acc, to_char(ev.ts AT TIME ZONE 'Europe/Paris', 'YYYY-MM'),
+        COUNT(*) FILTER (WHERE ev.kind = 'intervention'),
+        COUNT(*) FILTER (WHERE ev.kind = 'maintenance'),
+        COUNT(*) FILTER (WHERE ev.kind = 'resolved')
+      FROM ev
+      JOIN neon_auth."user" u ON u.id = ev.acc
+      WHERE COALESCE(u.role, '') NOT IN ('admin', 'test', 'cron')
+      GROUP BY ev.acc, to_char(ev.ts AT TIME ZONE 'Europe/Paris', 'YYYY-MM');
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp
+  `);
+  await client.query(`REVOKE ALL ON FUNCTION admin_monthly_activity() FROM PUBLIC`);
+  await client.query(`GRANT EXECUTE ON FUNCTION admin_monthly_activity() TO authenticated`);
+
   await client.query(`
     CREATE OR REPLACE FUNCTION admin_log_action(p_action TEXT, p_target_account_id UUID)
     RETURNS void AS $func$
