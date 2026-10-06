@@ -15,9 +15,9 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 
 function ExpiredLink() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
+    <div className="min-h-screen">
       <main className="mx-auto flex w-full max-w-lg flex-col gap-2 px-4 py-14 text-center">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Ce lien a expiré.</p>
+        <p className="text-sm text-ink-2">Ce lien a expiré.</p>
       </main>
     </div>
   );
@@ -59,23 +59,23 @@ export default async function GoPage({
   const mailtoHref = `mailto:${mailto.to ?? ""}?subject=${encodeURIComponent(mailto.subject)}&body=${encodeURIComponent(mailto.body)}`;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-4 px-4 py-10 sm:px-6 sm:py-14">
-        <h1 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-4 px-5 pt-5 pb-10 sm:pt-8">
+        <h1 className="text-xl font-semibold text-ink">
           {to === "quote" ? "Demande de devis" : "Demande d'intervention"}
         </h1>
         {!mailto.to && (
-          <p className="text-sm text-amber-700 dark:text-amber-400">
+          <p className="text-sm text-warn">
             Aucune adresse de professionnel connue : complétez le destinataire dans votre messagerie.
           </p>
         )}
-        <pre className="whitespace-pre-wrap rounded-xl border border-zinc-200 bg-white p-4 text-sm text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+        <pre className="whitespace-pre-wrap rounded-[20px] bg-surface p-4 text-sm text-ink">
           {mailto.body}
         </pre>
         <div className="flex gap-3">
           <a
             href={mailtoHref}
-            className="inline-flex w-fit items-center rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            className="inline-flex w-fit items-center inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent hover:opacity-85"
           >
             Ouvrir dans ma messagerie
           </a>

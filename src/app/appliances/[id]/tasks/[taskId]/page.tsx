@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAppliance } from "@/lib/appliances";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
@@ -8,14 +7,15 @@ import { formatFrenchMonthYear, currentMonthKey } from "@/lib/french-dates";
 import { MarkMaintenanceDoneButton } from "@/components/MarkMaintenanceDoneButton";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 import { MaintenanceHistoryList } from "@/components/MaintenanceHistoryList";
+import { BackLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const PERFORMER_STYLES: Record<"diy" | "pro", string> = {
-  diy: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
-  pro: "bg-sky-100 text-sky-700 dark:bg-sky-950/50 dark:text-sky-300",
+  diy: "bg-ok-soft text-ok",
+  pro: "bg-accent-soft text-accent",
 };
 
 export default async function MaintenanceTaskPage({
@@ -44,28 +44,23 @@ export default async function MaintenanceTaskPage({
   const doneThisMonth = latest?.doneMonth === currentMonthKey();
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <Link
-            href={`/appliances/${appliance.id}`}
-            className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-          >
-            ← Retour
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <BackLink href={`/appliances/${appliance.id}`}>Retour</BackLink>
+          <h1 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             {task.title}
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{getApplianceDisplayName(appliance)}</p>
+          <p className="mt-1 text-sm text-ink-2">{getApplianceDisplayName(appliance)}</p>
         </header>
 
-        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <section className="flex flex-col gap-3 rounded-[20px] bg-surface p-5">
+          <h2 className="text-sm font-semibold text-ink-2">
             Dernière réalisation
           </h2>
           {latest ? (
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="text-zinc-700 dark:text-zinc-300">Fait en {formatFrenchMonthYear(latest.doneMonth)}</span>
+              <span className="text-ink">Fait en {formatFrenchMonthYear(latest.doneMonth)}</span>
               <ModifyMaintenanceCompletionButton
                 completionId={latest.id}
                 applianceId={appliance.id}
@@ -76,7 +71,7 @@ export default async function MaintenanceTaskPage({
               />
             </div>
           ) : (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">Jamais réalisée pour l&apos;instant.</p>
+            <p className="text-sm text-ink-2">Jamais réalisée pour l&apos;instant.</p>
           )}
           <MaintenanceHistoryList
             olderEntries={olderEntries}
@@ -92,20 +87,20 @@ export default async function MaintenanceTaskPage({
           />
         </section>
 
-        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <span className={`w-fit rounded-md px-2 py-0.5 text-xs font-medium ${PERFORMER_STYLES[task.performer]}`}>
+        <section className="flex flex-col gap-3 rounded-[20px] bg-surface p-5">
+          <span className={`w-fit rounded-md px-2 py-0.5 text-[13px] font-medium ${PERFORMER_STYLES[task.performer]}`}>
             {PERFORMER_LABELS[task.performer]}
           </span>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">{task.procedure}</p>
+          <p className="text-sm text-ink">{task.procedure}</p>
           {task.tools && (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              <span className="font-medium text-zinc-600 dark:text-zinc-300">Matériel : </span>
+            <p className="text-sm text-ink-2">
+              <span className="font-medium text-ink-2">Matériel : </span>
               {task.tools}
             </p>
           )}
           {task.ifSkipped && (
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              <span className="font-medium text-zinc-600 dark:text-zinc-300">En cas d&apos;oubli : </span>
+            <p className="text-sm text-ink-2">
+              <span className="font-medium text-ink-2">En cas d&apos;oubli : </span>
               {task.ifSkipped}
             </p>
           )}

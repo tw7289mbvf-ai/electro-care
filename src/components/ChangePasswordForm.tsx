@@ -29,7 +29,7 @@ export function ChangePasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <div className="flex flex-col gap-1">
-        <label htmlFor="currentPassword" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="currentPassword" className="text-sm font-medium text-ink">
           Mot de passe actuel
         </label>
         <input
@@ -39,11 +39,11 @@ export function ChangePasswordForm() {
           autoComplete="current-password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label htmlFor="newPassword" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="newPassword" className="text-sm font-medium text-ink">
           Nouveau mot de passe
         </label>
         <input
@@ -54,15 +54,15 @@ export function ChangePasswordForm() {
           autoComplete="new-password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
         />
       </div>
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-      {success && <p className="text-sm text-emerald-600 dark:text-emerald-400">Mot de passe mis à jour.</p>}
+      {error && <p className="text-sm text-late">{error}</p>}
+      {success && <p className="text-sm text-ok">Mot de passe mis à jour.</p>}
       <button
         type="submit"
         disabled={submitting}
-        className="self-start rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
+        className="self-start inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:opacity-85 disabled:opacity-60"
       >
         {submitting ? "Un instant…" : "Modifier le mot de passe"}
       </button>

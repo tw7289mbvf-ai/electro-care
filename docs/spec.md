@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 53). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 55). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -210,6 +210,18 @@ The first step of the MVP's validation: the reminders are the core promise and t
 - **Reading rule**: indicators 1 to 3 met but not 7, the product works and monetization needs rework; indicators 1 to 3 missed, fix the product before anything else.
 - **Instrumentation**: product events recorded in the app's own database, with no cookie and no third-party tool: account created, questionnaire completed, "C'est fait", appointment booked, reminder sent, reminder link clicked, obligation status change. A KPI panel in the admin page computes the indicators, aggregated, without personal data.
 - **Sean Ellis survey**: shown once in the app after 30 days of use: "Comment vous sentiriez-vous si vous ne pouviez plus utiliser Electro Care ?" with "Très déçu", "Un peu déçu", "Pas déçu", and an optional comment.
+
+## Visual Design
+
+Validated on 6 October 2026, on the design canvas ([Electro Care, nouveau design](https://claude.ai/artifact/UwRPCMp8kxwNMyEqaqLsAt)). The full charter, tokens, components and icons, is in docs/design.md in the repository.
+
+- **Fresh and modern**: a light blue-grey ground, slate ink instead of black, and an electric blue for the brand, distinct from the green of "À jour".
+- **Light by default, dark on request**: Paramètres offers "Affichage" with three choices, "Clair" (default), "Sombre" and "Selon le téléphone". The choice is kept in a first-party cookie on the device and applied when the page is built, so the page never flashes the wrong theme; signed-out pages follow the same cookie, light when there is none. One set of tokens per theme.
+- **Softer statuses**: red, orange and green appear as pale pills with dark text; only the compliance bar on the home screen uses full colours.
+- **Typography**: Bricolage Grotesque for titles and figures, Figtree for text, both self-hosted by the app so no visitor's IP address is sent to Google.
+- **Airier**: one idea per line, no all-caps labels, no "A — B" or "A · B" strings; up-to-date obligations collapse into one line.
+- **Icons**: one line icon per appliance type, in a rounded square tinted by status.
+- **Accessibility**: touch targets of at least 44 px, text contrast of at least 4.5:1, statuses readable by text and lightness, not colour alone.
 
 ## Delivery Plan
 

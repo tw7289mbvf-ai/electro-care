@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getPlaces } from "@/lib/places";
 import { getInvoiceImportMode } from "@/lib/invoice-extraction";
 import { requireAdminRoute } from "@/lib/admin";
+import { BackLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +17,10 @@ export default async function ImportInvoicePickerPage() {
 
   if (mode === "disabled") {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-black">
-        <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
-          <Link href="/" className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">
-            ← Retour
-          </Link>
-          <p className="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+      <div className="min-h-screen">
+        <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-5 pt-5 pb-10 sm:pt-8">
+          <BackLink href="/">Retour</BackLink>
+          <p className="rounded-2xl border-[1.5px] border-dashed border-line-strong p-8 text-center text-sm text-ink-2">
             Import de factures : bientôt disponible.
           </p>
         </main>
@@ -35,20 +34,18 @@ export default async function ImportInvoicePickerPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <Link href="/" className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">
-            ← Retour
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <BackLink href="/">Retour</BackLink>
+          <h1 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Importer une facture
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Pour quel lieu ?</p>
+          <p className="mt-1 text-sm text-ink-2">Pour quel lieu ?</p>
         </header>
 
         {places.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+          <p className="rounded-2xl border-[1.5px] border-dashed border-line-strong p-8 text-center text-sm text-ink-2">
             Ajoutez d&apos;abord un lieu pour pouvoir y importer une facture.
           </p>
         ) : (
@@ -57,7 +54,7 @@ export default async function ImportInvoicePickerPage() {
               <li key={place.id}>
                 <Link
                   href={`/places/${place.id}/import-invoice`}
-                  className="block rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900 hover:border-emerald-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100"
+                  className="block rounded-2xl bg-surface px-4 py-3.5 text-[15px] font-semibold text-ink"
                 >
                   {place.name}
                 </Link>

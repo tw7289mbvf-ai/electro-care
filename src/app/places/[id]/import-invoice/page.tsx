@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { InvoiceImportFlow } from "@/components/InvoiceImportFlow";
 import { getPlace } from "@/lib/places";
 import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
 import { getInvoiceImportMode } from "@/lib/invoice-extraction";
 import { requireAdminRoute } from "@/lib/admin";
+import { BackLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -32,22 +32,17 @@ export default async function ImportInvoicePage({ params }: { params: Promise<{ 
   const mode = getInvoiceImportMode(isAdmin);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <Link
-            href={`/places/${place.id}`}
-            className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-          >
-            ← Retour
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-            Importer une facture — {place.name}
+          <BackLink href={`/places/${place.id}`}>{place.name}</BackLink>
+          <h1 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
+            Importer une facture
           </h1>
         </header>
 
         {mode === "disabled" ? (
-          <p className="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
+          <p className="rounded-2xl border-[1.5px] border-dashed border-line-strong p-8 text-center text-sm text-ink-2">
             Import de factures : bientôt disponible.
           </p>
         ) : (

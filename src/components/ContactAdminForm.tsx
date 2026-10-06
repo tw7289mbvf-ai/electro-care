@@ -13,7 +13,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="self-start rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
+      className="self-start inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:opacity-85 disabled:opacity-60"
     >
       {pending ? "Envoi…" : "Envoyer"}
     </button>
@@ -31,7 +31,7 @@ export function ContactAdminForm() {
 
   return (
     <form ref={formRef} action={formAction} className="flex flex-col gap-2">
-      <label htmlFor="message" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <label htmlFor="message" className="text-sm font-medium text-ink">
         Contacter l&apos;administrateur
       </label>
       <textarea
@@ -40,10 +40,10 @@ export function ContactAdminForm() {
         required
         rows={3}
         placeholder="Votre message"
-        className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+        className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
       />
-      {state.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
-      {sent && <p className="text-sm text-emerald-600 dark:text-emerald-400">Message envoyé.</p>}
+      {state.error && <p className="text-sm text-late">{state.error}</p>}
+      {sent && <p className="text-sm text-ok">Message envoyé.</p>}
       <SubmitButton />
     </form>
   );

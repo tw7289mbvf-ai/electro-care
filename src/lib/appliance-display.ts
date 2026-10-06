@@ -11,5 +11,5 @@ export function getApplianceDisplayName(appliance: Appliance): string {
   const parts = [base, appliance.brand, appliance.room].filter(
     (part): part is string => Boolean(part)
   );
-  return parts.join(" · ");
+  return parts.join(", ");
 }

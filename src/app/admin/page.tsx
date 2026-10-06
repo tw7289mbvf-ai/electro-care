@@ -3,6 +3,7 @@ import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminA
 import { getKpiIndicators, getMultiHomeBreakdown } from "@/lib/admin-metrics";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
 import { AdminRequestRow } from "@/components/AdminRequestRow";
+import { BackLink } from "@/components/ui";
 
 // Same rule as every other page reading live data (see src/app/page.tsx): never served
 // from a static/ISR cache.
@@ -23,9 +24,9 @@ function formatDateTime(iso: string): string {
 
 function StatTile({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">{value}</p>
-      <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{label}</p>
+    <div className="rounded-[20px] bg-surface p-4">
+      <p className="text-2xl font-semibold text-ink">{value}</p>
+      <p className="mt-1 text-sm text-ink-2">{label}</p>
     </div>
   );
 }
@@ -42,19 +43,17 @@ export default async function AdminPage() {
   ]);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <Link href="/" className="self-start text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400">
-            ← Tableau de bord
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <BackLink href="/">Tableau de bord</BackLink>
+          <h1 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Administration
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-sm text-ink-2">
             Vue globale, sans accès au contenu des comptes.
           </p>
-          <Link href="/admin/reminders" className="mt-2 inline-block text-sm font-medium text-emerald-700 hover:underline dark:text-emerald-400">
+          <Link href="/admin/reminders" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline">
             Aperçu des rappels par e-mail →
           </Link>
         </header>
@@ -71,42 +70,42 @@ export default async function AdminPage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Mesure du MVP</h2>
+          <h2 className="text-lg font-semibold text-ink">Mesure du MVP</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {kpiIndicators.map((indicator) => (
-              <div key={indicator.key} className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900">
-                <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+              <div key={indicator.key} className="rounded-[20px] bg-surface p-4">
+                <p className="text-xl font-semibold text-ink">
                   {indicator.ratio === null ? "—" : `${Math.round(indicator.ratio * 100)} %`}
                 </p>
-                <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">{indicator.label}</p>
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">{indicator.detail}</p>
+                <p className="mt-1 text-sm font-medium text-ink">{indicator.label}</p>
+                <p className="mt-1 text-[13px] text-ink-2">{indicator.detail}</p>
               </div>
             ))}
-            <div className="rounded-xl border border-dashed border-zinc-300 p-4 dark:border-zinc-700">
-              <p className="text-xl font-semibold text-zinc-400 dark:text-zinc-500">—</p>
-              <p className="mt-1 text-sm font-medium text-zinc-700 dark:text-zinc-300">Modèle économique</p>
-              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Suivi manuel (prestataires prêts à payer).</p>
+            <div className="rounded-2xl border-[1.5px] border-dashed border-line-strong p-4">
+              <p className="text-xl font-semibold text-ink-2">—</p>
+              <p className="mt-1 text-sm font-medium text-ink">Modèle économique</p>
+              <p className="mt-1 text-[13px] text-ink-2">Suivi manuel (prestataires prêts à payer).</p>
             </div>
           </div>
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Multi-logements</h2>
-          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-ink">Multi-logements</h2>
+          <div className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[420px] text-sm">
-              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+              <thead className="bg-surface-2 text-left text-ink-2">
                 <tr>
                   <th className="px-4 py-2 font-medium">Logements</th>
                   <th className="px-4 py-2 font-medium">Comptes</th>
                   <th className="px-4 py-2 font-medium">Engagement</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+              <tbody className="divide-y divide-line bg-surface">
                 {multiHomeBreakdown.map((bucket) => (
                   <tr key={bucket.label}>
-                    <td className="px-4 py-2 text-zinc-900 dark:text-zinc-50">{bucket.label}</td>
-                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">{bucket.accounts}</td>
-                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">
+                    <td className="px-4 py-2 text-ink">{bucket.label}</td>
+                    <td className="px-4 py-2 text-ink-2">{bucket.accounts}</td>
+                    <td className="px-4 py-2 text-ink-2">
                       {bucket.accounts === 0 ? "—" : `${Math.round((bucket.engagedAccounts / bucket.accounts) * 100)} %`}
                     </td>
                   </tr>
@@ -117,10 +116,10 @@ export default async function AdminPage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Comptes</h2>
-          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-ink">Comptes</h2>
+          <div className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[640px] text-sm">
-              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+              <thead className="bg-surface-2 text-left text-ink-2">
                 <tr>
                   <th className="px-4 py-2 font-medium">E-mail</th>
                   <th className="px-4 py-2 font-medium">Créé le</th>
@@ -131,7 +130,7 @@ export default async function AdminPage() {
                   <th className="px-4 py-2 font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+              <tbody className="divide-y divide-line bg-surface">
                 {accounts.map((account) => (
                   <AdminAccountRow
                     key={account.id}
@@ -143,7 +142,7 @@ export default async function AdminPage() {
                 ))}
                 {accounts.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                    <td colSpan={7} className="px-4 py-6 text-center text-ink-2">
                       Aucun compte.
                     </td>
                   </tr>
@@ -154,10 +153,10 @@ export default async function AdminPage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Demandes</h2>
-          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-ink">Demandes</h2>
+          <div className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[640px] text-sm">
-              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+              <thead className="bg-surface-2 text-left text-ink-2">
                 <tr>
                   <th className="px-4 py-2 font-medium">Reçu le</th>
                   <th className="px-4 py-2 font-medium">Type</th>
@@ -166,13 +165,13 @@ export default async function AdminPage() {
                   <th className="px-4 py-2 font-medium">Statut</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+              <tbody className="divide-y divide-line bg-surface">
                 {requests.map((request) => (
                   <AdminRequestRow key={request.id} request={request} formattedCreatedAt={formatDateTime(request.createdAt)} />
                 ))}
                 {requests.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                    <td colSpan={5} className="px-4 py-6 text-center text-ink-2">
                       Aucune demande pour l&apos;instant.
                     </td>
                   </tr>
@@ -183,31 +182,31 @@ export default async function AdminPage() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Journal des actions</h2>
-          <div className="overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+          <h2 className="text-lg font-semibold text-ink">Journal des actions</h2>
+          <div className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[480px] text-sm">
-              <thead className="bg-zinc-100 text-left text-zinc-500 dark:bg-zinc-900 dark:text-zinc-400">
+              <thead className="bg-surface-2 text-left text-ink-2">
                 <tr>
                   <th className="px-4 py-2 font-medium">Quand</th>
                   <th className="px-4 py-2 font-medium">Action</th>
                   <th className="px-4 py-2 font-medium">Compte visé</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-200 bg-white dark:divide-zinc-800 dark:bg-zinc-950">
+              <tbody className="divide-y divide-line bg-surface">
                 {actionLog.map((entry) => (
                   <tr key={entry.id}>
-                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">{formatDateTime(entry.createdAt)}</td>
-                    <td className="px-4 py-2 text-zinc-900 dark:text-zinc-50">
+                    <td className="px-4 py-2 text-ink-2">{formatDateTime(entry.createdAt)}</td>
+                    <td className="px-4 py-2 text-ink">
                       {ACTION_LABELS[entry.action] ?? entry.action}
                     </td>
-                    <td className="px-4 py-2 text-zinc-500 dark:text-zinc-400">
+                    <td className="px-4 py-2 text-ink-2">
                       {entry.targetEmail ?? "compte supprimé"}
                     </td>
                   </tr>
                 ))}
                 {actionLog.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-4 py-6 text-center text-zinc-500 dark:text-zinc-400">
+                    <td colSpan={3} className="px-4 py-6 text-center text-ink-2">
                       Aucune action pour l&apos;instant.
                     </td>
                   </tr>

@@ -20,7 +20,7 @@ export function CopyTextButton({ text }: { text: string }) {
     <button
       type="button"
       onClick={handleClick}
-      className="inline-flex w-fit items-center rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+      className="inline-flex w-fit items-center inline-flex min-h-11 items-center justify-center rounded-xl border-[1.5px] border-line-strong px-4 py-2 text-sm font-medium text-ink hover:bg-surface-2"
     >
       {copied ? "Texte copié" : "Copier le texte"}
     </button>

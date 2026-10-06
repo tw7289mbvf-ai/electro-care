@@ -29,7 +29,7 @@ export function DeleteApplianceButton({
       type="button"
       disabled={isPending}
       onClick={handleClick}
-      className="shrink-0 rounded-md px-2 py-1 text-sm text-zinc-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+      className="inline-flex min-h-11 shrink-0 items-center rounded-xl px-3 text-sm font-semibold text-late transition-colors hover:bg-late-soft disabled:opacity-50"
       aria-label="Supprimer l'appareil"
     >
       {isPending ? "…" : "Supprimer"}

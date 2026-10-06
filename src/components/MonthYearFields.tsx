@@ -3,7 +3,7 @@
 import { FRENCH_MONTHS } from "@/lib/french-dates";
 
 const SELECT_CLASS =
-  "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30";
 
 export type MonthYearValue = { month: string; year: string };
 
@@ -29,7 +29,7 @@ export function MonthYearFields({
   // at the current year — the month list still shows all 12 for a past year.
   disableFutureMonths?: boolean;
 }) {
-  const className = small ? `${SELECT_CLASS} px-2 py-1 text-xs` : SELECT_CLASS;
+  const className = small ? `${SELECT_CLASS} text-sm` : SELECT_CLASS;
   const now = new Date();
   const isCurrentYearSelected = disableFutureMonths && Number(value.year) === now.getFullYear();
   const maxMonth = isCurrentYearSelected ? now.getMonth() + 1 : 12;

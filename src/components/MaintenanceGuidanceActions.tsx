@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { markMaintenanceTaskDone, deferMaintenanceTaskAction } from "@/app/actions";
+import { BUTTON_DEFER, BUTTON_DONE } from "@/components/ui";
 
 // "C'est fait" fixes the next due date (marks the task done for the current month);
 // "Reporter" pushes it to next month instead, capped by canDeferMaintenanceTask so it
@@ -20,13 +21,13 @@ export function MaintenanceGuidanceActions({
   const [isPending, startTransition] = useTransition();
 
   return (
-    <span className="ml-auto flex shrink-0 items-center gap-1.5">
+    <span className="ml-auto flex shrink-0 items-center gap-2">
       {canDefer && (
         <button
           type="button"
           disabled={isPending}
           onClick={() => startTransition(() => deferMaintenanceTaskAction(applianceId, maintenanceTaskId, placeId))}
-          className="shrink-0 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100 disabled:opacity-60 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950"
+          className={BUTTON_DEFER}
         >
           Reporter
         </button>
@@ -35,7 +36,7 @@ export function MaintenanceGuidanceActions({
         type="button"
         disabled={isPending}
         onClick={() => startTransition(() => markMaintenanceTaskDone(applianceId, maintenanceTaskId, placeId))}
-        className="shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 disabled:opacity-60 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950"
+        className={BUTTON_DONE}
       >
         C&apos;est fait
       </button>

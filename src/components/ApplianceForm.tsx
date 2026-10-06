@@ -15,7 +15,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      className="w-full inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
     >
       {pending ? "Ajout…" : "Ajouter l'appareil"}
     </button>
@@ -59,10 +59,10 @@ export function ApplianceForm({
     <form
       ref={formRef}
       action={formAction}
-      className="grid grid-cols-1 gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900"
+      className="grid grid-cols-1 gap-4 rounded-[20px] bg-surface p-5 sm:grid-cols-2 sm:p-6"
     >
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="placeId" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="placeId" className="text-sm font-medium text-ink">
           Lieu
         </label>
         <select
@@ -70,7 +70,7 @@ export function ApplianceForm({
           name="placeId"
           required
           defaultValue={defaultPlaceId ?? places[0]?.id}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         >
           {places.map((place) => (
             <option key={place.id} value={place.id}>
@@ -81,7 +81,7 @@ export function ApplianceForm({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="category" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="category" className="text-sm font-medium text-ink">
           Catégorie
         </label>
         <select
@@ -90,7 +90,7 @@ export function ApplianceForm({
           required
           value={category}
           onChange={(e) => setCategory(e.target.value as Category)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         >
           <option value="" disabled>
             Choisir une catégorie
@@ -104,15 +104,15 @@ export function ApplianceForm({
       </div>
 
       <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label htmlFor="equipmentTypeId" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Type d&apos;appareil <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="equipmentTypeId" className="text-sm font-medium text-ink">
+          Type d&apos;appareil <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <select
           id="equipmentTypeId"
           name="equipmentTypeId"
           disabled={!category}
           defaultValue=""
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 disabled:opacity-50"
         >
           <option value="">
             {category ? "Non précisé" : "Choisissez d'abord une catégorie"}
@@ -126,72 +126,72 @@ export function ApplianceForm({
       </div>
 
       <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label htmlFor="name" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Nom <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="name" className="text-sm font-medium text-ink">
+          Nom <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <input
           id="name"
           name="name"
           type="text"
           placeholder="ex. Réfrigérateur cuisine"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="brand" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Marque <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="brand" className="text-sm font-medium text-ink">
+          Marque <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <input
           id="brand"
           name="brand"
           type="text"
           placeholder="ex. Bosch"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="model" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Modèle <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="model" className="text-sm font-medium text-ink">
+          Modèle <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <input
           id="model"
           name="model"
           type="text"
           placeholder="ex. Serie 6"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="room" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Pièce <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="room" className="text-sm font-medium text-ink">
+          Pièce <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <input
           id="room"
           name="room"
           type="text"
           placeholder="ex. Chambre parent"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="purchaseDate" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Date d&apos;achat <span className="font-normal text-zinc-400">(facultatif)</span>
+        <label htmlFor="purchaseDate" className="text-sm font-medium text-ink">
+          Date d&apos;achat <span className="font-normal text-ink-2">(facultatif)</span>
         </label>
         <input
           id="purchaseDate"
           name="purchaseDate"
           type="date"
           max={new Date().toISOString().split("T")[0]}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       {state.error && (
-        <p className="text-sm text-red-600 sm:col-span-2 dark:text-red-400">{state.error}</p>
+        <p className="text-sm text-late sm:col-span-2">{state.error}</p>
       )}
 
       <div className="sm:col-span-2">

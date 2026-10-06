@@ -29,41 +29,41 @@ const DEMO_OBLIGATIONS = [
 ];
 
 const STATUS_STYLES: Record<string, string> = {
-  "En retard": "bg-red-100 text-red-700 dark:bg-red-950/50 dark:text-red-300",
-  "À jour": "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300",
+  "En retard": "bg-late-soft text-late",
+  "À jour": "bg-ok-soft text-ok",
 };
 
 export function DemoDashboard() {
   return (
     <section className="flex flex-col gap-4 opacity-90">
       <div className="flex items-center gap-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <h2 className="text-sm font-semibold text-ink-2">
           Exemple de tableau de bord
         </h2>
-        <span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+        <span className="rounded-md bg-surface-2 px-2 py-0.5 text-[13px] font-medium text-ink-2">
           Données fictives, lecture seule
         </span>
       </div>
 
-      <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
-        <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Appartement (exemple)</h3>
-        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Lyon · 69003 · Résidence principale</p>
+      <div className="rounded-[20px] bg-surface p-4 sm:p-5">
+        <h3 className="text-base font-semibold text-ink">Appartement (exemple)</h3>
+        <p className="mt-1 text-sm text-ink-2">Résidence principale, 69003 Lyon</p>
 
         <div className="mt-4 flex flex-col gap-3">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          <h4 className="text-[13px] font-semibold text-ink-2">
             Obligations
           </h4>
           <ul className="flex flex-col gap-3">
             {DEMO_OBLIGATIONS.map((o) => (
               <li key={o.title} className="flex flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[o.status]}`}>
+                  <span className={`rounded-md px-2 py-0.5 text-[13px] font-medium ${STATUS_STYLES[o.status]}`}>
                     {o.status}
                   </span>
-                  <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{o.title}</span>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">({o.detail})</span>
+                  <span className="text-sm font-medium text-ink">{o.title}</span>
+                  <span className="text-sm text-ink-2">({o.detail})</span>
                 </div>
-                {o.risk && <p className="pl-1 text-xs text-zinc-500 dark:text-zinc-400">{o.risk}</p>}
+                {o.risk && <p className="pl-1 text-[13px] text-ink-2">{o.risk}</p>}
               </li>
             ))}
           </ul>
@@ -73,11 +73,11 @@ export function DemoDashboard() {
           {DEMO_APPLIANCES.map((a) => (
             <div
               key={a.name}
-              className="rounded-lg border border-zinc-200 p-3 text-sm dark:border-zinc-800"
+              className="rounded-lg border border-line p-3 text-sm"
             >
-              <p className="font-medium text-zinc-900 dark:text-zinc-100">{a.name}</p>
-              <p className="text-zinc-500 dark:text-zinc-400">
-                {a.brand} · {a.room}
+              <p className="font-medium text-ink">{a.name}</p>
+              <p className="text-ink-2">
+                {a.brand}, {a.room}
               </p>
             </div>
           ))}

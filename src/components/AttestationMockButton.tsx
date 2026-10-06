@@ -18,11 +18,11 @@ export function AttestationMockButton() {
           fileInputRef.current?.click();
           setShowNotice(true);
         }}
-        className="self-start text-xs font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+        className="self-start text-[13px] font-medium text-accent hover:underline"
       >
         Ajouter l&apos;attestation
       </button>
-      {showNotice && <p className="text-xs text-zinc-400 dark:text-zinc-500">Le dépôt des documents arrive bientôt.</p>}
+      {showNotice && <p className="text-[13px] text-ink-2">Le dépôt des documents arrive bientôt.</p>}
     </div>
   );
 }

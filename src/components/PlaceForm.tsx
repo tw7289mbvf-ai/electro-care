@@ -13,7 +13,7 @@ function SubmitButton({ label, pendingLabel }: { label: string; pendingLabel: st
     <button
       type="submit"
       disabled={pending}
-      className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      className="w-full inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
     >
       {pending ? pendingLabel : label}
     </button>
@@ -46,10 +46,10 @@ export function PlaceForm({
     <form
       ref={formRef}
       action={formAction}
-      className="grid grid-cols-1 gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-6 dark:border-zinc-800 dark:bg-zinc-900"
+      className="grid grid-cols-1 gap-4 rounded-[20px] bg-surface p-5 sm:grid-cols-2 sm:p-6"
     >
       <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label htmlFor="name" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="name" className="text-sm font-medium text-ink">
           Nom
         </label>
         <input
@@ -59,12 +59,12 @@ export function PlaceForm({
           required
           defaultValue={place?.name}
           placeholder="ex. Maison principale"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="commune" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="commune" className="text-sm font-medium text-ink">
           Commune
         </label>
         <input
@@ -73,12 +73,12 @@ export function PlaceForm({
           type="text"
           defaultValue={place?.commune ?? ""}
           placeholder="ex. Lyon"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="postcode" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="postcode" className="text-sm font-medium text-ink">
           Code postal
         </label>
         <input
@@ -87,12 +87,12 @@ export function PlaceForm({
           type="text"
           defaultValue={place?.postcode ?? ""}
           placeholder="ex. 69001"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="streetAddress" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="streetAddress" className="text-sm font-medium text-ink">
           Adresse (facultatif)
         </label>
         <input
@@ -101,12 +101,12 @@ export function PlaceForm({
           type="text"
           defaultValue={place?.streetAddress ?? ""}
           placeholder="ex. 12 rue des Lilas"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="addressComplement" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="addressComplement" className="text-sm font-medium text-ink">
           Complément d&apos;adresse (facultatif)
         </label>
         <input
@@ -115,19 +115,19 @@ export function PlaceForm({
           type="text"
           defaultValue={place?.addressComplement ?? ""}
           placeholder="ex. Bâtiment B, 3e étage"
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         />
       </div>
 
       <div className="flex flex-col gap-1.5 sm:col-span-2">
-        <label htmlFor="propertyType" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="propertyType" className="text-sm font-medium text-ink">
           Type de bien
         </label>
         <select
           id="propertyType"
           name="propertyType"
           defaultValue={place?.propertyType ?? ""}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
         >
           <option value="">Non renseigné</option>
           {PROPERTY_TYPES.map((type) => (
@@ -139,7 +139,7 @@ export function PlaceForm({
       </div>
 
       {state.error && (
-        <p className="text-sm text-red-600 sm:col-span-2 dark:text-red-400">{state.error}</p>
+        <p className="text-sm text-late sm:col-span-2">{state.error}</p>
       )}
 
       <div className="sm:col-span-2">

@@ -26,15 +26,15 @@ export function ObligationHistoryList({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400"
+        className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink hover:underline"
       >
         {olderEntries.length} intervention{olderEntries.length > 1 ? "s" : ""} précédente
         {olderEntries.length > 1 ? "s" : ""} <span aria-hidden="true">{open ? "▲" : "▼"}</span>
       </button>
       {open && (
-        <ul className="mt-1 flex flex-col gap-1.5 border-l border-zinc-200 pl-2 dark:border-zinc-700">
+        <ul className="mt-1 flex flex-col gap-1.5 border-l border-line pl-2">
           {olderEntries.map((entry) => (
-            <li key={entry.id} className="flex flex-wrap items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+            <li key={entry.id} className="flex flex-wrap items-center gap-2 text-[13px] text-ink-2">
               <span>
                 Fait en {formatFrenchMonthYear(entry.serviceDate)}
                 {entry.providerName ? ` par ${entry.providerName}` : ""}

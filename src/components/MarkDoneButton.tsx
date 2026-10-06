@@ -6,9 +6,10 @@ import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions } from "@/lib/french-dates";
 import { ObligationDateResolver } from "@/components/ObligationDateResolver";
 import { AttestationMockButton } from "@/components/AttestationMockButton";
-import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS } from "@/components/inline-form-styles";
+import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
 import type { DateAnswerResult } from "@/lib/date-answer";
 import type { ObligationStatus } from "@/lib/obligations";
+import { BUTTON_DONE, BUTTON_UPDATE } from "@/components/ui";
 
 function currentMonthValue() {
   const now = new Date();
@@ -35,7 +36,7 @@ function PowerThresholdForm({ applianceId, onDone, onCancel }: { applianceId: st
 
   return (
     <div className={WINDOW_CLASS}>
-      <p className="text-zinc-700 dark:text-zinc-300">
+      <p className="text-ink">
         Quelle est la puissance du groupe extérieur ? (inscrite sur sa plaque ; pour un multisplit, c&apos;est la
         puissance de l&apos;unité extérieure qui compte.)
       </p>
@@ -61,7 +62,7 @@ function PowerThresholdForm({ applianceId, onDone, onCancel }: { applianceId: st
           {isPending ? "…" : "Valider"}
         </button>
       </div>
-      <button type="button" onClick={onCancel} className="self-start text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+      <button type="button" onClick={onCancel} className={`self-start ${TEXT_BUTTON_CLASS}`}>
         Je ne sais pas
       </button>
     </div>
@@ -95,8 +96,8 @@ export function MarkDoneButton({
   const isToConfirm = status === "to_confirm";
   const label = isToConfirm ? "Mettre à jour" : "C'est fait";
   const closedButtonClass = isToConfirm
-    ? "shrink-0 rounded-md bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700 transition-colors hover:bg-orange-100 dark:bg-orange-950/50 dark:text-orange-300 dark:hover:bg-orange-950"
-    : "shrink-0 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-950";
+    ? BUTTON_UPDATE
+    : BUTTON_DONE;
 
   if (!open) {
     return (
@@ -120,7 +121,7 @@ export function MarkDoneButton({
     return (
       <div className={WINDOW_CLASS}>
         <ObligationDateResolver taskId={maintenanceTaskId} onAnswer={handleAnswer} onCancel={() => setOpen(false)} />
-        {isPending && <p className="text-zinc-400 dark:text-zinc-500">…</p>}
+        {isPending && <p className="text-ink-2">…</p>}
       </div>
     );
   }
@@ -162,7 +163,7 @@ export function MarkDoneButton({
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className={TEXT_BUTTON_CLASS}
         >
           Annuler
         </button>

@@ -6,7 +6,7 @@ import {
 } from "@/lib/maintenance-levels";
 
 const OPTION_CLASS =
-  "flex items-start gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 hover:border-emerald-400 cursor-pointer dark:border-zinc-700 dark:text-zinc-100";
+  "flex min-h-11 cursor-pointer items-start gap-3 rounded-2xl border border-line bg-surface p-3.5 text-[15px] text-ink hover:border-accent has-[:checked]:border-accent";
 
 export function MaintenanceLevelOptions({
   value,
@@ -28,11 +28,11 @@ export function MaintenanceLevelOptions({
             name="maintenanceLevel"
             checked={value === level}
             onChange={() => onChange(level)}
-            className="mt-0.5"
+            className="mt-1 h-4 w-4 accent-accent"
           />
           <span>
-            <span className="font-medium">{MAINTENANCE_LEVEL_LABELS[level]}</span>
-            <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">
+            <span className="font-semibold">{MAINTENANCE_LEVEL_LABELS[level]}</span>
+            <span className="mt-0.5 block text-sm text-ink-2">
               {MAINTENANCE_LEVEL_DESCRIPTIONS[level]}
               {level !== "none" && ` Environ ${estimates[level]} min/mois pour ce lieu.`}
             </span>

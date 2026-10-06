@@ -25,6 +25,7 @@ import { InvoiceImportFlow } from "@/components/InvoiceImportFlow";
 import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
 import type { InvoiceImportMode } from "@/lib/invoice-extraction";
 import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
+import { Icon } from "@/components/ui";
 
 type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireAnswer };
 // REGLE-03: a hearth appliance (poele, insert, chaudiere) created alongside its flue
@@ -180,20 +181,21 @@ function describeDateAnswer(d: QuestionnaireStepEffects["dateAnswers"][number]):
 }
 
 const CARD_CLASS =
-  "flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6 dark:border-zinc-800 dark:bg-zinc-900";
+  "flex flex-col gap-4 rounded-[20px] bg-surface p-5 sm:p-6";
 const OPTION_CLASS =
-  "flex items-start gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-900 hover:border-emerald-400 cursor-pointer dark:border-zinc-700 dark:text-zinc-100";
+  "flex items-start gap-2 rounded-lg border border-line px-3 py-2 text-sm text-ink hover:border-accent cursor-pointer";
 const BUTTON_CLASS =
-  "rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_BUTTON_CLASS =
-  "rounded-lg border border-zinc-300 px-4 py-2.5 font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
-const DISCREET_LINK_CLASS = "self-start text-xs text-zinc-400 hover:underline dark:text-zinc-500";
-const BACK_LINK_CLASS = "self-start text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400";
+  "inline-flex min-h-11 items-center justify-center rounded-xl border-[1.5px] border-line-strong px-4 py-2 font-medium text-ink hover:bg-surface-2";
+const DISCREET_LINK_CLASS = "inline-flex min-h-11 items-center self-start text-sm text-ink-2 hover:underline";
+const BACK_LINK_CLASS = "-ml-1 inline-flex min-h-11 items-center gap-1 self-start text-[15px] font-semibold text-accent";
 
 function BackLink({ onClick }: { onClick: () => void }) {
   return (
     <button type="button" className={BACK_LINK_CLASS} onClick={onClick}>
-      ← Précédent
+      <Icon name="back" size={20} strokeWidth={2} />
+      Précédent
     </button>
   );
 }
@@ -516,7 +518,7 @@ export function QuestionnaireWizard({
         {history.length > 0 && <BackLink onClick={handleBack} />}
         {invoiceImportMode === "disabled" ? (
           <div className={CARD_CLASS}>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-ink-2">
               Import de factures : bientôt disponible.
             </p>
             <button className={BUTTON_CLASS} onClick={() => completeCurrentStep(emptyStepEffects(placeId), ["Passer"])}>
@@ -574,7 +576,7 @@ export function QuestionnaireWizard({
   if (currentQuestion.answerType === "automatic") {
     return (
       <div className={CARD_CLASS}>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">…</p>
+        <p className="text-sm text-ink-2">…</p>
       </div>
     );
   }
@@ -584,10 +586,10 @@ export function QuestionnaireWizard({
   return (
     <div className={CARD_CLASS}>
       {history.length > 0 && <BackLink onClick={handleBack} />}
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="text-sm text-ink-2">
         {currentQuestion.block === "maintenance" ? "Entretien (facultatif)" : "Question"}
       </p>
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{questionText}</h2>
+      <h2 className="text-lg font-medium text-ink">{questionText}</h2>
       <div className="flex flex-col gap-2">
         {currentQuestion.answers.map((answer) => {
           const isChecked = selected.includes(answer.label);
@@ -595,7 +597,7 @@ export function QuestionnaireWizard({
           return (
             <label
               key={answer.label}
-              className={`${OPTION_CLASS} ${answer.unknown ? "text-zinc-400 dark:text-zinc-500" : ""}`}
+              className={`${OPTION_CLASS} ${answer.unknown ? "text-ink-2" : ""}`}
             >
               <input
                 type={inputType}
@@ -615,7 +617,7 @@ export function QuestionnaireWizard({
               <span>
                 {answer.label}
                 {answer.help && (
-                  <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">{answer.help}</span>
+                  <span className="mt-0.5 block text-[13px] text-ink-2">{answer.help}</span>
                 )}
               </span>
             </label>
@@ -649,8 +651,8 @@ function MaintenanceLevelStepCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">Entretien</p>
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+      <p className="text-sm text-ink-2">Entretien</p>
+      <h2 className="text-lg font-medium text-ink">
         Quel suivi voulez-vous pour l&apos;entretien de vos appareils ?
       </h2>
       <MaintenanceLevelOptions
@@ -659,7 +661,7 @@ function MaintenanceLevelStepCard({
         estimates={estimates}
         levels={QUESTIONNAIRE_LEVEL_CHOICES}
       />
-      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+      <p className="text-[13px] text-ink-2">
         Vos obligations légales restent suivies dans tous les cas.
       </p>
       <button className={BUTTON_CLASS} onClick={() => onSubmit(level)}>
@@ -681,7 +683,7 @@ function YesNoCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{question}</h2>
+      <h2 className="text-lg font-medium text-ink">{question}</h2>
       <div className="flex flex-wrap gap-2">
         <button className={BUTTON_CLASS} onClick={() => onAnswer("yes")}>
           Oui
@@ -711,7 +713,7 @@ function YesNoStatusCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
+      <h2 className="text-lg font-medium text-ink">{title}</h2>
       <div className="flex flex-wrap gap-2">
         <button className={BUTTON_CLASS} onClick={() => onAnswer({ confidence: "compliant" })}>
           Oui
@@ -746,7 +748,7 @@ function GradedMonthCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
+      <h2 className="text-lg font-medium text-ink">{dq.question}</h2>
 
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} disableFutureMonths />
@@ -799,7 +801,7 @@ function SimpleDateOrUnknownCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{title}</h2>
+      <h2 className="text-lg font-medium text-ink">{title}</h2>
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} disableFutureMonths={!futureYears} />
         <button
@@ -858,7 +860,7 @@ function ManufactureOrExpiryCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
+      <h2 className="text-lg font-medium text-ink">{dq.question}</h2>
       <div className="flex flex-wrap gap-2">
         <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("manufacture")}>
           Date de fabrication
@@ -899,7 +901,7 @@ function VehicleInspectionCard({
     return (
       <div className={CARD_CLASS}>
         <BackLink onClick={() => setShowYoung(false)} />
-        <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Date de première immatriculation ?</h2>
+        <h2 className="text-lg font-medium text-ink">Date de première immatriculation ?</h2>
         <div className="flex flex-wrap items-center gap-2">
           <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} disableFutureMonths />
           <button
@@ -920,7 +922,7 @@ function VehicleInspectionCard({
   return (
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">{dq.question}</h2>
+      <h2 className="text-lg font-medium text-ink">{dq.question}</h2>
 
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} disableFutureMonths />
@@ -994,7 +996,7 @@ function RecapCard({
         key: `${stepIndex}-${typeId}`,
         stepIndex,
         text: applianceLabel(typeId),
-        sub: dAnswers.length > 0 ? dAnswers.map(describeDateAnswer).join(" · ") : undefined,
+        sub: dAnswers.length > 0 ? dAnswers.map(describeDateAnswer).join(", ") : undefined,
       });
     }
     for (const [typeId, dAnswers] of dateAnswersByType) {
@@ -1003,7 +1005,7 @@ function RecapCard({
         key: `${stepIndex}-date-${typeId}`,
         stepIndex,
         text: applianceLabel(typeId),
-        sub: dAnswers.map(describeDateAnswer).join(" · "),
+        sub: dAnswers.map(describeDateAnswer).join(", "),
       });
     }
     for (const check of step.effects.unknownChecks) {
@@ -1014,26 +1016,26 @@ function RecapCard({
   return (
     <div className={CARD_CLASS}>
       {history.length > 0 && <BackLink onClick={onBack} />}
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Récapitulatif</h2>
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <h2 className="text-lg font-medium text-ink">Récapitulatif</h2>
+      <p className="text-sm text-ink-2">
         Rien n&apos;a encore été créé. Vérifiez ce qui va être ajouté à ce lieu, puis confirmez.
       </p>
 
       {lines.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">Rien à créer pour ce lieu.</p>
+        <p className="text-sm text-ink-2">Rien à créer pour ce lieu.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {lines.map((line) => (
             <li
               key={line.key}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-line px-3 py-2 text-sm"
             >
               <span>
-                <span className="font-medium text-zinc-900 dark:text-zinc-100">{line.text}</span>
-                {line.sub && <span className="ml-2 text-zinc-500 dark:text-zinc-400">({line.sub})</span>}
+                <span className="font-medium text-ink">{line.text}</span>
+                {line.sub && <span className="ml-2 text-ink-2">({line.sub})</span>}
               </span>
               <button
-                className="text-xs font-medium text-emerald-700 hover:underline dark:text-emerald-400"
+                className="inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline"
                 onClick={() => onEditStep(line.stepIndex)}
               >
                 Modifier

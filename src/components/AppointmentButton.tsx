@@ -4,9 +4,10 @@ import { useState, useTransition } from "react";
 import { bookObligationAppointment, cancelObligationAppointment, markObligationDone } from "@/app/actions";
 import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions, formatFrenchDate } from "@/lib/french-dates";
-import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS } from "@/components/inline-form-styles";
+import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
 import type { ObligationAppointment } from "@/lib/obligation-appointments";
 import { getTodayInFrance, type ObligationStatus } from "@/lib/obligations";
+import { Icon } from "@/components/ui";
 
 function tomorrowIso(): string {
   const d = new Date();
@@ -70,12 +71,12 @@ function BookingForm({
         placeholder="E-mail ou téléphone du prestataire (facultatif)"
         className={INPUT_CLASS}
       />
-      {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="text-late">{error}</p>}
       <div className="flex items-center gap-2">
         <button type="submit" disabled={isPending || !date || !providerName.trim()} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}
         </button>
-        <button type="button" onClick={onCancel} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+        <button type="button" onClick={onCancel} className={TEXT_BUTTON_CLASS}>
           Annuler
         </button>
       </div>
@@ -135,7 +136,7 @@ function PrefilledCompletionForm({
         <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}
         </button>
-        <button type="button" onClick={onCancel} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+        <button type="button" onClick={onCancel} className={TEXT_BUTTON_CLASS}>
           Annuler
         </button>
       </div>
@@ -180,7 +181,8 @@ export function AppointmentButton({
 
   const isPast = appointment.appointmentDate <= getTodayInFrance();
   const badge = (
-    <span className="rounded-md bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950/50 dark:text-blue-300">
+    <span className="inline-flex items-center gap-2 rounded-full bg-accent-soft px-3 py-1.5 text-[13px] font-semibold text-accent">
+      <Icon name="appointment" size={16} />
       Rendez-vous le {formatFrenchDate(appointment.appointmentDate)}
       {appointment.providerName ? ` avec ${appointment.providerName}` : ""}
     </span>
@@ -214,7 +216,7 @@ export function AppointmentButton({
     return (
       <div className="flex flex-wrap items-center gap-2">
         {badge}
-        <span className="text-xs text-zinc-600 dark:text-zinc-400">
+        <span className="text-sm text-ink-2">
           Le rendez-vous du {formatFrenchDate(appointment.appointmentDate)} a-t-il eu lieu ?
         </span>
         <button type="button" onClick={() => setMode("complete")} className={BUTTON_CLASS}>
@@ -247,7 +249,7 @@ export function AppointmentButton({
           type="button"
           disabled={isPending}
           onClick={() => startTransition(async () => cancelObligationAppointment(applianceId, maintenanceTaskId))}
-          className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className={TEXT_BUTTON_CLASS}
         >
           Annuler le rendez-vous
         </button>
