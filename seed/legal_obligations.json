@@ -148,9 +148,11 @@
   {
     "id": "L-07",
     "obligation": "Détecteur autonome avertisseur de fumée (DAAF)",
-    "applies_to": "Tout logement (SEC-01)",
+    "applies_to": "Tout logement (SEC-01, SEC-08, SEC-09)",
     "equipment_type_ids": [
-      "SEC-01"
+      "SEC-01",
+      "SEC-08",
+      "SEC-09"
     ],
     "legal_text": "Loi n. 2010-238 du 09/03/2010 ; CCH art. R129-12 à R129-15",
     "frequency": "Installation par le propriétaire ; entretien, test et remplacement des piles par l'occupant ; appareil à remplacer au bout de 10 ans",

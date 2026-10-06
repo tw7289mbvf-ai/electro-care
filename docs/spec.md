@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 58). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 60). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -91,7 +91,7 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 - **Vehicles phrased per home**: "Un véhicule est-il rattaché à votre résidence principale ?" Each vehicle belongs to one home only, where it is mainly parked, so it is never counted twice.
 - **Questions name the appliance**: every question and every date request states which appliance and which intervention it is about.
 - **Never blocking**: every obligation question offers "Je ne sais pas", as a regular button in last position. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
-- **Smoke detector**: always created, since it is mandatory in every home. The questionnaire asks whether one is installed ("no" shows as overdue), then the date printed on its back and what it means: a manufacturing date, replaced 10 years later, or a replacement deadline ("à remplacer avant 2034"), used as is. Future years are offered for the deadline. Recent models have a sealed 10-year battery, so there is no yearly battery reminder.
+- **Smoke detector**: always created, since it is mandatory in every home. Four answers: "Oui, un détecteur autonome", "Oui, relié à mon alarme", "Non" (overdue) and "Je ne sais pas". A standalone detector: the date printed on its back and what it means, a manufacturing date, replaced 10 years later, or a replacement deadline ("à remplacer avant 2034"), used as is; future years are offered for the deadline; recent models have a sealed 10-year battery, so no yearly battery reminder. A detector linked to an alarm: the app asks whether the alarm is monitored by a provider. Monitored: the obligation shows "Suivi par votre télésurveillance" in green, a one-time check asks whether the detector bears the CE EN 14604 marking ("Je ne sais pas" keeps it to confirm, with a tip to check its label or the provider's contract), and the provider's visits are recorded like any intervention. Not monitored: a monthly reminder to test it from the alarm's app, and the replacement date asked as for a standalone detector. Existing detectors stay standalone; a user changes the type from the detector's card ("Type": "Détecteur autonome" or "Relié à mon alarme", followed by the same two questions), or from the "Mettre à jour" window when the detector is to confirm, which offers "Il est relié à mon alarme" next to the date.
 - **Printed dates can be in the future**: the expiry date of a gas hose and a detector's replacement deadline are future dates, so their year lists extend ahead; intervention dates never do.
 - **Pool**: the answer names the safety device (barrier, alarm, cover or shelter); "no device" shows as overdue.
 - **Dates**: asked through each obligation's own question, described in Obligations and Maintenance.

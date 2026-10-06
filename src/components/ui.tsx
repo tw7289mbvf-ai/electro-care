@@ -267,8 +267,8 @@ export function Pill({ tone, children }: { tone: Tone; children: ReactNode }) {
   );
 }
 
-export function StatusPill({ status }: { status: ObligationStatus }) {
-  return <Pill tone={statusTone(status)}>{OBLIGATION_STATUS_LABELS[status]}</Pill>;
+export function StatusPill({ status, label }: { status: ObligationStatus; label?: string | null }) {
+  return <Pill tone={statusTone(status)}>{label ?? OBLIGATION_STATUS_LABELS[status]}</Pill>;
 }
 
 // --- "Ajouter": dashed border, accent text, + icon -------------------------------------

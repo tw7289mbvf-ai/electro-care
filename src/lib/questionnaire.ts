@@ -4,7 +4,9 @@ export type QuestionnaireAnswer = {
   label: string;
   creates: string[];
   help: string | null;
-  followUp: { question: string; createsIfYes: string[] } | null;
+  // createsIfNo: created on "Non" (and on "Je ne sais pas", the safe default) — e.g. a
+  // detector linked to an alarm that isn't monitored (SEC-08) vs monitored (SEC-09).
+  followUp: { question: string; createsIfYes: string[]; createsIfNo: string[] } | null;
   unknown: boolean;
   // REGLE-06: fixes the initial confidence ("never") for the named task ids directly,
   // without asking their date question.
@@ -35,7 +37,13 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
       label: a.label,
       creates: a.creates,
       help: a.help,
-      followUp: a.follow_up ? { question: a.follow_up.question, createsIfYes: a.follow_up.creates_if_yes } : null,
+      followUp: a.follow_up
+        ? {
+            question: a.follow_up.question,
+            createsIfYes: a.follow_up.creates_if_yes,
+            createsIfNo: a.follow_up.creates_if_no ?? [],
+          }
+        : null,
       unknown: a.unknown,
       initialStatus: (a.initial_status as Record<string, "never"> | null) ?? null,
       sets: "sets" in a ? (a.sets as { property_type: string }) : undefined,

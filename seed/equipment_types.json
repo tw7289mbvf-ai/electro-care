@@ -2566,5 +2566,53 @@
       "fields": "Marque, modèle, numéro de cadre, capacité de la batterie (Wh)",
       "tip": "Le numéro de cadre sert aussi en cas de vol"
     }
+  },
+  {
+    "id": "SEC-08",
+    "category": "home_safety",
+    "technical_group": "Securite",
+    "label": "Détecteur de fumée relié à une alarme",
+    "lifespan": "10 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Loi 2010-238 ; art. R129-12 à R129-15 CCH"
+    },
+    "reference_frequency": "Test mensuel depuis l'application de l'alarme ; remplacement à 10 ans",
+    "provider": "Particulier",
+    "proof_document": "Attestation à transmettre à l'assureur",
+    "indicative_pro_cost": "20-40 EUR",
+    "risk_if_neglected": "Détecteur muet = risque vital ; difficulté d'indemnisation",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "dated_label",
+      "location": "Au dos du détecteur",
+      "fields": "Date de fabrication ou de fin de vie, norme NF EN 14604",
+      "tip": "Le test se lance depuis l'application de l'alarme"
+    }
+  },
+  {
+    "id": "SEC-09",
+    "category": "home_safety",
+    "technical_group": "Securite",
+    "label": "Détecteur de fumée relié à une alarme télésurveillée",
+    "lifespan": "10 ans",
+    "legal": {
+      "status": "yes",
+      "note": "Oui",
+      "reference": "Loi 2010-238 ; art. R129-12 à R129-15 CCH"
+    },
+    "reference_frequency": "Suivi par le prestataire de télésurveillance",
+    "provider": "Prestataire de télésurveillance",
+    "proof_document": "Contrat de télésurveillance",
+    "indicative_pro_cost": null,
+    "risk_if_neglected": "Détecteur muet = risque vital ; difficulté d'indemnisation",
+    "mvp_priority": 1,
+    "nameplate": {
+      "photo_target": "document",
+      "location": "Contrat de télésurveillance",
+      "fields": "Marquage CE EN 14604",
+      "tip": "Le marquage figure sur l'étiquette au dos du détecteur ou dans le contrat"
+    }
   }
 ]

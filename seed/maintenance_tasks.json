@@ -3396,5 +3396,86 @@
     "legal": "no",
     "level": "essential",
     "active_minutes": 0
+  },
+  {
+    "id": "T-155",
+    "equipment_type_id": "SEC-08",
+    "title": "Tester le détecteur depuis l'application de l'alarme",
+    "performer": "diy",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 1,
+      "label": "Tous les mois"
+    },
+    "season": "Toute l'année",
+    "season_months": [],
+    "duration_min": 2,
+    "tools": "Aucun",
+    "procedure": "Lancer le test du détecteur depuis l'application de l'alarme et vérifier que la sirène et la notification se déclenchent.",
+    "if_skipped": "Un détecteur muet est un détecteur inutile",
+    "legal": "yes",
+    "level": null,
+    "active_minutes": 2
+  },
+  {
+    "id": "T-156",
+    "equipment_type_id": "SEC-08",
+    "title": "Remplacement du détecteur de fumée (10 ans après fabrication)",
+    "performer": "diy",
+    "frequency": {
+      "rule": "threshold",
+      "months": 120,
+      "label": "10 ans après la date de fabrication imprimée au dos",
+      "threshold": "Due date = manufacture date printed on the back of the detector + 10 years"
+    },
+    "season": "Selon échéance",
+    "season_months": [],
+    "duration_min": 15,
+    "tools": "Détecteur neuf certifié NF EN 14604, compatible avec la centrale",
+    "procedure": "Remplacer le détecteur 10 ans après sa date de fabrication, ou dès qu'il signale sa fin de vie, par un modèle compatible avec la centrale de l'alarme, puis l'appairer depuis l'application.",
+    "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
+    "legal": "yes",
+    "level": null,
+    "active_minutes": 15
+  },
+  {
+    "id": "T-157",
+    "equipment_type_id": "SEC-09",
+    "title": "Suivi par la télésurveillance",
+    "performer": "pro",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 12,
+      "label": "Selon le contrat de télésurveillance"
+    },
+    "season": "Toute l'année",
+    "season_months": [],
+    "duration_min": 0,
+    "tools": "Contrat de télésurveillance",
+    "procedure": "Le prestataire surveille le détecteur, le teste et le remplace selon son contrat. Enregistrer ses visites comme une intervention.",
+    "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
+    "legal": "yes",
+    "level": null,
+    "active_minutes": 0
+  },
+  {
+    "id": "T-158",
+    "equipment_type_id": "SEC-09",
+    "title": "Vérification du marquage CE EN 14604",
+    "performer": "diy",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 120,
+      "label": "Vérification unique"
+    },
+    "season": "À la mise en service",
+    "season_months": [],
+    "duration_min": 5,
+    "tools": "Aucun",
+    "procedure": "Vérifier que le détecteur porte le marquage CE et la norme EN 14604, sur son étiquette ou dans le contrat de télésurveillance.",
+    "if_skipped": "Un détecteur non conforme peut ne pas être reconnu par l'assureur",
+    "legal": "yes",
+    "level": null,
+    "active_minutes": 5
   }
 ]
