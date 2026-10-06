@@ -38,6 +38,26 @@ import {
 // would stay invisible until the next build.
 export const dynamic = "force-dynamic";
 
+const INTRO_SOURCES = [
+  { name: "Santé publique France", href: "https://www.santepubliquefrance.fr/monoxyde-de-carbone/les-enjeux-de-sante" },
+  { name: "ARS Centre-Val de Loire", href: "https://www.centre-val-de-loire.ars.sante.fr/media/146417/download" },
+  { name: "Ademe", href: "https://librairie.ademe.fr/ged/651/infographie-electromenager-faire-durer-pannes.pdf" },
+  {
+    name: "Gifam",
+    href: "https://leclaireur.fnac.com/article/469243-et-si-le-menage-de-printemps-pouvait-contribuer-aux-economies-denergie/",
+  },
+  { name: "Groupama", href: "https://www.groupama.fr/assurance-habitation/conseils/ramonage-indispensable-et-obligatoire/" },
+];
+
+function IntroStat({ value, children }: { value: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="font-display text-[40px] font-bold leading-none tracking-[-0.5px] text-ink">{value}</span>
+      <p className="text-[15px] leading-relaxed text-ink-2">{children}</p>
+    </div>
+  );
+}
+
 export default async function Home() {
   // A signed-out visitor never triggers a database read on this page: the check below
   // is the only thing standing between "/" and a live query, so it must come first,
@@ -60,18 +80,69 @@ export default async function Home() {
           </Link>
         </section>
 
-        <section className="flex flex-col gap-2 rounded-3xl bg-surface p-5">
-          <h2 className={SECTION_TITLE_CLASS}>Votre logement, entretenu et en règle</h2>
+        <section className="flex flex-col gap-5 rounded-3xl bg-surface p-5">
+          <div className="flex flex-col gap-2">
+            <h2 className={SECTION_TITLE_CLASS}>Votre logement est-il en règle ?</h2>
+            <p className="text-[15px] leading-relaxed text-ink-2">
+              Chaudière, ramonage, détecteur de fumée, climatisation, fosse septique : selon ses
+              équipements, un logement est soumis à plusieurs obligations d&apos;entretien, chacune à son
+              rythme, tous les ans, tous les deux ans, tous les dix ans. Difficile de tout retenir. Et
+              les oublis ont un prix :
+            </p>
+          </div>
+          <IntroStat value="450 €">l&apos;amende encourue pour un ramonage oublié.</IntroStat>
+          <IntroStat value="Près de 4 000">
+            intoxications au monoxyde de carbone chaque année en France, dont une centaine mortelles.
+            La chaudière est en cause dans plus de la moitié des cas à domicile.
+          </IntroStat>
           <p className="text-[15px] leading-relaxed text-ink-2">
-            Chaudière, ramonage, détecteur de fumée, fosse septique : certains entretiens sont
-            obligatoires, et les oublier peut coûter une amende ou un refus d&apos;indemnisation de
-            votre assureur. Electro Care établit la liste de vos obligations en quelques questions,
-            vous signale chaque échéance et vous guide pour l&apos;entretien courant de vos appareils.
-            Gratuit.
+            Et en cas de sinistre, un entretien que vous ne pouvez pas prouver peut réduire
+            l&apos;indemnisation de votre assureur.
           </p>
+
+          <div className="flex flex-col gap-2">
+            <h2 className={SECTION_TITLE_CLASS}>Et vos appareils du quotidien ?</h2>
+            <p className="text-[15px] leading-relaxed text-ink-2">
+              Rien d&apos;obligatoire ici, mais un vrai enjeu : un foyer compte en moyenne plus de sept
+              gros appareils électroménagers, et quelques gestes simples font toute la différence.
+            </p>
+          </div>
+          <IntroStat value="6 sur 10">
+            appareils de gros électroménager rapportés au service après-vente souffrent simplement
+            d&apos;un défaut d&apos;entretien, sans aucune pièce à changer.
+          </IntroStat>
+          <IntroStat value="Jusqu'à 30 %">
+            d&apos;électricité en plus pour un réfrigérateur à la grille encrassée, ou un congélateur
+            couvert de givre.
+          </IntroStat>
+
+          <div className="flex flex-col gap-2">
+            <h2 className={SECTION_TITLE_CLASS}>Pas d&apos;inquiétude : Electro Care s&apos;en occupe.</h2>
+            <p className="text-[15px] leading-relaxed text-ink-2">
+              En quelques questions, l&apos;app établit la liste de vos obligations, vous prévient avant
+              chaque échéance et garde la trace de chaque intervention. Et chaque mois, elle vous
+              indique les bons gestes, appareil par appareil, avec le temps qu&apos;ils prennent.
+            </p>
+          </div>
+          <Link href="/auth/sign-up" className={`${BUTTON_PRIMARY} self-start`}>
+            Faire le point sur mon logement
+          </Link>
         </section>
 
         <DemoDashboard />
+
+        <p className="text-[13px] text-ink-2">
+          Sources :{" "}
+          {INTRO_SOURCES.map(({ name, href }, i) => (
+            <span key={href}>
+              <a href={href} target="_blank" rel="noopener noreferrer" className="underline">
+                {name}
+              </a>
+              {i < INTRO_SOURCES.length - 1 ? ", " : ". "}
+            </span>
+          ))}
+          Chiffres vérifiés en octobre 2026.
+        </p>
       </main>
     );
   }
