@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
+import { formatDuration } from "@/lib/durations";
 import type { MaintenanceGuidanceItem } from "@/lib/maintenance-guidance";
 import { MaintenanceGuidanceActions } from "@/components/MaintenanceGuidanceActions";
 import { ApplianceIconTile, ROW_CLASS, Section } from "@/components/ui";
@@ -23,7 +24,7 @@ export function MaintenanceGuidanceList({
   return (
     <Section
       title="Entretien du mois"
-      aside={totalMinutes > 0 && <span className="text-sm text-ink-2">environ {totalMinutes} min</span>}
+      aside={totalMinutes > 0 && <span className="text-sm text-ink-2">environ {formatDuration(totalMinutes)}</span>}
     >
       <ul className="flex flex-col gap-2.5">
         {items.map(({ appliance, task }) => (
@@ -33,7 +34,7 @@ export function MaintenanceGuidanceList({
               <span className="flex min-w-0 flex-col gap-0.5">
                 <span className="text-base font-semibold text-ink">{task.title}</span>
                 <span className="text-sm text-ink-2">
-                  {getApplianceDisplayName(appliance)}, {task.performer === "pro" ? "professionnel" : `${task.activeMinutes} min`}
+                  {getApplianceDisplayName(appliance)}, {task.performer === "pro" ? "professionnel" : formatDuration(task.activeMinutes)}
                 </span>
               </span>
             </Link>

@@ -3,6 +3,7 @@ import type { MaintenanceGuidanceItem, UpcomingMaintenanceItem } from "@/lib/mai
 import { MaintenanceGuidanceActions } from "@/components/MaintenanceGuidanceActions";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
+import { formatDuration } from "@/lib/durations";
 import { GROUP_LABEL_CLASS, Pill, ROW_CLASS, Section } from "@/components/ui";
 
 // Appliance fiche's "entretien courant, au niveau choisi pour le lieu" (spec's "Managing
@@ -53,7 +54,7 @@ export function ApplianceEntretienSection({
                 <Link href={`/appliances/${applianceId}/tasks/${task.id}`} className="flex flex-col gap-0.5">
                   <span className="text-base font-semibold text-ink">{task.title}</span>
                   <span className="text-sm text-ink-2">
-                    {task.performer === "pro" ? "Par un professionnel" : `${task.activeMinutes} min, à faire soi-même`}
+                    {task.performer === "pro" ? "Par un professionnel" : `${formatDuration(task.activeMinutes)}, à faire soi-même`}
                   </span>
                 </Link>
                 <MaintenanceGuidanceActions

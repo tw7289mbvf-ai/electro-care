@@ -4,6 +4,7 @@ import type { Appliance } from "@/lib/appliance-types";
 import type { ObligationCounts, ObligationStatus } from "@/lib/obligations";
 import { OBLIGATION_STATUS_LABELS } from "@/lib/obligations";
 import { getApplianceIconName } from "@/lib/appliance-icons";
+import { formatDuration } from "@/lib/durations";
 
 // Building blocks of the design charter (docs/design.md, "Composants"). Colours only
 // ever come from the theme tokens in globals.css.
@@ -345,7 +346,7 @@ export function ComplianceGauge({
         <p className={`flex items-center gap-2.5 text-sm text-ink-2 ${total > 0 ? "border-t border-line pt-3.5" : ""}`}>
           <Icon name="time" size={18} />
           {maintenanceDueCount} geste{maintenanceDueCount > 1 ? "s" : ""} d&apos;entretien ce mois-ci
-          {maintenanceMinutes > 0 ? `, environ ${maintenanceMinutes} min` : ""}
+          {maintenanceMinutes > 0 ? `, environ ${formatDuration(maintenanceMinutes)}` : ""}
         </p>
       )}
     </section>

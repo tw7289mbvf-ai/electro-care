@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 55). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 56). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -217,7 +217,9 @@ Validated on 6 October 2026, on the design canvas ([Electro Care, nouveau design
 
 - **Fresh and modern**: a light blue-grey ground, slate ink instead of black, and an electric blue for the brand, distinct from the green of "À jour".
 - **Light by default, dark on request**: Paramètres offers "Affichage" with three choices, "Clair" (default), "Sombre" and "Selon le téléphone". The choice is kept in a first-party cookie on the device and applied when the page is built, so the page never flashes the wrong theme; signed-out pages follow the same cookie, light when there is none. One set of tokens per theme.
-- **Softer statuses**: red, orange and green appear as pale pills with dark text; only the compliance bar on the home screen uses full colours.
+- **Compliance gauge on every level**: on the home screen for all places together, and at the top of each place page for that place alone, with the same card: "13 sur 28 obligations à jour", the segmented bar, its legend, and the month's maintenance with its duration.
+- **Durations readable**: under an hour in minutes ("environ 45 min"), from an hour in hours and minutes rounded to five minutes ("environ 4 h 45").
+- **Softer statuses**: red, orange and green appear as pale pills with dark text; only the compliance bar uses full colours.
 - **Typography**: Bricolage Grotesque for titles and figures, Figtree for text, both self-hosted by the app so no visitor's IP address is sent to Google.
 - **Airier**: one idea per line, no all-caps labels, no "A — B" or "A · B" strings; up-to-date obligations collapse into one line.
 - **Icons**: one line icon per appliance type, in a rounded square tinted by status.
