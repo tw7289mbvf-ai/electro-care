@@ -322,6 +322,8 @@ async function main() {
     ["admin_account_counts()", () => sqlB`SELECT * FROM admin_account_counts()`],
     ["admin_account_activity()", () => sqlB`SELECT * FROM admin_account_activity()`],
     ["admin_obligation_rows()", () => sqlB`SELECT * FROM admin_obligation_rows()`],
+    ["admin_account_compliance_rows()", () => sqlB`SELECT * FROM admin_account_compliance_rows()`],
+    ["admin_log_action('view_compliance', NULL)", () => sqlB`SELECT admin_log_action('view_compliance', NULL)`],
     ["admin_list_actions()", () => sqlB`SELECT * FROM admin_list_actions()`],
     ["admin_log_action(...)", () => sqlB`SELECT admin_log_action('suspend', ${a.accountId})`],
     ["admin_list_requests()", () => sqlB`SELECT * FROM admin_list_requests()`],

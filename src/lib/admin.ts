@@ -186,9 +186,88 @@ export async function getAdminObligationCounts(): Promise<ObligationCounts> {
   return totals;
 }
 
+export type AdminAccountCompliance = {
+  id: string;
+  email: string;
+  createdAt: string;
+  placesCount: number;
+  counts: ObligationCounts;
+};
+
+type ComplianceRow = {
+  account_id: string;
+  places_count: string | number;
+  appliance_id: string | null;
+  equipment_type_id: string | null;
+  power_kw: string | number | null;
+  maintenance_task_id: string | null;
+  last_service_date: string | Date | null;
+  known_due_date: string | Date | null;
+  service_confidence: string | null;
+};
+
+// "Conformité par compte" (spec, "Compliance per account, for support"). The raw rows
+// (equipment type, power, task, dates) stay in this function: only per-account counts
+// leave it, and they're never logged anywhere. The database returns account ids only;
+// the email and sign-up date come from `accounts` (the Neon Auth list) and are attached
+// to the final counts just before display. Each call is written to admin_actions first,
+// with no target, so a viewing that fails halfway is still journaled.
+export async function getAdminComplianceByAccount(accounts: AdminAccount[]): Promise<AdminAccountCompliance[]> {
+  await logAdminAction("view_compliance", null);
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`SELECT * FROM admin_account_compliance_rows()`) as ComplianceRow[];
+
+  const byAccount = new Map<
+    string,
+    {
+      placesCount: number;
+      appliances: Map<string, { equipmentTypeId: string; powerKw: number | null; records: ApplianceObligationRecord[] }>;
+    }
+  >();
+  for (const row of rows) {
+    const account = byAccount.get(row.account_id) ?? { placesCount: Number(row.places_count), appliances: new Map() };
+    byAccount.set(row.account_id, account);
+    if (!row.appliance_id || !row.equipment_type_id) continue;
+    const appliance = account.appliances.get(row.appliance_id) ?? {
+      equipmentTypeId: row.equipment_type_id,
+      powerKw: row.power_kw === null ? null : Number(row.power_kw),
+      records: [],
+    };
+    account.appliances.set(row.appliance_id, appliance);
+    if (row.maintenance_task_id) {
+      appliance.records.push({
+        applianceId: row.appliance_id,
+        maintenanceTaskId: row.maintenance_task_id,
+        lastServiceDate: row.last_service_date === null ? null : toIso(row.last_service_date).slice(0, 10),
+        knownDueDate: row.known_due_date === null ? null : toIso(row.known_due_date).slice(0, 10),
+        serviceConfidence: row.service_confidence as ApplianceObligationRecord["serviceConfidence"],
+        providerName: null,
+        providerContact: null,
+        modifiedAt: null,
+      });
+    }
+  }
+
+  const accountById = new Map(accounts.map((a) => [a.id, a]));
+  const result: AdminAccountCompliance[] = [];
+  for (const [accountId, { placesCount, appliances }] of byAccount) {
+    const account = accountById.get(accountId);
+    if (!account) continue;
+    const counts: ObligationCounts = { overdue: 0, toConfirm: 0, upToDate: 0 };
+    for (const { equipmentTypeId, powerKw, records } of appliances.values()) {
+      const c = countObligationsByStatus(getObligationsForAppliance(equipmentTypeId, records, powerKw));
+      counts.overdue += c.overdue;
+      counts.toConfirm += c.toConfirm;
+      counts.upToDate += c.upToDate;
+    }
+    result.push({ id: accountId, email: account.email, createdAt: account.createdAt, placesCount, counts });
+  }
+  return result.sort((a, b) => b.counts.overdue - a.counts.overdue);
+}
+
 export type AdminActionEntry = {
   id: string;
-  action: "suspend" | "reactivate" | "delete" | "send_reset_link";
+  action: "suspend" | "reactivate" | "delete" | "send_reset_link" | "view_compliance";
   targetAccountId: string | null;
   targetEmail: string | null;
   createdAt: string;
@@ -215,7 +294,7 @@ export async function getAdminActionLog(accounts: AdminAccount[]): Promise<Admin
   }));
 }
 
-async function logAdminAction(action: AdminActionEntry["action"], targetAccountId: string): Promise<void> {
+async function logAdminAction(action: AdminActionEntry["action"], targetAccountId: string | null): Promise<void> {
   const { sql } = await getAuthedContext();
   await sql`SELECT admin_log_action(${action}, ${targetAccountId})`;
 }

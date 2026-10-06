@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { requireAdminPage, getAdminOverview, getAdminObligationCounts, getAdminActionLog, getAdminRequests } from "@/lib/admin";
+import {
+  requireAdminPage,
+  getAdminOverview,
+  getAdminObligationCounts,
+  getAdminActionLog,
+  getAdminRequests,
+  getAdminComplianceByAccount,
+} from "@/lib/admin";
 import { getKpiIndicators, getMultiHomeBreakdown } from "@/lib/admin-metrics";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
 import { AdminRequestRow } from "@/components/AdminRequestRow";
-import { BackLink } from "@/components/ui";
+import { BackLink, SegmentedBar } from "@/components/ui";
 
 // Same rule as every other page reading live data (see src/app/page.tsx): never served
 // from a static/ISR cache.
@@ -14,12 +21,17 @@ const ACTION_LABELS: Record<string, string> = {
   reactivate: "Réactivation",
   delete: "Suppression",
   send_reset_link: "Lien de réinitialisation envoyé",
+  view_compliance: "Consultation de la conformité par compte",
 };
 
 function formatDateTime(iso: string): string {
   return new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/Paris" }).format(
     new Date(iso)
   );
+}
+
+function formatDate(iso: string): string {
+  return new Intl.DateTimeFormat("fr-FR", { dateStyle: "medium", timeZone: "Europe/Paris" }).format(new Date(iso));
 }
 
 function StatTile({ label, value }: { label: string; value: number }) {
@@ -34,6 +46,8 @@ function StatTile({ label, value }: { label: string; value: number }) {
 export default async function AdminPage() {
   const adminAccountId = await requireAdminPage();
   const { stats, accounts } = await getAdminOverview();
+  // Before the action log: this viewing's own journal entry then shows up in it.
+  const compliance = await getAdminComplianceByAccount(accounts);
   const [obligationCounts, actionLog, requests, kpiIndicators, multiHomeBreakdown] = await Promise.all([
     getAdminObligationCounts(),
     getAdminActionLog(accounts),
@@ -153,6 +167,50 @@ export default async function AdminPage() {
         </section>
 
         <section className="flex flex-col gap-3">
+          <h2 className="text-lg font-semibold text-ink">Conformité par compte</h2>
+          <p className="text-sm text-ink-2">
+            Décomptes uniquement, pour le support. Chaque consultation est enregistrée dans le journal.
+          </p>
+          <div className="overflow-x-auto rounded-xl border border-line">
+            <table className="w-full min-w-[720px] text-sm">
+              <thead className="bg-surface-2 text-left text-ink-2">
+                <tr>
+                  <th className="px-4 py-2 font-medium">E-mail</th>
+                  <th className="px-4 py-2 font-medium">Inscrit le</th>
+                  <th className="px-4 py-2 font-medium">Lieux</th>
+                  <th className="px-4 py-2 font-medium">En retard</th>
+                  <th className="px-4 py-2 font-medium">À confirmer</th>
+                  <th className="px-4 py-2 font-medium">À jour</th>
+                  <th className="w-32 px-4 py-2 font-medium">Jauge</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line bg-surface">
+                {compliance.map((row) => (
+                  <tr key={row.id}>
+                    <td className="px-4 py-2 text-ink">{row.email}</td>
+                    <td className="px-4 py-2 text-ink-2">{formatDate(row.createdAt)}</td>
+                    <td className="px-4 py-2 text-ink-2">{row.placesCount}</td>
+                    <td className="px-4 py-2 text-ink-2">{row.counts.overdue}</td>
+                    <td className="px-4 py-2 text-ink-2">{row.counts.toConfirm}</td>
+                    <td className="px-4 py-2 text-ink-2">{row.counts.upToDate}</td>
+                    <td className="px-4 py-2">
+                      <SegmentedBar counts={row.counts} thin />
+                    </td>
+                  </tr>
+                ))}
+                {compliance.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-6 text-center text-ink-2">
+                      Aucun compte.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold text-ink">Demandes</h2>
           <div className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[640px] text-sm">
@@ -200,7 +258,7 @@ export default async function AdminPage() {
                       {ACTION_LABELS[entry.action] ?? entry.action}
                     </td>
                     <td className="px-4 py-2 text-ink-2">
-                      {entry.targetEmail ?? "compte supprimé"}
+                      {entry.targetAccountId === null ? "—" : entry.targetEmail ?? "compte supprimé"}
                     </td>
                   </tr>
                 ))}
