@@ -10,7 +10,9 @@ import {
 import { getKpiIndicators, getMultiHomeBreakdown } from "@/lib/admin-metrics";
 import { AdminAccountRow } from "@/components/AdminAccountRow";
 import { AdminRequestRow } from "@/components/AdminRequestRow";
-import { BackLink, SegmentedBar } from "@/components/ui";
+import { AdminActivityChart } from "@/components/AdminActivityChart";
+import { AdminComplianceRow } from "@/components/AdminComplianceRow";
+import { BackLink } from "@/components/ui";
 
 // Same rule as every other page reading live data (see src/app/page.tsx): never served
 // from a static/ISR cache.
@@ -47,7 +49,7 @@ export default async function AdminPage() {
   const adminAccountId = await requireAdminPage();
   const { stats, accounts } = await getAdminOverview();
   // Before the action log: this viewing's own journal entry then shows up in it.
-  const compliance = await getAdminComplianceByAccount(accounts);
+  const { rows: compliance, globalActivity } = await getAdminComplianceByAccount(accounts);
   const [obligationCounts, actionLog, requests, kpiIndicators, multiHomeBreakdown] = await Promise.all([
     getAdminObligationCounts(),
     getAdminActionLog(accounts),
@@ -101,6 +103,8 @@ export default async function AdminPage() {
               <p className="mt-1 text-[13px] text-ink-2">Suivi manuel (prestataires prêts à payer).</p>
             </div>
           </div>
+          <h3 className="mt-2 text-base font-semibold text-ink">Activité par mois</h3>
+          <AdminActivityChart activity={globalActivity} />
         </section>
 
         <section className="flex flex-col gap-3">
@@ -169,10 +173,11 @@ export default async function AdminPage() {
         <section className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold text-ink">Conformité par compte</h2>
           <p className="text-sm text-ink-2">
-            Décomptes uniquement, pour le support. Chaque consultation est enregistrée dans le journal.
+            Décomptes uniquement, pour le support. Cliquez sur une ligne pour voir ses 12 derniers mois. Chaque
+            consultation est enregistrée dans le journal.
           </p>
           <div className="overflow-x-auto rounded-xl border border-line">
-            <table className="w-full min-w-[720px] text-sm">
+            <table className="w-full min-w-[1040px] text-sm">
               <thead className="bg-surface-2 text-left text-ink-2">
                 <tr>
                   <th className="px-4 py-2 font-medium">E-mail</th>
@@ -182,25 +187,25 @@ export default async function AdminPage() {
                   <th className="px-4 py-2 font-medium">À confirmer</th>
                   <th className="px-4 py-2 font-medium">À jour</th>
                   <th className="w-32 px-4 py-2 font-medium">Jauge</th>
+                  <th className="px-4 py-2 font-medium">Interventions (mois)</th>
+                  <th className="px-4 py-2 font-medium">Gestes (mois)</th>
+                  <th className="px-4 py-2 font-medium">Retards régularisés (mois)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line bg-surface">
                 {compliance.map((row) => (
-                  <tr key={row.id}>
-                    <td className="px-4 py-2 text-ink">{row.email}</td>
-                    <td className="px-4 py-2 text-ink-2">{formatDate(row.createdAt)}</td>
-                    <td className="px-4 py-2 text-ink-2">{row.placesCount}</td>
-                    <td className="px-4 py-2 text-ink-2">{row.counts.overdue}</td>
-                    <td className="px-4 py-2 text-ink-2">{row.counts.toConfirm}</td>
-                    <td className="px-4 py-2 text-ink-2">{row.counts.upToDate}</td>
-                    <td className="px-4 py-2">
-                      <SegmentedBar counts={row.counts} thin />
-                    </td>
-                  </tr>
+                  <AdminComplianceRow
+                    key={row.id}
+                    email={row.email}
+                    formattedCreatedAt={formatDate(row.createdAt)}
+                    placesCount={row.placesCount}
+                    counts={row.counts}
+                    activity={row.activity}
+                  />
                 ))}
                 {compliance.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-6 text-center text-ink-2">
+                    <td colSpan={10} className="px-4 py-6 text-center text-ink-2">
                       Aucun compte.
                     </td>
                   </tr>

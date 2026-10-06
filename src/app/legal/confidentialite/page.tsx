@@ -103,7 +103,8 @@ export default function ConfidentialitePage() {
             <li>
               <strong>L&apos;administrateur</strong> voit la liste des comptes : e-mail, dates de création et de
               dernière connexion, nombre de lieux et d&apos;appareils, et, pour le support, le nombre
-              d&apos;obligations à jour, à confirmer et en retard de chaque compte. Jamais le détail de vos appareils
+              d&apos;obligations à jour, à confirmer et en retard de chaque compte, ainsi que le nombre
+              d&apos;interventions et de gestes d&apos;entretien enregistrés chaque mois. Jamais le détail de vos appareils
               ou de vos lieux, ni vos adresses. Chaque consultation est enregistrée dans le journal
               d&apos;administration.
             </li>

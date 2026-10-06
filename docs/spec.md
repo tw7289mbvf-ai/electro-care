@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 57). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 58). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -209,7 +209,8 @@ The first step of the MVP's validation: the reminders are the core promise and t
 - **Seven indicators**, thresholds to treat as hypotheses: activation, at least 60 % of accounts finish the questionnaire; engagement, at least 40 % of them record a "C'est fait" or an appointment within 30 days; retention, at least 30 % come back in the second month; reminder effect, at least 20 % of reminder emails followed by an action within 30 days; promise kept, at least 30 % of red obligations turn green within 60 days; attachment, at least 40 % "très déçu" in the Sean Ellis survey; business model, at least three property professionals ready to pay 5 € per home per month, tracked by hand.
 - **Reading rule**: indicators 1 to 3 met but not 7, the product works and monetization needs rework; indicators 1 to 3 missed, fix the product before anything else.
 - **Instrumentation**: product events recorded in the app's own database, with no cookie and no third-party tool: account created, questionnaire completed, "C'est fait", appointment booked, reminder sent, reminder link clicked, obligation status change. A KPI panel in the admin page computes the indicators, aggregated, without personal data.
-- **Compliance per account, for support**: in the admin page, one line per account with its email, sign-up date, number of places, and its counts of overdue, to-confirm and up-to-date obligations, with a mini gauge; sorted by overdue count. Never the appliances, places or addresses behind the counts. The privacy policy states it, and each viewing is written to the admin log.
+- **Monthly activity, aggregated**: a 12-month bar chart with three series: legal interventions recorded, maintenance tasks done, and overdue obligations brought up to date. Counted on the date the user records it in the app, not the intervention month they declare; entries from the questionnaire and from the history migration are left out. Status changes are recorded since 5 October 2026, so the third series starts then.
+- **Compliance and activity per account, for support**: in the admin page, one line per account with its email, sign-up date, number of places, its counts of overdue, to-confirm and up-to-date obligations with a mini gauge, and this month's three activity counts; a line expands to its last twelve months. Sorted by overdue count. Never the appliances, places or addresses behind the counts. The privacy policy states it, and each viewing is written to the admin log.
 - **Sean Ellis survey**: shown once in the app after 30 days of use: "Comment vous sentiriez-vous si vous ne pouviez plus utiliser Electro Care ?" with "Très déçu", "Un peu déçu", "Pas déçu", and an optional comment.
 
 ## Visual Design
