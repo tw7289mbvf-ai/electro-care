@@ -250,6 +250,8 @@ def main():
             "legal": legal_status(r["Obligation legale"]),
             "level": LEVELS.get(r["Niveau d'entretien"]),
             "active_minutes": r["Temps actif (min)"],
+            # Replaces the legal obligation's risks on this task's row when set.
+            "risk": r.get("Risque affiche"),
         }
         if task["id"] in THRESHOLD_TASKS:
             task["frequency"]["threshold"] = THRESHOLD_TASKS[task["id"]]
@@ -307,7 +309,8 @@ def main():
         date_questions.append({"key": r["Cle"], "tasks": split(r["Taches"], ", "), "appliance": r["Appareil"],
                                "question": r["Question"], "kind": DATE_KINDS[plain(r["Type"])],
                                "interval_label": r["Delai"], "note": r["Note"],
-                               "tip": r.get("Conseil si a confirmer")})
+                               "tip": r.get("Conseil si a confirmer"),
+                               "overdue_tip": r.get("Conseil si en retard")})
 
     brands = []
     for r in rows(wb["Plaques par marque"]):

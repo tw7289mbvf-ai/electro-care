@@ -29,6 +29,7 @@ import {
 } from "@/lib/maintenance-levels";
 import { currentMonthKey } from "@/lib/french-dates";
 import { updateAppliance } from "@/app/actions";
+import { SMOKE_DETECTOR_KIND_LABELS, getSmokeDetectorKind } from "@/lib/smoke-detectors";
 
 export const dynamic = "force-dynamic";
 
@@ -94,7 +95,14 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, MAX_MAINTENANCE_LEVEL)
       : 0;
 
-  const subtitle = [appliance.brand, appliance.model].filter(Boolean).join(" ");
+  // A smoke detector's kind leads its subtitle, the way brand and model do elsewhere.
+  const detectorKind = getSmokeDetectorKind(appliance.equipmentTypeId);
+  const subtitle = [
+    detectorKind ? SMOKE_DETECTOR_KIND_LABELS[detectorKind] : null,
+    [appliance.brand, appliance.model].filter(Boolean).join(" ") || null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <main className={PAGE_CLASS}>

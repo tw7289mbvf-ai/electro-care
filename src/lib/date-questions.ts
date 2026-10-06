@@ -25,6 +25,8 @@ export type DateQuestion = {
   // Shown on an orange row ("à confirmer"): where to find the answer, e.g. the label on
   // the detector or the monitoring contract (T-158).
   tip: string | null;
+  // Shown on a red row: what to do about it (e.g. T-158 answered "Non").
+  overdueTip: string | null;
 };
 
 export const DATE_QUESTIONS: DateQuestion[] = dateQuestionsSeed.map((d) => ({
@@ -36,6 +38,7 @@ export const DATE_QUESTIONS: DateQuestion[] = dateQuestionsSeed.map((d) => ({
   intervalLabel: d.interval_label,
   note: d.note,
   tip: d.tip ?? null,
+  overdueTip: d.overdue_tip ?? null,
 }));
 
 // Every legal task has exactly one single-task entry (seed/date_questions.json is the

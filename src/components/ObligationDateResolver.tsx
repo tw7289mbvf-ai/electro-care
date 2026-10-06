@@ -35,7 +35,7 @@ export function ObligationDateResolver({
     case "vehicle_inspection":
       return <VehicleInspectionResolver dq={dq} taskId={taskId} onAnswer={onAnswer} onCancel={onCancel} />;
     case "yes_no":
-      return <YesNoResolver title={dq.question!} tip={dq.tip} onAnswer={onAnswer} onCancel={onCancel} />;
+      return <YesNoResolver title={dq.question!} onAnswer={onAnswer} onCancel={onCancel} />;
     default:
       return <GradedMonthResolver dq={dq} onAnswer={onAnswer} onCancel={onCancel} />;
   }
@@ -181,19 +181,16 @@ function ManufactureOrExpiryResolver({
 // retard (rouge), Je ne sais pas -> à confirmer (orange).
 function YesNoResolver({
   title,
-  tip,
   onAnswer,
   onCancel,
 }: {
   title: string;
-  tip: string | null;
   onAnswer: (result: DateAnswerResult) => void;
   onCancel: () => void;
 }) {
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm font-medium text-ink">{title}</p>
-      {tip && <p className="text-[13px] text-ink-2">{tip}</p>}
       <div className="flex flex-wrap gap-2">
         <button className={BUTTON_CLASS} onClick={() => onAnswer({ confidence: "compliant" })}>
           Oui

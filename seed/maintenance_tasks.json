@@ -21,7 +21,8 @@
     "if_skipped": "Obligation légale non respectée, risque de CO, refus de prise en charge par l'assurance",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-002",
@@ -41,7 +42,8 @@
     "if_skipped": "Mise en sécurité de la chaudière, arrêt du chauffage",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 3
+    "active_minutes": 3,
+    "risk": null
   },
   {
     "id": "T-003",
@@ -61,7 +63,8 @@
     "if_skipped": "Vase crevé = variations de pression permanentes et fatigue du circuit",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-004",
@@ -85,7 +88,8 @@
     "if_skipped": "Brûleur encrassé, surconsommation, panne en plein hiver",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-005",
@@ -112,7 +116,8 @@
     "if_skipped": "Panne sèche, aspiration des boues de fond de cuve",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-006",
@@ -135,7 +140,8 @@
     "if_skipped": "Perte de rendement, blocage de la vis d'alimentation",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-007",
@@ -163,7 +169,8 @@
     "if_skipped": "Débordement dans le foyer, combustion dégradée",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-008",
@@ -191,7 +198,8 @@
     "if_skipped": "Trous obstrués = mauvaise combustion, extinction, code d'erreur",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-009",
@@ -219,7 +227,8 @@
     "if_skipped": "Échangeur encrassé = jusqu'à 20% de rendement perdu",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 25
+    "active_minutes": 25,
+    "risk": null
   },
   {
     "id": "T-010",
@@ -242,7 +251,8 @@
     "if_skipped": "Obligation légale, usure prématurée, arrêt en pleine saison",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-011",
@@ -262,7 +272,8 @@
     "if_skipped": "Entrée d'air parasite, combustion incontrôlée, surconsommation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-012",
@@ -290,7 +301,8 @@
     "if_skipped": "Vitre opaque, mauvais tirage",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-013",
@@ -313,7 +325,8 @@
     "if_skipped": "Déflecteur percé = chaleur perdue et conduit surchauffe",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-014",
@@ -338,7 +351,8 @@
     "if_skipped": "Amende jusqu'à 450 EUR, refus d'indemnisation en cas de feu de cheminée",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-015",
@@ -362,7 +376,8 @@
     "if_skipped": "Non-conformité, bistre accumulé, risque de feu de conduit",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-016",
@@ -385,7 +400,8 @@
     "if_skipped": "Feu de conduit, propagation à la charpente",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-017",
@@ -412,7 +428,8 @@
     "if_skipped": "Obligation légale, perte de COP, casse compresseur (3000 à 6000 EUR)",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-018",
@@ -435,7 +452,8 @@
     "if_skipped": "Échangeur obstrué = perte de rendement et degivrages à répétition",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-019",
@@ -457,7 +475,8 @@
     "if_skipped": "Bac de dégivrage pris en glace, ventilateur bloqué",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-020",
@@ -477,7 +496,8 @@
     "if_skipped": "Débit d'air réduit, odeurs, allergenes diffusés dans le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-021",
@@ -501,7 +521,8 @@
     "if_skipped": "Obligation légale, fuite de fluide frigorigene à fort pouvoir réchauffant",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-022",
@@ -524,7 +545,8 @@
     "if_skipped": "Radiateurs froids en partie haute, gargouillis, surconsommation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-023",
@@ -547,7 +569,8 @@
     "if_skipped": "Jusqu'à 10% de rendement perdu",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-024",
@@ -567,7 +590,8 @@
     "if_skipped": "Boues = circulateur qui casse, échangeur bouché, jusqu'à 15% de rendement perdu",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-025",
@@ -589,7 +613,8 @@
     "if_skipped": "Odeur de brûlé à la remise en route, risque d'incendie",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-026",
@@ -609,7 +634,8 @@
     "if_skipped": "Fuite = depollution des sols à la charge du propriétaire (plusieurs dizaines de milliers d'euros)",
     "legal": "conditional",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-027",
@@ -629,7 +655,8 @@
     "if_skipped": "Groupe grippé = surpression et risque d'éclatement du ballon",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 2
+    "active_minutes": 2,
+    "risk": null
   },
   {
     "id": "T-028",
@@ -649,7 +676,8 @@
     "if_skipped": "Anode consommée = cuve percée et remplacement complet (800 à 1500 EUR)",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-029",
@@ -669,7 +697,8 @@
     "if_skipped": "Risque sanitaire ou entartrage prématuré",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-030",
@@ -693,7 +722,8 @@
     "if_skipped": "Obligation légale, bascule permanente sur la résistance électrique d'appoint",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-031",
@@ -713,7 +743,8 @@
     "if_skipped": "COP dégradé, appareil qui fonctionne en mode électrique pur",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-032",
@@ -737,7 +768,8 @@
     "if_skipped": "Glycol acidifie = corrosion des capteurs et du ballon",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-033",
@@ -757,7 +789,8 @@
     "if_skipped": "Pont de sel = adoucisseur inopérant sans alerte",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-034",
@@ -777,7 +810,8 @@
     "if_skipped": "Prolifération bactérienne dans la résine, eau trop douce et corrosive pour les canalisations",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-035",
@@ -800,7 +834,8 @@
     "if_skipped": "Condensation, moisissures dans les pièces humides",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-036",
@@ -820,7 +855,8 @@
     "if_skipped": "Turbine déséquilibrée, bruit, débit effondré",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-037",
@@ -840,7 +876,8 @@
     "if_skipped": "Filtres saturés = débit nul, rendement de récupération perdu, surconsommation du moteur",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-038",
@@ -864,7 +901,8 @@
     "if_skipped": "Échangeur colmaté, eau stagnante, odeurs diffusées dans tout le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-039",
@@ -884,7 +922,8 @@
     "if_skipped": "Accumulation de graisse = cause fréquente de départ de feu en cuisine",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-040",
@@ -904,7 +943,8 @@
     "if_skipped": "Odeurs de cuisine qui stagnent dans tout le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-041",
@@ -927,7 +967,8 @@
     "if_skipped": "Sans air neuf entrant, la VMC n'extrait rien et les appareils à combustion tirent mal",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-042",
@@ -950,7 +991,8 @@
     "if_skipped": "Condenseur empoussiere = jusqu'à 25% de surconsommation et compresseur en surchauffe",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-043",
@@ -973,7 +1015,8 @@
     "if_skipped": "Joint usé = compresseur en marche permanente, givre, facture d'électricité en hausse",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-044",
@@ -996,7 +1039,8 @@
     "if_skipped": "Eau stagnante dans le bac à légumes, odeurs, moisissures",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-045",
@@ -1018,7 +1062,8 @@
     "if_skipped": "3 mm de givre = environ 30% de surconsommation",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-046",
@@ -1038,7 +1083,8 @@
     "if_skipped": "Goût désagréable, développement bactérien dans le circuit d'eau",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-047",
@@ -1058,7 +1104,8 @@
     "if_skipped": "Pompe de vidange forcée puis HS, eau stagnante et odeurs",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-048",
@@ -1078,7 +1125,8 @@
     "if_skipped": "Moisissure noire incrustée, odeur transmise au linge, joint à remplacer",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-049",
@@ -1098,7 +1146,8 @@
     "if_skipped": "Résistance entartrée = surconsommation puis panne (cause n.1 de mise au rebut)",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-050",
@@ -1118,7 +1167,8 @@
     "if_skipped": "Rupture du tuyau = dégât des eaux, première cause de sinistre habitation",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-051",
@@ -1138,7 +1188,8 @@
     "if_skipped": "Temps de séchage double, surchauffe, risque d'incendie",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 2
+    "active_minutes": 2,
+    "risk": null
   },
   {
     "id": "T-052",
@@ -1158,7 +1209,8 @@
     "if_skipped": "Condenseur colmaté = cycles interminables et surconsommation massive",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-053",
@@ -1178,7 +1230,8 @@
     "if_skipped": "Evaporateur encrassé = panne du circuit frigorifique, réparation coûteuse",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-054",
@@ -1198,7 +1251,8 @@
     "if_skipped": "Vaisselle qui ressort sale, odeurs, pompe bloquée",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-055",
@@ -1218,7 +1272,8 @@
     "if_skipped": "Buses obstruées = zones non lavées, cycles relancés inutilement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-056",
@@ -1238,7 +1293,8 @@
     "if_skipped": "Traces blanches, entartrage de la résistance",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-057",
@@ -1258,7 +1314,8 @@
     "if_skipped": "Résistance entartrée, cycles qui n'atteignent plus la température",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-058",
@@ -1278,7 +1335,8 @@
     "if_skipped": "Graisses carbonisées = fumées à chaque cuisson, joint attaqué",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-059",
@@ -1298,7 +1356,8 @@
     "if_skipped": "Perte de chaleur, cuissons irrégulières, surconsommation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-060",
@@ -1319,7 +1378,8 @@
     "if_skipped": "Fuite de gaz, explosion, non-couverture par l'assurance",
     "legal": "yes",
     "level": null,
-    "active_minutes": 3
+    "active_minutes": 3,
+    "risk": null
   },
   {
     "id": "T-061",
@@ -1339,7 +1399,8 @@
     "if_skipped": "Flamme jaune = combustion incomplète et production de monoxyde de carbone",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-062",
@@ -1359,7 +1420,8 @@
     "if_skipped": "Entartrage de la pompe : première cause de panne définitive",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-063",
@@ -1379,7 +1441,8 @@
     "if_skipped": "Rancissement du circuit lait, goût altéré, contamination",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-064",
@@ -1399,7 +1462,8 @@
     "if_skipped": "Perte d'aspiration, rejet de particules fines, moteur en surchauffe",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-065",
@@ -1419,7 +1483,8 @@
     "if_skipped": "Moteur de brosse force, navigation erratique, chutes dans les escaliers",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-066",
@@ -1439,7 +1504,8 @@
     "if_skipped": "Débit réduit, projections, éclaboussures",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-067",
@@ -1459,7 +1525,8 @@
     "if_skipped": "Une chasse d'eau qui fuit peut représenter 200 m3 par an",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-068",
@@ -1483,7 +1550,8 @@
     "if_skipped": "Retour d'eau polluée dans le réseau public : responsabilité civile et pénale engagée",
     "legal": "conditional",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-069",
@@ -1506,7 +1574,8 @@
     "if_skipped": "Eau chargée, colmatage de la pompe, non-conformité au contrôle",
     "legal": "conditional",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-070",
@@ -1530,7 +1599,8 @@
     "if_skipped": "Inondation du sous-sol le jour du premier gros orage",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-071",
@@ -1551,7 +1621,8 @@
     "if_skipped": "Colmatage de l'épandage, remontées d'eaux usées, non-conformité au contrôle",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-072",
@@ -1571,7 +1642,8 @@
     "if_skipped": "Avis de non-conformité, travaux imposés sous 4 ans, majoration de redevance",
     "legal": "yes",
     "level": null,
-    "active_minutes": 60
+    "active_minutes": 60,
+    "risk": null
   },
   {
     "id": "T-073",
@@ -1594,7 +1666,8 @@
     "if_skipped": "Graisses qui colmatent le pretraitement et l'épandage",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-074",
@@ -1617,7 +1690,8 @@
     "if_skipped": "Prefiltre colmaté = passage de matières vers l'épandage, qui se bouche définitivement",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-075",
@@ -1637,7 +1711,8 @@
     "if_skipped": "Arrêt de la biomasse epuratoire, rejets non conformes, remise en route longue",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-076",
@@ -1660,7 +1735,8 @@
     "if_skipped": "Ombrage partiel = perte disproportionnée sur toute la chaîne de modules",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-077",
@@ -1684,7 +1760,8 @@
     "if_skipped": "Salissures = 5 à 15% de production perdue",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-078",
@@ -1704,7 +1781,8 @@
     "if_skipped": "Sous-production non détectée pendant des mois, perte sèche sur la revente",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-079",
@@ -1724,7 +1802,8 @@
     "if_skipped": "Échauffement des contacts, déclenchements répétés, risque d'incendie",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-080",
@@ -1744,7 +1823,8 @@
     "if_skipped": "Un différentiel grippé ne protège plus contre l'électrocution",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-081",
@@ -1764,7 +1844,8 @@
     "if_skipped": "Carburateur encrassé : refus de démarrage le jour ou on en à besoin",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-082",
@@ -1784,7 +1865,8 @@
     "if_skipped": "Un détecteur muet est un détecteur inutile",
     "legal": "yes",
     "level": null,
-    "active_minutes": 2
+    "active_minutes": 2,
+    "risk": null
   },
   {
     "id": "T-083",
@@ -1805,7 +1887,8 @@
     "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
     "legal": "yes",
     "level": null,
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-084",
@@ -1825,7 +1908,8 @@
     "if_skipped": "Le CO est inodore et incolore : sans détecteur, aucun signe avant-coureur",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 2
+    "active_minutes": 2,
+    "risk": null
   },
   {
     "id": "T-085",
@@ -1845,7 +1929,8 @@
     "if_skipped": "Détecteur muet ou fausses alarmes à répétition",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-086",
@@ -1865,7 +1950,8 @@
     "if_skipped": "Responsabilité civile et pénale du propriétaire en cas d'accident",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-087",
@@ -1885,7 +1971,8 @@
     "if_skipped": "Non-conformité, mise à l'arrêt de l'appareil",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-088",
@@ -1908,7 +1995,8 @@
     "if_skipped": "Cellules desalignees ou anti-écrasement HS : risque d'accident grave, notamment pour un enfant",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-089",
@@ -1931,7 +2019,8 @@
     "if_skipped": "Portail qui refuse de se fermer ou se ferme sur un obstacle",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-090",
@@ -1954,7 +2043,8 @@
     "if_skipped": "Rupture de ressort, chute brutale du tablier",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-091",
@@ -1978,7 +2068,8 @@
     "if_skipped": "Lames coincées, moteur forcé puis grille",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-092",
@@ -2002,7 +2093,8 @@
     "if_skipped": "Infiltrations, déperdition thermique, ferrure désaxée",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-093",
@@ -2022,7 +2114,8 @@
     "if_skipped": "Amende jusqu'à 45 000 EUR et, surtout, risque de noyade",
     "legal": "yes",
     "level": null,
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-094",
@@ -2048,7 +2141,8 @@
     "if_skipped": "Filtre colmaté = pression qui monte, filtration inefficace, eau trouble",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-095",
@@ -2072,7 +2166,8 @@
     "if_skipped": "Sable aggloméré en blocs = filtration nulle malgré des contre-lavages",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-096",
@@ -2098,7 +2193,8 @@
     "if_skipped": "Pompe désamorcée puis joint de turbine grille",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-097",
@@ -2120,7 +2216,8 @@
     "if_skipped": "Gel = pompe et filtre fendus, plusieurs centaines d'euros de remplacement",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 120
+    "active_minutes": 120,
+    "risk": null
   },
   {
     "id": "T-098",
@@ -2143,7 +2240,8 @@
     "if_skipped": "Démarrage trop tardif = eau verte et traitement de choc coûteux",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 90
+    "active_minutes": 90,
+    "risk": null
   },
   {
     "id": "T-099",
@@ -2169,7 +2267,8 @@
     "if_skipped": "Cellule entartrée = production de chlore nulle et eau qui verdit en 48 h",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-100",
@@ -2189,7 +2288,8 @@
     "if_skipped": "Dispositif de sécurité obligatoire inopérant : responsabilité pénale engagée",
     "legal": "yes",
     "level": null,
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-101",
@@ -2209,7 +2309,8 @@
     "if_skipped": "Biofilm dans les canalisations, risque de legionelle",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-102",
@@ -2231,7 +2332,8 @@
     "if_skipped": "Moteur grippé, lame émoussée qui arraché l'herbe au lieu de la couper",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 60
+    "active_minutes": 60,
+    "risk": null
   },
   {
     "id": "T-103",
@@ -2253,7 +2355,8 @@
     "if_skipped": "Carburateur encrassé par le carburant vieilli : refus de démarrage au printemps",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-104",
@@ -2282,7 +2385,8 @@
     "if_skipped": "Lames émoussées = herbe déchirée, pelouse jaunissante, surconsommation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-105",
@@ -2304,7 +2408,8 @@
     "if_skipped": "Corps de pompe fendu par le gel : appareil bon pour la casse",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-106",
@@ -2326,7 +2431,8 @@
     "if_skipped": "Canalisations et electrovannes éclatées par le gel",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 60
+    "active_minutes": 60,
+    "risk": null
   },
   {
     "id": "T-107",
@@ -2349,7 +2455,8 @@
     "if_skipped": "Zones non arrosées et gaspillage d'eau ailleurs",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-108",
@@ -2371,7 +2478,8 @@
     "if_skipped": "Fuite de gaz, retour de flamme",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-109",
@@ -2394,7 +2502,8 @@
     "if_skipped": "Débordement le long des murs, humidité en pied de façade, gel qui déformé les chenaux",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 90
+    "active_minutes": 90,
+    "risk": null
   },
   {
     "id": "T-110",
@@ -2418,7 +2527,8 @@
     "if_skipped": "Une tuile déplacée non vue = infiltration lente, charpente et isolant à reprendre",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-111",
@@ -2445,7 +2555,8 @@
     "if_skipped": "Mousses retenant l'humidité, tuiles gelives qui éclatent",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-112",
@@ -2468,7 +2579,8 @@
     "if_skipped": "Grisaillement, échardes, lames qui se fendent et doivent être remplacées",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 180
+    "active_minutes": 180,
+    "risk": null
   },
   {
     "id": "T-113",
@@ -2488,7 +2600,8 @@
     "if_skipped": "Attaque détectée trop tard = reprise structurelle très lourde",
     "legal": "conditional",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-114",
@@ -2512,7 +2625,8 @@
     "if_skipped": "Isolant humide ou tassé : performance divisée par deux sans signe visible depuis l'intérieur",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-115",
@@ -2536,7 +2650,8 @@
     "if_skipped": "Remontées capillaires, planchers bois dégradés, air vicié diffuse vers le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-116",
@@ -2558,7 +2673,8 @@
     "if_skipped": "Sans justificatif, l'assureur peut réduire ou refuser l'indemnisation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-117",
@@ -2584,7 +2700,8 @@
     "if_skipped": "Débit réduit, odeurs, allergenes rediffusés dans le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-118",
@@ -2606,7 +2723,8 @@
     "if_skipped": "Obligation légale ; fuite de fluide frigorigene à fort pouvoir réchauffant",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-119",
@@ -2628,7 +2746,8 @@
     "if_skipped": "Dégât des eaux derrière l'unité intérieure, taches au plafond de l'étage inférieur",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-120",
@@ -2653,7 +2772,8 @@
     "if_skipped": "Eau stagnante, odeurs, rendement de refroidissement divisé",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-121",
@@ -2673,7 +2793,8 @@
     "if_skipped": "Sanction administrative ; une fuite de R410A équivaut à plusieurs tonnes de CO2",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-122",
@@ -2697,7 +2818,8 @@
     "if_skipped": "Obligation légale ; déperdition du champ de captage difficile à diagnostiquer tardivement",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-123",
@@ -2719,7 +2841,8 @@
     "if_skipped": "Boucles déséquilibrées, zones froides, colmatage progressif",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-124",
@@ -2739,7 +2862,8 @@
     "if_skipped": "Risque d'explosion ; résiliation possible du contrat de fourniture",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-125",
@@ -2761,7 +2885,8 @@
     "if_skipped": "Perte de liaison = chaudière qui tourne en continu ou reste éteinte",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-126",
@@ -2785,7 +2910,8 @@
     "if_skipped": "Intoxication au monoxyde de carbone",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-127",
@@ -2805,7 +2931,8 @@
     "if_skipped": "Clapet grippé = surpression et risque d'éclatement du ballon",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-128",
@@ -2829,7 +2956,8 @@
     "if_skipped": "Eau stagnante = développement microbien diffuse dans tout le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-129",
@@ -2849,7 +2977,8 @@
     "if_skipped": "Hygrometrie instable, odeurs transmises aux bouchons",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-130",
@@ -2869,7 +2998,8 @@
     "if_skipped": "Usure accélérée, cycles de séchage interminables",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-131",
@@ -2892,7 +3022,8 @@
     "if_skipped": "Surchauffe de l'électronique, coupures en cours de cuisson, carte à remplacer",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-132",
@@ -2912,7 +3043,8 @@
     "if_skipped": "Fuite de micro-ondes si le joint ou la charnière est abîmé",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-133",
@@ -2932,7 +3064,8 @@
     "if_skipped": "Filtre saturé = rejet des particules accumulées dans la pièce",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-134",
@@ -2959,7 +3092,8 @@
     "if_skipped": "Développement bactérien dans le bac, air rejeté vicié",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-135",
@@ -2979,7 +3113,8 @@
     "if_skipped": "Projection de calcaire sur le linge puis panne de la chaudière",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 10
+    "active_minutes": 10,
+    "risk": null
   },
   {
     "id": "T-136",
@@ -2999,7 +3134,8 @@
     "if_skipped": "Fuite enterrée facturée au plein tarif pendant des mois",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": null
   },
   {
     "id": "T-137",
@@ -3019,7 +3155,8 @@
     "if_skipped": "Amende ; obligation de déconnexion du réseau intérieur",
     "legal": "yes",
     "level": null,
-    "active_minutes": 60
+    "active_minutes": 60,
+    "risk": null
   },
   {
     "id": "T-138",
@@ -3043,7 +3180,8 @@
     "if_skipped": "Cycles courts à répétition = usure rapide de la pompe et du contacteur",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-139",
@@ -3063,7 +3201,8 @@
     "if_skipped": "Corrosion interne, perte de stratification et donc de rendement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-140",
@@ -3083,7 +3222,8 @@
     "if_skipped": "Bouchon, refoulement d'eaux usées dans le logement",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-141",
@@ -3103,7 +3243,8 @@
     "if_skipped": "Perte de capacité non détectée, risque thermique en cas de défaut cellule",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-142",
@@ -3123,7 +3264,8 @@
     "if_skipped": "Vente bloquée ; responsabilité du vendeur pour vice caché",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-143",
@@ -3143,7 +3285,8 @@
     "if_skipped": "Extincteur inopérant au moment ou il sert",
     "legal": "conditional",
     "level": "recommended",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-144",
@@ -3166,7 +3309,8 @@
     "if_skipped": "Images inexploitables au moment ou on en à besoin",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 20
+    "active_minutes": 20,
+    "risk": null
   },
   {
     "id": "T-145",
@@ -3190,7 +3334,8 @@
     "if_skipped": "Corrosion des contacts, platine muette",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-146",
@@ -3212,7 +3357,8 @@
     "if_skipped": "Toile moisie à remplacer, bras bloqués, casse au premier coup de vent",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-147",
@@ -3234,7 +3380,8 @@
     "if_skipped": "Obligation légale ; échangeur entartré et fuite de fluide",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-148",
@@ -3260,7 +3407,8 @@
     "if_skipped": "Moteur encrassé, courroies rompues, appareil rarement réparable",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-149",
@@ -3282,7 +3430,8 @@
     "if_skipped": "Lames grippées, moteur noyé, coupe qui déchiré la végétation",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 45
+    "active_minutes": 45,
+    "risk": null
   },
   {
     "id": "T-150",
@@ -3305,7 +3454,8 @@
     "if_skipped": "Pourrissement des pieds de poteaux et de la toiture, structure à remplacer",
     "legal": "no",
     "level": "recommended",
-    "active_minutes": 180
+    "active_minutes": 180,
+    "risk": null
   },
   {
     "id": "T-151",
@@ -3329,7 +3479,8 @@
     "if_skipped": "Infiltration par microfissure ; ravalement pouvant être imposé par arrêté municipal",
     "legal": "conditional",
     "level": "recommended",
-    "active_minutes": 30
+    "active_minutes": 30,
+    "risk": null
   },
   {
     "id": "T-152",
@@ -3350,7 +3501,8 @@
     "if_skipped": "Amende de 135 EUR, immobilisation possible, difficultés avec l'assureur après un sinistre",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-153",
@@ -3371,7 +3523,8 @@
     "if_skipped": "Amende de 135 EUR",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-154",
@@ -3395,7 +3548,8 @@
     "if_skipped": "Freinage dégradé, usure accélérée de la transmission, batterie qui perd de sa capacité",
     "legal": "no",
     "level": "essential",
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-155",
@@ -3415,7 +3569,8 @@
     "if_skipped": "Un détecteur muet est un détecteur inutile",
     "legal": "yes",
     "level": null,
-    "active_minutes": 2
+    "active_minutes": 2,
+    "risk": null
   },
   {
     "id": "T-156",
@@ -3436,7 +3591,8 @@
     "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
     "legal": "yes",
     "level": null,
-    "active_minutes": 15
+    "active_minutes": 15,
+    "risk": null
   },
   {
     "id": "T-157",
@@ -3456,7 +3612,8 @@
     "if_skipped": "Détecteur hors service sans que personne ne s'en aperçoive",
     "legal": "yes",
     "level": null,
-    "active_minutes": 0
+    "active_minutes": 0,
+    "risk": null
   },
   {
     "id": "T-158",
@@ -3473,9 +3630,10 @@
     "duration_min": 5,
     "tools": "Aucun",
     "procedure": "Vérifier que le détecteur porte le marquage CE et la norme EN 14604, sur son étiquette ou dans le contrat de télésurveillance.",
-    "if_skipped": "Un détecteur non conforme peut ne pas être reconnu par l'assureur",
+    "if_skipped": "Un détecteur non conforme peut ne pas être reconnu par votre assureur",
     "legal": "yes",
     "level": null,
-    "active_minutes": 5
+    "active_minutes": 5,
+    "risk": "Un détecteur non conforme peut ne pas être reconnu par votre assureur"
   }
 ]

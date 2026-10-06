@@ -26,11 +26,15 @@ export const SMOKE_DETECTOR_START_TASKS: Record<SmokeDetectorKind, string[]> = {
   monitored: [],
 };
 
+// The detector's kind, shown as its fiche's subtitle and in its "Type" field.
 export const SMOKE_DETECTOR_KIND_LABELS: Record<SmokeDetectorKind, string> = {
   standalone: "Détecteur autonome",
-  alarm: "Relié à mon alarme",
-  monitored: "Relié à mon alarme télésurveillée",
+  alarm: "Relié à votre alarme",
+  monitored: "Relié à votre alarme télésurveillée",
 };
+
+// One name for the three kinds; the kind itself goes in the subtitle.
+export const SMOKE_DETECTOR_NAME = "Détecteur de fumée";
 
 export function getSmokeDetectorKind(equipmentTypeId: string | null): SmokeDetectorKind | null {
   for (const [kind, typeId] of Object.entries(SMOKE_DETECTOR_TYPES)) {

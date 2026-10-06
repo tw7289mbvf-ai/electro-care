@@ -48,20 +48,25 @@ export function ObligationRow({
         : null;
   // Orange row: where to find the missing answer (e.g. the label on the detector or the
   // monitoring contract for the CE EN 14604 check).
-  const tip = row.status === "to_confirm" ? (getDateQuestionForTask(row.task.id)?.tip ?? null) : null;
+  // Red row: what to do, when the seed says (e.g. replace a non-compliant detector).
+  const dq = getDateQuestionForTask(row.task.id);
+  const tip = row.status === "to_confirm" ? (dq?.tip ?? null) : row.status === "overdue" ? (dq?.overdueTip ?? null) : null;
   const completedLine = row.completedOn
     ? `Fait en ${formatFrenchMonthYear(row.completedOn)}${row.providerName ? ` par ${row.providerName}` : ""}${
         row.providerContact ? ` (${row.providerContact})` : ""
       }`
     : null;
   // One idea per line (docs/design.md): each risk on its own line, never joined.
-  const risks = [
-    ...new Set(
-      row.legalObligations.flatMap((o) =>
-        o.risks ? [o.risks.danger, o.risks.insurance, o.risks.liability, o.risks.other] : []
-      )
-    ),
-  ].filter((risk): risk is string => Boolean(risk));
+  // A task-specific risk (seed `risk`) replaces the obligation's general ones.
+  const risks = row.task.risk
+    ? [row.task.risk]
+    : [
+        ...new Set(
+          row.legalObligations.flatMap((o) =>
+            o.risks ? [o.risks.danger, o.risks.insurance, o.risks.liability, o.risks.other] : []
+          )
+        ),
+      ].filter((risk): risk is string => Boolean(risk));
 
   return (
     <li className={ROW_CLASS}>
