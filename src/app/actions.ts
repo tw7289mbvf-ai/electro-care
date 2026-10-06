@@ -7,9 +7,17 @@ import {
   deleteAppliance,
   getAppliance,
   importApplianceFromInvoice,
+  setApplianceEquipmentType,
   setAppliancePowerKw,
   updateAppliance as updateApplianceRecord,
 } from "@/lib/appliances";
+import {
+  SMOKE_DETECTOR_QUESTION_TASK,
+  SMOKE_DETECTOR_START_TASKS,
+  SMOKE_DETECTOR_TYPES,
+  getSmokeDetectorKind,
+  type SmokeDetectorKind,
+} from "@/lib/smoke-detectors";
 import {
   addPlace,
   deletePlace,
@@ -389,6 +397,43 @@ export async function resolveObligationDate(
   revalidatePath(`/appliances/${applianceId}`);
   const appliance = await getAppliance(applianceId);
   if (appliance) revalidatePath(`/places/${appliance.placeId}`);
+}
+
+// Smoke detector "Type" (spec, Onboarding Questionnaire, "Smoke detector"), from the
+// fiche's "Type" field or the orange "Mettre à jour" window's "Il est relié à mon
+// alarme": switches the detector to its new kind's equipment type, starts the new monthly
+// test from today (unless one is already recorded), and stores the answer to the kind's
+// own question (the date on the back, or the CE EN 14604 marking).
+export async function setSmokeDetectorKind(
+  applianceId: string,
+  kind: SmokeDetectorKind,
+  answer: DateAnswerResult
+): Promise<void> {
+  if (!(kind in SMOKE_DETECTOR_TYPES)) {
+    throw new Error("Type de détecteur invalide");
+  }
+  const existing = await getAppliance(applianceId);
+  if (!existing || getSmokeDetectorKind(existing.equipmentTypeId) === null) {
+    throw new Error("Cet appareil n'est pas un détecteur de fumée");
+  }
+  if (kind === "monitored" && !("confidence" in answer && ["compliant", "old", "recent"].includes(answer.confidence))) {
+    throw new Error("Réponse invalide");
+  }
+  const appliance = await setApplianceEquipmentType(applianceId, SMOKE_DETECTOR_TYPES[kind]);
+  const records = await getObligationRecordsForAppliance(applianceId);
+  for (const taskId of SMOKE_DETECTOR_START_TASKS[kind]) {
+    if (!records.some((r) => r.maintenanceTaskId === taskId)) {
+      await setApplianceObligation({ applianceId, maintenanceTaskId: taskId, lastServiceDate: getTodayInFrance() });
+    }
+  }
+  await setApplianceObligation({
+    applianceId,
+    maintenanceTaskId: SMOKE_DETECTOR_QUESTION_TASK[kind],
+    ...dateAnswerToObligationFields(answer),
+  });
+  revalidatePath("/");
+  revalidatePath(`/appliances/${applianceId}`);
+  revalidatePath(`/places/${appliance.placeId}`);
 }
 
 // "Entretien" fiche de tâche: no date to give, no email — just a completion for the

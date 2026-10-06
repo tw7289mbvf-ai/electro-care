@@ -9,7 +9,10 @@ import { AttestationMockButton } from "@/components/AttestationMockButton";
 import { BUTTON_CLASS, GHOST_BUTTON_CLASS, INPUT_CLASS, WINDOW_CLASS, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
 import type { DateAnswerResult } from "@/lib/date-answer";
 import type { ObligationStatus } from "@/lib/obligations";
-import { BUTTON_DONE, BUTTON_UPDATE } from "@/components/ui";
+import { BUTTON_DONE, BUTTON_OUTLINE, BUTTON_UPDATE } from "@/components/ui";
+import { SmokeDetectorKindFlow } from "@/components/SmokeDetectorKindFlow";
+import { getDateQuestionForTask } from "@/lib/date-questions";
+import { SMOKE_DETECTOR_QUESTION_TASK } from "@/lib/smoke-detectors";
 
 function currentMonthValue() {
   const now = new Date();
@@ -79,25 +82,34 @@ export function MarkDoneButton({
   maintenanceTaskId,
   status,
   toConfirmReason,
+  onFiche = false,
 }: {
   applianceId: string;
   maintenanceTaskId: string;
   status: ObligationStatus;
   toConfirmReason: "date" | "threshold" | null;
+  onFiche?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [linkedToAlarm, setLinkedToAlarm] = useState(false);
   const [value, setValue] = useState(currentMonthValue);
   const [providerName, setProviderName] = useState("");
   const [providerContact, setProviderContact] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  if (status === "up_to_date" || status === "not_applicable") return null;
+  // A detector followed by a monitoring provider stays green; its fiche still records the
+  // provider's visits, as interventions (spec, "Smoke detector").
+  const isMonitored = getDateQuestionForTask(maintenanceTaskId)?.kind === "monitored";
+  if (status === "not_applicable") return null;
+  if (status === "up_to_date" && !(isMonitored && onFiche)) return null;
 
   const isToConfirm = status === "to_confirm";
-  const label = isToConfirm ? "Mettre à jour" : "C'est fait";
+  const label = isToConfirm ? "Mettre à jour" : isMonitored ? "Enregistrer une visite" : "C'est fait";
   const closedButtonClass = isToConfirm
     ? BUTTON_UPDATE
-    : BUTTON_DONE;
+    : isMonitored
+      ? BUTTON_OUTLINE
+      : BUTTON_DONE;
 
   if (!open) {
     return (
@@ -111,6 +123,19 @@ export function MarkDoneButton({
     return <PowerThresholdForm applianceId={applianceId} onDone={() => setOpen(false)} onCancel={() => setOpen(false)} />;
   }
 
+  if (isToConfirm && toConfirmReason === "date" && linkedToAlarm) {
+    return (
+      <div className={WINDOW_CLASS}>
+        <SmokeDetectorKindFlow
+          applianceId={applianceId}
+          startAt="monitoring"
+          onDone={() => setOpen(false)}
+          onCancel={() => setLinkedToAlarm(false)}
+        />
+      </div>
+    );
+  }
+
   if (isToConfirm && toConfirmReason === "date") {
     const handleAnswer = (result: DateAnswerResult) => {
       startTransition(async () => {
@@ -121,6 +146,13 @@ export function MarkDoneButton({
     return (
       <div className={WINDOW_CLASS}>
         <ObligationDateResolver taskId={maintenanceTaskId} onAnswer={handleAnswer} onCancel={() => setOpen(false)} />
+        {/* A standalone detector whose date is unknown may in fact be linked to an alarm
+            (spec, "Smoke detector"): switching it asks the alarm's own questions. */}
+        {maintenanceTaskId === SMOKE_DETECTOR_QUESTION_TASK.standalone && (
+          <button type="button" onClick={() => setLinkedToAlarm(true)} className={`self-start ${GHOST_BUTTON_CLASS}`}>
+            Il est relié à mon alarme
+          </button>
+        )}
         {isPending && <p className="text-ink-2">…</p>}
       </div>
     );

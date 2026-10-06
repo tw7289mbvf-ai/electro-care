@@ -77,10 +77,11 @@ THRESHOLD_TASKS = {
     "T-153": "Due date computed from the first registration date (registration certificate, field B): "
              "first check 4.5 to 5 years after first registration, then every 3 years",
     "T-083": "Due date = manufacture date printed on the back of the detector + 10 years",
+    "T-156": "Due date = manufacture date printed on the back of the detector + 10 years",
 }
 DATE_KINDS = {"Mois gradué": "graded_month", "Péremption": "expiry_date", "Fabrication": "manufacture_date",
               "Contrôle véhicule": "vehicle_inspection", "Oui / non": "yes_no", "Aucune": "none",
-              "Non générée": "not_generated"}
+              "Non générée": "not_generated", "Télésurveillance": "monitored"}
 STATUS_WORDS = {"jamais": "never"}
 LEVELS = {"Essentiel": "essential", "Recommande": "recommended", "Obligation": None}
 
@@ -249,6 +250,8 @@ def main():
             "legal": legal_status(r["Obligation legale"]),
             "level": LEVELS.get(r["Niveau d'entretien"]),
             "active_minutes": r["Temps actif (min)"],
+            # Replaces the legal obligation's risks on this task's row when set.
+            "risk": r.get("Risque affiche"),
         }
         if task["id"] in THRESHOLD_TASKS:
             task["frequency"]["threshold"] = THRESHOLD_TASKS[task["id"]]
@@ -288,7 +291,8 @@ def main():
         follow_up = None
         if r["Question de suivi"]:
             follow_up = {"question": r["Question de suivi"],
-                         "creates_if_yes": split(r["Suivi : types crees si oui"], ", ")}
+                         "creates_if_yes": split(r["Suivi : types crees si oui"], ", "),
+                         "creates_if_no": split(r.get("Suivi : types crees si non"), ", ")}
         by_id[r["ID"]]["answers"].append({"label": r["Reponse"], "creates": split(r["Types crees"], ", "),
                                           "help": r["Aide"], "follow_up": follow_up,
                                           "unknown": r["Reponse"] == "Je ne sais pas",
@@ -304,7 +308,9 @@ def main():
     for r in rows(wb["Questions de date"]):
         date_questions.append({"key": r["Cle"], "tasks": split(r["Taches"], ", "), "appliance": r["Appareil"],
                                "question": r["Question"], "kind": DATE_KINDS[plain(r["Type"])],
-                               "interval_label": r["Delai"], "note": r["Note"]})
+                               "interval_label": r["Delai"], "note": r["Note"],
+                               "tip": r.get("Conseil si a confirmer"),
+                               "overdue_tip": r.get("Conseil si en retard")})
 
     brands = []
     for r in rows(wb["Plaques par marque"]):
@@ -331,7 +337,8 @@ def main():
     assert not orphans, f"Equipment types without any task: {orphans}"
     assert not bad_links, f"Obligations point to unknown equipment types: {bad_links}"
     created = {i for q in questionnaire["questions"] for a in q["answers"]
-               for i in a["creates"] + (a["follow_up"]["creates_if_yes"] if a["follow_up"] else [])}
+               for i in a["creates"] + (a["follow_up"]["creates_if_yes"] + a["follow_up"]["creates_if_no"]
+                                        if a["follow_up"] else [])}
     bad_q = sorted(created - equipment_ids)
     assert not bad_q, f"Questionnaire creates unknown equipment types: {bad_q}"
     labels = {(q["id"], a["label"]) for q in questionnaire["questions"] for a in q["answers"]}

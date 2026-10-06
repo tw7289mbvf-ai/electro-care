@@ -8,7 +8,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-004",
@@ -19,7 +21,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-006",
@@ -30,7 +34,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-010",
@@ -41,7 +47,9 @@
     "question": "Quand le poêle à granulés a-t-il été entretenu pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-013",
@@ -52,7 +60,9 @@
     "question": "Quand le poêle ou l'insert a-t-il été entretenu pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-014",
@@ -63,7 +73,9 @@
     "question": "Quand le conduit de fumée a-t-il été ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Posée seule quand l'appareil et le conduit ont été faits à des dates différentes."
+    "note": "Posée seule quand l'appareil et le conduit ont été faits à des dates différentes.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-016",
@@ -74,7 +86,9 @@
     "question": "Quand la cheminée a-t-elle été ramonée pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-001+T-014",
@@ -86,7 +100,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-004+T-014",
@@ -98,7 +114,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-006+T-014",
@@ -110,7 +128,9 @@
     "question": "Quand la chaudière a-t-elle été entretenue et son conduit ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-010+T-014",
@@ -122,7 +142,9 @@
     "question": "Quand le poêle à granulés a-t-il été entretenu et son conduit ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-013+T-014",
@@ -134,7 +156,9 @@
     "question": "Quand le poêle ou l'insert a-t-il été entretenu et son conduit ramoné pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": "Question commune à l'appareil et à son conduit (REGLE-03)."
+    "note": "Question commune à l'appareil et à son conduit (REGLE-03).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-017",
@@ -145,7 +169,9 @@
     "question": "Quand la pompe à chaleur a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-021",
@@ -156,7 +182,9 @@
     "question": "Quand la pompe à chaleur a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-122",
@@ -167,7 +195,9 @@
     "question": "Quand la pompe à chaleur géothermique a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-030",
@@ -178,7 +208,9 @@
     "question": "Quand le chauffe-eau thermodynamique a-t-il été entretenu pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-126",
@@ -189,7 +221,9 @@
     "question": "Quand le chauffe-eau au gaz a-t-il été entretenu pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-118",
@@ -200,7 +234,9 @@
     "question": "Quand la climatisation a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-147",
@@ -211,7 +247,9 @@
     "question": "Quand la pompe à chaleur de la piscine a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "2 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-121",
@@ -222,7 +260,9 @@
     "question": "Quand l'étanchéité du circuit de climatisation a-t-elle été contrôlée pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-124",
@@ -233,7 +273,9 @@
     "question": "Quand votre fournisseur de gaz a-t-il contrôlé la citerne pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "5 ans",
-    "note": "Selon le contrat du fournisseur."
+    "note": "Selon le contrat du fournisseur.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-071",
@@ -244,7 +286,9 @@
     "question": "Quand la fosse a-t-elle été vidangée pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "4 ans",
-    "note": "Délai indicatif : la vidange dépend du niveau de boues."
+    "note": "Délai indicatif : la vidange dépend du niveau de boues.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-072",
@@ -255,7 +299,9 @@
     "question": "Quand le SPANC est-il venu contrôler l'installation pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "10 ans",
-    "note": "La commune peut fixer un délai plus court."
+    "note": "La commune peut fixer un délai plus court.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-075",
@@ -266,7 +312,9 @@
     "question": "Quand la micro-station a-t-elle été entretenue pour la dernière fois ?",
     "kind": "graded_month",
     "interval_label": "un an",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-087",
@@ -277,7 +325,9 @@
     "question": "Quand l'ascenseur a-t-il passé son dernier contrôle technique ?",
     "kind": "graded_month",
     "interval_label": "5 ans",
-    "note": null
+    "note": null,
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-142",
@@ -288,7 +338,9 @@
     "question": "Quand le diagnostic de l'installation de gaz a-t-il été réalisé ?",
     "kind": "graded_month",
     "interval_label": "3 ans",
-    "note": "Exigé à la vente (valable 3 ans) ou à la mise en location (6 ans)."
+    "note": "Exigé à la vente (valable 3 ans) ou à la mise en location (6 ans).",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-060",
@@ -299,7 +351,9 @@
     "question": "Quelle date de péremption est imprimée sur le tuyau de gaz de la cuisinière ?",
     "kind": "expiry_date",
     "interval_label": null,
-    "note": "Mois et année, années futures proposées (la date de péremption est à venir), ou « Je ne trouve pas la date » (à confirmer). La date donnée devient l'échéance."
+    "note": "Mois et année, années futures proposées (la date de péremption est à venir), ou « Je ne trouve pas la date » (à confirmer). La date donnée devient l'échéance.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-083",
@@ -310,7 +364,9 @@
     "question": "Quelle date est imprimée au dos du détecteur ?",
     "kind": "manufacture_date",
     "interval_label": "10 ans",
-    "note": "Deux cas, au choix de l'utilisateur : date de fabrication (échéance = date + 10 ans) ou date limite de remplacement, souvent imprimée « à remplacer avant … » (échéance = cette date). Mois et année ; années futures proposées pour la date limite. « Je ne la trouve pas » → à confirmer."
+    "note": "Deux cas, au choix de l'utilisateur : date de fabrication (échéance = date + 10 ans) ou date limite de remplacement, souvent imprimée « à remplacer avant … » (échéance = cette date). Mois et année ; années futures proposées pour la date limite. « Je ne la trouve pas » → à confirmer.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-152",
@@ -321,7 +377,9 @@
     "question": "Quand la voiture a-t-elle passé son dernier contrôle technique ?",
     "kind": "vehicle_inspection",
     "interval_label": "2 ans",
-    "note": "Option en plus : « Jamais, elle a moins de 4 ans ». On demande alors la date de première immatriculation ; échéance = cette date + 4 ans."
+    "note": "Option en plus : « Jamais, elle a moins de 4 ans ». On demande alors la date de première immatriculation ; échéance = cette date + 4 ans.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-153",
@@ -332,7 +390,9 @@
     "question": "Quand le véhicule a-t-il passé son dernier contrôle technique ?",
     "kind": "vehicle_inspection",
     "interval_label": "3 ans",
-    "note": "Option en plus : « Jamais, il a moins de 5 ans ». Échéance = date de première immatriculation + 5 ans."
+    "note": "Option en plus : « Jamais, il a moins de 5 ans ». Échéance = date de première immatriculation + 5 ans.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-137",
@@ -343,7 +403,9 @@
     "question": "Le puits est-il déclaré en mairie ?",
     "kind": "yes_no",
     "interval_label": null,
-    "note": "Oui → à jour ; Non → en retard (à déclarer) ; Je ne sais pas → à confirmer."
+    "note": "Oui → à jour ; Non → en retard (à déclarer) ; Je ne sais pas → à confirmer.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-082",
@@ -354,7 +416,9 @@
     "question": null,
     "kind": "none",
     "interval_label": null,
-    "note": "Test mensuel : démarre à la création."
+    "note": "Test mensuel : démarre à la création.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-086",
@@ -365,7 +429,9 @@
     "question": null,
     "kind": "none",
     "interval_label": null,
-    "note": "Visite toutes les 6 semaines : démarre à la création."
+    "note": "Visite toutes les 6 semaines : démarre à la création.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-093",
@@ -376,7 +442,9 @@
     "question": null,
     "kind": "none",
     "interval_label": null,
-    "note": "Contrôle mensuel du dispositif : démarre à la création, sauf statut initial fixé par le questionnaire."
+    "note": "Contrôle mensuel du dispositif : démarre à la création, sauf statut initial fixé par le questionnaire.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-100",
@@ -387,7 +455,9 @@
     "question": null,
     "kind": "none",
     "interval_label": null,
-    "note": "Test mensuel : démarre à la création."
+    "note": "Test mensuel : démarre à la création.",
+    "tip": null,
+    "overdue_tip": null
   },
   {
     "key": "T-015",
@@ -398,6 +468,60 @@
     "question": null,
     "kind": "not_generated",
     "interval_label": null,
-    "note": "Second ramonage : seulement au-delà de 6 m³ de bois ou 2,5 t de granulés par an."
+    "note": "Second ramonage : seulement au-delà de 6 m³ de bois ou 2,5 t de granulés par an.",
+    "tip": null,
+    "overdue_tip": null
+  },
+  {
+    "key": "T-155",
+    "tasks": [
+      "T-155"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": null,
+    "kind": "none",
+    "interval_label": null,
+    "note": "Test mensuel depuis l'application de l'alarme : démarre à la création.",
+    "tip": null,
+    "overdue_tip": null
+  },
+  {
+    "key": "T-156",
+    "tasks": [
+      "T-156"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": "Quelle date est imprimée au dos du détecteur ?",
+    "kind": "manufacture_date",
+    "interval_label": "10 ans",
+    "note": "Comme T-083 : date de fabrication (échéance = date + 10 ans) ou date limite de remplacement (échéance = cette date). « Je ne la trouve pas » → à confirmer.",
+    "tip": null,
+    "overdue_tip": null
+  },
+  {
+    "key": "T-157",
+    "tasks": [
+      "T-157"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": null,
+    "kind": "monitored",
+    "interval_label": null,
+    "note": "Toujours à jour (vert, « Suivi par votre télésurveillance ») tant que l'alarme est télésurveillée ; les visites du prestataire s'enregistrent comme une intervention.",
+    "tip": null,
+    "overdue_tip": null
+  },
+  {
+    "key": "T-158",
+    "tasks": [
+      "T-158"
+    ],
+    "appliance": "Détecteur de fumée",
+    "question": "Le détecteur porte-t-il le marquage CE EN 14604 ?",
+    "kind": "yes_no",
+    "interval_label": null,
+    "note": "Vérification unique. Oui → à jour ; Non → en retard (à remplacer par un modèle conforme) ; Je ne sais pas → à confirmer.",
+    "tip": "Regardez l'étiquette au dos du détecteur, ou le contrat de télésurveillance.",
+    "overdue_tip": "Remplacez le détecteur par un modèle conforme, ou contactez votre prestataire de télésurveillance."
   }
 ]

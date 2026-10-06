@@ -175,7 +175,10 @@ function describeDateAnswer(d: QuestionnaireStepEffects["dateAnswers"][number]):
   if (d.date) return `dernier passage : ${formatFrenchMonthYear(d.date)}`;
   const kind = getDateQuestionForTask(d.taskId)?.kind;
   if (d.confidence === "compliant") return "conforme";
-  if (d.confidence === "old") return kind === "yes_no" ? "non déclaré" : "fait, il y a plus longtemps que le délai";
+  if (d.confidence === "old") {
+    if (kind !== "yes_no") return "fait, il y a plus longtemps que le délai";
+    return d.taskId === "T-137" ? "non déclaré" : "non";
+  }
   if (d.confidence === "recent") return kind === "yes_no" ? "à confirmer" : "date à préciser plus tard";
   return "jamais fait ou inconnu";
 }
@@ -339,7 +342,8 @@ export function QuestionnaireWizard({
       for (const task of getTrackedLegalTasks(typeId)) {
         if (excludeTaskIds.has(task.id)) continue;
         const dq = getDateQuestionForTask(task.id);
-        if (!dq || dq.kind === "none") continue;
+        // "monitored" (T-157) needs no question either: it's green from the start.
+        if (!dq || dq.kind === "none" || dq.kind === "monitored") continue;
         pending.push({ taskId: task.id, equipmentTypeId: typeId });
       }
     }
@@ -426,7 +430,12 @@ export function QuestionnaireWizard({
     const effects = { ...stepEffects };
     if (kind === "yes") {
       effects.createEquipmentTypeIds = [...effects.createEquipmentTypeIds, ...followUp.createsIfYes];
-    } else if (kind === "unknown") {
+    } else {
+      // "Je ne sais pas" takes the "Non" branch too: e.g. a detector linked to an alarm
+      // not known to be monitored is followed as unmonitored (monthly test), the safe side.
+      effects.createEquipmentTypeIds = [...effects.createEquipmentTypeIds, ...followUp.createsIfNo];
+    }
+    if (kind === "unknown") {
       effects.unknownChecks = [
         ...effects.unknownChecks,
         { questionId: question.id, questionLabel: followUp.question, help: null },
@@ -498,7 +507,9 @@ export function QuestionnaireWizard({
       case "vehicle_inspection":
         return <VehicleInspectionCard dq={ask.dq} taskId={ask.taskId} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
       case "yes_no":
-        return <YesNoStatusCard title={ask.dq.question!} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
+        return (
+          <YesNoStatusCard title={ask.dq.question!} tip={ask.dq.tip} onAnswer={handleDateAskAnswer} onBack={handleBack} />
+        );
       default:
         return <GradedMonthCard dq={ask.dq} onAnswer={handleDateAskAnswer} onBack={handleBack} />;
     }
@@ -506,7 +517,7 @@ export function QuestionnaireWizard({
 
   if (pendingFollowUps.length > 0) {
     const { answer } = pendingFollowUps[0];
-    const subjectLabel = getApplianceLabelForEquipmentType(answer.creates[0]);
+    const subjectLabel = getApplianceLabelForEquipmentType(answer.creates[0] ?? answer.followUp!.createsIfYes[0]);
     const questionText = answer.followUp!.question;
     const title = subjectLabel ? `${subjectLabel} : ${questionText}` : questionText;
     return <YesNoCard question={title} onAnswer={handleFollowUpYesNo} onBack={handleBack} />;
@@ -703,10 +714,12 @@ function YesNoCard({
 // en retard (rouge), Je ne sais pas -> a confirmer (orange).
 function YesNoStatusCard({
   title,
+  tip,
   onAnswer,
   onBack,
 }: {
   title: string;
+  tip: string | null;
   onAnswer: (result: DateAnswerResult) => void;
   onBack: () => void;
 }) {
@@ -714,6 +727,7 @@ function YesNoStatusCard({
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
       <h2 className="text-lg font-medium text-ink">{title}</h2>
+      {tip && <p className="text-sm text-ink-2">{tip}</p>}
       <div className="flex flex-wrap gap-2">
         <button className={BUTTON_CLASS} onClick={() => onAnswer({ confidence: "compliant" })}>
           Oui

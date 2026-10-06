@@ -10,6 +10,7 @@ import { AppointmentButton } from "@/components/AppointmentButton";
 import { ApplianceIconTile, Icon, ROW_CLASS, StatusPill, statusTone } from "@/components/ui";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 import type { ObligationAppointment } from "@/lib/obligation-appointments";
+import { getDateQuestionForTask } from "@/lib/date-questions";
 
 // Shared by ObligationsBlock (a place's or an appliance's full list) and UrgentActions
 // (the dashboard's overdue-only, grouped-by-place view) so both render the same row.
@@ -45,19 +46,27 @@ export function ObligationRow({
           ? `En retard depuis ${formatFrenchMonthYear(row.dueDate)}`
           : `Prochaine échéance en ${formatFrenchMonthYear(row.dueDate)}`
         : null;
+  // Orange row: where to find the missing answer (e.g. the label on the detector or the
+  // monitoring contract for the CE EN 14604 check).
+  // Red row: what to do, when the seed says (e.g. replace a non-compliant detector).
+  const dq = getDateQuestionForTask(row.task.id);
+  const tip = row.status === "to_confirm" ? (dq?.tip ?? null) : row.status === "overdue" ? (dq?.overdueTip ?? null) : null;
   const completedLine = row.completedOn
     ? `Fait en ${formatFrenchMonthYear(row.completedOn)}${row.providerName ? ` par ${row.providerName}` : ""}${
         row.providerContact ? ` (${row.providerContact})` : ""
       }`
     : null;
   // One idea per line (docs/design.md): each risk on its own line, never joined.
-  const risks = [
-    ...new Set(
-      row.legalObligations.flatMap((o) =>
-        o.risks ? [o.risks.danger, o.risks.insurance, o.risks.liability, o.risks.other] : []
-      )
-    ),
-  ].filter((risk): risk is string => Boolean(risk));
+  // A task-specific risk (seed `risk`) replaces the obligation's general ones.
+  const risks = row.task.risk
+    ? [row.task.risk]
+    : [
+        ...new Set(
+          row.legalObligations.flatMap((o) =>
+            o.risks ? [o.risks.danger, o.risks.insurance, o.risks.liability, o.risks.other] : []
+          )
+        ),
+      ].filter((risk): risk is string => Boolean(risk));
 
   return (
     <li className={ROW_CLASS}>
@@ -71,12 +80,13 @@ export function ObligationRow({
             {!onFiche && <span className="text-sm text-ink-2">{row.task.title}</span>}
           </span>
         </Link>
-        <StatusPill status={row.status} />
+        <StatusPill status={row.status} label={row.statusLabel} />
       </div>
 
-      {(dateLine || completedLine || risks.length > 0) && (
+      {(dateLine || tip || completedLine || risks.length > 0) && (
         <div className="flex flex-col gap-1 text-sm text-ink-2">
           {dateLine && <p>{dateLine}</p>}
+          {tip && <p>{tip}</p>}
           {completedLine && (
             <p className="flex items-center gap-2">
               <Icon name="person" size={18} />
@@ -104,6 +114,7 @@ export function ObligationRow({
             maintenanceTaskId={row.task.id}
             status={row.status}
             toConfirmReason={row.toConfirmReason}
+            onFiche={onFiche}
           />
         )}
         {row.completedOn && latest && (

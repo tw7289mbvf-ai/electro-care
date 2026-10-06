@@ -104,7 +104,8 @@
             "question": "Est-elle raccordée à un conduit de cheminée, et non à une ventouse (un tuyau qui sort directement du mur) ?",
             "creates_if_yes": [
               "CH-07"
-            ]
+            ],
+            "creates_if_no": []
           },
           "unknown": false,
           "initial_status": null,
@@ -121,7 +122,8 @@
             "question": "Est-elle raccordée à un conduit de cheminée, et non à une ventouse (un tuyau qui sort directement du mur) ?",
             "creates_if_yes": [
               "CH-07"
-            ]
+            ],
+            "creates_if_no": []
           },
           "unknown": false,
           "initial_status": null,
@@ -713,12 +715,29 @@
       "skip_if": null,
       "answers": [
         {
-          "label": "Oui",
+          "label": "Oui, un détecteur autonome",
           "creates": [
             "SEC-01"
           ],
           "help": "Obligatoire dans tout logement.",
           "follow_up": null,
+          "unknown": false,
+          "initial_status": null,
+          "sets": null
+        },
+        {
+          "label": "Oui, relié à mon alarme",
+          "creates": [],
+          "help": "Un détecteur raccordé à la centrale de votre alarme.",
+          "follow_up": {
+            "question": "Votre alarme est-elle télésurveillée par un prestataire ?",
+            "creates_if_yes": [
+              "SEC-09"
+            ],
+            "creates_if_no": [
+              "SEC-08"
+            ]
+          },
           "unknown": false,
           "initial_status": null,
           "sets": null

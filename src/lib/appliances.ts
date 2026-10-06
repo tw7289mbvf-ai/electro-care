@@ -154,6 +154,20 @@ export async function updateAppliance(
   return toAppliance(rows[0]);
 }
 
+// Smoke detector "Type" (spec, Onboarding Questionnaire, "Smoke detector"): the kind of
+// detector is its equipment type, so changing it switches the tasks and obligations the
+// appliance carries. Only this column changes; the previous kind's obligation records
+// stay, unused, and come back if the detector is switched back.
+export async function setApplianceEquipmentType(id: string, equipmentTypeId: string): Promise<Appliance> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    UPDATE appliances SET equipment_type_id = ${equipmentTypeId}
+    WHERE id = ${id}
+    RETURNING ${sql.unsafe(APPLIANCE_COLUMNS)}
+  `) as ApplianceRow[];
+  return toAppliance(rows[0]);
+}
+
 // The orange "Mettre à jour" power-threshold window (spec's "Actions and colours") only
 // ever resolves the power, so it writes just that column — never the full replace
 // `updateAppliance` does, which would blank out brand/model/etc. left unset by this

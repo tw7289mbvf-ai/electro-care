@@ -2,12 +2,16 @@ import type { EquipmentType } from "@/lib/equipment-types";
 import { getEquipmentType } from "@/lib/equipment-types";
 import { getMaintenanceTask, getTrackedLegalTasks, type MaintenanceTask } from "@/lib/maintenance-tasks";
 import { getLegalObligationsForType, type LegalObligation } from "@/lib/legal-obligations";
+import { getDateQuestionForTask } from "@/lib/date-questions";
 
 // "not_applicable" (spec's "Actions and colours"): a power-conditional obligation
 // (climatisation fixe, PAC air-air, chauffe-eau thermodynamique, PAC piscine) whose
 // appliance is below the 4 kW threshold — grey, and left out of the compliance count,
 // same as "to_schedule".
 export type ObligationStatus = "up_to_date" | "to_schedule" | "overdue" | "to_confirm" | "not_applicable";
+
+// A monitored detector's follow-up (T-157): green with its own wording rather than "À jour".
+export const MONITORED_STATUS_LABEL = "Suivi par votre télésurveillance";
 
 export const OBLIGATION_STATUS_LABELS: Record<ObligationStatus, string> = {
   up_to_date: "À jour",
@@ -41,6 +45,8 @@ export type ApplianceObligationRecord = {
 export type ObligationView = {
   task: MaintenanceTask;
   status: ObligationStatus;
+  // Replaces the status's own label when set (MONITORED_STATUS_LABEL).
+  statusLabel: string | null;
   dueDate: string | null;
   // REGLE-01: "jamais realise ou je ne sais pas" sorts ahead of other overdue rows.
   priority: boolean;
@@ -90,6 +96,20 @@ function computeStatusAndDueDate(
   modifiedAt: string | null;
 } {
   const none = { completedOn: null, providerName: null, providerContact: null, modifiedAt: null };
+  // Followed by a monitoring provider: green whatever the dates, the provider's recorded
+  // visits only feed the "Fait en … par …" line and the history.
+  if (getDateQuestionForTask(task.id)?.kind === "monitored") {
+    return {
+      status: "up_to_date",
+      dueDate: null,
+      priority: false,
+      toConfirmReason: null,
+      completedOn: record?.lastServiceDate ?? null,
+      providerName: record?.lastServiceDate ? record.providerName : null,
+      providerContact: record?.lastServiceDate ? record.providerContact : null,
+      modifiedAt: record?.lastServiceDate ? record.modifiedAt : null,
+    };
+  }
   // Power known: below the threshold the obligation doesn't apply at all; at or above
   // it, the appliance is treated exactly like a legalStatus "yes" one from here on
   // (falls through to the checks below instead of returning).
@@ -155,6 +175,7 @@ export function getObligationsForAppliance(
     return {
       task,
       status,
+      statusLabel: getDateQuestionForTask(task.id)?.kind === "monitored" ? MONITORED_STATUS_LABEL : null,
       dueDate,
       priority,
       toConfirmReason,

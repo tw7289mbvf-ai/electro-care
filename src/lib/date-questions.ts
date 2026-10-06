@@ -8,7 +8,11 @@ export type DateQuestionKind =
   | "vehicle_inspection"
   | "yes_no"
   | "none"
-  | "not_generated";
+  | "not_generated"
+  // T-157, a smoke detector followed by a monitoring provider: always green ("Suivi par
+  // votre télésurveillance"), no question; the provider's visits are recorded as
+  // interventions.
+  | "monitored";
 
 export type DateQuestion = {
   key: string;
@@ -18,6 +22,11 @@ export type DateQuestion = {
   kind: DateQuestionKind;
   intervalLabel: string | null;
   note: string | null;
+  // Shown on an orange row ("à confirmer"): where to find the answer, e.g. the label on
+  // the detector or the monitoring contract (T-158).
+  tip: string | null;
+  // Shown on a red row: what to do about it (e.g. T-158 answered "Non").
+  overdueTip: string | null;
 };
 
 export const DATE_QUESTIONS: DateQuestion[] = dateQuestionsSeed.map((d) => ({
@@ -28,6 +37,8 @@ export const DATE_QUESTIONS: DateQuestion[] = dateQuestionsSeed.map((d) => ({
   kind: d.kind as DateQuestionKind,
   intervalLabel: d.interval_label,
   note: d.note,
+  tip: d.tip ?? null,
+  overdueTip: d.overdue_tip ?? null,
 }));
 
 // Every legal task has exactly one single-task entry (seed/date_questions.json is the

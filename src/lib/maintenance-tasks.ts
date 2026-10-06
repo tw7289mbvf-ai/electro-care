@@ -24,6 +24,9 @@ export type MaintenanceTask = {
   // Hands-on minutes for the user, 0 when a professional does it (seed/README.md
   // "active_minutes").
   activeMinutes: number;
+  // Shown instead of the legal obligation's risks on this task's row (e.g. T-158, the
+  // CE EN 14604 check, whose stake is the insurer, not an undetected fire).
+  risk: string | null;
 };
 
 export const PERFORMER_LABELS: Record<MaintenanceTask["performer"], string> = {
@@ -44,6 +47,7 @@ const ALL_TASKS: MaintenanceTask[] = maintenanceTasksSeed.map((t) => ({
   legal: t.legal as "yes" | "no",
   level: t.level as MaintenanceTask["level"],
   activeMinutes: t.active_minutes,
+  risk: t.risk ?? null,
 }));
 
 const TASKS_BY_ID = new Map(ALL_TASKS.map((t) => [t.id, t]));
