@@ -506,6 +506,24 @@ export async function submitContactMessage(_prevState: FormState, formData: Form
   return {};
 }
 
+// "Donner mon avis" (footer, signed-in pages): reuses the contact-message circuit, so
+// feedback lands on the admin page with no extra table. The page path comes from the
+// client and is only kept when it looks like an in-app path.
+export async function submitFeedbackMessage(_prevState: FormState, formData: FormData): Promise<FormState> {
+  if (process.env.FEEDBACK_ENABLED !== "true") {
+    return { error: "Fonction indisponible." };
+  }
+  const message = String(formData.get("message") ?? "").trim();
+  if (!message) {
+    return { error: "Veuillez saisir un message." };
+  }
+  const rawPath = String(formData.get("page") ?? "");
+  const page = /^\/[^\s]{0,300}$/.test(rawPath) ? rawPath : "inconnue";
+  const email = await requireSessionEmail();
+  await createContactMessage(email, `[Avis] ${page} — ${message}`);
+  return {};
+}
+
 export type InvoiceExtractionState = {
   error?: string;
   rows?: ExtractedApplianceCandidate[];
