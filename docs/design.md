@@ -65,9 +65,12 @@ Ce chantier ne change que l'apparence : aucune logique, aucune donnée, aucune m
 
 ## Composants
 
-- **Jauge de conformité** (accueil) : « 8 sur 12 » en grand, « obligations à jour » à côté ; barre segmentée de
+- **Jauge de conformité** : la même carte à deux niveaux, sur l'accueil pour tous les lieux réunis, et en tête de
+  chaque page de lieu pour ce seul lieu. « 8 sur 12 » en grand, « obligations à jour » à côté ; barre segmentée de
   12 px (en retard, à confirmer, à jour, proportionnelles, 4 px d'écart) ; légende en dessous ; puis une ligne
-  « 3 gestes d'entretien ce mois-ci, environ 25 min ». Mini-jauge de 6-8 px sur chaque carte de lieu.
+  « 3 gestes d'entretien ce mois-ci, environ 25 min ». Mini-jauge de 6-8 px sur chaque carte de lieu de l'accueil.
+- **Durées** : moins d'une heure en minutes (« environ 45 min ») ; à partir d'une heure, en heures et minutes
+  arrondies à 5 minutes (« environ 4 h 45 »). Même règle partout où une durée s'affiche.
 - **Ligne d'élément** : carré d'icône teinté selon le statut, nom (16 px, 600), détail (14 px), action à droite
   ou en dessous.
 - **Pastille de statut** : En retard, À confirmer, À jour, Rendez-vous pris (accent), Non concerné (neutre).

@@ -29,13 +29,13 @@ import {
   BackLink,
   BUTTON_SURFACE,
   BUTTON_PRIMARY,
+  ComplianceGauge,
   LINK_ACTION,
   GROUP_LABEL_CLASS,
   PAGE_CLASS,
   PAGE_TITLE_CLASS,
   Pill,
   Section,
-  SegmentedBar,
 } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -107,15 +107,18 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             {locality && <span className="text-sm text-ink-2">{locality}</span>}
           </div>
         )}
-        <div className="mt-1.5">
-          <SegmentedBar counts={counts} thin />
-        </div>
         {!place.onboardedAt && (
           <Link href={`/places/${place.id}/questionnaire`} className={`${BUTTON_PRIMARY} mt-1 self-start`}>
             Compléter le questionnaire pour ce lieu
           </Link>
         )}
       </header>
+
+      <ComplianceGauge
+        counts={counts}
+        maintenanceDueCount={guidance.length}
+        maintenanceMinutes={guidance.reduce((sum, { task }) => sum + task.activeMinutes, 0)}
+      />
 
       <MaintenanceLevelPicker placeId={place.id} level={place.maintenanceLevel} estimates={levelEstimates} />
 
