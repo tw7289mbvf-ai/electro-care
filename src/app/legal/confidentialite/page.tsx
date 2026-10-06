@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { BackLink } from "@/components/ui";
 
 // The Brevo line below reflects a live env var, not a build-time constant: it must
 // flip the moment EMAIL_REMINDERS_SENDING_ENABLED does, without waiting for a rebuild.
@@ -7,38 +7,34 @@ export const dynamic = "force-dynamic";
 export default function ConfidentialitePage() {
   const sendingEnabled = process.env.EMAIL_REMINDERS_SENDING_ENABLED === "true";
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-5 pt-5 pb-10 sm:pt-8">
         <div className="flex flex-wrap gap-3">
-          <Link href="/" className="text-xs font-medium text-zinc-500 hover:underline dark:text-zinc-400">
-            ← Tableau de bord
-          </Link>
-          <Link href="/settings" className="text-sm text-zinc-500 underline-offset-2 hover:underline dark:text-zinc-400">
-            ← Retour aux paramètres
-          </Link>
+          <BackLink href="/">Tableau de bord</BackLink>
+          <BackLink href="/settings">Retour aux paramètres</BackLink>
         </div>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Politique de confidentialité
           </h1>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Dernière mise à jour : 30 septembre 2026</p>
+          <p className="mt-1 text-sm text-ink-2">Dernière mise à jour : 6 octobre 2026</p>
         </div>
 
-        <p className="text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="text-sm text-ink">
           Electro Care vous aide à suivre les obligations d&apos;entretien de votre logement. Cette page explique
           quelles données nous utilisons, pourquoi, et comment exercer vos droits.
         </p>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Qui est responsable de vos données ?</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Qui est responsable de vos données ?</h2>
           <p>
             Mathieu Decrop, éditeur d&apos;Electro Care, 43 rue Rosa Bonheur, 33000 Bordeaux. Contact :
             matdec41@hotmail.com.
           </p>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Quelles données, et pourquoi ?</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Quelles données, et pourquoi ?</h2>
           <ul className="list-disc pl-5">
             <li>
               <strong>Votre compte</strong> : adresse e-mail et mot de passe. Le mot de passe n&apos;est conservé que
@@ -83,8 +79,8 @@ export default function ConfidentialitePage() {
           <p>Nous ne collectons aucune donnée de paiement.</p>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Sur quelle base ?</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Sur quelle base ?</h2>
           <ul className="list-disc pl-5">
             <li>
               <strong>L&apos;exécution du service</strong> que vous avez choisi d&apos;utiliser (article 6.1.b du
@@ -97,8 +93,8 @@ export default function ConfidentialitePage() {
           </ul>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Qui y a accès ?</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Qui y a accès ?</h2>
           <ul className="list-disc pl-5">
             <li>
               <strong>Vous seul voyez vos lieux et vos appareils</strong> : chaque compte est cloisonné
@@ -134,8 +130,8 @@ export default function ConfidentialitePage() {
           <p>Nous ne vendons ni ne louons vos données, et Electro Care n&apos;affiche aucune publicité.</p>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Combien de temps ?</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Combien de temps ?</h2>
           <ul className="list-disc pl-5">
             <li>
               <strong>Compte, lieux et appareils</strong> : tant que votre compte est actif. Après une demande de
@@ -155,16 +151,18 @@ export default function ConfidentialitePage() {
           </ul>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Cookies</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Cookies</h2>
           <p>
-            Electro Care n&apos;utilise que le cookie strictement nécessaire à votre connexion. Aucun cookie
-            publicitaire ni de mesure d&apos;audience : aucun consentement n&apos;est donc demandé.
+            Electro Care n&apos;utilise que deux cookies : celui strictement nécessaire à votre connexion, et celui
+            qui retient le thème d&apos;affichage que vous avez choisi (clair, sombre ou selon le téléphone), sans
+            aucune autre information. Aucun cookie publicitaire ni de mesure d&apos;audience : aucun consentement
+            n&apos;est donc demandé.
           </p>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Vos droits</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Vos droits</h2>
           <p>
             Vous pouvez accéder à vos données, les rectifier, les effacer, en limiter l&apos;utilisation, vous y
             opposer ou les récupérer. Pour cela, utilisez Paramètres (« Demander la suppression de mon compte »,
@@ -177,8 +175,8 @@ export default function ConfidentialitePage() {
           </p>
         </section>
 
-        <section className="flex flex-col gap-2 text-sm text-zinc-700 dark:text-zinc-300">
-          <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">Modifications</h2>
+        <section className="flex flex-col gap-2 text-[15px] leading-relaxed text-ink">
+          <h2 className="font-display text-[19px] font-semibold text-ink">Modifications</h2>
           <p>
             Cette politique peut évoluer avec le service. En cas de changement important, vous en serez informé dans
             l&apos;application.

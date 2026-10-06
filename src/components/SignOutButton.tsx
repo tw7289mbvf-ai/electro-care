@@ -16,7 +16,7 @@ export function SignOutButton() {
     <button
       type="button"
       onClick={handleClick}
-      className="text-sm font-medium text-zinc-500 underline-offset-2 hover:underline dark:text-zinc-400"
+      className="inline-flex min-h-11 items-center rounded-xl px-2 text-sm font-medium text-ink-2 hover:text-ink"
     >
       Se déconnecter
     </button>

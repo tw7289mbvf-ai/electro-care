@@ -5,11 +5,8 @@ import { getDateQuestionForTask, type DateQuestion } from "@/lib/date-questions"
 import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
 import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions, wideYearOptions } from "@/lib/french-dates";
+import { BUTTON_CLASS, GHOST_BUTTON_CLASS, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
 
-const BUTTON_CLASS =
-  "rounded-md bg-emerald-600 px-2 py-0.5 text-xs font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-60";
-const GHOST_BUTTON_CLASS =
-  "rounded-md border border-zinc-300 px-2 py-0.5 text-xs font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
 
 // Orange "Mettre à jour" (a date to pin down): the window asks the obligation's own
 // date question (spec's "Actions and colours"), never a plain last-service month —
@@ -46,7 +43,7 @@ export function ObligationDateResolver({
 
 function CancelLink({ onCancel }: { onCancel: () => void }) {
   return (
-    <button type="button" onClick={onCancel} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+    <button type="button" onClick={onCancel} className={TEXT_BUTTON_CLASS}>
       Annuler
     </button>
   );
@@ -68,7 +65,7 @@ function GradedMonthResolver({
   const iso = monthYearToIso(value);
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
+      <p className="text-sm font-medium text-ink">{dq.question}</p>
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>
@@ -111,7 +108,7 @@ function SimpleDateCard({
   const iso = monthYearToIso(value);
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</p>
+      <p className="text-sm font-medium text-ink">{title}</p>
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} small disableFutureMonths={!futureYears} />
         <button
@@ -163,7 +160,7 @@ function ManufactureOrExpiryResolver({
   }
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
+      <p className="text-sm font-medium text-ink">{dq.question}</p>
       <div className="flex flex-wrap gap-2">
         <button className={GHOST_BUTTON_CLASS} onClick={() => setMode("manufacture")}>
           Date de fabrication
@@ -193,7 +190,7 @@ function YesNoResolver({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{title}</p>
+      <p className="text-sm font-medium text-ink">{title}</p>
       <div className="flex flex-wrap gap-2">
         <button className={BUTTON_CLASS} onClick={() => onAnswer({ confidence: "compliant" })}>
           Oui
@@ -234,7 +231,7 @@ function VehicleInspectionResolver({
   if (showYoung) {
     return (
       <div className="flex flex-col gap-2">
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">Date de première immatriculation ?</p>
+        <p className="text-sm font-medium text-ink">Date de première immatriculation ?</p>
         <div className="flex flex-wrap items-center gap-2">
           <MonthYearFields value={regValue} onChange={setRegValue} years={pastYearOptions()} small disableFutureMonths />
           <button
@@ -257,7 +254,7 @@ function VehicleInspectionResolver({
 
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{dq.question}</p>
+      <p className="text-sm font-medium text-ink">{dq.question}</p>
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
         <button className={BUTTON_CLASS} disabled={!iso} onClick={() => onAnswer({ date: iso! })}>

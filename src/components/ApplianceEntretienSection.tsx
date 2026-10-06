@@ -3,6 +3,7 @@ import type { MaintenanceGuidanceItem, UpcomingMaintenanceItem } from "@/lib/mai
 import { MaintenanceGuidanceActions } from "@/components/MaintenanceGuidanceActions";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
+import { GROUP_LABEL_CLASS, Pill, ROW_CLASS, Section } from "@/components/ui";
 
 // Appliance fiche's "entretien courant, au niveau choisi pour le lieu" (spec's "Managing
 // Appliances", revision 51): every lifespan task of the place's level, shown exactly
@@ -32,35 +33,29 @@ export function ApplianceEntretienSection({
   if (pending.length === 0 && upcoming.length === 0) {
     if (!upgradeTaskCount || !upgradeLevelLabel) return null;
     return (
-      <section className="flex flex-col gap-2 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Entretien</h3>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+      <Section title="Entretien">
+        <p className="rounded-2xl bg-surface p-3.5 text-sm text-ink-2">
           Aucun geste indispensable pour cet appareil. Passez au niveau {upgradeLevelLabel} pour voir{" "}
           {upgradeTaskCount === 1 ? "son geste d'entretien" : `ses ${upgradeTaskCount} gestes d'entretien`}.
         </p>
-      </section>
+      </Section>
     );
   }
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">Entretien</h3>
-
+    <Section title="Entretien">
       {pending.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">À faire</h4>
-          <ul className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
+          <h3 className={GROUP_LABEL_CLASS}>À faire</h3>
+          <ul className="flex flex-col gap-2.5">
             {pending.map(({ task }) => (
-              <li
-                key={task.id}
-                className="flex flex-wrap items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
-              >
-                <Link href={`/appliances/${applianceId}/tasks/${task.id}`} className="font-medium text-zinc-900 hover:underline dark:text-zinc-100">
-                  {task.title}
+              <li key={task.id} className={ROW_CLASS}>
+                <Link href={`/appliances/${applianceId}/tasks/${task.id}`} className="flex flex-col gap-0.5">
+                  <span className="text-base font-semibold text-ink">{task.title}</span>
+                  <span className="text-sm text-ink-2">
+                    {task.performer === "pro" ? "Par un professionnel" : `${task.activeMinutes} min, à faire soi-même`}
+                  </span>
                 </Link>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                  {task.performer === "pro" ? "Professionnel" : `${task.activeMinutes} min`}
-                </span>
                 <MaintenanceGuidanceActions
                   applianceId={applianceId}
                   maintenanceTaskId={task.id}
@@ -74,36 +69,38 @@ export function ApplianceEntretienSection({
       )}
 
       {upcoming.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">À venir</h4>
-          <ul className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
+          <h3 className={`${GROUP_LABEL_CLASS} pt-1.5`}>À venir</h3>
+          <ul className="flex flex-col gap-2.5">
             {upcoming.map(({ task, completion, nextDate }) => (
-              <li
-                key={task.id}
-                className="flex flex-wrap items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
-              >
-                <Link href={`/appliances/${applianceId}/tasks/${task.id}`} className="font-medium text-zinc-900 hover:underline dark:text-zinc-100">
-                  {task.title}
-                </Link>
-                <span className="text-zinc-500 dark:text-zinc-400">
-                  {completion && `Fait en ${formatFrenchMonthYear(completion.doneMonth)} · `}
-                  Prévu en {formatFrenchMonthYear(nextDate)}
-                </span>
+              <li key={task.id} className={ROW_CLASS}>
+                <div className="flex items-center justify-between gap-3">
+                  <Link href={`/appliances/${applianceId}/tasks/${task.id}`} className="flex min-w-0 flex-col gap-0.5">
+                    <span className="text-base font-semibold text-ink">{task.title}</span>
+                    <span className="text-sm text-ink-2">Prévu en {formatFrenchMonthYear(nextDate)}</span>
+                    {completion && (
+                      <span className="text-sm text-ink-2">Fait en {formatFrenchMonthYear(completion.doneMonth)}</span>
+                    )}
+                  </Link>
+                  {task.performer === "pro" && <Pill tone="neutral">Professionnel</Pill>}
+                </div>
                 {completion && (
-                  <ModifyMaintenanceCompletionButton
-                    completionId={completion.id}
-                    applianceId={applianceId}
-                    maintenanceTaskId={task.id}
-                    doneMonth={completion.doneMonth}
-                    modifiedAt={completion.modifiedAt}
-                    placeId={placeId}
-                  />
+                  <div className="flex justify-end">
+                    <ModifyMaintenanceCompletionButton
+                      completionId={completion.id}
+                      applianceId={applianceId}
+                      maintenanceTaskId={task.id}
+                      doneMonth={completion.doneMonth}
+                      modifiedAt={completion.modifiedAt}
+                      placeId={placeId}
+                    />
+                  </div>
                 )}
               </li>
             ))}
           </ul>
         </div>
       )}
-    </section>
+    </Section>
   );
 }

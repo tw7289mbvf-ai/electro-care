@@ -1,26 +1,128 @@
 @import "tailwindcss";
 
+/* Design charter tokens (docs/design.md). Light by default; the dark set applies when
+   <html data-theme="dark">, or "system" with a dark OS preference. data-theme is set on
+   the server from the ec-theme cookie, so the page never flashes the wrong theme. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --bg: #f3f6f9;
+  --surface: #ffffff;
+  --surface-2: #f3f6f9;
+  --text: #15202b;
+  --text-2: #5b6b78;
+  --line: #e8edf2;
+  --line-strong: #c9d3dc;
+  --accent: #3d4fe0;
+  --accent-soft: #ebedfc;
+  --on-accent: #ffffff;
+  --ok-text: #1f7a4d;
+  --ok-soft: #e3f3ea;
+  --warn-text: #9a5b00;
+  --warn-soft: #fff1dc;
+  --warn-border: #f3c98a;
+  --late-text: #b3261e;
+  --late-soft: #fce8e6;
+  --bar-ok: #3ba36b;
+  --bar-warn: #f0a23b;
+  --bar-late: #e05a4f;
+  --neutral-text: #3a4956;
+  --neutral-soft: #f3f6f9;
+  --overlay: rgb(21 32 43 / 0.45);
+  --knob: #ffffff;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e151c;
+  --surface: #17212b;
+  --surface-2: #1d2a36;
+  --text: #e8eef3;
+  --text-2: #9aabb8;
+  --line: #263544;
+  --line-strong: #34465a;
+  --accent: #8c98ff;
+  --accent-soft: #222a52;
+  --on-accent: #0e151c;
+  --ok-text: #73d6a0;
+  --ok-soft: #12301f;
+  --warn-text: #f5b85e;
+  --warn-soft: #33240c;
+  --warn-border: #6b4a14;
+  --late-text: #ff9b92;
+  --late-soft: #3a1714;
+  --bar-ok: #46b57a;
+  --bar-warn: #e9a23f;
+  --bar-late: #e8675c;
+  --neutral-text: #c3cfd8;
+  --neutral-soft: #1d2a36;
+  --overlay: rgb(0 0 0 / 0.6);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --bg: #0e151c;
+    --surface: #17212b;
+    --surface-2: #1d2a36;
+    --text: #e8eef3;
+    --text-2: #9aabb8;
+    --line: #263544;
+    --line-strong: #34465a;
+    --accent: #8c98ff;
+    --accent-soft: #222a52;
+    --on-accent: #0e151c;
+    --ok-text: #73d6a0;
+    --ok-soft: #12301f;
+    --warn-text: #f5b85e;
+    --warn-soft: #33240c;
+    --warn-border: #6b4a14;
+    --late-text: #ff9b92;
+    --late-soft: #3a1714;
+    --bar-ok: #46b57a;
+    --bar-warn: #e9a23f;
+    --bar-late: #e8675c;
+    --neutral-text: #c3cfd8;
+    --neutral-soft: #1d2a36;
+    --overlay: rgb(0 0 0 / 0.6);
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--text);
+  --color-ink-2: var(--text-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-ok: var(--ok-text);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn-text);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-border: var(--warn-border);
+  --color-late: var(--late-text);
+  --color-late-soft: var(--late-soft);
+  --color-bar-ok: var(--bar-ok);
+  --color-bar-warn: var(--bar-warn);
+  --color-bar-late: var(--bar-late);
+  --color-neutral: var(--neutral-text);
+  --color-neutral-soft: var(--neutral-soft);
+  --color-overlay: var(--overlay);
+  --color-knob: var(--knob);
+  --font-sans: var(--font-figtree), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-figtree), system-ui, sans-serif;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

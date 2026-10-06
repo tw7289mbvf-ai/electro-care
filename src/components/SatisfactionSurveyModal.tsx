@@ -28,22 +28,22 @@ export function SatisfactionSurveyModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-      <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg dark:bg-zinc-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay p-4">
+      <div className="w-full max-w-sm rounded-xl bg-surface p-6">
         {submitted ? (
           <>
-            <p className="text-sm text-zinc-700 dark:text-zinc-300">Merci pour votre avis.</p>
+            <p className="text-sm text-ink">Merci pour votre avis.</p>
             <button
               type="button"
               onClick={() => setDismissed(true)}
-              className="mt-4 rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+              className="mt-4 inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent hover:opacity-85"
             >
               Fermer
             </button>
           </>
         ) : (
           <>
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">
+            <h2 className="font-display text-[19px] font-semibold text-ink">
               Comment vous sentiriez-vous si vous ne pouviez plus utiliser Electro Care ?
             </h2>
             <div className="mt-4 flex flex-col gap-2">
@@ -53,7 +53,7 @@ export function SatisfactionSurveyModal() {
                   type="button"
                   disabled={isPending}
                   onClick={() => handleAnswer(option.value)}
-                  className="rounded-lg border border-zinc-300 px-4 py-2 text-left text-sm text-zinc-700 hover:bg-zinc-100 disabled:opacity-50 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                  className="inline-flex min-h-11 items-center justify-center rounded-xl border-[1.5px] border-line-strong px-4 py-2 text-left text-sm text-ink hover:bg-surface-2 disabled:opacity-50"
                 >
                   {option.label}
                 </button>
@@ -63,13 +63,13 @@ export function SatisfactionSurveyModal() {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Un commentaire ? (facultatif)"
-              className="mt-3 w-full rounded-lg border border-zinc-300 p-2 text-sm dark:border-zinc-700 dark:bg-zinc-800"
+              className="mt-3 w-full rounded-lg border border-line-strong p-2 text-sm"
               rows={2}
             />
             <button
               type="button"
               onClick={() => setDismissed(true)}
-              className="mt-3 text-xs text-zinc-400 underline-offset-2 hover:underline"
+              className="mt-3 inline-flex min-h-11 items-center text-sm text-ink-2 underline-offset-2 hover:underline"
             >
               Fermer sans répondre
             </button>

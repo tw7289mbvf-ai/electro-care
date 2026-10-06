@@ -3,7 +3,6 @@ import { PlaceCard } from "@/components/PlaceCard";
 import { UrgentActions } from "@/components/UrgentActions";
 import { DemoDashboard } from "@/components/DemoDashboard";
 import { SignOutButton } from "@/components/SignOutButton";
-import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { getAppliances } from "@/lib/appliances";
 import { getPlaces } from "@/lib/places";
 import { comparePlacesByPropertyType } from "@/lib/place-types";
@@ -21,6 +20,18 @@ import { auth } from "@/lib/auth/server";
 import { logProductEvent } from "@/lib/product-events";
 import { getAccountPreferencesOrNull, shouldShowSatisfactionSurvey, markSatisfactionSurveyShown } from "@/lib/account-preferences";
 import { SatisfactionSurveyModal } from "@/components/SatisfactionSurveyModal";
+import {
+  AddLink,
+  BUTTON_PRIMARY,
+  BUTTON_SURFACE,
+  LINK_ACTION,
+  ComplianceGauge,
+  Icon,
+  PAGE_CLASS,
+  PAGE_TITLE_CLASS,
+  SECTION_TITLE_CLASS,
+  Section,
+} from "@/components/ui";
 
 // Every page here reads user data straight from Postgres: it must never be served
 // from a static/ISR cache, or edits made outside the app (migrations, other users)
@@ -34,50 +45,34 @@ export default async function Home() {
   const { data: session } = await auth.getSession();
   if (!session?.user) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-black">
-        <main className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-4 py-10 sm:px-6 sm:py-14">
-          <header>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-              Electro Care
-            </h1>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Suivez les appareils de votre maison, connectez-vous pour commencer.
-            </p>
-          </header>
+      <main className={PAGE_CLASS}>
+        <header className="flex flex-col gap-1">
+          <h1 className={PAGE_TITLE_CLASS}>Electro Care</h1>
+          <p className="text-[15px] text-ink-2">Suivez les appareils de votre maison, connectez-vous pour commencer.</p>
+        </header>
 
-          <section className="flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href="/auth/sign-in"
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700"
-              >
-                Se connecter
-              </Link>
-              <Link
-                href="/auth/sign-up"
-                className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-              >
-                Créer un compte
-              </Link>
-            </div>
-          </section>
+        <section className="flex flex-wrap gap-2.5">
+          <Link href="/auth/sign-in" className={BUTTON_PRIMARY}>
+            Se connecter
+          </Link>
+          <Link href="/auth/sign-up" className={BUTTON_SURFACE}>
+            Créer un compte
+          </Link>
+        </section>
 
-          <section className="flex flex-col gap-2">
-            <h2 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Votre logement, entretenu et en règle
-            </h2>
-            <p className="text-sm text-zinc-600 dark:text-zinc-300">
-              Chaudière, ramonage, détecteur de fumée, fosse septique : certains entretiens sont
-              obligatoires, et les oublier peut coûter une amende ou un refus d&apos;indemnisation de
-              votre assureur. Electro Care établit la liste de vos obligations en quelques questions,
-              vous signale chaque échéance et vous guide pour l&apos;entretien courant de vos appareils.
-              Gratuit.
-            </p>
-          </section>
+        <section className="flex flex-col gap-2 rounded-3xl bg-surface p-5">
+          <h2 className={SECTION_TITLE_CLASS}>Votre logement, entretenu et en règle</h2>
+          <p className="text-[15px] leading-relaxed text-ink-2">
+            Chaudière, ramonage, détecteur de fumée, fosse septique : certains entretiens sont
+            obligatoires, et les oublier peut coûter une amende ou un refus d&apos;indemnisation de
+            votre assureur. Electro Care établit la liste de vos obligations en quelques questions,
+            vous signale chaque échéance et vous guide pour l&apos;entretien courant de vos appareils.
+            Gratuit.
+          </p>
+        </section>
 
-          <DemoDashboard />
-        </main>
-      </div>
+        <DemoDashboard />
+      </main>
     );
   }
 
@@ -109,14 +104,24 @@ export default async function Home() {
         getMaintenanceDeferralsForPlace(place.id),
       ]);
       const counts = getObligationCountsForAppliances(placeAppliances, obligationRecords);
-      const maintenanceDueCount = applyDeferrals(
+      const maintenanceDue = applyDeferrals(
         filterPendingGuidance(getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel), completions),
         placeAppliances,
         place.maintenanceLevel,
         deferrals,
         month
-      ).length;
-      return { place, appliances: placeAppliances, obligationRecords, appointments, counts, maintenanceDueCount };
+      );
+      const maintenanceDueCount = maintenanceDue.length;
+      const maintenanceMinutes = maintenanceDue.reduce((sum, { task }) => sum + task.activeMinutes, 0);
+      return {
+        place,
+        appliances: placeAppliances,
+        obligationRecords,
+        appointments,
+        counts,
+        maintenanceDueCount,
+        maintenanceMinutes,
+      };
     })
   );
 
@@ -129,49 +134,41 @@ export default async function Home() {
     { overdue: 0, toConfirm: 0, upToDate: 0 }
   );
   const totalMaintenanceDue = placesData.reduce((sum, p) => sum + p.maintenanceDueCount, 0);
+  const totalMaintenanceMinutes = placesData.reduce((sum, p) => sum + p.maintenanceMinutes, 0);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
-        <header className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-              Electro Care
-            </h1>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Suivez les appareils de votre maison.
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            {invoiceImportMode === "disabled" ? (
-              <span className="text-sm text-zinc-400 dark:text-zinc-500">Import de factures : bientôt disponible</span>
-            ) : (
-              <Link
-                href="/import-invoice"
-                className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-              >
-                Importer une facture
-              </Link>
-            )}
-            <Link
-              href="/settings"
-              className="text-sm font-medium text-zinc-500 underline-offset-2 hover:underline dark:text-zinc-400"
-            >
-              Paramètres
-            </Link>
-            <SignOutButton />
-          </div>
+    <>
+      <main className={PAGE_CLASS}>
+        <header className="flex min-h-11 items-center justify-between gap-4">
+          <span className="font-display text-[21px] font-bold tracking-[-0.3px] text-ink">Electro Care</span>
+          <Link
+            href="/settings"
+            aria-label="Paramètres"
+            className="flex h-11 w-11 items-center justify-center rounded-[14px] bg-surface text-ink"
+          >
+            <Icon name="settings" />
+          </Link>
         </header>
 
-        {places.length > 0 && <ComplianceBanner counts={totalCounts} maintenanceDueCount={totalMaintenanceDue} />}
+        <div className="flex flex-col gap-1">
+          <p className="text-[15px] text-ink-2">Bonjour</p>
+          <h1 className="font-display text-[26px] font-semibold leading-tight tracking-[-0.4px] text-ink">
+            Vos logements, en un coup d&apos;œil
+          </h1>
+        </div>
+
+        {places.length > 0 && (
+          <ComplianceGauge
+            counts={totalCounts}
+            maintenanceDueCount={totalMaintenanceDue}
+            maintenanceMinutes={totalMaintenanceMinutes}
+          />
+        )}
 
         {places.length === 0 ? (
-          <section className="flex flex-col items-center gap-4 rounded-xl border border-dashed border-zinc-300 p-10 text-center dark:border-zinc-700">
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">Aucun lieu pour l&apos;instant.</p>
-            <Link
-              href="/places/new"
-              className="rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700"
-            >
+          <section className="flex flex-col items-center gap-4 rounded-3xl bg-surface p-8 text-center">
+            <p className="text-[15px] text-ink-2">Aucun lieu pour l&apos;instant.</p>
+            <Link href="/places/new" className={BUTTON_PRIMARY}>
               Ajouter votre premier lieu
             </Link>
           </section>
@@ -179,24 +176,29 @@ export default async function Home() {
           <>
             <UrgentActions placesData={placesData} />
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {placesData.map(({ place, counts, maintenanceDueCount }) => (
-                <PlaceCard key={place.id} place={place} counts={counts} maintenanceDueCount={maintenanceDueCount} />
-              ))}
-            </div>
-
-            <div>
-              <Link
-                href="/places/new"
-                className="inline-block rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
-              >
-                Ajouter un lieu
-              </Link>
-            </div>
+            <Section title="Vos lieux">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {placesData.map(({ place, counts, maintenanceDueCount }) => (
+                  <PlaceCard key={place.id} place={place} counts={counts} maintenanceDueCount={maintenanceDueCount} />
+                ))}
+              </div>
+              <AddLink href="/places/new">Ajouter un lieu</AddLink>
+            </Section>
           </>
         )}
+
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          {invoiceImportMode === "disabled" ? (
+            <span className="px-1 text-sm text-ink-2">Import de factures : bientôt disponible</span>
+          ) : (
+            <Link href="/import-invoice" className={LINK_ACTION}>
+              Importer une facture
+            </Link>
+          )}
+          <SignOutButton />
+        </div>
       </main>
       {showSatisfactionSurvey && <SatisfactionSurveyModal />}
-    </div>
+    </>
   );
 }

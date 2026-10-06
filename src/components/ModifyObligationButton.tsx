@@ -5,7 +5,8 @@ import { editObligation } from "@/app/actions";
 import { MonthYearFields, monthYearToIso, type MonthYearValue } from "@/components/MonthYearFields";
 import { AttestationMockButton } from "@/components/AttestationMockButton";
 import { pastYearOptions, formatFrenchDate } from "@/lib/french-dates";
-import { BUTTON_CLASS, INPUT_CLASS, EDIT_WINDOW_CLASS, MODIFY_WARNING } from "@/components/inline-form-styles";
+import { BUTTON_CLASS, INPUT_CLASS, EDIT_WINDOW_CLASS, MODIFY_WARNING, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
+import { BUTTON_NEUTRAL } from "@/components/ui";
 
 function isoToMonthYear(isoDate: string): MonthYearValue {
   const [year, month] = isoDate.split("-");
@@ -43,12 +44,12 @@ export function ModifyObligationButton({
     return (
       <span className="flex shrink-0 items-center gap-2">
         {modifiedAt && (
-          <span className="text-xs text-zinc-400 dark:text-zinc-500">modifiée le {formatFrenchDate(modifiedAt)}</span>
+          <span className="text-[13px] text-ink-2">Modifiée le {formatFrenchDate(modifiedAt)}</span>
         )}
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="shrink-0 rounded-md px-2 py-0.5 text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+          className={BUTTON_NEUTRAL}
         >
           Modifier
         </button>
@@ -76,7 +77,7 @@ export function ModifyObligationButton({
       }}
       className={EDIT_WINDOW_CLASS}
     >
-      <p className="text-orange-800 dark:text-orange-300">{MODIFY_WARNING}</p>
+      <p className="text-warn">{MODIFY_WARNING}</p>
       <MonthYearFields value={value} onChange={setValue} years={pastYearOptions()} small disableFutureMonths />
       <input
         type="text"
@@ -93,7 +94,7 @@ export function ModifyObligationButton({
         className={INPUT_CLASS}
       />
       <AttestationMockButton />
-      {error && <p className="text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="text-late">{error}</p>}
       <div className="flex items-center gap-2">
         <button type="submit" disabled={isPending || !iso} className={BUTTON_CLASS}>
           {isPending ? "…" : "Valider"}
@@ -101,7 +102,7 @@ export function ModifyObligationButton({
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+          className={TEXT_BUTTON_CLASS}
         >
           Annuler
         </button>

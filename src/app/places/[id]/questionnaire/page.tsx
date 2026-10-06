@@ -32,13 +32,13 @@ export default async function QuestionnairePage({ params }: { params: Promise<{ 
   const invoiceImportMode = getInvoiceImportMode(isAdmin);
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             {place.name}
           </h1>
-          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p className="mt-1 text-sm text-ink-2">
             Quelques questions pour préparer les obligations et rappels de ce lieu.
           </p>
         </header>

@@ -23,6 +23,20 @@ import { ObligationsBlock } from "@/components/ObligationsBlock";
 import { MaintenanceGuidanceList } from "@/components/MaintenanceGuidanceList";
 import { MaintenanceLevelPicker } from "@/components/MaintenanceLevelPicker";
 import { ApplianceList } from "@/components/ApplianceList";
+import { getObligationCountsForAppliances } from "@/lib/obligations";
+import {
+  AddLink,
+  BackLink,
+  BUTTON_SURFACE,
+  BUTTON_PRIMARY,
+  LINK_ACTION,
+  GROUP_LABEL_CLASS,
+  PAGE_CLASS,
+  PAGE_TITLE_CLASS,
+  Pill,
+  Section,
+  SegmentedBar,
+} from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -74,97 +88,68 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
     appliances: appliances.filter((a) => a.category === category),
   })).filter((group) => group.appliances.length > 0);
 
+  const counts = getObligationCountsForAppliances(appliances, obligationRecords);
+  const locality = [place.postcode, place.commune].filter(Boolean).join(" ");
+
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-4 py-10 sm:px-6 sm:py-14">
-        <header>
-          <Link href="/" className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400">
-            ← Retour
+    <main className={PAGE_CLASS}>
+      <header className="flex flex-col gap-2.5">
+        <div className="flex items-center justify-between gap-3">
+          <BackLink href="/">Accueil</BackLink>
+          <Link href={`/places/${place.id}/edit`} className={BUTTON_SURFACE}>
+            Modifier
           </Link>
-          <div className="mt-2 flex items-start justify-between gap-4">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-                {place.name}
-              </h1>
-              <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-                {[place.commune, place.postcode, place.propertyType ? PROPERTY_TYPE_LABELS[place.propertyType] : null]
-                  .filter(Boolean)
-                  .join(" · ") || "Aucune information complémentaire"}
-              </p>
-            </div>
-            <Link
-              href={`/places/${place.id}/edit`}
-              className="shrink-0 text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              Modifier
-            </Link>
+        </div>
+        <h1 className={`${PAGE_TITLE_CLASS} text-[30px]`}>{place.name}</h1>
+        {(place.propertyType || locality) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {place.propertyType && <Pill tone="accent">{PROPERTY_TYPE_LABELS[place.propertyType]}</Pill>}
+            {locality && <span className="text-sm text-ink-2">{locality}</span>}
           </div>
-          {!place.onboardedAt && (
-            <Link
-              href={`/places/${place.id}/questionnaire`}
-              className="mt-2 inline-block text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              Compléter le questionnaire pour ce lieu
-            </Link>
-          )}
-        </header>
+        )}
+        <div className="mt-1.5">
+          <SegmentedBar counts={counts} thin />
+        </div>
+        {!place.onboardedAt && (
+          <Link href={`/places/${place.id}/questionnaire`} className={`${BUTTON_PRIMARY} mt-1 self-start`}>
+            Compléter le questionnaire pour ce lieu
+          </Link>
+        )}
+      </header>
 
-        <MaintenanceLevelPicker placeId={place.id} level={place.maintenanceLevel} estimates={levelEstimates} />
+      <MaintenanceLevelPicker placeId={place.id} level={place.maintenanceLevel} estimates={levelEstimates} />
 
-        <ObligationsBlock
-          appliances={appliances}
-          obligationRecords={obligationRecords}
-          appointments={appointments}
-          placeChecks={placeChecks}
-        />
+      <ObligationsBlock
+        appliances={appliances}
+        obligationRecords={obligationRecords}
+        appointments={appointments}
+        placeChecks={placeChecks}
+      />
 
-        <MaintenanceGuidanceList items={guidance} placeId={id} deferrableTaskKeys={deferrableTaskKeys} />
+      <MaintenanceGuidanceList items={guidance} placeId={id} deferrableTaskKeys={deferrableTaskKeys} />
 
-        <section className="flex flex-col gap-4">
-          <div className="flex items-baseline justify-between gap-2">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-              Appareils
-            </h2>
-            <div className="flex items-baseline gap-3">
-              {invoiceImportMode === "disabled" ? (
-                <span className="text-sm text-zinc-400 dark:text-zinc-500">
-                  Import de factures : bientôt disponible
-                </span>
-              ) : (
-                <Link
-                  href={`/places/${place.id}/import-invoice`}
-                  className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-                >
-                  Importer une facture
-                </Link>
-              )}
-              <Link
-                href={`/places/${place.id}/appliances/new`}
-                className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-              >
-                Ajouter un appareil
-              </Link>
-            </div>
+      <Section title="Appareils">
+        {byCategory.length === 0 ? (
+          <p className="rounded-2xl bg-surface p-6 text-center text-sm text-ink-2">Aucun appareil pour l&apos;instant.</p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {byCategory.map(({ category, appliances: categoryAppliances }) => (
+              <div key={category} className="flex flex-col gap-2">
+                <h3 className={GROUP_LABEL_CLASS}>{CATEGORY_LABELS[category]}</h3>
+                <ApplianceList appliances={categoryAppliances} />
+              </div>
+            ))}
           </div>
-
-          {byCategory.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-zinc-300 p-8 text-center text-sm text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
-              Aucun appareil pour l&apos;instant.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-6">
-              {byCategory.map(({ category, appliances: categoryAppliances }) => (
-                <div key={category} className="flex flex-col gap-3">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                    {CATEGORY_LABELS[category]}
-                  </h3>
-                  <ApplianceList appliances={categoryAppliances} />
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
-      </main>
-    </div>
+        )}
+        <AddLink href={`/places/${place.id}/appliances/new`}>Ajouter un appareil</AddLink>
+        {invoiceImportMode === "disabled" ? (
+          <p className="px-1 text-sm text-ink-2">Import de factures : bientôt disponible</p>
+        ) : (
+          <Link href={`/places/${place.id}/import-invoice`} className={`${LINK_ACTION} self-start`}>
+            Importer une facture
+          </Link>
+        )}
+      </Section>
+    </main>
   );
 }

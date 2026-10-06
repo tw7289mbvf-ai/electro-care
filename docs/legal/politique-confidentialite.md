@@ -1,6 +1,6 @@
 # Politique de confidentialité
 
-*Dernière mise à jour : 30 septembre 2026*
+*Dernière mise à jour : 6 octobre 2026*
 
 Electro Care vous aide à suivre les obligations d'entretien de votre logement. Cette page explique quelles données nous utilisons, pourquoi, et comment exercer vos droits.
 
@@ -48,7 +48,7 @@ Nous ne vendons ni ne louons vos données, et Electro Care n'affiche aucune publ
 
 ## Cookies
 
-Electro Care n'utilise que le cookie strictement nécessaire à votre connexion. Aucun cookie publicitaire ni de mesure d'audience : aucun consentement n'est donc demandé.
+Electro Care n'utilise que deux cookies : celui strictement nécessaire à votre connexion, et celui qui retient le thème d'affichage que vous avez choisi (clair, sombre ou selon le téléphone), sans aucune autre information. Aucun cookie publicitaire ni de mesure d'audience : aucun consentement n'est donc demandé.
 
 ## Vos droits
 

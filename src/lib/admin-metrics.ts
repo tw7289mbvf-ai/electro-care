@@ -55,7 +55,7 @@ export async function getKpiIndicators(): Promise<KpiIndicator[]> {
       key: "retention",
       label: "Rétention",
       ratio: ratio(n(row.accounts_retained_second_month), n(row.accounts_eligible_for_retention)),
-      detail: `${row.accounts_retained_second_month} / ${row.accounts_eligible_for_retention} comptes (≥ 60 jours) revenus après le premier mois — approximation (dernière visite connue uniquement)`,
+      detail: `${row.accounts_retained_second_month} / ${row.accounts_eligible_for_retention} comptes (≥ 60 jours) revenus après le premier mois, approximation (dernière visite connue uniquement)`,
     },
     {
       key: "reminder_effect",
@@ -70,7 +70,7 @@ export async function getKpiIndicators(): Promise<KpiIndicator[]> {
         n(row.obligations_overdue_resolved_60d),
         n(row.obligations_overdue_resolved_60d) + n(row.obligations_overdue_more_than_60d)
       ),
-      detail: `${row.obligations_overdue_resolved_60d} obligations rouges devenues vertes sous 60 jours, ${row.obligations_overdue_more_than_60d} toujours rouges après 60 jours — approximation`,
+      detail: `${row.obligations_overdue_resolved_60d} obligations rouges devenues vertes sous 60 jours, ${row.obligations_overdue_more_than_60d} toujours rouges après 60 jours, approximation`,
     },
     {
       key: "attachment",

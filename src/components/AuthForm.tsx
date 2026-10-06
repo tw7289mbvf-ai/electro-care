@@ -33,7 +33,7 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       {mode === "sign-up" && (
         <div className="flex flex-col gap-1">
-          <label htmlFor="name" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label htmlFor="name" className="text-sm font-medium text-ink">
             Nom
           </label>
           <input
@@ -42,12 +42,12 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
             autoComplete="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+            className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
           />
         </div>
       )}
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="email" className="text-sm font-medium text-ink">
           E-mail
         </label>
         <input
@@ -57,11 +57,11 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label htmlFor="password" className="text-sm font-medium text-ink">
           Mot de passe
         </label>
         <input
@@ -72,14 +72,14 @@ export function AuthForm({ mode }: { mode: "sign-in" | "sign-up" }) {
           autoComplete={mode === "sign-up" ? "new-password" : "current-password"}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          className="min-h-11 rounded-xl border border-line-strong bg-surface px-3 py-2 text-sm text-ink"
         />
       </div>
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {error && <p className="text-sm text-late">{error}</p>}
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-700 disabled:opacity-60"
+        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 text-sm font-semibold text-on-accent transition hover:opacity-85 disabled:opacity-60"
       >
         {submitting ? "Un instant…" : mode === "sign-up" ? "Créer mon compte" : "Se connecter"}
       </button>

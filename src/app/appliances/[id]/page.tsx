@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ApplianceEditForm } from "@/components/ApplianceEditForm";
+import { ApplianceDetailsSection } from "@/components/ApplianceDetailsSection";
+import { ApplianceIconTile, BackLink, PAGE_CLASS, PAGE_TITLE_CLASS } from "@/components/ui";
 import { DeleteApplianceButton } from "@/components/DeleteApplianceButton";
 import { ObligationsBlock } from "@/components/ObligationsBlock";
 import { ApplianceEntretienSection } from "@/components/ApplianceEntretienSection";
@@ -94,50 +94,49 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, MAX_MAINTENANCE_LEVEL)
       : 0;
 
+  const subtitle = [appliance.brand, appliance.model].filter(Boolean).join(" ");
+
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
-        <header className="flex items-start justify-between gap-4">
-          <div>
-            <Link
-              href={`/places/${appliance.placeId}`}
-              className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-            >
-              ← Retour
-            </Link>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
-              {getApplianceDisplayName(appliance)}
-            </h1>
-          </div>
+    <main className={PAGE_CLASS}>
+      <header className="flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-3">
+          <BackLink href={`/places/${appliance.placeId}`}>{place.name}</BackLink>
           <DeleteApplianceButton
             id={appliance.id}
             confirmMessage={`Supprimer « ${getApplianceDisplayName(appliance)} » ? Ses obligations et rappels seront supprimés avec.`}
             redirectTo={`/places/${appliance.placeId}`}
           />
-        </header>
+        </div>
+        <div className="flex items-center gap-4">
+          <ApplianceIconTile appliance={appliance} large />
+          <div className="flex min-w-0 flex-col gap-1">
+            <h1 className={PAGE_TITLE_CLASS}>{getApplianceDisplayName(appliance)}</h1>
+            {subtitle && <p className="text-[15px] text-ink-2">{subtitle}</p>}
+          </div>
+        </div>
+      </header>
 
-        <ObligationsBlock
-          appliances={[appliance]}
-          obligationRecords={obligationRecords}
-          appointments={appointments}
-          placeChecks={[]}
-          completionsByTaskId={obligationCompletionsByTaskId}
-        />
+      <ObligationsBlock
+        appliances={[appliance]}
+        obligationRecords={obligationRecords}
+        appointments={appointments}
+        placeChecks={[]}
+        completionsByTaskId={obligationCompletionsByTaskId}
+      />
 
-        <ApplianceEntretienSection
-          applianceId={appliance.id}
-          placeId={appliance.placeId}
-          pending={guidance}
-          upcoming={upcoming}
-          deferrableTaskKeys={deferrableTaskKeys}
-          upgradeTaskCount={upgradeTaskCount || undefined}
-          upgradeLevelLabel={upgradeTaskCount > 0 ? MAINTENANCE_LEVEL_LABELS[MAX_MAINTENANCE_LEVEL] : undefined}
-        />
+      <ApplianceEntretienSection
+        applianceId={appliance.id}
+        placeId={appliance.placeId}
+        pending={guidance}
+        upcoming={upcoming}
+        deferrableTaskKeys={deferrableTaskKeys}
+        upgradeTaskCount={upgradeTaskCount || undefined}
+        upgradeLevelLabel={upgradeTaskCount > 0 ? MAINTENANCE_LEVEL_LABELS[MAX_MAINTENANCE_LEVEL] : undefined}
+      />
 
-        <ApplianceRoutinesSection applianceId={appliance.id} routines={routines} />
+      <ApplianceRoutinesSection applianceId={appliance.id} routines={routines} />
 
-        <ApplianceEditForm appliance={appliance} action={updateAppliance.bind(null, appliance.id)} />
-      </main>
-    </div>
+      <ApplianceDetailsSection appliance={appliance} action={updateAppliance.bind(null, appliance.id)} />
+    </main>
   );
 }

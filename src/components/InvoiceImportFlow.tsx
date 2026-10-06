@@ -16,13 +16,13 @@ const initialState: InvoiceExtractionState = {};
 type Row = ExtractedApplianceCandidate & { clientId: string; checked: boolean };
 
 const CARD_CLASS =
-  "flex flex-col gap-4 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm sm:p-6 dark:border-zinc-800 dark:bg-zinc-900";
+  "flex flex-col gap-4 rounded-[20px] bg-surface p-5 sm:p-6";
 const INPUT_CLASS =
-  "rounded-lg border border-zinc-300 bg-white px-2.5 py-1.5 text-sm text-zinc-900 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/30 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100";
+  "rounded-lg border border-line-strong bg-surface px-2.5 py-1.5 text-sm text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/30";
 const BUTTON_CLASS =
-  "rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_BUTTON_CLASS =
-  "rounded-lg border border-zinc-300 px-4 py-2.5 font-medium text-zinc-700 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800";
+  "inline-flex min-h-11 items-center justify-center rounded-xl border-[1.5px] border-line-strong px-4 py-2 font-medium text-ink hover:bg-surface-2";
 
 function SubmitUploadButton({ mode }: { mode: "real" | "demo" }) {
   const { pending } = useFormStatus();
@@ -98,7 +98,7 @@ export function InvoiceImportFlow({
   if (addedCount !== null) {
     return (
       <div className={CARD_CLASS}>
-        <p className="text-sm text-zinc-700 dark:text-zinc-300">
+        <p className="text-sm text-ink">
           {addedCount} appareil{addedCount > 1 ? "s" : ""} ajouté{addedCount > 1 ? "s" : ""} ou complété
           {addedCount > 1 ? "s" : ""}.
         </p>
@@ -110,20 +110,20 @@ export function InvoiceImportFlow({
     return (
       <div className={CARD_CLASS}>
         {isDemoResult && (
-          <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
+          <p className="rounded-lg border border-warn-border bg-warn-soft px-3 py-2 text-[13px] text-warn">
             Exemple de démonstration : ces données ne proviennent pas d&apos;une facture réelle.
           </p>
         )}
-        <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">
+        <h2 className="text-lg font-medium text-ink">
           Nous avons trouvé {rows.length} appareil{rows.length > 1 ? "s" : ""}
         </h2>
         <div className="flex flex-col gap-3">
           {rows.map((row) => (
             <div
               key={row.clientId}
-              className="flex flex-col gap-2 rounded-lg border border-zinc-200 p-3 dark:border-zinc-700"
+              className="flex flex-col gap-2 rounded-lg border border-line p-3"
             >
-              <label className="flex items-start gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              <label className="flex items-start gap-2 text-sm font-medium text-ink">
                 <input
                   type="checkbox"
                   checked={row.checked}
@@ -134,7 +134,7 @@ export function InvoiceImportFlow({
               </label>
               <div className="grid grid-cols-1 gap-2 pl-6 sm:grid-cols-2">
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 dark:text-zinc-400">Type d&apos;appareil</label>
+                  <label className="text-[13px] text-ink-2">Type d&apos;appareil</label>
                   <select
                     value={row.equipmentTypeId}
                     onChange={(e) => updateRow(row.clientId, { equipmentTypeId: e.target.value })}
@@ -155,7 +155,7 @@ export function InvoiceImportFlow({
                   </select>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 dark:text-zinc-400">Marque</label>
+                  <label className="text-[13px] text-ink-2">Marque</label>
                   <input
                     type="text"
                     value={row.brand ?? ""}
@@ -164,7 +164,7 @@ export function InvoiceImportFlow({
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 dark:text-zinc-400">Modèle</label>
+                  <label className="text-[13px] text-ink-2">Modèle</label>
                   <input
                     type="text"
                     value={row.model ?? ""}
@@ -173,7 +173,7 @@ export function InvoiceImportFlow({
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 dark:text-zinc-400">Date d&apos;achat</label>
+                  <label className="text-[13px] text-ink-2">Date d&apos;achat</label>
                   <input
                     type="date"
                     max={new Date().toISOString().split("T")[0]}
@@ -183,7 +183,7 @@ export function InvoiceImportFlow({
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-xs text-zinc-500 dark:text-zinc-400">Fin de garantie</label>
+                  <label className="text-[13px] text-ink-2">Fin de garantie</label>
                   <input
                     type="date"
                     value={row.warrantyEnd ?? ""}
@@ -196,7 +196,7 @@ export function InvoiceImportFlow({
           ))}
         </div>
 
-        {confirmError && <p className="text-sm text-red-600 dark:text-red-400">{confirmError}</p>}
+        {confirmError && <p className="text-sm text-late">{confirmError}</p>}
 
         <div className="flex flex-wrap gap-3">
           <button
@@ -224,21 +224,21 @@ export function InvoiceImportFlow({
 
   return (
     <form action={formAction} className={CARD_CLASS}>
-      <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-50">Importer une facture</h2>
+      <h2 className="text-lg font-medium text-ink">Importer une facture</h2>
       {mode === "demo" ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-ink-2">
           Compte admin : ce parcours est en mode démonstration, avec un résultat d&apos;exemple fixe (la lecture des
           factures n&apos;est pas encore connectée).
         </p>
       ) : (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-ink-2">
           Déposez une facture (PDF ou photo) : nous listons les appareils qu&apos;elle contient. Le fichier n&apos;est
           jamais conservé.
         </p>
       )}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="file" className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          Facture {mode === "demo" && <span className="font-normal text-zinc-400">(facultatif en démonstration)</span>}
+        <label htmlFor="file" className="text-sm font-medium text-ink">
+          Facture {mode === "demo" && <span className="font-normal text-ink-2">(facultatif en démonstration)</span>}
         </label>
         <input
           id="file"
@@ -246,10 +246,10 @@ export function InvoiceImportFlow({
           type="file"
           accept="application/pdf,image/*"
           required={mode === "real"}
-          className="text-sm text-zinc-700 dark:text-zinc-300"
+          className="text-sm text-ink"
         />
       </div>
-      {state.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+      {state.error && <p className="text-sm text-late">{state.error}</p>}
       <SubmitUploadButton mode={mode} />
     </form>
   );

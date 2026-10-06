@@ -19,7 +19,7 @@ export function MarkMaintenanceDoneButton({
   const router = useRouter();
 
   if (done) {
-    return <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">Fait ce mois-ci</p>;
+    return <p className="text-sm font-semibold text-ok">Fait ce mois-ci</p>;
   }
 
   return (
@@ -32,7 +32,7 @@ export function MarkMaintenanceDoneButton({
           router.push(`/appliances/${applianceId}`);
         })
       }
-      className="self-start rounded-lg bg-emerald-600 px-4 py-2.5 font-medium text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+      className="self-start inline-flex min-h-11 items-center justify-center rounded-xl bg-accent px-4 py-2 font-semibold text-on-accent transition-colors hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isPending ? "…" : "C'est fait"}
     </button>

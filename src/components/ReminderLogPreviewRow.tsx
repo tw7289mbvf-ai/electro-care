@@ -12,18 +12,18 @@ export function ReminderLogPreviewRow({ log }: { log: AdminReminderLogPreview })
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <li className="rounded-xl border border-zinc-200 p-4 dark:border-zinc-800">
+    <li className="rounded-xl border border-line p-4">
       <button type="button" onClick={() => setExpanded((v) => !v)} className="flex w-full items-center justify-between gap-4 text-left">
-        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-50">{log.subject}</span>
-        <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">
-          {log.sentDate} · {log.actuallySent ? "envoyé" : "aperçu (envoi coupé)"}
+        <span className="text-sm font-medium text-ink">{log.subject}</span>
+        <span className="shrink-0 text-[13px] text-ink-2">
+          {log.sentDate}, {log.actuallySent ? "envoyé" : "aperçu (envoi coupé)"}
         </span>
       </button>
       {expanded && (
         <iframe
           sandbox=""
           srcDoc={log.htmlBody}
-          className="mt-3 h-96 w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+          className="mt-3 h-96 w-full rounded-lg border border-line"
         />
       )}
     </li>

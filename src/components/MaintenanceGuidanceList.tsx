@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getApplianceDisplayName } from "@/lib/appliance-display";
 import type { MaintenanceGuidanceItem } from "@/lib/maintenance-guidance";
 import { MaintenanceGuidanceActions } from "@/components/MaintenanceGuidanceActions";
+import { ApplianceIconTile, ROW_CLASS, Section } from "@/components/ui";
 
 // Place page "l'entretien du mois": lifespan maintenance tasks due this month, each
 // leading to its fiche de tâche for the procedure, with "C'est fait" and "Reporter"
@@ -20,29 +21,22 @@ export function MaintenanceGuidanceList({
   const totalMinutes = items.reduce((sum, { task }) => sum + task.activeMinutes, 0);
 
   return (
-    <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm sm:p-5 dark:border-zinc-800 dark:bg-zinc-900">
-      <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-        Entretien du mois
-        {totalMinutes > 0 && (
-          <span className="font-normal text-zinc-400 dark:text-zinc-500"> · environ {totalMinutes} min</span>
-        )}
-      </h3>
-      <ul className="flex flex-col gap-2">
+    <Section
+      title="Entretien du mois"
+      aside={totalMinutes > 0 && <span className="text-sm text-ink-2">environ {totalMinutes} min</span>}
+    >
+      <ul className="flex flex-col gap-2.5">
         {items.map(({ appliance, task }) => (
-          <li
-            key={`${appliance.id}-${task.id}`}
-            className="flex flex-wrap items-center gap-2 rounded-lg border border-zinc-200 px-3 py-2 text-sm dark:border-zinc-800"
-          >
-            <Link
-              href={`/appliances/${appliance.id}/tasks/${task.id}`}
-              className="flex flex-wrap items-center gap-2 hover:underline"
-            >
-              <span className="font-medium text-zinc-900 dark:text-zinc-100">{task.title}</span>
-              <span className="text-zinc-500 dark:text-zinc-400">— {getApplianceDisplayName(appliance)}</span>
+          <li key={`${appliance.id}-${task.id}`} className={ROW_CLASS}>
+            <Link href={`/appliances/${appliance.id}/tasks/${task.id}`} className="flex min-w-0 items-center gap-3">
+              <ApplianceIconTile appliance={appliance} />
+              <span className="flex min-w-0 flex-col gap-0.5">
+                <span className="text-base font-semibold text-ink">{task.title}</span>
+                <span className="text-sm text-ink-2">
+                  {getApplianceDisplayName(appliance)}, {task.performer === "pro" ? "professionnel" : `${task.activeMinutes} min`}
+                </span>
+              </span>
             </Link>
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">
-              {task.performer === "pro" ? "Professionnel" : `${task.activeMinutes} min`}
-            </span>
             <MaintenanceGuidanceActions
               applianceId={appliance.id}
               maintenanceTaskId={task.id}
@@ -52,6 +46,6 @@ export function MaintenanceGuidanceList({
           </li>
         ))}
       </ul>
-    </section>
+    </Section>
   );
 }

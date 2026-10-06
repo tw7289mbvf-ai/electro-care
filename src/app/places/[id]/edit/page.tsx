@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlaceForm } from "@/components/PlaceForm";
 import { DeletePlaceButton } from "@/components/DeletePlaceButton";
 import { getPlace } from "@/lib/places";
 import { countAppliancesForPlace } from "@/lib/appliances";
 import { updatePlace } from "@/app/actions";
+import { BackLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -26,16 +26,11 @@ export default async function EditPlacePage({ params }: { params: Promise<{ id: 
       : `Supprimer « ${place.name} » ? Cette action est définitive.`;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-10 sm:px-6 sm:py-14">
+    <div className="min-h-screen">
+      <main className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-5 pt-5 pb-10 sm:pt-8">
         <header>
-          <Link
-            href={`/places/${place.id}`}
-            className="text-sm font-medium text-emerald-600 hover:underline dark:text-emerald-400"
-          >
-            ← Retour
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
+          <BackLink href={`/places/${place.id}`}>Retour</BackLink>
+          <h1 className="mt-2 font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Modifier le lieu
           </h1>
         </header>
@@ -47,8 +42,8 @@ export default async function EditPlacePage({ params }: { params: Promise<{ id: 
           pendingLabel="Enregistrement…"
         />
 
-        <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <section className="flex flex-col gap-3 rounded-[20px] bg-surface p-5">
+          <h2 className="text-sm font-semibold text-ink-2">
             Zone de danger
           </h2>
           <DeletePlaceButton id={place.id} confirmMessage={confirmMessage} />
