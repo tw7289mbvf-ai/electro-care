@@ -1,4 +1,5 @@
 import questionnaireSeed from "../../seed/onboarding_questionnaire.json";
+import type { PropertyType } from "@/lib/place-types";
 
 export type QuestionnaireAnswer = {
   label: string;
@@ -11,7 +12,7 @@ export type QuestionnaireAnswer = {
   // REGLE-06: fixes the initial confidence ("never") for the named task ids directly,
   // without asking their date question.
   initialStatus: Record<string, "never"> | null;
-  sets?: { property_type: string };
+  sets?: { property_type?: string; maintenance_level?: string };
 };
 
 export type QuestionnaireQuestion = {
@@ -46,6 +47,22 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
         : null,
       unknown: a.unknown,
       initialStatus: (a.initial_status as Record<string, "never"> | null) ?? null,
-      sets: "sets" in a ? (a.sets as { property_type: string }) : undefined,
+      sets: "sets" in a ? (a.sets as QuestionnaireAnswer["sets"]) : undefined,
     })),
   }));
+
+// REGLE-05: {residence} names the place by its type ("votre residence principale" /
+// "votre residence secondaire"). Only ever reached for a main or second home: Q10, the
+// one question using it, is skipped for both rental types. Applied to the question on
+// screen, to the "À vérifier" label stored from a "Je ne sais pas", and again when
+// displaying labels stored raw before this was done.
+export function resolveResidenceText(text: string, propertyType: PropertyType | null): string {
+  if (!text.includes("{residence}")) return text;
+  const phrase =
+    propertyType === "main_home"
+      ? "votre résidence principale"
+      : propertyType === "second_home"
+        ? "votre résidence secondaire"
+        : "ce logement";
+  return text.replaceAll("{residence}", phrase);
+}

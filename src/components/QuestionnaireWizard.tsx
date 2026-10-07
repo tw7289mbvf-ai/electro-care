@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { QUESTIONS, type QuestionnaireAnswer, type QuestionnaireQuestion } from "@/lib/questionnaire";
+import {
+  QUESTIONS,
+  resolveResidenceText,
+  type QuestionnaireAnswer,
+  type QuestionnaireQuestion,
+} from "@/lib/questionnaire";
 import {
   getApplianceLabelForEquipmentType,
   getCombinedDateQuestion,
@@ -138,20 +143,6 @@ function nextQuestion(
 
 function emptyStepEffects(placeId: string): QuestionnaireStepEffects {
   return { placeId, createEquipmentTypeIds: [], dateAnswers: [], unknownChecks: [] };
-}
-
-// REGLE-05: {residence} names the place by its type ("votre residence principale" /
-// "votre residence secondaire"). Only ever reached for a main or second home: Q10, the
-// one question using it, is skipped for both rental types.
-function resolveResidenceText(text: string, propertyType: PropertyType | null): string {
-  if (!text.includes("{residence}")) return text;
-  const phrase =
-    propertyType === "main_home"
-      ? "votre résidence principale"
-      : propertyType === "second_home"
-        ? "votre résidence secondaire"
-        : "ce logement";
-  return text.replaceAll("{residence}", phrase);
 }
 
 function applianceLabel(equipmentTypeId: string): string {
@@ -387,12 +378,17 @@ export function QuestionnaireWizard({
       dateAnswers: [],
       unknownChecks: chosenAnswers
         .filter((a) => a.unknown)
-        .map((a) => ({ questionId: question.id, questionLabel: question.question, help: a.help })),
+        .map((a) => ({
+          questionId: question.id,
+          questionLabel: resolveResidenceText(question.question, effectivePropertyType(history)),
+          help: a.help,
+        })),
     };
-    if (question.id === "Q01") {
-      const sets = chosenAnswers[0]?.sets;
-      if (sets) effects.setPropertyType = sets.property_type as QuestionnaireStepEffects["setPropertyType"];
-    }
+    const sets = chosenAnswers[0]?.sets;
+    if (sets?.property_type) effects.setPropertyType = sets.property_type as QuestionnaireStepEffects["setPropertyType"];
+    // Q19 "Non, plus tard" sets the place to Aucun. Without this the column default
+    // (essential) stayed, and the place page never offered to resume upkeep.
+    if (sets?.maintenance_level) effects.maintenanceLevel = sets.maintenance_level as MaintenanceLevel;
     // REGLE-06: a "Statut initial" fixes the confidence directly; its date question is
     // never asked (proceedAfterFollowUps excludes it via effects.dateAnswers below).
     for (const answer of chosenAnswers) {
@@ -438,7 +434,7 @@ export function QuestionnaireWizard({
     if (kind === "unknown") {
       effects.unknownChecks = [
         ...effects.unknownChecks,
-        { questionId: question.id, questionLabel: followUp.question, help: null },
+        { questionId: question.id, questionLabel: resolveResidenceText(followUp.question, effectivePropertyType(history)), help: null },
       ];
     }
     advanceFollowUp(effects);

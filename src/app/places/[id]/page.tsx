@@ -7,6 +7,7 @@ import { getAppliances } from "@/lib/appliances";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
 import { getPlaceChecks } from "@/lib/place-checks";
+import { resolveResidenceText } from "@/lib/questionnaire";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
@@ -114,6 +115,17 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         )}
       </header>
 
+      {place.onboardedAt && place.maintenanceLevel === "none" && (
+        <div className="flex flex-col gap-3 rounded-[20px] bg-accent-soft p-4">
+          <p className="text-[15px] font-semibold text-ink">
+            L&apos;entretien de vos appareils n&apos;est pas suivi. Voulez-vous le suivre ?
+          </p>
+          <Link href={`/places/${place.id}/appliances/checklist`} className={`${BUTTON_PRIMARY} self-start`}>
+            Suivre l&apos;entretien
+          </Link>
+        </div>
+      )}
+
       <ComplianceGauge
         counts={counts}
         maintenanceDueCount={guidance.length}
@@ -126,7 +138,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         appliances={appliances}
         obligationRecords={obligationRecords}
         appointments={appointments}
-        placeChecks={placeChecks}
+        placeChecks={placeChecks.map((check) => ({
+          ...check,
+          questionLabel: resolveResidenceText(check.questionLabel, place.propertyType),
+        }))}
       />
 
       <MaintenanceGuidanceList items={guidance} placeId={id} deferrableTaskKeys={deferrableTaskKeys} />
@@ -144,7 +159,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             ))}
           </div>
         )}
-        <AddLink href={`/places/${place.id}/appliances/new`}>Ajouter un appareil</AddLink>
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          <AddLink href={`/places/${place.id}/appliances/new`}>Ajouter un appareil</AddLink>
+          {place.maintenanceLevel !== "none" && (
+            <AddLink href={`/places/${place.id}/appliances/checklist`}>Ajouter plusieurs appareils</AddLink>
+          )}
+        </div>
         {invoiceImportMode === "disabled" ? (
           <p className="px-1 text-sm text-ink-2">Import de factures : bientôt disponible</p>
         ) : (
