@@ -1,4 +1,5 @@
 import questionnaireSeed from "../../seed/onboarding_questionnaire.json";
+import type { PropertyType } from "@/lib/place-types";
 
 export type QuestionnaireAnswer = {
   label: string;
@@ -49,3 +50,19 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
       sets: "sets" in a ? (a.sets as QuestionnaireAnswer["sets"]) : undefined,
     })),
   }));
+
+// REGLE-05: {residence} names the place by its type ("votre residence principale" /
+// "votre residence secondaire"). Only ever reached for a main or second home: Q10, the
+// one question using it, is skipped for both rental types. Applied to the question on
+// screen, to the "À vérifier" label stored from a "Je ne sais pas", and again when
+// displaying labels stored raw before this was done.
+export function resolveResidenceText(text: string, propertyType: PropertyType | null): string {
+  if (!text.includes("{residence}")) return text;
+  const phrase =
+    propertyType === "main_home"
+      ? "votre résidence principale"
+      : propertyType === "second_home"
+        ? "votre résidence secondaire"
+        : "ce logement";
+  return text.replaceAll("{residence}", phrase);
+}

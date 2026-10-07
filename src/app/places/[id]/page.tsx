@@ -7,6 +7,7 @@ import { getAppliances } from "@/lib/appliances";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
 import { getPlaceChecks } from "@/lib/place-checks";
+import { resolveResidenceText } from "@/lib/questionnaire";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
@@ -137,7 +138,10 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         appliances={appliances}
         obligationRecords={obligationRecords}
         appointments={appointments}
-        placeChecks={placeChecks}
+        placeChecks={placeChecks.map((check) => ({
+          ...check,
+          questionLabel: resolveResidenceText(check.questionLabel, place.propertyType),
+        }))}
       />
 
       <MaintenanceGuidanceList items={guidance} placeId={id} deferrableTaskKeys={deferrableTaskKeys} />
