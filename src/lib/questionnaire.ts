@@ -11,7 +11,7 @@ export type QuestionnaireAnswer = {
   // REGLE-06: fixes the initial confidence ("never") for the named task ids directly,
   // without asking their date question.
   initialStatus: Record<string, "never"> | null;
-  sets?: { property_type: string };
+  sets?: { property_type?: string; maintenance_level?: string };
 };
 
 export type QuestionnaireQuestion = {
@@ -46,6 +46,6 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
         : null,
       unknown: a.unknown,
       initialStatus: (a.initial_status as Record<string, "never"> | null) ?? null,
-      sets: "sets" in a ? (a.sets as { property_type: string }) : undefined,
+      sets: "sets" in a ? (a.sets as QuestionnaireAnswer["sets"]) : undefined,
     })),
   }));

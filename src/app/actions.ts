@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import {
   addAppliance,
   deleteAppliance,
+  deleteAppliancesOfPlace,
   getAppliance,
   importApplianceFromInvoice,
   setApplianceEquipmentType,
@@ -46,6 +47,7 @@ import { getMaintenanceTask } from "@/lib/maintenance-tasks";
 import { PROPERTY_TYPES, type PropertyType } from "@/lib/place-types";
 import { MAINTENANCE_LEVELS, type MaintenanceLevel } from "@/lib/maintenance-levels";
 import { applyQuestionnaireStepEffects, type QuestionnaireStepEffects } from "@/lib/questionnaire-effects";
+import { APPLIANCE_CHECKLIST_EQUIPMENT_TYPE_IDS } from "@/lib/appliance-checklist";
 import { createDeletionRequest, createContactMessage } from "@/lib/account-requests";
 import { auth } from "@/lib/auth/server";
 import { requireAdminRoute } from "@/lib/admin";
@@ -498,6 +500,41 @@ export async function completeQuestionnaire(placeId: string): Promise<void> {
   await logProductEvent("questionnaire_completed");
   revalidatePath("/");
   redirect("/");
+}
+
+// "Voulez-vous le suivre ?" and "Ajouter plusieurs appareils" (spec, Maintenance
+// Levels): one confirmation applies the whole checklist. Additions go through the
+// questionnaire's find-or-create, so a type already in the place is never duplicated;
+// deletions happen only here, after the final recap. A level is set only when resuming
+// upkeep from Aucun.
+export async function applyApplianceChecklist(input: {
+  placeId: string;
+  addEquipmentTypeIds: string[];
+  deleteApplianceIds: string[];
+  maintenanceLevel?: string;
+}): Promise<void> {
+  const place = await getPlace(input.placeId);
+  if (!place) {
+    throw new Error("Lieu introuvable");
+  }
+  if (input.addEquipmentTypeIds.some((id) => !APPLIANCE_CHECKLIST_EQUIPMENT_TYPE_IDS.has(id))) {
+    throw new Error("Appareil invalide");
+  }
+  const level = input.maintenanceLevel;
+  if (level !== undefined && (level === "none" || !isMaintenanceLevel(level))) {
+    throw new Error("Niveau d'entretien invalide");
+  }
+  await deleteAppliancesOfPlace(place.id, input.deleteApplianceIds);
+  await applyQuestionnaireStepEffects({
+    placeId: place.id,
+    createEquipmentTypeIds: input.addEquipmentTypeIds,
+    dateAnswers: [],
+    unknownChecks: [],
+    maintenanceLevel: level as MaintenanceLevel | undefined,
+  });
+  revalidatePath("/");
+  revalidatePath(`/places/${place.id}`);
+  redirect(`/places/${place.id}`);
 }
 
 export async function updatePlaceMaintenanceLevelAction(placeId: string, level: string): Promise<void> {

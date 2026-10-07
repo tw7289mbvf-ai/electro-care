@@ -1,6 +1,6 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 60). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 62). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
@@ -183,6 +183,8 @@ An invoice or a photo of it fills in appliances automatically, instead of enteri
 - **In the MVP**: a single demonstration on one precise product, written once, with no generation.
 
 ## Maintenance Levels
+
+The appliance part of the questionnaire can always be done, or redone, later. A place whose level is "Aucun" shows a card at the top of its page, "L'entretien de vos appareils n'est pas suivi. Voulez-vous le suivre ?", with a button that opens the appliance checklist and then the level choice, exactly as in the questionnaire; its appliance cards say the same, with a link to the place page. A place already followed offers "Ajouter plusieurs appareils" next to "Ajouter", which opens the same checklist with every existing appliance already ticked, whether it came from the questionnaire, a manual addition or an invoice import. Unticking one is deleting it: a warning appears at once, "Décocher ce lave-linge le supprimera, avec ses obligations et son historique (3 interventions enregistrées). Supprimer ?"; confirming strikes the line through, cancelling leaves it ticked. At the end a recap, "2 appareils ajoutés, 1 appareil supprimé", asks a final confirmation, and nothing is deleted before it. Answering "Non, plus tard" in the questionnaire therefore always has a later.
 
 Lifespan maintenance comes in levels, so users are not overwhelmed by every recommendation.
 

@@ -114,6 +114,17 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         )}
       </header>
 
+      {place.onboardedAt && place.maintenanceLevel === "none" && (
+        <div className="flex flex-col gap-3 rounded-[20px] bg-accent-soft p-4">
+          <p className="text-[15px] font-semibold text-ink">
+            L&apos;entretien de vos appareils n&apos;est pas suivi. Voulez-vous le suivre ?
+          </p>
+          <Link href={`/places/${place.id}/appliances/checklist`} className={`${BUTTON_PRIMARY} self-start`}>
+            Suivre l&apos;entretien
+          </Link>
+        </div>
+      )}
+
       <ComplianceGauge
         counts={counts}
         maintenanceDueCount={guidance.length}
@@ -144,7 +155,12 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
             ))}
           </div>
         )}
-        <AddLink href={`/places/${place.id}/appliances/new`}>Ajouter un appareil</AddLink>
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+          <AddLink href={`/places/${place.id}/appliances/new`}>Ajouter un appareil</AddLink>
+          {place.maintenanceLevel !== "none" && (
+            <AddLink href={`/places/${place.id}/appliances/checklist`}>Ajouter plusieurs appareils</AddLink>
+          )}
+        </div>
         {invoiceImportMode === "disabled" ? (
           <p className="px-1 text-sm text-ink-2">Import de factures : bientôt disponible</p>
         ) : (

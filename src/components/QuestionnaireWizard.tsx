@@ -389,10 +389,11 @@ export function QuestionnaireWizard({
         .filter((a) => a.unknown)
         .map((a) => ({ questionId: question.id, questionLabel: question.question, help: a.help })),
     };
-    if (question.id === "Q01") {
-      const sets = chosenAnswers[0]?.sets;
-      if (sets) effects.setPropertyType = sets.property_type as QuestionnaireStepEffects["setPropertyType"];
-    }
+    const sets = chosenAnswers[0]?.sets;
+    if (sets?.property_type) effects.setPropertyType = sets.property_type as QuestionnaireStepEffects["setPropertyType"];
+    // Q19 "Non, plus tard" sets the place to Aucun. Without this the column default
+    // (essential) stayed, and the place page never offered to resume upkeep.
+    if (sets?.maintenance_level) effects.maintenanceLevel = sets.maintenance_level as MaintenanceLevel;
     // REGLE-06: a "Statut initial" fixes the confidence directly; its date question is
     // never asked (proceedAfterFollowUps excludes it via effects.dateAnswers below).
     for (const answer of chosenAnswers) {

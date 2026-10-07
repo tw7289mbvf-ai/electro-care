@@ -267,3 +267,26 @@ export async function importApplianceFromInvoice(input: {
   `) as ApplianceRow[];
   return { appliance: toAppliance(rows[0]), created };
 }
+
+// Recorded interventions per appliance of a place — legal "C'est fait" entries plus
+// maintenance completions — quoted in the warning before an appliance is unticked
+// (and so deleted) from the "Ajouter plusieurs appareils" checklist.
+export async function countInterventionsByAppliance(placeId: string): Promise<Record<string, number>> {
+  const { sql } = await getAuthedContext();
+  const rows = (await sql`
+    SELECT a.id,
+           (SELECT COUNT(*) FROM obligation_completions oc WHERE oc.appliance_id = a.id)
+         + (SELECT COUNT(*) FROM maintenance_completions mc WHERE mc.appliance_id = a.id) AS count
+    FROM appliances a
+    WHERE a.place_id = ${placeId}
+  `) as { id: string; count: string | number }[];
+  return Object.fromEntries(rows.map((r) => [r.id, Number(r.count)]));
+}
+
+// Scoped to the place on top of RLS: an id from another place of the same account is
+// silently ignored rather than deleted.
+export async function deleteAppliancesOfPlace(placeId: string, ids: string[]): Promise<void> {
+  if (ids.length === 0) return;
+  const { sql } = await getAuthedContext();
+  await sql`DELETE FROM appliances WHERE place_id = ${placeId} AND id = ANY(${ids}::uuid[])`;
+}

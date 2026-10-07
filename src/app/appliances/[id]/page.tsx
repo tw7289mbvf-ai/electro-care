@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplianceDetailsSection } from "@/components/ApplianceDetailsSection";
-import { ApplianceIconTile, BackLink, PAGE_CLASS, PAGE_TITLE_CLASS } from "@/components/ui";
+import { ApplianceIconTile, BackLink, LINK_TEXT, PAGE_CLASS, PAGE_TITLE_CLASS } from "@/components/ui";
 import { DeleteApplianceButton } from "@/components/DeleteApplianceButton";
 import { ObligationsBlock } from "@/components/ObligationsBlock";
 import { ApplianceEntretienSection } from "@/components/ApplianceEntretienSection";
@@ -123,6 +124,15 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
           </div>
         </div>
       </header>
+
+      {place.maintenanceLevel === "none" && (
+        <p className="rounded-[20px] bg-accent-soft p-4 text-[15px] text-ink">
+          L&apos;entretien de vos appareils n&apos;est pas suivi.{" "}
+          <Link href={`/places/${place.id}`} className={LINK_TEXT}>
+            Voulez-vous le suivre ?
+          </Link>
+        </p>
+      )}
 
       <ObligationsBlock
         appliances={[appliance]}
