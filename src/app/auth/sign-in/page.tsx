@@ -12,6 +12,12 @@ export default function SignInPage() {
           </p>
         </header>
         <AuthForm mode="sign-in" />
+        <Link
+          href="/auth/forgot-password"
+          className="-mt-3 inline-flex min-h-11 items-center self-start text-sm font-semibold text-accent"
+        >
+          Mot de passe oublié ?
+        </Link>
         <p className="text-sm text-ink-2">
           Pas encore de compte ?{" "}
           <Link href="/auth/sign-up" className="inline-flex min-h-11 items-center font-semibold text-accent">
