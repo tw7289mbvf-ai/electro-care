@@ -1,22 +1,31 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Bricolage_Grotesque, Figtree } from "next/font/google";
+import localFont from "next/font/local";
 import { Footer } from "@/components/Footer";
 import { THEME_COOKIE, parseTheme } from "@/lib/theme";
 import "./globals.css";
 
-// next/font downloads these at build time and serves them from the app itself: no
-// visitor's browser ever requests fonts.googleapis.com (docs/design.md, "Typographie").
-const bricolage = Bricolage_Grotesque({
+// Self-hosted from src/fonts (Google Fonts' static files, latin + latin-ext in one file
+// per weight) so the build never depends on reaching Google: next/font/google failed
+// to download them during a Vercel build. No visitor's browser ever requests
+// fonts.googleapis.com either (docs/design.md, "Typographie").
+const bricolage = localFont({
   variable: "--font-bricolage",
-  subsets: ["latin"],
-  weight: ["600", "700"],
+  src: [
+    { path: "../fonts/BricolageGrotesque-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/BricolageGrotesque-700.woff2", weight: "700", style: "normal" },
+  ],
+  display: "swap",
 });
 
-const figtree = Figtree({
+const figtree = localFont({
   variable: "--font-figtree",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  src: [
+    { path: "../fonts/Figtree-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/Figtree-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/Figtree-600.woff2", weight: "600", style: "normal" },
+  ],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
