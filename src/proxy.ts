@@ -60,7 +60,8 @@ export default async function proxy(request: NextRequest) {
   }
 }
 
-// Every route calls into Neon Auth except the auth pages themselves, the legal pages
+// Every route calls into Neon Auth except the auth pages themselves (sign-in, sign-up,
+// forgot-password, reset-password: reachable without a session), the legal pages
 // (never touch the session) and the auth API proxy — those stay untouched so the
 // sign-in/sign-up flow and static assets never depend on this proxy running first.
 // The reminder job and the two email-link routes (/go, /api/unsubscribe) are excluded
