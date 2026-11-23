@@ -144,24 +144,28 @@ function PrefilledCompletionForm({
   );
 }
 
-// Spec's "Managing Appliances": "Rendez-vous pris" on a red or orange obligation, the
-// blue badge it produces, and the "a-t-il eu lieu ?" flow once the date has passed.
+// Spec's "Managing Appliances": "Rendez-vous pris" on a red or orange obligation done by
+// a professional — never on a task the user does alone (decided 2026-11-23) — the blue
+// badge it produces, and the "a-t-il eu lieu ?" flow once the date has passed.
 export function AppointmentButton({
   applianceId,
   maintenanceTaskId,
   status,
+  performer,
   appointment,
 }: {
   applianceId: string;
   maintenanceTaskId: string;
   status: ObligationStatus;
+  performer: "diy" | "pro";
   appointment: ObligationAppointment | null;
 }) {
   const [mode, setMode] = useState<"idle" | "book" | "confirm" | "complete" | "reschedule">("idle");
   const [isPending, startTransition] = useTransition();
 
   if (!appointment) {
-    if (status !== "overdue" && status !== "to_confirm") return null;
+    if (performer !== "pro") return null;
+    if (status !== "overdue" && status !== "to_confirm" && status !== "to_schedule") return null;
     if (mode === "book") {
       return (
         <BookingForm

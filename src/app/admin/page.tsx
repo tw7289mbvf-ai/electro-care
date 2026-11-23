@@ -96,7 +96,7 @@ export default async function AdminPage() {
           <StatTile label="Appareils" value={stats.appliancesTotal} />
           <StatTile label="Questionnaires terminés" value={stats.questionnairesCompleted} />
           <StatTile label="Obligations en retard" value={obligationCounts.overdue} />
-          <StatTile label="Obligations à confirmer" value={obligationCounts.toConfirm} />
+          <StatTile label="Obligations à confirmer ou à planifier" value={obligationCounts.toConfirm} />
         </section>
 
         <section className="flex flex-col gap-3">
@@ -198,7 +198,7 @@ export default async function AdminPage() {
                   <th className="px-4 py-2 font-medium">Inscrit le</th>
                   <th className="px-4 py-2 font-medium">Lieux</th>
                   <th className="px-4 py-2 font-medium">En retard</th>
-                  <th className="px-4 py-2 font-medium">À confirmer</th>
+                  <th className="px-4 py-2 font-medium">À confirmer / à planifier</th>
                   <th className="px-4 py-2 font-medium">À jour</th>
                   <th className="w-32 px-4 py-2 font-medium">Jauge</th>
                   <th className="px-4 py-2 font-medium">Interventions (mois)</th>
