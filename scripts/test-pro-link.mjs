@@ -14,12 +14,15 @@
 // Nothing printed here is a token or a secret: only HTTP codes and account/row ids.
 //
 // Required env: NEON_AUTH_BASE_URL, DATABASE_URL (the `authenticated`-role string),
-// NEON_PROJECT_ID. Optional: APP_URL (default: the Vercel team alias of the production
-// deployment), NEON_BRANCH (default "main"). Before any token goes over the wire the
-// script checks that APP_URL really serves Electro Care: `electro-care.vercel.app`,
-// the obvious guess, belongs to someone else (found 2026-11-23) — a link sent to a
-// wrong host would hand a live capability to a stranger.
-// The account is deleted at the end and its absence is checked by id.
+// NEON_PROJECT_ID. Optional: APP_URL (default: the production domain, the one the
+// deployment's own APP_URL names — CLAUDE.md "Tests"), NEON_BRANCH (default "main").
+// Before any token goes over the wire the script checks that APP_URL really serves
+// Electro Care: `electro-care.vercel.app`, the obvious guess, belongs to someone else
+// (found 2026-11-23) — a link sent to a wrong host would hand a live capability to a
+// stranger.
+// Whatever happens on the way (a failed check, an exception), the cleanup block runs:
+// the account loses the admin role, is deleted, its absence is checked by id, and the
+// run ends by checking that exactly one admin account remains.
 
 import { execSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
@@ -29,7 +32,7 @@ const AUTH_BASE = process.env.NEON_AUTH_BASE_URL;
 const DATABASE_URL = process.env.DATABASE_URL;
 const PROJECT_ID = process.env.NEON_PROJECT_ID;
 const BRANCH = process.env.NEON_BRANCH ?? "main";
-const APP_URL = (process.env.APP_URL ?? "https://electro-care-electro-care.vercel.app").replace(/\/$/, "");
+const APP_URL = (process.env.APP_URL ?? "https://electro-care-seven.vercel.app").replace(/\/$/, "");
 if (!AUTH_BASE || !DATABASE_URL || !PROJECT_ID) {
   throw new Error("NEON_AUTH_BASE_URL, DATABASE_URL and NEON_PROJECT_ID must be set");
 }
@@ -91,6 +94,7 @@ async function main() {
   const sqlA = neon(DATABASE_URL, { authToken: a.token });
 
   try {
+   try {
     // The throwaway account is the admin for this run: the links are obtained the way
     // the admin page does it. The role lives on neon_auth.user and is read at call
     // time by _require_admin(), so the session token above stays valid.
@@ -187,8 +191,22 @@ async function main() {
     record("Cancelled: page still answers", cancelled.status === 200, `HTTP ${cancelled.status}`);
     record("Cancelled: address, phone and comment are gone", !cancelled.html.includes(ADDRESS) && !cancelled.html.includes(PHONE) && !cancelled.html.includes(COMMENT), undefined);
     record("Cancelled: told the client cancelled", cancelled.html.includes("a annulé cette demande"), undefined);
+   } catch (e) {
+    // An exception mid-way is a failed check, not a crash: the summary still prints and
+    // the cleanup below still runs.
+    record("Test ran to the end", false, e.message);
+   }
   } finally {
-    // --- Cleanup: the account, then verify by id ---------------------------------
+    // --- Cleanup, run whatever happened above: the admin role goes first, then the
+    // account, then everything is checked by id — including that the only admin left is
+    // the real one (CLAUDE.md "Tests").
+    try {
+      execSync(`npx --yes neonctl neon-auth user set-role ${a.accountId} --project-id ${PROJECT_ID} --branch ${BRANCH} --roles user`, { stdio: "pipe" });
+    } catch (e) {
+      console.error(`CLEANUP: could not remove the admin role from ${a.accountId}: ${e.stderr?.toString() ?? e.message}`);
+    }
+    const [roleAfter] = await owner`SELECT role FROM neon_auth."user" WHERE id = ${a.accountId}`;
+    record("Admin role removed from the throwaway account before deletion", roleAfter?.role === "user", roleAfter?.role);
     try {
       execSync(`npx --yes neonctl neon-auth user delete ${a.accountId} --project-id ${PROJECT_ID} --branch ${BRANCH}`, { stdio: "pipe" });
     } catch (e) {
@@ -200,13 +218,15 @@ async function main() {
              (SELECT COUNT(*) FROM places WHERE account_id = ${a.accountId})::int AS places,
              (SELECT COUNT(*) FROM booking_requests WHERE account_id = ${a.accountId})::int AS requests,
              (SELECT COUNT(*) FROM admin_actions WHERE actor_account_id = ${a.accountId})::int AS actions,
-             (SELECT COUNT(*) FROM product_events WHERE account_id = ${a.accountId})::int AS events
+             (SELECT COUNT(*) FROM product_events WHERE account_id = ${a.accountId})::int AS events,
+             (SELECT COUNT(*) FROM neon_auth."user" WHERE role = 'admin')::int AS admins
     `;
     record(
       "Throwaway account and its rows deleted (checked by id)",
       left.accounts === 0 && left.places === 0 && left.requests === 0 && left.actions === 0 && left.events === 0,
       `accounts ${left.accounts}, places ${left.places}, requests ${left.requests}, admin actions ${left.actions}, events ${left.events}`
     );
+    record("Exactly one admin account remains", left.admins === 1, `${left.admins} admin account(s)`);
   }
 
   const failures = results.filter((r) => !r.ok);
