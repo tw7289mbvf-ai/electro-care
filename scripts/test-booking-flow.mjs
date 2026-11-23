@@ -160,8 +160,8 @@ async function main() {
   await owner`SELECT _apply_booking_answer(${recipientsA[0].id}, 'confirm', '{"slot_index":0,"time":"09:00"}'::jsonb, 'link')`;
   const [confirmedA] = await sqlA`SELECT status, closed_at FROM booking_requests WHERE id = ${appointmentRequest}`;
   record("Appointment request confirmed and closed", confirmedA.status === "confirmed" && confirmedA.closed_at !== null, confirmedA.status);
-  const [appt] = await sqlA`SELECT appointment_date, provider_name FROM obligation_appointments WHERE appliance_id = ${boiler.id} AND maintenance_task_id = 'T-001'`;
-  record("« Rendez-vous pris » created on the obligation", appt && String(appt.appointment_date).startsWith("2099-03-02") && appt.provider_name === heating[0].name, appt?.provider_name);
+  const [appt] = await sqlA`SELECT appointment_date::text AS appointment_date, provider_name FROM obligation_appointments WHERE appliance_id = ${boiler.id} AND maintenance_task_id = 'T-001'`;
+  record("« Rendez-vous pris » created on the obligation", appt?.appointment_date === "2099-03-02" && appt.provider_name === heating[0].name, `${appt?.appointment_date} ${appt?.provider_name}`);
 
   // --- 2. Quote: three sweeps, two answers, one choice ---------------------------
   const sweeps = await sqlA`SELECT * FROM list_bookable_professionals('ramoneur', '33000', ARRAY['T-014'])`;
@@ -177,7 +177,8 @@ async function main() {
     recipients: sweeps.slice(0, 3).map((p) => ({ professional_id: p.id })),
     consent: true,
   })}::jsonb) AS id`;
-  const quoteRecipients = await sqlA`SELECT id, provider_name FROM booking_request_recipients WHERE request_id = ${quoteRequest} ORDER BY created_at`;
+  // Same created_at for all three (one transaction): order by id so both reads agree.
+  const quoteRecipients = await sqlA`SELECT id, provider_name FROM booking_request_recipients WHERE request_id = ${quoteRequest} ORDER BY id`;
   record("Quote request has three recipients", quoteRecipients.length === 3, `${quoteRecipients.length}`);
   await owner`SELECT _apply_booking_answer(${quoteRecipients[0].id}, 'quote', '{"price_eur":"95","date":"2099-03-10","time":"14:00"}'::jsonb, 'link')`;
   await owner`SELECT _apply_booking_answer(${quoteRecipients[1].id}, 'quote', '{"price_eur":"80","date":"2099-03-12"}'::jsonb, 'admin')`;
@@ -187,16 +188,17 @@ async function main() {
   record("Quote request still open while the user compares", openQuote.status === "sent", openQuote.status);
 
   await sqlA`SELECT choose_booking_answer(${quoteRecipients[1].id})`;
-  const chosen = await sqlA`SELECT id, status FROM booking_request_recipients WHERE request_id = ${quoteRequest} ORDER BY created_at`;
+  const chosen = await sqlA`SELECT id, status FROM booking_request_recipients WHERE request_id = ${quoteRequest} ORDER BY id`;
+  const statusOf = (id) => chosen.find((c) => c.id === id)?.status;
   record(
     "Chosen quote confirmed, the others not chosen",
-    chosen[1].status === "confirmed" && chosen[0].status === "not_chosen" && chosen[2].status === "not_chosen",
-    chosen.map((c) => c.status).join(",")
+    statusOf(quoteRecipients[1].id) === "confirmed" && statusOf(quoteRecipients[0].id) === "not_chosen" && statusOf(quoteRecipients[2].id) === "not_chosen",
+    quoteRecipients.map((r) => statusOf(r.id)).join(",")
   );
   const [closedQuote] = await sqlA`SELECT status FROM booking_requests WHERE id = ${quoteRequest}`;
   record("Quote request confirmed", closedQuote.status === "confirmed", closedQuote.status);
-  const [flueAppt] = await sqlA`SELECT appointment_date, provider_name FROM obligation_appointments WHERE appliance_id = ${flue.id} AND maintenance_task_id = 'T-014'`;
-  record("« Rendez-vous pris » created from the chosen quote", flueAppt && String(flueAppt.appointment_date).startsWith("2099-03-12") && flueAppt.provider_name === quoteRecipients[1].provider_name, flueAppt?.provider_name);
+  const [flueAppt] = await sqlA`SELECT appointment_date::text AS appointment_date, provider_name FROM obligation_appointments WHERE appliance_id = ${flue.id} AND maintenance_task_id = 'T-014'`;
+  record("« Rendez-vous pris » created from the chosen quote", flueAppt?.appointment_date === "2099-03-12" && flueAppt.provider_name === quoteRecipients[1].provider_name, `${flueAppt?.appointment_date} ${flueAppt?.provider_name}`);
 
   const events = await owner`SELECT event_type, COUNT(*)::int AS n FROM product_events WHERE account_id = ${a.accountId} GROUP BY event_type ORDER BY event_type`;
   const counts = Object.fromEntries(events.map((e) => [e.event_type, e.n]));
