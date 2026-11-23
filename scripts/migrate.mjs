@@ -556,12 +556,9 @@ try {
   `);
   // 'view_compliance' (spec, "Compliance per account, for support"): each display of the
   // per-account compliance table, with no target — the journal records who looked, never
-  // the emails on screen. Re-added for a database whose table predates this action.
-  await client.query(`ALTER TABLE admin_actions DROP CONSTRAINT IF EXISTS admin_actions_action_check`);
-  await client.query(`
-    ALTER TABLE admin_actions ADD CONSTRAINT admin_actions_action_check
-      CHECK (action IN ('suspend', 'reactivate', 'delete', 'send_reset_link', 'view_compliance'))
-  `);
+  // the emails on screen. The check constraint is (re)added once, with the complete list
+  // of actions, in the booking block below: re-adding an older, shorter list here first
+  // fails on a database that already journals the newer actions (found 2026-11-23).
   await client.query(`ALTER TABLE admin_actions ENABLE ROW LEVEL SECURITY`);
   await client.query(`DROP POLICY IF EXISTS admin_actions_no_direct_access ON admin_actions`);
   await client.query(`
@@ -921,14 +918,8 @@ try {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `);
-  await client.query(`ALTER TABLE product_events DROP CONSTRAINT IF EXISTS product_events_event_type_check`);
-  await client.query(`
-    ALTER TABLE product_events ADD CONSTRAINT product_events_event_type_check
-      CHECK (event_type IN (
-        'account_created', 'questionnaire_completed', 'obligation_done', 'appointment_booked',
-        'reminder_sent', 'reminder_link_clicked', 'obligation_status_changed', 'multi_home_interest_clicked'
-      ))
-  `);
+  // The event_type check constraint is (re)added once, with the complete list, in the
+  // booking block below — same reason as admin_actions_action_check above.
   await client.query(`
     CREATE UNIQUE INDEX IF NOT EXISTS product_events_account_created_once
       ON product_events (account_id) WHERE event_type = 'account_created'
@@ -1874,6 +1865,11 @@ try {
   // The professional's page (src/app/pro/[token]): this recipient's view of the
   // request and nothing about the other recipients. NULL for an unknown, expired or
   // replaced token — the page answers 404 either way.
+  // The client's address, phone and comment (the comment can hold an entry code) are
+  // only returned while this professional still has a reason to use them: the request
+  // is open and they have not declined, or they are the confirmed one. Cancelled or
+  // closed request, professional not chosen or declined: the page keeps the status
+  // message and the prestation, the contact data is gone (data minimisation).
   await client.query(`DROP FUNCTION IF EXISTS pro_get_booking(UUID)`);
   await client.query(`
     CREATE FUNCTION pro_get_booking(p_token UUID) RETURNS JSONB AS $func$
@@ -1881,6 +1877,7 @@ try {
       v_rec booking_request_recipients%ROWTYPE;
       v_req booking_requests%ROWTYPE;
       v_items JSONB;
+      v_contact BOOLEAN;
     BEGIN
       PERFORM _require_cron();
       SELECT r.* INTO v_rec FROM booking_recipient_tokens t
@@ -1890,11 +1887,16 @@ try {
       SELECT * INTO v_req FROM booking_requests WHERE id = v_rec.request_id;
       SELECT COALESCE(jsonb_agg(jsonb_build_object('taskTitle', i.task_title, 'applianceLabel', i.appliance_label) ORDER BY i.task_title), '[]'::jsonb)
       INTO v_items FROM booking_request_items i WHERE i.request_id = v_req.id;
+      v_contact := (v_req.status = 'sent' AND v_rec.status IN ('pending', 'proposed', 'quoted'))
+                   OR (v_req.status = 'confirmed' AND v_rec.status = 'confirmed');
       RETURN jsonb_build_object(
         'recipientStatus', v_rec.status, 'providerName', v_rec.provider_name,
         'priceEur', v_rec.price_eur, 'proposedDate', v_rec.proposed_date, 'proposedTime', v_rec.proposed_time,
         'requestStatus', v_req.status, 'kind', v_req.kind, 'trade', v_req.trade,
-        'address', v_req.address, 'phone', v_req.phone, 'slots', v_req.slots, 'comment', v_req.comment,
+        'address', CASE WHEN v_contact THEN v_req.address END,
+        'phone', CASE WHEN v_contact THEN v_req.phone END,
+        'slots', v_req.slots,
+        'comment', CASE WHEN v_contact THEN v_req.comment END,
         'details', v_req.details, 'createdAt', v_req.created_at, 'items', v_items
       );
     END;

@@ -14,8 +14,11 @@ export type ProBookingView = {
   requestStatus: BookingRequestStatus;
   kind: BookingKind;
   trade: string;
-  address: string;
-  phone: string;
+  // Null once this professional no longer needs them (request cancelled or closed,
+  // professional not chosen or declined) — the SQL function withholds them, see
+  // pro_get_booking() in scripts/migrate.mjs.
+  address: string | null;
+  phone: string | null;
   slots: BookingSlot[];
   comment: string | null;
   details: Partial<BookingDetails>;

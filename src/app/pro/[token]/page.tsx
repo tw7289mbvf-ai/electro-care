@@ -64,8 +64,11 @@ export default async function ProfessionalBookingPage({ params }: { params: Prom
 
         <section className={CARD_CLASS}>
           <h2 className={SECTION_TITLE_CLASS}>Le client</h2>
-          <p className="text-sm text-ink">{view.address}</p>
-          <p className="text-sm text-ink">{view.phone}</p>
+          {view.address && <p className="text-sm text-ink">{view.address}</p>}
+          {view.phone && <p className="text-sm text-ink">{view.phone}</p>}
+          {!view.address && !view.phone && (
+            <p className="text-sm text-ink-2">Les coordonnées du client ne sont plus affichées pour cette demande.</p>
+          )}
           <p className="text-sm text-ink-2">
             Demi-journées souhaitées : {view.slots.map((s) => `${formatFrenchDate(s.date)} ${SLOT_PERIOD_LABELS[s.period]}`).join(", ")}
           </p>
