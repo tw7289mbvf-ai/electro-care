@@ -86,7 +86,8 @@ THRESHOLD_TASKS = {
 DATE_KINDS = {"Mois gradué": "graded_month", "Péremption": "expiry_date", "Fabrication": "manufacture_date",
               "Contrôle véhicule": "vehicle_inspection", "Oui / non": "yes_no", "Aucune": "none",
               "Non générée": "not_generated", "Télésurveillance": "monitored"}
-STATUS_WORDS = {"jamais": "never"}
+# "Statut initial" words (REGLE-06): "jamais" -> never (red, priority), "conforme" -> compliant (green).
+STATUS_WORDS = {"jamais": "never", "conforme": "compliant"}
 LEVELS = {"Essentiel": "essential", "Recommande": "recommended", "Obligation": None}
 
 # Indicative identifier patterns. Only groups with status "verified" may drive
