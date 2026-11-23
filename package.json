@@ -9,6 +9,8 @@
     "lint": "eslint",
     "db:migrate": "node scripts/migrate.mjs",
     "test:isolation": "node scripts/test-isolation.mjs",
+    "test:booking-flow": "node scripts/test-booking-flow.mjs",
+    "test:pro-link": "node scripts/test-pro-link.mjs",
     "test:reminder-milestones": "node --experimental-strip-types scripts/test-reminder-milestones.mjs"
   },
   "dependencies": {

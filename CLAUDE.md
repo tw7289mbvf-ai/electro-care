@@ -152,6 +152,31 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - Ne lire que les fichiers nécessaires à la tâche en cours ; pas d'exploration large.
 - Réponses courtes ; pas de long récapitulatif si non demandé.
 
+## Tests
+
+- Adresse de production : `https://electro-care-seven.vercel.app`. C'est le domaine que
+  porte la variable `APP_URL` en production (les liens `/go/` des rappels sont construits
+  dessus) ; l'alias d'équipe `https://electro-care-electro-care.vercel.app` sert le même
+  déploiement. Le lien « Copier le lien » de l'admin est construit sur l'origine de la
+  page admin ouverte, donc sur l'un de ces deux domaines. `https://electro-care.vercel.app`
+  n'est PAS à nous : il sert un site tiers (trouvé 2026-11-23, des liens de test y ont été
+  envoyés par erreur).
+- Interdiction d'envoyer un jeton, un lien ou une requête de test vers un hôte qui n'a pas
+  été vérifié comme servant Electro Care : un script qui parle à l'application déployée
+  vérifie d'abord que `GET /` répond 200 avec `<title>Electro Care</title>` et s'arrête
+  sinon (`scripts/test-pro-link.mjs`, `assertTargetIsElectroCare()`). Ne jamais deviner
+  l'adresse à partir du nom du projet.
+- Un compte jetable qui reçoit le rôle admin pour un test le perd (`neonctl neon-auth user
+  set-role <id> --roles user`) avant sa suppression, et le test se termine par la
+  vérification qu'il ne reste qu'un seul compte admin — dans tous les cas, y compris si le
+  test échoue en route : le nettoyage vit dans un bloc `finally`, et une exception en cours
+  de test est enregistrée comme un échec au lieu de l'interrompre.
+- Scripts : `npm run test:isolation` (isolation entre comptes, RLS, fonctions admin et cron,
+  pages `/admin`), `npm run test:booking-flow` (parcours rendez-vous et devis),
+  `npm run test:pro-link` (lien professionnel `/pro/<token>` contre l'application déployée).
+  Tous créent leurs comptes jetables, les suppriment et vérifient leur absence par
+  identifiant ; aucun ne doit afficher un jeton ni un secret.
+
 ## Commands
 
 <!-- TODO: build, test and lint commands for this stack. Run /init: Claude Code proposes them and suggests improvements to this file. -->
