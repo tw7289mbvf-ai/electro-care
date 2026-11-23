@@ -213,7 +213,7 @@ try {
   await client.query(`ALTER TABLE appliance_obligations DROP CONSTRAINT IF EXISTS appliance_obligations_service_confidence_check`);
   await client.query(`
     ALTER TABLE appliance_obligations ADD CONSTRAINT appliance_obligations_service_confidence_check
-      CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never', 'compliant'))
+      CHECK (service_confidence IS NULL OR service_confidence IN ('recent', 'old', 'never', 'compliant', 'not_applicable'))
   `);
   // "C'est fait" window (spec's "Managing Appliances"): who did the intervention, for the
   // household's own history ("Fait en octobre 2026 par Chauffage Dupont"). Deliberately
@@ -377,6 +377,33 @@ try {
   `);
   await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON maintenance_deferrals TO authenticated`);
 
+  // « Mon appareil n'a pas cet élément » (spec "Maintenance Guidance"): a maintenance task
+  // ruled out for one appliance. Same ownership path and RLS as maintenance_completions.
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS maintenance_task_exclusions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      appliance_id UUID NOT NULL REFERENCES appliances(id) ON DELETE CASCADE,
+      maintenance_task_id TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      UNIQUE (appliance_id, maintenance_task_id)
+    )
+  `);
+  await client.query(`ALTER TABLE maintenance_task_exclusions ENABLE ROW LEVEL SECURITY`);
+  await client.query(`DROP POLICY IF EXISTS maintenance_task_exclusions_isolation ON maintenance_task_exclusions`);
+  await client.query(`
+    CREATE POLICY maintenance_task_exclusions_isolation ON maintenance_task_exclusions
+      FOR ALL
+      USING (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_task_exclusions.appliance_id AND p.account_id = auth.uid()
+      ))
+      WITH CHECK (EXISTS (
+        SELECT 1 FROM appliances a JOIN places p ON p.id = a.place_id
+        WHERE a.id = maintenance_task_exclusions.appliance_id AND p.account_id = auth.uid()
+      ))
+  `);
+  await client.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON maintenance_task_exclusions TO authenticated`);
+
   // --- One-time data conversions (journaled in schema_migrations, run at most once) ---
 
   // T-083 changed meaning (chantier 1): it used to be the annual battery check, it is
@@ -418,6 +445,51 @@ try {
     `);
     await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [OBLIGATION_HISTORY_SEED]);
     console.log(`Obligation history seed: ${rowCount} row(s) became each task's first history entry.`);
+  }
+
+  // Chantier "Corrections : statuts, contrôles mensuels et référentiel" (spec "Obligations
+  // and Maintenance", decided 2026-11-23): the monthly checks the user does alone — T-082
+  // and T-155 (smoke detector tests), T-093 (pool safety device check), T-100 (pool alarm
+  // test) — are maintenance tasks of the Essentiel level now, not legal obligations. Their
+  // recorded history is kept as maintenance history (one maintenance_completions row per
+  // appliance, task and month), then the legal rows of these four tasks go: tracking
+  // rows, history, reminder milestones, appointments. A pool answered « sans dispositif »
+  // (T-093 'never', red) carries that answer to the pool's new legal line T-161,
+  // « Dispositif de sécurité en place », so it stays red instead of asking again.
+  const MONTHLY_CHECKS_MIGRATION = "2026-11-23-monthly-checks-to-maintenance";
+  const [{ exists: monthlyChecksDone }] = (
+    await client.query(`SELECT EXISTS(SELECT 1 FROM schema_migrations WHERE name = $1) AS exists`, [MONTHLY_CHECKS_MIGRATION])
+  ).rows;
+  if (!monthlyChecksDone) {
+    const moved = ["T-082", "T-093", "T-100", "T-155"];
+    const counts = {};
+    counts.converted = (
+      await client.query(
+        `INSERT INTO maintenance_completions (appliance_id, maintenance_task_id, done_month)
+         SELECT DISTINCT appliance_id, maintenance_task_id, to_char(service_date, 'YYYY-MM')
+         FROM obligation_completions WHERE maintenance_task_id = ANY($1)
+         ON CONFLICT (appliance_id, maintenance_task_id, done_month) DO NOTHING`,
+        [moved]
+      )
+    ).rowCount;
+    counts.carriedToT161 = (
+      await client.query(
+        `UPDATE appliance_obligations o
+         SET maintenance_task_id = 'T-161', last_service_date = NULL, known_due_date = NULL
+         WHERE o.maintenance_task_id = 'T-093' AND o.service_confidence = 'never'
+           AND NOT EXISTS (SELECT 1 FROM appliance_obligations x WHERE x.appliance_id = o.appliance_id AND x.maintenance_task_id = 'T-161')`
+      )
+    ).rowCount;
+    for (const [key, table] of [
+      ["remindersDeleted", "reminder_schedule_sent"],
+      ["appointmentsDeleted", "obligation_appointments"],
+      ["completionsDeleted", "obligation_completions"],
+      ["legalRowsDeleted", "appliance_obligations"],
+    ]) {
+      counts[key] = (await client.query(`DELETE FROM ${table} WHERE maintenance_task_id = ANY($1)`, [moved])).rowCount;
+    }
+    await client.query(`INSERT INTO schema_migrations (name) VALUES ($1)`, [MONTHLY_CHECKS_MIGRATION]);
+    console.log(`Monthly checks to maintenance (${moved.join(", ")}): ${JSON.stringify(counts)}`);
   }
 
   // A "to check" item from a "Je ne sais pas" answer (REGLE-02). question_label and
@@ -1591,7 +1663,7 @@ try {
         'account_created', 'questionnaire_completed', 'obligation_done', 'appointment_booked',
         'reminder_sent', 'reminder_link_clicked', 'obligation_status_changed', 'multi_home_interest_clicked',
         'booking_request_sent', 'quote_received', 'quote_chosen', 'booking_confirmed', 'booking_declined',
-        'booking_cancelled'
+        'booking_cancelled', 'task_not_applicable'
       ))
   `);
 

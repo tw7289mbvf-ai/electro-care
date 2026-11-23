@@ -141,6 +141,7 @@ async function main() {
   const [check] = await owner`INSERT INTO place_checks (place_id, question_id, question_label) VALUES (${place.id}, 'Q-TEST', 'test') RETURNING id`;
   const [completion] = await owner`INSERT INTO maintenance_completions (appliance_id, maintenance_task_id, done_month) VALUES (${appliance.id}, 'T-TEST', '2026-09') RETURNING id`;
   const [deferral] = await owner`INSERT INTO maintenance_deferrals (appliance_id, maintenance_task_id, origin_month, deferred_to_month) VALUES (${appliance.id}, 'T-TEST', '2026-09', '2026-10') RETURNING id`;
+  const [exclusion] = await owner`INSERT INTO maintenance_task_exclusions (appliance_id, maintenance_task_id) VALUES (${appliance.id}, 'T-TEST') RETURNING id`;
   const [document] = await owner`INSERT INTO documents (account_id, document_type, storage_path) VALUES (${a.accountId}, 'invoice', '/test.pdf') RETURNING id`;
   await owner`INSERT INTO document_appliances (document_id, appliance_id) VALUES (${document.id}, ${appliance.id})`;
   const [request] = await owner`INSERT INTO account_requests (account_id, kind, email, message) VALUES (${a.accountId}, 'contact', 'a@example.com', 'A message') RETURNING id`;
@@ -211,6 +212,7 @@ async function main() {
     { table: "documents", id: document.id, col: "storage_path" },
     { table: "maintenance_completions", id: completion.id, col: "maintenance_task_id" },
     { table: "maintenance_deferrals", id: deferral.id, col: "deferred_to_month" },
+    { table: "maintenance_task_exclusions", id: exclusion.id, col: "maintenance_task_id" },
     { table: "account_requests", id: request.id, col: "message" },
     { table: "booking_requests", id: bookingRequest.id, col: "phone" },
     { table: "booking_request_items", id: bookingItem.id, col: "task_title" },
@@ -266,6 +268,7 @@ async function main() {
     ["INSERT place_checks on A's place", () => sqlB.query("INSERT INTO place_checks (place_id, question_id, question_label) VALUES ($1, 'x', 'x')", [place.id])],
     ["INSERT maintenance_completions on A's appliance", () => sqlB.query("INSERT INTO maintenance_completions (appliance_id, maintenance_task_id, done_month) VALUES ($1, 'x', '2026-09')", [appliance.id])],
     ["INSERT maintenance_deferrals on A's appliance", () => sqlB.query("INSERT INTO maintenance_deferrals (appliance_id, maintenance_task_id, origin_month, deferred_to_month) VALUES ($1, 'x', '2026-09', '2026-10')", [appliance.id])],
+    ["INSERT maintenance_task_exclusions on A's appliance", () => sqlB.query("INSERT INTO maintenance_task_exclusions (appliance_id, maintenance_task_id) VALUES ($1, 'x')", [appliance.id])],
     ["INSERT document_appliances linking A's document to B's appliance", () => sqlB.query("INSERT INTO document_appliances (document_id, appliance_id) VALUES ($1, $2)", [document.id, applianceB.id])],
     ["INSERT account_requests with A's account_id", () => sqlB.query("INSERT INTO account_requests (account_id, kind, email) VALUES ($1, 'deletion', 'pirate@example.com')", [a.accountId])],
     ["INSERT product_events with A's account_id", () => sqlB.query("INSERT INTO product_events (account_id, event_type) VALUES ($1, 'obligation_done')", [a.accountId])],
@@ -334,7 +337,7 @@ async function main() {
   record("SELECT A's document after injection attempt", stillHidden.ok);
 
   // --- 3. No session at all ------------------------------------------------
-  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "account_requests", "account_preferences", "product_events", "reminder_logs", "reminder_schedule_sent", "professionals", "professional_prices", "booking_requests", "booking_request_items", "booking_request_recipients", "booking_recipient_tokens"]) {
+  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "maintenance_task_exclusions", "account_requests", "account_preferences", "product_events", "reminder_logs", "reminder_schedule_sent", "professionals", "professional_prices", "booking_requests", "booking_request_items", "booking_request_recipients", "booking_recipient_tokens"]) {
     const res = await refused(() => sqlAs(undefined).query(`SELECT * FROM ${table}`));
     record(`SELECT ${table} with no session token`, res.ok, res.code);
   }
