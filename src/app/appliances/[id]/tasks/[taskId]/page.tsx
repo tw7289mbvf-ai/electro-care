@@ -7,6 +7,8 @@ import { formatFrenchMonthYear, currentMonthKey } from "@/lib/french-dates";
 import { MarkMaintenanceDoneButton } from "@/components/MarkMaintenanceDoneButton";
 import { ModifyMaintenanceCompletionButton } from "@/components/ModifyMaintenanceCompletionButton";
 import { MaintenanceHistoryList } from "@/components/MaintenanceHistoryList";
+import { MaintenanceTaskNotApplicableLink } from "@/components/MaintenanceTaskNotApplicableLink";
+import { getMaintenanceExclusionsForAppliance } from "@/lib/maintenance-exclusions";
 import { BackLink } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -38,7 +40,11 @@ export default async function MaintenanceTaskPage({
     notFound();
   }
 
-  const history = await getMaintenanceCompletionHistory(appliance.id, task.id);
+  const [history, exclusions] = await Promise.all([
+    getMaintenanceCompletionHistory(appliance.id, task.id),
+    getMaintenanceExclusionsForAppliance(appliance.id),
+  ]);
+  const excluded = exclusions.some((e) => e.maintenanceTaskId === task.id);
   const latest = history[0] ?? null;
   const olderEntries = history.slice(1);
   const doneThisMonth = latest?.doneMonth === currentMonthKey();
@@ -79,12 +85,14 @@ export default async function MaintenanceTaskPage({
             maintenanceTaskId={task.id}
             placeId={appliance.placeId}
           />
-          <MarkMaintenanceDoneButton
-            applianceId={appliance.id}
-            maintenanceTaskId={task.id}
-            placeId={appliance.placeId}
-            done={doneThisMonth}
-          />
+          {!excluded && (
+            <MarkMaintenanceDoneButton
+              applianceId={appliance.id}
+              maintenanceTaskId={task.id}
+              placeId={appliance.placeId}
+              done={doneThisMonth}
+            />
+          )}
         </section>
 
         <section className="flex flex-col gap-3 rounded-[20px] bg-surface p-5">
@@ -104,6 +112,14 @@ export default async function MaintenanceTaskPage({
               {task.ifSkipped}
             </p>
           )}
+          {/* Spec "Maintenance Guidance": only on a maintenance task — this page already
+              404s on a legal obligation (see the notFound() above). */}
+          <MaintenanceTaskNotApplicableLink
+            applianceId={appliance.id}
+            maintenanceTaskId={task.id}
+            placeId={appliance.placeId}
+            excluded={excluded}
+          />
         </section>
       </main>
     </div>

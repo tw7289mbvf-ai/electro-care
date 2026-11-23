@@ -11,7 +11,8 @@ import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
 import { getObligationCountsForAppliances, type ObligationCounts } from "@/lib/obligations";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
-import { getMaintenanceGuidanceForAppliances, filterPendingGuidance, applyDeferrals } from "@/lib/maintenance-guidance";
+import { getMaintenanceGuidanceForAppliances, filterPendingGuidance, filterExcludedGuidance, applyDeferrals } from "@/lib/maintenance-guidance";
+import { getMaintenanceExclusionsForPlace } from "@/lib/maintenance-exclusions";
 import { currentMonthKey } from "@/lib/french-dates";
 import { touchAccountActivity } from "@/lib/account-activity";
 import { getInvoiceImportMode } from "@/lib/invoice-extraction";
@@ -168,19 +169,23 @@ export default async function Home() {
   const placesData = await Promise.all(
     orderedPlaces.map(async (place) => {
       const placeAppliances = appliances.filter((a) => a.placeId === place.id);
-      const [obligationRecords, appointments, completions, deferrals] = await Promise.all([
+      const [obligationRecords, appointments, completions, deferrals, exclusions] = await Promise.all([
         getObligationRecordsForPlace(place.id),
         getAppointmentsForPlace(place.id),
         getMaintenanceCompletionsForPlace(place.id, month),
         getMaintenanceDeferralsForPlace(place.id),
+        getMaintenanceExclusionsForPlace(place.id),
       ]);
       const counts = getObligationCountsForAppliances(placeAppliances, obligationRecords);
-      const maintenanceDue = applyDeferrals(
-        filterPendingGuidance(getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel), completions),
-        placeAppliances,
-        place.maintenanceLevel,
-        deferrals,
-        month
+      const maintenanceDue = filterExcludedGuidance(
+        applyDeferrals(
+          filterPendingGuidance(getMaintenanceGuidanceForAppliances(placeAppliances, place.maintenanceLevel), completions),
+          placeAppliances,
+          place.maintenanceLevel,
+          deferrals,
+          month
+        ),
+        exclusions
       );
       const maintenanceDueCount = maintenanceDue.length;
       const maintenanceMinutes = maintenanceDue.reduce((sum, { task }) => sum + task.activeMinutes, 0);

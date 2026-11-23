@@ -39,6 +39,7 @@ import { getTodayInFrance } from "@/lib/obligations";
 import { dateAnswerToObligationFields, type DateAnswerResult } from "@/lib/date-answer";
 import { recordMaintenanceCompletion, editMaintenanceCompletion } from "@/lib/maintenance-completions";
 import { deferMaintenanceTask, clearMaintenanceDeferral, getMaintenanceDeferral } from "@/lib/maintenance-deferrals";
+import { excludeMaintenanceTask, restoreMaintenanceTask } from "@/lib/maintenance-exclusions";
 import { canDeferMaintenanceTask } from "@/lib/maintenance-guidance";
 import { currentMonthKey, addMonthsToKey } from "@/lib/french-dates";
 import { CATEGORIES, type Category } from "@/lib/appliance-types";
@@ -489,6 +490,29 @@ export async function deferMaintenanceTaskAction(applianceId: string, maintenanc
   });
   revalidatePath("/");
   revalidatePath(`/places/${placeId}`);
+}
+
+// « Mon appareil n'a pas cet élément » (spec "Maintenance Guidance"): only a maintenance
+// task, never a legal obligation — the fiche never offers it on one, and this guards it.
+export async function excludeMaintenanceTaskAction(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {
+  const task = getMaintenanceTask(maintenanceTaskId);
+  if (!task || task.legal === "yes") return;
+  await excludeMaintenanceTask(applianceId, maintenanceTaskId);
+  await clearMaintenanceDeferral(applianceId, maintenanceTaskId);
+  await logProductEvent("task_not_applicable", { applianceId, maintenanceTaskId });
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
+  revalidatePath(`/appliances/${applianceId}`);
+  revalidatePath(`/appliances/${applianceId}/tasks/${maintenanceTaskId}`);
+}
+
+// « Rétablir », from the appliance card's « Non concerné » group or the task's fiche.
+export async function restoreMaintenanceTaskAction(applianceId: string, maintenanceTaskId: string, placeId: string): Promise<void> {
+  await restoreMaintenanceTask(applianceId, maintenanceTaskId);
+  revalidatePath("/");
+  revalidatePath(`/places/${placeId}`);
+  revalidatePath(`/appliances/${applianceId}`);
+  revalidatePath(`/appliances/${applianceId}/tasks/${maintenanceTaskId}`);
 }
 
 export async function submitQuestionnaireStep(effects: QuestionnaireStepEffects): Promise<void> {

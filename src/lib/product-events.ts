@@ -19,7 +19,9 @@ export type ProductEventType =
   | "quote_chosen"
   | "booking_confirmed"
   | "booking_declined"
-  | "booking_cancelled";
+  | "booking_cancelled"
+  // « Mon appareil n'a pas cet élément » on a maintenance task (spec "Maintenance Guidance").
+  | "task_not_applicable";
 
 const UNIQUE_PER_ACCOUNT: ReadonlySet<ProductEventType> = new Set([
   "account_created",
