@@ -4,7 +4,7 @@
 // a quote sent to three professionals, two answers, one choice. Professionals' answers
 // are applied as the database owner through _apply_booking_answer(), the same function
 // the personal link and the admin's manual entry both call — the link's HTTP page is
-// covered by scripts/test-isolation.mjs when the cron credentials are available.
+// covered by scripts/test-pro-link.mjs against the deployed app.
 //
 // Required env: NEON_AUTH_BASE_URL, DATABASE_URL (the `authenticated`-role string),
 // NEON_PROJECT_ID. Optional: NEON_BRANCH (default "main"), SKIP_HTTP=1.

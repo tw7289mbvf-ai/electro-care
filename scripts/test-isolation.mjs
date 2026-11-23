@@ -507,7 +507,8 @@ async function main() {
 
       // --- 8. The professional's personal link (/pro/<token>): only its own request,
       // never another recipient; 404 for an unknown or expired token. Needs the cron
-      // account's credentials (src/lib/cron-auth.ts) in the environment, like the app.
+      // account's credentials (src/lib/cron-auth.ts) in the environment, like the app —
+      // scripts/test-pro-link.mjs runs the same checks against the deployed app without them.
       if (process.env.CRON_ACCOUNT_EMAIL && process.env.CRON_ACCOUNT_PASSWORD) {
         const own = await fetch(`${app.base}/pro/${token1.token}`);
         const html = await own.text();
