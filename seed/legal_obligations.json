@@ -173,10 +173,9 @@
   {
     "id": "L-08",
     "obligation": "Sécurité des piscines privatives enterrées",
-    "applies_to": "Piscine enterrée ou semi-enterrée non close, à usage individuel ou collectif (PIS-01, PIS-07)",
+    "applies_to": "Piscine enterrée ou semi-enterrée non close, à usage individuel ou collectif (PIS-01)",
     "equipment_type_ids": [
-      "PIS-01",
-      "PIS-07"
+      "PIS-01"
     ],
     "legal_text": "Loi n. 2003-9 du 03/01/2003 ; CCH art. L128-1 et R128-1",
     "frequency": "Dispositif normalisé en place en permanence : barrière NF P90-306, alarme NF P90-307, couverture NF P90-308 ou abri NF P90-309",

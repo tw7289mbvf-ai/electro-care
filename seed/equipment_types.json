@@ -2118,9 +2118,9 @@
     "label": "Alarme de piscine",
     "lifespan": "8-10 ans",
     "legal": {
-      "status": "yes",
-      "note": "Oui",
-      "reference": "Norme NF P90-307 ; obligatoire des lors que l'alarme est le dispositif de sécurité retenu"
+      "status": "no",
+      "note": "Non",
+      "reference": "Norme NF P90-307 ; le dispositif de sécurité est l'obligation du bassin (PIS-01)"
     },
     "reference_frequency": "Test mensuel ; pile annuelle",
     "provider": "Particulier",

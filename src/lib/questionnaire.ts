@@ -9,9 +9,9 @@ export type QuestionnaireAnswer = {
   // detector linked to an alarm that isn't monitored (SEC-08) vs monitored (SEC-09).
   followUp: { question: string; createsIfYes: string[]; createsIfNo: string[] } | null;
   unknown: boolean;
-  // REGLE-06: fixes the initial confidence ("never") for the named task ids directly,
+  // REGLE-06: fixes the initial confidence ("never", or "compliant" for « conforme ») for the named task ids directly,
   // without asking their date question.
-  initialStatus: Record<string, "never"> | null;
+  initialStatus: Record<string, "never" | "compliant"> | null;
   sets?: { property_type?: string; maintenance_level?: string };
 };
 
@@ -46,7 +46,7 @@ export const QUESTIONS: QuestionnaireQuestion[] = [...questionnaireSeed.question
           }
         : null,
       unknown: a.unknown,
-      initialStatus: (a.initial_status as Record<string, "never"> | null) ?? null,
+      initialStatus: (a.initial_status as Record<string, "never" | "compliant"> | null) ?? null,
       sets: "sets" in a ? (a.sets as QuestionnaireAnswer["sets"]) : undefined,
     })),
   }));

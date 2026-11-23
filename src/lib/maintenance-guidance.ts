@@ -5,6 +5,7 @@ import { getCurrentMonthInFrance, addMonthsToKey, monthsBetweenKeys } from "@/li
 import { addMonths } from "@/lib/obligations";
 import type { MaintenanceCompletion } from "@/lib/maintenance-completions";
 import type { MaintenanceDeferral } from "@/lib/maintenance-deferrals";
+import { exclusionKey, exclusionKeys, type MaintenanceExclusion } from "@/lib/maintenance-exclusions";
 
 export type MaintenanceGuidanceItem = { appliance: Appliance; task: MaintenanceTask };
 
@@ -46,12 +47,14 @@ export function getUpcomingApplianceTasks(
   level: MaintenanceLevel,
   latestCompletions: MaintenanceCompletion[],
   pendingTaskIds: Set<string>,
-  monthKey: string
+  monthKey: string,
+  // « Non concerné » tasks of this appliance (spec "Maintenance Guidance"): never listed.
+  excludedTaskIds: Set<string> = new Set()
 ): UpcomingMaintenanceItem[] {
   if (!appliance.equipmentTypeId) return [];
   const completionByTask = new Map(latestCompletions.map((c) => [c.maintenanceTaskId, c]));
   return getLifespanMaintenanceTasks(appliance.equipmentTypeId)
-    .filter((task) => isTaskIncludedAtLevel(task.level, level) && !pendingTaskIds.has(task.id))
+    .filter((task) => isTaskIncludedAtLevel(task.level, level) && !pendingTaskIds.has(task.id) && !excludedTaskIds.has(task.id))
     .map((task) => {
       const completion = completionByTask.get(task.id) ?? null;
       const nextDate = completion
@@ -83,6 +86,17 @@ export function filterPendingGuidance(
 ): MaintenanceGuidanceItem[] {
   const done = new Set(completions.map((c) => `${c.applianceId}:${c.maintenanceTaskId}`));
   return items.filter((item) => !done.has(`${item.appliance.id}:${item.task.id}`));
+}
+
+// « Mon appareil n'a pas cet élément » (spec "Maintenance Guidance"): a task ruled out
+// for an appliance leaves the month's maintenance, « À faire » and « À venir ».
+export function filterExcludedGuidance(
+  items: MaintenanceGuidanceItem[],
+  exclusions: MaintenanceExclusion[]
+): MaintenanceGuidanceItem[] {
+  if (exclusions.length === 0) return items;
+  const excluded = exclusionKeys(exclusions);
+  return items.filter((item) => !excluded.has(exclusionKey(item.appliance.id, item.task.id)));
 }
 
 function guidanceKey(applianceId: string, maintenanceTaskId: string): string {

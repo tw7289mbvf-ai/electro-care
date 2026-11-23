@@ -408,19 +408,6 @@
     "overdue_tip": null
   },
   {
-    "key": "T-082",
-    "tasks": [
-      "T-082"
-    ],
-    "appliance": "Détecteur de fumée",
-    "question": null,
-    "kind": "none",
-    "interval_label": null,
-    "note": "Test mensuel : démarre à la création.",
-    "tip": null,
-    "overdue_tip": null
-  },
-  {
     "key": "T-086",
     "tasks": [
       "T-086"
@@ -434,32 +421,6 @@
     "overdue_tip": null
   },
   {
-    "key": "T-093",
-    "tasks": [
-      "T-093"
-    ],
-    "appliance": "Piscine",
-    "question": null,
-    "kind": "none",
-    "interval_label": null,
-    "note": "Contrôle mensuel du dispositif : démarre à la création, sauf statut initial fixé par le questionnaire.",
-    "tip": null,
-    "overdue_tip": null
-  },
-  {
-    "key": "T-100",
-    "tasks": [
-      "T-100"
-    ],
-    "appliance": "Alarme de piscine",
-    "question": null,
-    "kind": "none",
-    "interval_label": null,
-    "note": "Test mensuel : démarre à la création.",
-    "tip": null,
-    "overdue_tip": null
-  },
-  {
     "key": "T-015",
     "tasks": [
       "T-015"
@@ -469,19 +430,6 @@
     "kind": "not_generated",
     "interval_label": null,
     "note": "Second ramonage : seulement au-delà de 6 m³ de bois ou 2,5 t de granulés par an.",
-    "tip": null,
-    "overdue_tip": null
-  },
-  {
-    "key": "T-155",
-    "tasks": [
-      "T-155"
-    ],
-    "appliance": "Détecteur de fumée",
-    "question": null,
-    "kind": "none",
-    "interval_label": null,
-    "note": "Test mensuel depuis l'application de l'alarme : démarre à la création.",
     "tip": null,
     "overdue_tip": null
   },
@@ -523,5 +471,18 @@
     "note": "Vérification unique. Oui → à jour ; Non → en retard (à remplacer par un modèle conforme) ; Je ne sais pas → à confirmer.",
     "tip": "Regardez l'étiquette au dos du détecteur, ou le contrat de télésurveillance.",
     "overdue_tip": "Remplacez le détecteur par un modèle conforme, ou contactez votre prestataire de télésurveillance."
+  },
+  {
+    "key": "T-161",
+    "tasks": [
+      "T-161"
+    ],
+    "appliance": "Piscine",
+    "question": "La piscine est-elle protégée par un dispositif de sécurité normalisé (barrière, alarme, couverture ou abri) ?",
+    "kind": "yes_no",
+    "interval_label": null,
+    "note": "Vérification unique, pré-remplie par le questionnaire (Q08). Oui → à jour ; Non → en retard ; Je ne sais pas → à confirmer.",
+    "tip": "Un dispositif normalisé est obligatoire : barrière, alarme, couverture ou abri.",
+    "overdue_tip": "Installez un dispositif de sécurité normalisé : barrière, alarme, couverture ou abri."
   }
 ]

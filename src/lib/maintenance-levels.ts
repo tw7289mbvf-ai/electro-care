@@ -25,15 +25,23 @@ export function isTaskIncludedAtLevel(taskLevel: MaintenanceTask["level"], level
   return LEVEL_RANK[taskLevel] <= LEVEL_RANK[level];
 }
 
+// One appliance instance for the time estimate: its equipment type, and the tasks the
+// user ruled out for it (« Mon appareil n'a pas cet élément »), which no longer count.
+// A bare type id means "no exclusions" (the questionnaire and the checklist estimate
+// appliances that don't exist yet).
+export type MaintenanceEstimateEntry = string | { equipmentTypeId: string; excludedTaskIds?: Set<string> };
+
 // Hands-on time per month a level asks for, for one place: sum of active_minutes /
 // frequency.months over the lifespan tasks (monthly or slower — legal obligations are
 // tracked separately, at every level) included at that level, one contribution per
-// appliance instance passed in (equipmentTypeIds is not deduplicated by this function).
-export function estimateMaintenanceMinutesPerMonth(equipmentTypeIds: string[], level: MaintenanceLevel): number {
+// appliance instance passed in (entries are not deduplicated by this function).
+export function estimateMaintenanceMinutesPerMonth(entries: MaintenanceEstimateEntry[], level: MaintenanceLevel): number {
   let total = 0;
-  for (const typeId of equipmentTypeIds) {
+  for (const entry of entries) {
+    const typeId = typeof entry === "string" ? entry : entry.equipmentTypeId;
+    const excluded = typeof entry === "string" ? undefined : entry.excludedTaskIds;
     for (const task of getLifespanMaintenanceTasks(typeId)) {
-      if (isTaskIncludedAtLevel(task.level, level)) {
+      if (isTaskIncludedAtLevel(task.level, level) && !excluded?.has(task.id)) {
         total += task.activeMinutes / task.frequency.months;
       }
     }
@@ -41,9 +49,9 @@ export function estimateMaintenanceMinutesPerMonth(equipmentTypeIds: string[], l
   return Math.round(total);
 }
 
-export function estimateMaintenanceMinutesForAllLevels(equipmentTypeIds: string[]): Record<MaintenanceLevel, number> {
+export function estimateMaintenanceMinutesForAllLevels(entries: MaintenanceEstimateEntry[]): Record<MaintenanceLevel, number> {
   return Object.fromEntries(
-    MAINTENANCE_LEVELS.map((level) => [level, estimateMaintenanceMinutesPerMonth(equipmentTypeIds, level)])
+    MAINTENANCE_LEVELS.map((level) => [level, estimateMaintenanceMinutesPerMonth(entries, level)])
   ) as Record<MaintenanceLevel, number>;
 }
 
@@ -53,7 +61,11 @@ export const MAX_MAINTENANCE_LEVEL: MaintenanceLevel = MAINTENANCE_LEVELS[MAINTE
 // separately) an equipment type carries at a level. Used by the appliance fiche's empty
 // state (spec "Managing Appliances": "Aucun geste indispensable pour cet appareil.
 // Passez au niveau Recommandé pour voir ses N gestes d'entretien.").
-export function countMaintenanceTasksAtLevel(equipmentTypeId: string, level: MaintenanceLevel): number {
+export function countMaintenanceTasksAtLevel(
+  equipmentTypeId: string,
+  level: MaintenanceLevel,
+  excludedTaskIds: Set<string> = new Set()
+): number {
   const tasks = [...getLifespanMaintenanceTasks(equipmentTypeId), ...getRoutineMaintenanceTasks(equipmentTypeId)];
-  return tasks.filter((t) => isTaskIncludedAtLevel(t.level, level)).length;
+  return tasks.filter((t) => isTaskIncludedAtLevel(t.level, level) && !excludedTaskIds.has(t.id)).length;
 }

@@ -11,9 +11,11 @@ import { getPlaceChecks } from "@/lib/place-checks";
 import { resolveResidenceText } from "@/lib/questionnaire";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
+import { getMaintenanceExclusionsForPlace } from "@/lib/maintenance-exclusions";
 import {
   getMaintenanceGuidanceForAppliances,
   filterPendingGuidance,
+  filterExcludedGuidance,
   applyDeferrals,
   canDeferMaintenanceTask,
 } from "@/lib/maintenance-guidance";
@@ -55,22 +57,27 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   }
 
   const month = currentMonthKey();
-  const [allAppliances, obligationRecords, appointments, placeChecks, completions, deferrals, bookingRequests] = await Promise.all([
-    getAppliances(),
-    getObligationRecordsForPlace(id),
-    getAppointmentsForPlace(id),
-    getPlaceChecks(id),
-    getMaintenanceCompletionsForPlace(id, month),
-    getMaintenanceDeferralsForPlace(id),
-    getBookingRequestsForPlace(id),
-  ]);
+  const [allAppliances, obligationRecords, appointments, placeChecks, completions, deferrals, bookingRequests, exclusions] =
+    await Promise.all([
+      getAppliances(),
+      getObligationRecordsForPlace(id),
+      getAppointmentsForPlace(id),
+      getPlaceChecks(id),
+      getMaintenanceCompletionsForPlace(id, month),
+      getMaintenanceDeferralsForPlace(id),
+      getBookingRequestsForPlace(id),
+      getMaintenanceExclusionsForPlace(id),
+    ]);
   const appliances = allAppliances.filter((a) => a.placeId === id);
-  const guidance = applyDeferrals(
-    filterPendingGuidance(getMaintenanceGuidanceForAppliances(appliances, place.maintenanceLevel), completions),
-    appliances,
-    place.maintenanceLevel,
-    deferrals,
-    month
+  const guidance = filterExcludedGuidance(
+    applyDeferrals(
+      filterPendingGuidance(getMaintenanceGuidanceForAppliances(appliances, place.maintenanceLevel), completions),
+      appliances,
+      place.maintenanceLevel,
+      deferrals,
+      month
+    ),
+    exclusions
   );
   const deferralByTask = new Map(deferrals.map((d) => [`${d.applianceId}:${d.maintenanceTaskId}`, d]));
   const deferrableTaskKeys = new Set(
@@ -80,8 +87,14 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
       )
       .map(({ appliance, task }) => `${appliance.id}:${task.id}`)
   );
+  // The time estimate skips the tasks ruled out per appliance (spec "Maintenance Guidance").
   const levelEstimates = estimateMaintenanceMinutesForAllLevels(
-    appliances.map((a) => a.equipmentTypeId).filter((typeId): typeId is string => typeId !== null)
+    appliances
+      .filter((a): a is typeof a & { equipmentTypeId: string } => a.equipmentTypeId !== null)
+      .map((a) => ({
+        equipmentTypeId: a.equipmentTypeId,
+        excludedTaskIds: new Set(exclusions.filter((e) => e.applianceId === a.id).map((e) => e.maintenanceTaskId)),
+      }))
   );
   const isAdmin = (await requireAdminRoute()) !== null;
   const invoiceImportMode = getInvoiceImportMode(isAdmin);

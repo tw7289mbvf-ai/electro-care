@@ -1146,7 +1146,7 @@
     "season_months": [],
     "duration_min": 15,
     "tools": "Récipient plat, serpillière, chiffon",
-    "procedure": "Ouvrir la trappe en bas de l'appareil, placer un récipient, dévisser lentement le bouchon. Retirer pièces, cheveux et peluches. Rincer et revisser fermement.",
+    "procedure": "Certains modèles n'ont pas de filtre accessible (pas de trappe en bas de la façade). Dans ce cas, utilisez \"Mon appareil n'a pas cet élément\". Ouvrir la trappe en bas de l'appareil, placer un récipient, dévisser lentement le bouchon. Retirer pièces, cheveux et peluches. Rincer et revisser fermement.",
     "if_skipped": "Pompe de vidange forcée puis HS, eau stagnante et odeurs",
     "legal": "no",
     "level": "essential",
@@ -1179,7 +1179,7 @@
   {
     "id": "T-049",
     "equipment_type_id": "LAV-01",
-    "title": "Cycle de détartrage à vide",
+    "title": "Lavage d'entretien à vide",
     "performer": "diy",
     "frequency": {
       "rule": "every_n_months",
@@ -1193,7 +1193,7 @@
     "procedure": "Machine vide, cycle le plus chaud (90 degrés), produit directement dans le tambour. Nettoyer ensuite le bac à lessive à l'eau chaude.",
     "if_skipped": "Résistance entartrée = surconsommation puis panne (cause n.1 de mise au rebut)",
     "legal": "no",
-    "level": "recommended",
+    "level": "essential",
     "active_minutes": 5,
     "risk": null,
     "booking_trade": null
@@ -1944,8 +1944,8 @@
     "tools": "Aucun",
     "procedure": "Appuyer sur le bouton test jusqu'au signal sonore. Dépoussiérer la grille à l'aspirateur tous les 6 mois.",
     "if_skipped": "Un détecteur muet est un détecteur inutile",
-    "legal": "yes",
-    "level": null,
+    "legal": "no",
+    "level": "essential",
     "active_minutes": 2,
     "risk": null,
     "booking_trade": null
@@ -2204,8 +2204,8 @@
     "tools": "Aucun",
     "procedure": "Vérifier le bon état et le fonctionnement du dispositif retenu (barrière, alarme, couverture ou abri) et conserver l'attestation de conformité.",
     "if_skipped": "Amende jusqu'à 45 000 EUR et, surtout, risque de noyade",
-    "legal": "yes",
-    "level": null,
+    "legal": "no",
+    "level": "essential",
     "active_minutes": 10,
     "risk": null,
     "booking_trade": null
@@ -2385,8 +2385,8 @@
     "tools": "Aucun",
     "procedure": "Déclencher volontairement le détecteur et vérifier la sirène. Remplacer la pile chaque année. C'est un équipement réglementaire, pas un accessoire.",
     "if_skipped": "Dispositif de sécurité obligatoire inopérant : responsabilité pénale engagée",
-    "legal": "yes",
-    "level": null,
+    "legal": "no",
+    "level": "essential",
     "active_minutes": 5,
     "risk": null,
     "booking_trade": null
@@ -3721,8 +3721,8 @@
     "tools": "Aucun",
     "procedure": "Lancer le test du détecteur depuis l'application de l'alarme et vérifier que la sirène et la notification se déclenchent.",
     "if_skipped": "Un détecteur muet est un détecteur inutile",
-    "legal": "yes",
-    "level": null,
+    "legal": "no",
+    "level": "essential",
     "active_minutes": 2,
     "risk": null,
     "booking_trade": null
@@ -3792,6 +3792,72 @@
     "level": null,
     "active_minutes": 5,
     "risk": "Un détecteur non conforme peut ne pas être reconnu par votre assureur",
+    "booking_trade": null
+  },
+  {
+    "id": "T-159",
+    "equipment_type_id": "LAV-01",
+    "title": "Nettoyage du bac à produits",
+    "performer": "diy",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 3,
+      "label": "Tous les 3 mois"
+    },
+    "season": "Toute l'année",
+    "season_months": [],
+    "duration_min": 10,
+    "tools": "Eau chaude, brosse",
+    "procedure": "Retirer le bac en appuyant sur sa languette, le rincer à l'eau chaude, brosser les résidus, nettoyer son logement, le remettre.",
+    "if_skipped": "Résidus et moisissures, lessive mal distribuée",
+    "legal": "no",
+    "level": "recommended",
+    "active_minutes": 10,
+    "risk": null,
+    "booking_trade": null
+  },
+  {
+    "id": "T-160",
+    "equipment_type_id": "LAV-01",
+    "title": "Nettoyage du filtre d'arrivée d'eau",
+    "performer": "diy",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 12,
+      "label": "Tous les ans"
+    },
+    "season": "Toute l'année",
+    "season_months": [],
+    "duration_min": 15,
+    "tools": "Pince, chiffon",
+    "procedure": "Fermer le robinet, dévisser le tuyau d'arrivée, retirer le petit filtre à la pince, le rincer, remonter, rouvrir et vérifier l'absence de fuite.",
+    "if_skipped": "Remplissage lent, erreur d'arrivée d'eau",
+    "legal": "no",
+    "level": "recommended",
+    "active_minutes": 15,
+    "risk": null,
+    "booking_trade": null
+  },
+  {
+    "id": "T-161",
+    "equipment_type_id": "PIS-01",
+    "title": "Dispositif de sécurité en place",
+    "performer": "diy",
+    "frequency": {
+      "rule": "every_n_months",
+      "months": 120,
+      "label": "Vérification unique"
+    },
+    "season": "À la mise en service",
+    "season_months": [],
+    "duration_min": 5,
+    "tools": "Attestation de conformité du dispositif",
+    "procedure": "Vérifier qu'un dispositif normalisé protège le bassin en permanence : barrière, alarme, couverture ou abri. Conserver l'attestation de conformité remise à l'installation.",
+    "if_skipped": "Amende jusqu'à 45 000 EUR et, surtout, risque de noyade",
+    "legal": "yes",
+    "level": null,
+    "active_minutes": 5,
+    "risk": null,
     "booking_trade": null
   }
 ]

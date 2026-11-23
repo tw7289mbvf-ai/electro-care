@@ -6,8 +6,11 @@ import { getDateQuestionForTask } from "@/lib/date-questions";
 
 // "not_applicable" (spec's "Actions and colours"): a power-conditional obligation
 // (climatisation fixe, PAC air-air, chauffe-eau thermodynamique, PAC piscine) whose
-// appliance is below the 4 kW threshold — grey, and left out of the compliance count,
-// same as "to_schedule".
+// appliance is below the 4 kW threshold, or an answer that rules the obligation out (the
+// gas hose on a rigid connection) — grey, and left out of the compliance count.
+// "to_schedule" (« À planifier », decided 2026-11-23): the deadline falls this month.
+// Dates are kept to the month, so an obligation is never red during its due month; it
+// turns "overdue" on the first day of the following month. Orange, in the gauge.
 export type ObligationStatus = "up_to_date" | "to_schedule" | "overdue" | "to_confirm" | "not_applicable";
 
 // A monitored detector's follow-up (T-157): green with its own wording rather than "À jour".
@@ -28,8 +31,10 @@ export const CONDITIONAL_POWER_THRESHOLD_KW = 4;
 // REGLE-01's graded answer to a date question when there is no exact date: 'recent'
 // (fait recemment / date inconnue, a confirmer), 'old' (plus ancien que le delai, ou une
 // obligation connue non tenue, e.g. un puits non declare), 'never' (jamais fait ou je ne
-// sais pas), 'compliant' (verifie conforme sans date, e.g. un puits declare).
-export type ServiceConfidence = "recent" | "old" | "never" | "compliant" | null;
+// sais pas), 'compliant' (verifie conforme sans date, e.g. un puits declare, ou un
+// flexible gaz metallique sans date limite), 'not_applicable' (l'obligation ne concerne
+// pas cet appareil, e.g. un raccordement gaz rigide sans flexible).
+export type ServiceConfidence = "recent" | "old" | "never" | "compliant" | "not_applicable" | null;
 
 export type ApplianceObligationRecord = {
   applianceId: string;
@@ -63,6 +68,10 @@ export type ObligationView = {
   // "modifiée le …" (spec's "Managing Appliances"): set only once someone edits this
   // recorded intervention, never on the original "C'est fait"/"Mettre à jour" answer.
   modifiedAt: string | null;
+  // « Sans date limite »: an expiry-dated obligation answered "compliant" (the metal gas
+  // hose, T-060) is up to date with no deadline at all, and the row says so instead of
+  // showing a next due date.
+  noDeadline: boolean;
 };
 
 // Due dates are calendar dates with no time component; comparing them against a UTC
@@ -77,6 +86,23 @@ export function addMonths(isoDate: string, months: number): string {
   const [year, month, day] = isoDate.split("-").map(Number);
   const date = new Date(year, month - 1 + Math.round(months), day);
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+// Dates are kept to the month (spec "Obligations and Maintenance"): a due date in the
+// current month is « À planifier », one in an earlier month « En retard », a later one
+// « À jour ». Compared on "YYYY-MM", never on the day.
+export function statusForDueDate(dueDate: string, today: string): "up_to_date" | "to_schedule" | "overdue" {
+  const dueMonth = dueDate.slice(0, 7);
+  const thisMonth = today.slice(0, 7);
+  if (dueMonth < thisMonth) return "overdue";
+  if (dueMonth === thisMonth) return "to_schedule";
+  return "up_to_date";
+}
+
+// « En retard depuis <mois> »: an obligation due in November is late from the first day
+// of December, so the month shown is the one after the due month.
+export function overdueSinceMonth(dueDate: string): string {
+  return addMonths(dueDate, 1);
 }
 
 function computeStatusAndDueDate(
@@ -94,8 +120,9 @@ function computeStatusAndDueDate(
   providerName: string | null;
   providerContact: string | null;
   modifiedAt: string | null;
+  noDeadline: boolean;
 } {
-  const none = { completedOn: null, providerName: null, providerContact: null, modifiedAt: null };
+  const none = { completedOn: null, providerName: null, providerContact: null, modifiedAt: null, noDeadline: false };
   // Followed by a monitoring provider: green whatever the dates, the provider's recorded
   // visits only feed the "Fait en … par …" line and the history.
   if (getDateQuestionForTask(task.id)?.kind === "monitored") {
@@ -108,6 +135,7 @@ function computeStatusAndDueDate(
       providerName: record?.lastServiceDate ? record.providerName : null,
       providerContact: record?.lastServiceDate ? record.providerContact : null,
       modifiedAt: record?.lastServiceDate ? record.modifiedAt : null,
+      noDeadline: false,
     };
   }
   // Power known: below the threshold the obligation doesn't apply at all; at or above
@@ -123,15 +151,28 @@ function computeStatusAndDueDate(
   }
   if (record?.knownDueDate) {
     return {
-      status: record.knownDueDate < today ? "overdue" : "up_to_date",
+      status: statusForDueDate(record.knownDueDate, today),
       dueDate: record.knownDueDate,
       priority: false,
       toConfirmReason: null,
       ...none,
     };
   }
+  // The answer rules the obligation out for this appliance (e.g. T-060 on a rigid gas
+  // connection): same grey, same exclusion from the count as the power threshold.
+  // toConfirmReason "date" lets the fiche offer « Mettre à jour » to change the answer.
+  if (record?.serviceConfidence === "not_applicable") {
+    return { status: "not_applicable", dueDate: null, priority: false, toConfirmReason: "date", ...none };
+  }
   if (record?.serviceConfidence === "compliant") {
-    return { status: "up_to_date", dueDate: null, priority: false, toConfirmReason: null, ...none };
+    return {
+      status: "up_to_date",
+      dueDate: null,
+      priority: false,
+      toConfirmReason: null,
+      ...none,
+      noDeadline: getDateQuestionForTask(task.id)?.kind === "expiry_date",
+    };
   }
   if (record?.serviceConfidence === "recent") {
     return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date", ...none };
@@ -142,12 +183,14 @@ function computeStatusAndDueDate(
   if (record?.serviceConfidence === "never") {
     return { status: "overdue", dueDate: null, priority: true, toConfirmReason: null, ...none };
   }
+  // No answer at all (e.g. an appliance added by hand, never asked its date question):
+  // « À confirmer », with « Mettre à jour » opening the question (decided 2026-11-23).
   if (!record?.lastServiceDate) {
-    return { status: "to_schedule", dueDate: null, priority: false, toConfirmReason: null, ...none };
+    return { status: "to_confirm", dueDate: null, priority: false, toConfirmReason: "date", ...none };
   }
   const dueDate = addMonths(record.lastServiceDate, task.frequency.months);
   return {
-    status: dueDate < today ? "overdue" : "up_to_date",
+    status: statusForDueDate(dueDate, today),
     dueDate,
     priority: false,
     toConfirmReason: null,
@@ -155,6 +198,7 @@ function computeStatusAndDueDate(
     providerName: record.providerName,
     providerContact: record.providerContact,
     modifiedAt: record.modifiedAt,
+    noDeadline: false,
   };
 }
 
@@ -170,7 +214,7 @@ export function getObligationsForAppliance(
 
   return tasks.map((task) => {
     const record = records.find((r) => r.maintenanceTaskId === task.id);
-    const { status, dueDate, priority, toConfirmReason, completedOn, providerName, providerContact, modifiedAt } =
+    const { status, dueDate, priority, toConfirmReason, completedOn, providerName, providerContact, modifiedAt, noDeadline } =
       computeStatusAndDueDate(equipmentType, task, record, today, powerKw);
     return {
       task,
@@ -183,6 +227,7 @@ export function getObligationsForAppliance(
       providerName,
       providerContact,
       modifiedAt,
+      noDeadline,
       legalObligations: getLegalObligationsForType(equipmentTypeId),
     };
   });
@@ -205,16 +250,16 @@ export function compareObligationsByUrgency(a: ObligationView, b: ObligationView
   return Number(b.priority) - Number(a.priority);
 }
 
-// Compliance banner: "2 en retard, 1 a confirmer, 4 a jour" — only these three statuses
-// count as evaluated; "a planifier" (no data at all, e.g. a manually added appliance)
-// isn't part of the compliance picture yet.
+// Compliance gauge: red, orange, green. The orange count (toConfirm) covers both orange
+// statuses, « À confirmer » and « À planifier » (spec: "All three count in the orange
+// segment of the gauge"); only "not_applicable" stays out of the picture.
 export type ObligationCounts = { overdue: number; toConfirm: number; upToDate: number };
 
 export function countObligationsByStatus(obligations: ObligationView[]): ObligationCounts {
   const counts: ObligationCounts = { overdue: 0, toConfirm: 0, upToDate: 0 };
   for (const o of obligations) {
     if (o.status === "overdue") counts.overdue += 1;
-    else if (o.status === "to_confirm") counts.toConfirm += 1;
+    else if (o.status === "to_confirm" || o.status === "to_schedule") counts.toConfirm += 1;
     else if (o.status === "up_to_date") counts.upToDate += 1;
   }
   return counts;

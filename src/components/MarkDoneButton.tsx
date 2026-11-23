@@ -100,10 +100,13 @@ export function MarkDoneButton({
   // A detector followed by a monitoring provider stays green; its fiche still records the
   // provider's visits, as interventions (spec, "Smoke detector").
   const isMonitored = getDateQuestionForTask(maintenanceTaskId)?.kind === "monitored";
-  if (status === "not_applicable") return null;
+  // « Non concerné » shows no button — except on the fiche when it came from the user's
+  // own answer (toConfirmReason "date", e.g. the gas hose on a rigid connection), where
+  // « Mettre à jour » lets them change that answer. « À planifier » shows « C'est fait ».
+  if (status === "not_applicable" && !(toConfirmReason === "date" && onFiche)) return null;
   if (status === "up_to_date" && !(isMonitored && onFiche)) return null;
 
-  const isToConfirm = status === "to_confirm";
+  const isToConfirm = status === "to_confirm" || status === "not_applicable";
   const label = isToConfirm ? "Mettre à jour" : isMonitored ? "Enregistrer une visite" : "C'est fait";
   const closedButtonClass = isToConfirm
     ? BUTTON_UPDATE

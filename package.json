@@ -11,7 +11,8 @@
     "test:isolation": "node scripts/test-isolation.mjs",
     "test:booking-flow": "node scripts/test-booking-flow.mjs",
     "test:pro-link": "node scripts/test-pro-link.mjs",
-    "test:reminder-milestones": "node --experimental-strip-types scripts/test-reminder-milestones.mjs"
+    "test:reminder-milestones": "node --experimental-strip-types scripts/test-reminder-milestones.mjs",
+    "test:status-rules": "node --experimental-strip-types scripts/test-status-rules.mjs"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.5.0-beta",

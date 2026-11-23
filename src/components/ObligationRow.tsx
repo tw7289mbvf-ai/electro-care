@@ -11,6 +11,7 @@ import { BookingRequestButton } from "@/components/BookingRequestButton";
 import type { BookingRequestSummary } from "@/lib/booking-types";
 import { ApplianceIconTile, Icon, ROW_CLASS, StatusPill, statusTone } from "@/components/ui";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
+import { overdueSinceMonth } from "@/lib/obligations";
 import type { ObligationAppointment } from "@/lib/obligation-appointments";
 import { getDateQuestionForTask } from "@/lib/date-questions";
 
@@ -47,14 +48,23 @@ export function ObligationRow({
   const olderEntries = history?.slice(1) ?? [];
   const onFiche = history !== undefined && history !== null;
 
+  // Dates are kept to the month: due this month reads « Échéance ce mois-ci » under the
+  // orange « À planifier » pill; late from the first day of the following month, so
+  // « En retard depuis » names that month, not the due month.
   const dateLine =
     row.status === "not_applicable"
-      ? "Puissance sous le seuil de 4 kW"
-      : row.dueDate
-        ? row.status === "overdue"
-          ? `En retard depuis ${formatFrenchMonthYear(row.dueDate)}`
-          : `Prochaine échéance en ${formatFrenchMonthYear(row.dueDate)}`
-        : null;
+      ? row.toConfirmReason === "date"
+        ? "Non concerné pour cet appareil"
+        : "Puissance sous le seuil de 4 kW"
+      : row.noDeadline
+        ? "Sans date limite"
+        : row.dueDate
+          ? row.status === "overdue"
+            ? `En retard depuis ${formatFrenchMonthYear(overdueSinceMonth(row.dueDate))}`
+            : row.status === "to_schedule"
+              ? "Échéance ce mois-ci"
+              : `Prochaine échéance en ${formatFrenchMonthYear(row.dueDate)}`
+          : null;
   // Orange row: where to find the missing answer (e.g. the label on the detector or the
   // monitoring contract for the CE EN 14604 check).
   // Red row: what to do, when the seed says (e.g. replace a non-compliant detector).
@@ -123,6 +133,7 @@ export function ObligationRow({
           applianceId={appliance.id}
           maintenanceTaskId={row.task.id}
           status={row.status}
+          performer={row.task.performer}
           appointment={appointment}
         />
         {!appointment && (

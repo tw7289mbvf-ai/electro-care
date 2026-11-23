@@ -5,7 +5,7 @@ import { setPlacePropertyType, updatePlaceMaintenanceLevel } from "@/lib/places"
 import { getEquipmentType } from "@/lib/equipment-types";
 import { getTrackedLegalTasks } from "@/lib/maintenance-tasks";
 import { getDateQuestionForTask } from "@/lib/date-questions";
-import { getTodayInFrance } from "@/lib/obligations";
+import { getTodayInFrance, type ServiceConfidence } from "@/lib/obligations";
 import type { PropertyType } from "@/lib/place-types";
 import type { MaintenanceLevel } from "@/lib/maintenance-levels";
 
@@ -21,7 +21,7 @@ export type QuestionnaireStepEffects = {
     // Exactly one of these is set: a precise date, or (last_service_date only,
     // REGLE-01) a graded answer with no exact date.
     date?: string;
-    confidence?: "recent" | "old" | "never" | "compliant";
+    confidence?: Exclude<ServiceConfidence, null>;
   }[];
   unknownChecks: { questionId: string; questionLabel: string; help: string | null }[];
 };

@@ -1,4 +1,4 @@
-import type { ApplianceObligationRecord } from "@/lib/obligations";
+import type { ApplianceObligationRecord, ServiceConfidence } from "@/lib/obligations";
 import { getAuthedContext } from "@/lib/db";
 
 type ObligationRow = {
@@ -74,7 +74,7 @@ export async function setApplianceObligation(input: {
   maintenanceTaskId: string;
   lastServiceDate?: string | null;
   knownDueDate?: string | null;
-  serviceConfidence?: "recent" | "old" | "never" | "compliant" | null;
+  serviceConfidence?: ServiceConfidence;
   providerName?: string | null;
   providerContact?: string | null;
   // "Modifier" (spec's "Managing Appliances"): true only for the edit flow, so

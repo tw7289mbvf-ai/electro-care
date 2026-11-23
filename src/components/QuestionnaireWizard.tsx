@@ -29,7 +29,7 @@ import { MaintenanceLevelOptions } from "@/components/MaintenanceLevelOptions";
 import { InvoiceImportFlow } from "@/components/InvoiceImportFlow";
 import { EQUIPMENT_TYPES } from "@/lib/equipment-types";
 import type { InvoiceImportMode } from "@/lib/invoice-extraction";
-import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
+import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult, EXPIRY_EXTRA_OPTIONS } from "@/lib/date-answer";
 import { Icon } from "@/components/ui";
 
 type PendingFollowUp = { question: QuestionnaireQuestion; answer: QuestionnaireAnswer };
@@ -494,6 +494,7 @@ export function QuestionnaireWizard({
             resultKind="dueDate"
             unknownLabel="Je ne trouve pas la date"
             futureYears
+            extra={EXPIRY_EXTRA_OPTIONS[ask.taskId]}
             onAnswer={handleDateAskAnswer}
             onBack={handleBack}
           />
@@ -796,6 +797,7 @@ function SimpleDateOrUnknownCard({
   resultKind,
   unknownLabel,
   futureYears = false,
+  extra,
   onAnswer,
   onBack,
 }: {
@@ -803,6 +805,8 @@ function SimpleDateOrUnknownCard({
   resultKind: "date" | "dueDate";
   unknownLabel: string;
   futureYears?: boolean;
+  // T-060's « sans date limite » / « pas de flexible » answers and their help text.
+  extra?: (typeof EXPIRY_EXTRA_OPTIONS)[string];
   onAnswer: (result: DateAnswerResult) => void;
   onBack: () => void;
 }) {
@@ -812,6 +816,7 @@ function SimpleDateOrUnknownCard({
     <div className={CARD_CLASS}>
       <BackLink onClick={onBack} />
       <h2 className="text-lg font-medium text-ink">{title}</h2>
+      {extra && <p className="text-sm text-ink-2">{extra.help}</p>}
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} disableFutureMonths={!futureYears} />
         <button
@@ -822,6 +827,11 @@ function SimpleDateOrUnknownCard({
           Valider
         </button>
       </div>
+      {extra?.options.map((option) => (
+        <button key={option.label} className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: option.confidence })}>
+          {option.label}
+        </button>
+      ))}
       <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
         {unknownLabel}
       </button>

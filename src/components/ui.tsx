@@ -233,7 +233,7 @@ const TONE_TILE: Record<Tone, string> = {
 
 export function statusTone(status: ObligationStatus): Tone {
   if (status === "overdue") return "late";
-  if (status === "to_confirm") return "warn";
+  if (status === "to_confirm" || status === "to_schedule") return "warn";
   if (status === "up_to_date") return "ok";
   return "neutral";
 }
@@ -317,7 +317,7 @@ export function ComplianceGauge({
 
   const legend = [
     { label: `${counts.overdue} en retard`, className: "bg-bar-late" },
-    { label: `${counts.toConfirm} à confirmer`, className: "bg-bar-warn" },
+    { label: `${counts.toConfirm} à confirmer ou à planifier`, className: "bg-bar-warn" },
     { label: `${counts.upToDate} à jour`, className: "bg-bar-ok" },
   ];
 

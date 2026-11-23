@@ -538,7 +538,9 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
-          "initial_status": null,
+          "initial_status": {
+            "T-161": "compliant"
+          },
           "sets": null
         },
         {
@@ -550,7 +552,9 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
-          "initial_status": null,
+          "initial_status": {
+            "T-161": "compliant"
+          },
           "sets": null
         },
         {
@@ -561,7 +565,9 @@
           "help": null,
           "follow_up": null,
           "unknown": false,
-          "initial_status": null,
+          "initial_status": {
+            "T-161": "compliant"
+          },
           "sets": null
         },
         {
@@ -573,7 +579,7 @@
           "follow_up": null,
           "unknown": false,
           "initial_status": {
-            "T-093": "never"
+            "T-161": "never"
           },
           "sets": null
         },
@@ -751,7 +757,6 @@
           "follow_up": null,
           "unknown": false,
           "initial_status": {
-            "T-082": "never",
             "T-083": "never"
           },
           "sets": null

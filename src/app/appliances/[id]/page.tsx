@@ -15,14 +15,17 @@ import { getAppointmentsForAppliance } from "@/lib/obligation-appointments";
 import { getBookingRequestsForAppliance, summarizeOpenRequests } from "@/lib/booking-requests";
 import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
+import { getMaintenanceExclusionsForAppliance } from "@/lib/maintenance-exclusions";
+import { NotApplicableTasksGroup } from "@/components/NotApplicableTasksGroup";
 import {
   getMaintenanceGuidanceForAppliances,
   getUpcomingApplianceTasks,
   filterPendingGuidance,
+  filterExcludedGuidance,
   applyDeferrals,
   canDeferMaintenanceTask,
 } from "@/lib/maintenance-guidance";
-import { getRoutineMaintenanceTasks } from "@/lib/maintenance-tasks";
+import { getMaintenanceTask, getRoutineMaintenanceTasks, type MaintenanceTask } from "@/lib/maintenance-tasks";
 import {
   isTaskIncludedAtLevel,
   countMaintenanceTasksAtLevel,
@@ -52,7 +55,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
   }
 
   const month = currentMonthKey();
-  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions, bookingRequests] =
+  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions, bookingRequests, exclusions] =
     await Promise.all([
       getObligationRecordsForAppliance(id),
       getObligationCompletionsForAppliance(id),
@@ -61,7 +64,14 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       getMaintenanceDeferralsForPlace(appliance.placeId),
       getLatestMaintenanceCompletionsForAppliance(id),
       getBookingRequestsForAppliance(id),
+      getMaintenanceExclusionsForAppliance(id),
     ]);
+  // « Mon appareil n'a pas cet élément » (spec "Maintenance Guidance"): ruled-out tasks
+  // leave « À faire », « À venir » and the counts, and sit in a collapsed group below.
+  const excludedTaskIds = new Set(exclusions.map((e) => e.maintenanceTaskId));
+  const excludedTasks = exclusions
+    .map((e) => getMaintenanceTask(e.maintenanceTaskId))
+    .filter((t): t is MaintenanceTask => t !== undefined && t.legal !== "yes");
   const completions = placeCompletions.filter((c) => c.applianceId === id);
   const deferrals = placeDeferrals.filter((d) => d.applianceId === id);
   const obligationCompletionsByTaskId = new Map<string, typeof obligationCompletions>();
@@ -71,12 +81,15 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
     else obligationCompletionsByTaskId.set(entry.maintenanceTaskId, [entry]);
   }
 
-  const guidance = applyDeferrals(
-    filterPendingGuidance(getMaintenanceGuidanceForAppliances([appliance], place.maintenanceLevel), completions),
-    [appliance],
-    place.maintenanceLevel,
-    deferrals,
-    month
+  const guidance = filterExcludedGuidance(
+    applyDeferrals(
+      filterPendingGuidance(getMaintenanceGuidanceForAppliances([appliance], place.maintenanceLevel), completions),
+      [appliance],
+      place.maintenanceLevel,
+      deferrals,
+      month
+    ),
+    exclusions
   );
   const deferralByTask = new Map(deferrals.map((d) => [d.maintenanceTaskId, d]));
   const deferrableTaskKeys = new Set(
@@ -85,17 +98,19 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       .map(({ task }) => task.id)
   );
   const pendingTaskIds = new Set(guidance.map(({ task }) => task.id));
-  const upcoming = getUpcomingApplianceTasks(appliance, place.maintenanceLevel, latestCompletions, pendingTaskIds, month);
+  const upcoming = getUpcomingApplianceTasks(appliance, place.maintenanceLevel, latestCompletions, pendingTaskIds, month, excludedTaskIds);
   const routines = appliance.equipmentTypeId
-    ? getRoutineMaintenanceTasks(appliance.equipmentTypeId).filter((t) => isTaskIncludedAtLevel(t.level, place.maintenanceLevel))
+    ? getRoutineMaintenanceTasks(appliance.equipmentTypeId).filter(
+        (t) => isTaskIncludedAtLevel(t.level, place.maintenanceLevel) && !excludedTaskIds.has(t.id)
+      )
     : [];
 
   const currentLevelTaskCount = appliance.equipmentTypeId
-    ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, place.maintenanceLevel)
+    ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, place.maintenanceLevel, excludedTaskIds)
     : 0;
   const upgradeTaskCount =
     appliance.equipmentTypeId && currentLevelTaskCount === 0 && place.maintenanceLevel !== MAX_MAINTENANCE_LEVEL
-      ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, MAX_MAINTENANCE_LEVEL)
+      ? countMaintenanceTasksAtLevel(appliance.equipmentTypeId, MAX_MAINTENANCE_LEVEL, excludedTaskIds)
       : 0;
 
   // A smoke detector's kind leads its subtitle, the way brand and model do elsewhere.
@@ -156,6 +171,8 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       />
 
       <ApplianceRoutinesSection applianceId={appliance.id} routines={routines} />
+
+      <NotApplicableTasksGroup applianceId={appliance.id} placeId={appliance.placeId} tasks={excludedTasks} />
 
       <ApplianceDetailsSection appliance={appliance} action={updateAppliance.bind(null, appliance.id)} />
     </main>
