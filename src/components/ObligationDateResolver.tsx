@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getDateQuestionForTask, type DateQuestion } from "@/lib/date-questions";
-import { VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
+import { EXPIRY_EXTRA_OPTIONS, VEHICLE_YOUNG_OPTION, addYearsIso, type DateAnswerResult } from "@/lib/date-answer";
 import { MonthYearFields, monthYearToIso } from "@/components/MonthYearFields";
 import { pastYearOptions, wideYearOptions } from "@/lib/french-dates";
 import { BUTTON_CLASS, GHOST_BUTTON_CLASS, TEXT_BUTTON_CLASS } from "@/components/inline-form-styles";
@@ -28,7 +28,14 @@ export function ObligationDateResolver({
   switch (dq.kind) {
     case "expiry_date":
       return (
-        <SimpleDateCard title={dq.question!} resultKind="dueDate" futureYears onAnswer={onAnswer} onCancel={onCancel} />
+        <SimpleDateCard
+          title={dq.question!}
+          resultKind="dueDate"
+          futureYears
+          extra={EXPIRY_EXTRA_OPTIONS[taskId]}
+          onAnswer={onAnswer}
+          onCancel={onCancel}
+        />
       );
     case "manufacture_date":
       return <ManufactureOrExpiryResolver dq={dq} onAnswer={onAnswer} onCancel={onCancel} />;
@@ -95,12 +102,15 @@ function SimpleDateCard({
   title,
   resultKind,
   futureYears = false,
+  extra,
   onAnswer,
   onCancel,
 }: {
   title: string;
   resultKind: "date" | "dueDate";
   futureYears?: boolean;
+  // T-060's « sans date limite » / « pas de flexible » answers and their help text.
+  extra?: (typeof EXPIRY_EXTRA_OPTIONS)[string];
   onAnswer: (result: DateAnswerResult) => void;
   onCancel: () => void;
 }) {
@@ -109,6 +119,7 @@ function SimpleDateCard({
   return (
     <div className="flex flex-col gap-2">
       <p className="text-sm font-medium text-ink">{title}</p>
+      {extra && <p className="text-sm text-ink-2">{extra.help}</p>}
       <div className="flex flex-wrap items-center gap-2">
         <MonthYearFields value={value} onChange={setValue} years={futureYears ? wideYearOptions() : pastYearOptions()} small disableFutureMonths={!futureYears} />
         <button
@@ -120,6 +131,11 @@ function SimpleDateCard({
         </button>
       </div>
       <div className="flex flex-wrap gap-2">
+        {extra?.options.map((option) => (
+          <button key={option.label} className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: option.confidence })}>
+            {option.label}
+          </button>
+        ))}
         <button className={GHOST_BUTTON_CLASS} onClick={() => onAnswer({ confidence: "recent" })}>
           Je ne trouve pas la date
         </button>

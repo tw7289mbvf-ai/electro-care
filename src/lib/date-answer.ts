@@ -28,3 +28,21 @@ export function addYearsIso(isoDate: string, years: number): string {
   const [y, m, d] = isoDate.split("-");
   return `${Number(y) + years}-${m}-${d}`;
 }
+
+// T-060, the gas hose (spec "Obligations and Maintenance", decided 2026-11-23): two
+// answers besides the printed expiry date. A metal hose has no expiry at all (compliant,
+// shown « Sans date limite »); a rigid connection has no hose, so the obligation does not
+// apply (« Non concerné », grey, out of the gauge). Seed-authored wording, kept here like
+// VEHICLE_YOUNG_OPTION since seed/date_questions.json has no structured field for it.
+export const EXPIRY_EXTRA_OPTIONS: Record<
+  string,
+  { help: string; options: { label: string; confidence: "compliant" | "not_applicable" }[] }
+> = {
+  "T-060": {
+    help: "Un flexible métallique (inox) porte la mention \"à durée de vie illimitée\". Un flexible en caoutchouc porte une date limite d'utilisation.",
+    options: [
+      { label: "Flexible métallique, sans date limite", confidence: "compliant" },
+      { label: "Raccordement rigide, pas de flexible", confidence: "not_applicable" },
+    ],
+  },
+};
