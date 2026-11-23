@@ -94,6 +94,13 @@ Le code lui-même (noms de variables, fonctions, commentaires, commits) reste en
 - At most three backup branches at a time. Delete the oldest once their chantier is
   verified in production — the project's branch limit otherwise blocks the next
   backup.
+- A backup branch is never modified: no migration, no data conversion, no one-off
+  write runs against it, so it stays the exact state of `main` before the chantier.
+  A migration rehearsal runs on a temporary branch created for the occasion
+  (`neonctl branches create --parent main --name rehearsal-<date>-<chantier>`, `-o json |
+  jq` on id and name only), is compared to the expected counts, then that branch is
+  deleted; it does not count among the three backups (found 2026-11-23: a rehearsal
+  was run on the backup itself, which then no longer matched the pre-migration state).
 - `scripts/migrate.mjs` assumes the database it's pointed at either has none of these
   tables yet or already has `account_id` on every one of them: `CREATE TABLE IF NOT
   EXISTS places (...)` no-ops on a pre-existing table, so a legacy `places` without
