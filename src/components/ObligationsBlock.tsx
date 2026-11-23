@@ -3,6 +3,7 @@ import { compareObligationsByUrgency, getObligationsForAppliance, type Appliance
 import type { PlaceCheck } from "@/lib/place-checks";
 import type { ObligationCompletion } from "@/lib/obligation-completions";
 import type { ObligationAppointment } from "@/lib/obligation-appointments";
+import type { BookingRequestSummary } from "@/lib/booking-types";
 import { ObligationRow } from "@/components/ObligationRow";
 import { UpToDateObligationsGroup } from "@/components/UpToDateObligationsGroup";
 import { Section } from "@/components/ui";
@@ -11,12 +12,16 @@ export function ObligationsBlock({
   appliances,
   obligationRecords,
   appointments,
+  bookingRequests,
   placeChecks,
   completionsByTaskId,
 }: {
   appliances: Appliance[];
   obligationRecords: ApplianceObligationRecord[];
   appointments?: ObligationAppointment[];
+  // Open booking requests of these appliances (spec "Booking Requests"): shown as a
+  // status chip on the row; also switches the "Prendre rendez-vous" button on.
+  bookingRequests?: BookingRequestSummary[];
   placeChecks: PlaceCheck[];
   // Full "C'est fait" history, keyed by maintenance task id, most recent first — passed
   // only from the appliance fiche (a single appliance) so "Modifier" and the history
@@ -33,6 +38,9 @@ export function ObligationsBlock({
         history: completionsByTaskId ? (completionsByTaskId.get(obligation.task.id) ?? []) : undefined,
         appointment:
           appointments?.find((a) => a.applianceId === appliance.id && a.maintenanceTaskId === obligation.task.id) ?? null,
+        bookable: bookingRequests !== undefined && obligation.task.bookingTrade !== null && obligation.status !== "not_applicable",
+        bookingRequest:
+          bookingRequests?.find((b) => b.applianceId === appliance.id && b.maintenanceTaskId === obligation.task.id) ?? null,
       }));
     })
     .sort(compareObligationsByUrgency);

@@ -4,11 +4,17 @@ import { useState } from "react";
 import type { Appliance } from "@/lib/appliance-types";
 import type { ObligationView } from "@/lib/obligations";
 import type { ObligationCompletion } from "@/lib/obligation-completions";
+import type { BookingRequestSummary } from "@/lib/booking-types";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 import { ObligationRow } from "@/components/ObligationRow";
 import { Icon } from "@/components/ui";
 
-type Row = { appliance: Appliance; history?: ObligationCompletion[] } & ObligationView;
+type Row = {
+  appliance: Appliance;
+  history?: ObligationCompletion[];
+  bookable?: boolean;
+  bookingRequest?: BookingRequestSummary | null;
+} & ObligationView;
 
 // Spec "Page du lieu": a collapsed "À jour" group with the count and the next action
 // date, expanding on tap to the same rows as the red/orange obligations above it.

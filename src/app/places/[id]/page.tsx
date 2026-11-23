@@ -6,6 +6,7 @@ import { getPlace } from "@/lib/places";
 import { getAppliances } from "@/lib/appliances";
 import { getObligationRecordsForPlace } from "@/lib/appliance-obligations";
 import { getAppointmentsForPlace } from "@/lib/obligation-appointments";
+import { getBookingRequestsForPlace, summarizeOpenRequests } from "@/lib/booking-requests";
 import { getPlaceChecks } from "@/lib/place-checks";
 import { resolveResidenceText } from "@/lib/questionnaire";
 import { getMaintenanceCompletionsForPlace } from "@/lib/maintenance-completions";
@@ -54,13 +55,14 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
   }
 
   const month = currentMonthKey();
-  const [allAppliances, obligationRecords, appointments, placeChecks, completions, deferrals] = await Promise.all([
+  const [allAppliances, obligationRecords, appointments, placeChecks, completions, deferrals, bookingRequests] = await Promise.all([
     getAppliances(),
     getObligationRecordsForPlace(id),
     getAppointmentsForPlace(id),
     getPlaceChecks(id),
     getMaintenanceCompletionsForPlace(id, month),
     getMaintenanceDeferralsForPlace(id),
+    getBookingRequestsForPlace(id),
   ]);
   const appliances = allAppliances.filter((a) => a.placeId === id);
   const guidance = applyDeferrals(
@@ -138,6 +140,7 @@ export default async function PlacePage({ params }: { params: Promise<{ id: stri
         appliances={appliances}
         obligationRecords={obligationRecords}
         appointments={appointments}
+        bookingRequests={summarizeOpenRequests(bookingRequests)}
         placeChecks={placeChecks.map((check) => ({
           ...check,
           questionLabel: resolveResidenceText(check.questionLabel, place.propertyType),

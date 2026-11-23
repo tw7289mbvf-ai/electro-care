@@ -7,8 +7,32 @@ import {
   sendPasswordResetLink,
   markRequestHandled,
 } from "@/lib/admin";
+import {
+  addBookingRecipient,
+  closeBookingRequestAsAdmin,
+  getBookingRecipientToken,
+  recordBookingAnswerAsAdmin,
+  saveProfessional,
+  setProfessionalActive,
+  type AdminProfessionalInput,
+} from "@/lib/booking-admin";
 
-const ACTIONS = ["suspend", "reactivate", "delete", "reset-link", "mark-request-handled"] as const;
+const ACTIONS = [
+  "suspend",
+  "reactivate",
+  "delete",
+  "reset-link",
+  "mark-request-handled",
+  // Professionals directory and booking queue (spec "Booking Requests"); each one is a
+  // SECURITY DEFINER function gated on _require_admin() that journals itself.
+  "save-professional",
+  "set-professional-active",
+  "booking-link",
+  "booking-answer",
+  "booking-add-recipient",
+  "booking-close",
+] as const;
+const BOOKING_ANSWERS = ["confirm", "propose", "quote", "decline"] as const;
 type Action = (typeof ACTIONS)[number];
 
 function isAction(value: unknown): value is Action {
@@ -34,7 +58,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(null, { status: 404 });
   }
 
-  let body: { action?: unknown; accountId?: unknown; requestId?: unknown };
+  let body: {
+    action?: unknown;
+    accountId?: unknown;
+    requestId?: unknown;
+    recipientId?: unknown;
+    professionalId?: unknown;
+    replaceRecipientId?: unknown;
+    professional?: unknown;
+    active?: unknown;
+    answer?: unknown;
+    payload?: unknown;
+  };
   try {
     body = await request.json();
   } catch {
@@ -43,6 +78,45 @@ export async function POST(request: NextRequest) {
   const { action, accountId, requestId } = body;
   if (!isAction(action)) {
     return NextResponse.json({ error: "Action invalide." }, { status: 400 });
+  }
+
+  const isId = (value: unknown): value is string => typeof value === "string" && value.length > 0;
+  if (action.startsWith("booking-") || action.endsWith("professional") || action === "set-professional-active") {
+    try {
+      if (action === "save-professional") {
+        if (typeof body.professional !== "object" || body.professional === null) {
+          return NextResponse.json({ error: "Professionnel invalide." }, { status: 400 });
+        }
+        const id = await saveProfessional(body.professional as AdminProfessionalInput);
+        return NextResponse.json({ ok: true, id });
+      }
+      if (action === "set-professional-active") {
+        if (!isId(body.professionalId) || typeof body.active !== "boolean") {
+          return NextResponse.json({ error: "Professionnel invalide." }, { status: 400 });
+        }
+        await setProfessionalActive(body.professionalId, body.active);
+      } else if (action === "booking-link") {
+        if (!isId(body.recipientId)) return NextResponse.json({ error: "Destinataire invalide." }, { status: 400 });
+        const token = await getBookingRecipientToken(body.recipientId);
+        return NextResponse.json({ ok: true, url: `${request.nextUrl.origin}/pro/${token}` });
+      } else if (action === "booking-answer") {
+        const answer = body.answer;
+        if (!isId(body.recipientId) || typeof answer !== "string" || !(BOOKING_ANSWERS as readonly string[]).includes(answer)) {
+          return NextResponse.json({ error: "Réponse invalide." }, { status: 400 });
+        }
+        const payload = typeof body.payload === "object" && body.payload !== null ? (body.payload as Record<string, unknown>) : {};
+        await recordBookingAnswerAsAdmin(body.recipientId, answer as (typeof BOOKING_ANSWERS)[number], payload);
+      } else if (action === "booking-add-recipient") {
+        if (!isId(requestId) || !isId(body.professionalId)) return NextResponse.json({ error: "Demande invalide." }, { status: 400 });
+        await addBookingRecipient(requestId, body.professionalId, isId(body.replaceRecipientId) ? body.replaceRecipientId : null);
+      } else if (action === "booking-close") {
+        if (!isId(requestId)) return NextResponse.json({ error: "Demande invalide." }, { status: 400 });
+        await closeBookingRequestAsAdmin(requestId);
+      }
+    } catch (err) {
+      return NextResponse.json({ error: err instanceof Error ? err.message : "Erreur inconnue." }, { status: 500 });
+    }
+    return NextResponse.json({ ok: true });
   }
 
   if (action === "mark-request-handled") {

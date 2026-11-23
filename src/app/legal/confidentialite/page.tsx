@@ -17,7 +17,7 @@ export default function ConfidentialitePage() {
           <h1 className="font-display text-[28px] font-bold leading-tight tracking-[-0.5px] text-ink">
             Politique de confidentialité
           </h1>
-          <p className="mt-1 text-sm text-ink-2">Dernière mise à jour : 7 octobre 2026</p>
+          <p className="mt-1 text-sm text-ink-2">Dernière mise à jour : 23 novembre 2026</p>
         </div>
 
         <p className="text-sm text-ink">
@@ -72,6 +72,13 @@ export default function ConfidentialitePage() {
               l&apos;app, votre réponse et votre commentaire éventuel.
             </li>
             <li>
+              <strong>Vos demandes de rendez-vous et de devis</strong> : quand vous envoyez une demande, nous
+              utilisons l&apos;adresse du lieu, votre numéro de téléphone, vos créneaux souhaités, votre commentaire et
+              les informations de l&apos;appareil concerné (type, marque, modèle, date du dernier entretien). Ces
+              données sont transmises aux professionnels que vous choisissez, et à eux seuls, pour qu&apos;ils
+              puissent vous répondre. Rien n&apos;est transmis sans votre accord, donné à chaque demande.
+            </li>
+            <li>
               <strong>Vos demandes</strong> : les messages envoyés avec « Contacter l&apos;administrateur » et les
               demandes de suppression de compte, pour y répondre.
             </li>
@@ -90,6 +97,11 @@ export default function ConfidentialitePage() {
               <strong>Notre intérêt légitime</strong> (article 6.1.f du RGPD), pour la sécurité du service, la
               mesure de son usage et le traitement de vos messages.
             </li>
+            <li>
+              <strong>Votre consentement</strong> (article 6.1.a du RGPD), donné à chaque demande de rendez-vous ou
+              de devis, pour transmettre vos coordonnées aux professionnels que vous avez choisis. Vous pouvez
+              annuler une demande à tout moment.
+            </li>
           </ul>
         </section>
 
@@ -105,8 +117,16 @@ export default function ConfidentialitePage() {
               dernière connexion, nombre de lieux et d&apos;appareils, et, pour le support, le nombre
               d&apos;obligations à jour, à confirmer et en retard de chaque compte, ainsi que le nombre
               d&apos;interventions et de gestes d&apos;entretien enregistrés chaque mois. Jamais le détail de vos appareils
-              ou de vos lieux, ni vos adresses. Chaque consultation est enregistrée dans le journal
-              d&apos;administration.
+              ou de vos lieux, ni vos adresses. Seule exception : les demandes de rendez-vous ou de devis que vous
+              envoyez. L&apos;administrateur voit alors l&apos;adresse, le téléphone et l&apos;appareil concernés par la
+              demande, pour la suivre et contacter les professionnels si besoin. Chaque consultation est enregistrée
+              dans le journal d&apos;administration.
+            </li>
+            <li>
+              <strong>Les professionnels que vous choisissez</strong> reçoivent votre demande : adresse du lieu,
+              téléphone, créneaux souhaités et appareil concerné. Ce sont des entreprises indépendantes, responsables
+              de l&apos;usage qu&apos;elles font de ces données pour vous répondre. Un professionnel ne voit jamais les
+              autres destinataires de votre demande.
             </li>
             <li>
               <strong>Nos prestataires techniques</strong>, qui traitent les données pour notre compte :
@@ -146,6 +166,10 @@ export default function ConfidentialitePage() {
             </li>
             <li>
               <strong>Messages et demandes</strong> : 12 mois après leur traitement.
+            </li>
+            <li>
+              <strong>Demandes de rendez-vous et de devis</strong> : 12 mois après leur clôture. Le rendez-vous
+              réalisé reste dans l&apos;historique de votre appareil.
             </li>
             <li>
               <strong>Journal des actions d&apos;administration</strong> : 12 mois. Il ne contient que des

@@ -183,6 +183,24 @@
       "label": "Abonnement"
     }
   ],
+  "booking_trade": [
+    {
+      "key": "chauffagiste",
+      "label": "Chauffagiste"
+    },
+    {
+      "key": "ramoneur",
+      "label": "Ramoneur"
+    },
+    {
+      "key": "frigoriste",
+      "label": "Frigoriste"
+    },
+    {
+      "key": "assainissement",
+      "label": "Assainissement"
+    }
+  ],
   "mvp_priority": [
     {
       "key": 1,

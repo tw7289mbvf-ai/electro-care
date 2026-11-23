@@ -338,7 +338,18 @@ export async function getAdminComplianceByAccount(
 
 export type AdminActionEntry = {
   id: string;
-  action: "suspend" | "reactivate" | "delete" | "send_reset_link" | "view_compliance";
+  action:
+    | "suspend"
+    | "reactivate"
+    | "delete"
+    | "send_reset_link"
+    | "view_compliance"
+    | "view_booking_queue"
+    | "copy_booking_link"
+    | "answer_for_professional"
+    | "assign_professional"
+    | "edit_professional"
+    | "close_booking_request";
   targetAccountId: string | null;
   targetEmail: string | null;
   createdAt: string;

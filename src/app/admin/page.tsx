@@ -24,6 +24,12 @@ const ACTION_LABELS: Record<string, string> = {
   delete: "Suppression",
   send_reset_link: "Lien de réinitialisation envoyé",
   view_compliance: "Consultation de la conformité par compte",
+  view_booking_queue: "Consultation de la file des demandes",
+  copy_booking_link: "Lien professionnel copié",
+  answer_for_professional: "Réponse saisie pour un professionnel",
+  assign_professional: "Professionnel attribué à une demande",
+  edit_professional: "Annuaire des professionnels modifié",
+  close_booking_request: "Demande de rendez-vous close",
 };
 
 function formatDateTime(iso: string): string {
@@ -69,9 +75,17 @@ export default async function AdminPage() {
           <p className="mt-1 text-sm text-ink-2">
             Vue globale, sans accès au contenu des comptes.
           </p>
-          <Link href="/admin/reminders" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline">
-            Aperçu des rappels par e-mail →
-          </Link>
+          <div className="flex flex-wrap gap-x-5">
+            <Link href="/admin/reminders" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline">
+              Aperçu des rappels par e-mail →
+            </Link>
+            <Link href="/admin/bookings" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline">
+              File des demandes de rendez-vous →
+            </Link>
+            <Link href="/admin/professionals" className="mt-2 inline-flex min-h-11 items-center text-sm font-semibold text-accent hover:underline">
+              Annuaire des professionnels →
+            </Link>
+          </div>
         </header>
 
         <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
