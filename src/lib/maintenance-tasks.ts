@@ -27,7 +27,22 @@ export type MaintenanceTask = {
   // Shown instead of the legal obligation's risks on this task's row (e.g. T-158, the
   // CE EN 14604 check, whose stake is the insurer, not an undetected fire).
   risk: string | null;
+  // Trade booked through "Prendre rendez-vous" (spec "Booking Requests"); null on a
+  // task that isn't bookable in step 1 (seed/README.md "booking_trade").
+  bookingTrade: BookingTrade | null;
 };
+
+export const BOOKING_TRADES = ["chauffagiste", "ramoneur", "frigoriste", "assainissement"] as const;
+export type BookingTrade = (typeof BOOKING_TRADES)[number];
+export const BOOKING_TRADE_LABELS: Record<BookingTrade, string> = {
+  chauffagiste: "Chauffagiste",
+  ramoneur: "Ramoneur",
+  frigoriste: "Frigoriste",
+  assainissement: "Assainissement",
+};
+export function isBookingTrade(value: unknown): value is BookingTrade {
+  return typeof value === "string" && (BOOKING_TRADES as readonly string[]).includes(value);
+}
 
 export const PERFORMER_LABELS: Record<MaintenanceTask["performer"], string> = {
   diy: "À faire soi-même",
@@ -48,6 +63,7 @@ const ALL_TASKS: MaintenanceTask[] = maintenanceTasksSeed.map((t) => ({
   level: t.level as MaintenanceTask["level"],
   activeMinutes: t.active_minutes,
   risk: t.risk ?? null,
+  bookingTrade: (t.booking_trade as BookingTrade | null) ?? null,
 }));
 
 const TASKS_BY_ID = new Map(ALL_TASKS.map((t) => [t.id, t]));

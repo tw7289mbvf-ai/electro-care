@@ -64,9 +64,10 @@ export default async function proxy(request: NextRequest) {
 // forgot-password, reset-password: reachable without a session), the legal pages
 // (never touch the session) and the auth API proxy — those stay untouched so the
 // sign-in/sign-up flow and static assets never depend on this proxy running first.
-// The reminder job and the two email-link routes (/go, /api/unsubscribe) are excluded
-// too: they never read the visitor's session (src/lib/cron-auth.ts), and Vercel Cron or
-// a signed-out click from an email would otherwise be redirected to the login page.
+// The reminder job, the two email-link routes (/go, /api/unsubscribe) and the
+// professional's personal link (/pro) are excluded too: they never read the visitor's
+// session (src/lib/cron-auth.ts), and Vercel Cron, a signed-out click from an email or a
+// professional without an account would otherwise be redirected to the login page.
 export const config = {
-  matcher: ["/((?!auth|legal|api/auth|api/cron/|api/unsubscribe/|go/|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!auth|legal|api/auth|api/cron/|api/unsubscribe/|go/|pro/|_next/static|_next/image|favicon.ico).*)"],
 };

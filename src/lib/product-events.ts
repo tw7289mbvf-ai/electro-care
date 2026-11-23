@@ -11,7 +11,15 @@ export type ProductEventType =
   | "obligation_done"
   | "appointment_booked"
   | "obligation_status_changed"
-  | "multi_home_interest_clicked";
+  | "multi_home_interest_clicked"
+  // Booking requests (spec "Booking Requests"); these six are written by the SQL
+  // functions in scripts/migrate.mjs, listed here so the type stays the full contract.
+  | "booking_request_sent"
+  | "quote_received"
+  | "quote_chosen"
+  | "booking_confirmed"
+  | "booking_declined"
+  | "booking_cancelled";
 
 const UNIQUE_PER_ACCOUNT: ReadonlySet<ProductEventType> = new Set([
   "account_created",

@@ -159,6 +159,43 @@ async function main() {
     RETURNING id
   `;
 
+  // Booking requests (spec "Booking Requests"): a directory entry, A's place made
+  // bookable, one quote request of A's with two recipients and their tokens, plus a
+  // third recipient whose token has already expired.
+  await owner`UPDATE places SET postcode = '33000', street_address = '1 rue Test' WHERE id = ${place.id}`;
+  const [professional] = await owner`
+    INSERT INTO professionals (name, trades, city, postal_codes_covered)
+    VALUES ('Pro Test Isolation', ARRAY['chauffagiste'], 'Bordeaux', ARRAY['33000']) RETURNING id
+  `;
+  await owner`INSERT INTO professional_prices (professional_id, maintenance_task_id, price_eur) VALUES (${professional.id}, 'T-001', 120)`;
+  const [bookingRequest] = await owner`
+    INSERT INTO booking_requests (account_id, place_id, kind, trade, phone, address, slots, consent_at)
+    VALUES (${a.accountId}, ${place.id}, 'quote', 'chauffagiste', '0600000000', '1 rue Test, 33000 Bordeaux',
+            '[{"date":"2099-01-04","period":"morning"},{"date":"2099-01-05","period":"afternoon"}]'::jsonb, now())
+    RETURNING id
+  `;
+  const [bookingItem] = await owner`
+    INSERT INTO booking_request_items (request_id, appliance_id, maintenance_task_id, task_title, appliance_label)
+    VALUES (${bookingRequest.id}, ${appliance.id}, 'T-001', 'Entretien test', 'Chaudière test') RETURNING id
+  `;
+  const [recipient1] = await owner`
+    INSERT INTO booking_request_recipients (request_id, professional_id, provider_name, provider_city)
+    VALUES (${bookingRequest.id}, ${professional.id}, 'Pro Test Isolation', 'Bordeaux') RETURNING id
+  `;
+  const [recipient2] = await owner`
+    INSERT INTO booking_request_recipients (request_id, provider_name)
+    VALUES (${bookingRequest.id}, 'SECOND-RECIPIENT-SECRET') RETURNING id
+  `;
+  const [recipient3] = await owner`
+    INSERT INTO booking_request_recipients (request_id, provider_name)
+    VALUES (${bookingRequest.id}, 'Expired recipient') RETURNING id
+  `;
+  const [token1] = await owner`INSERT INTO booking_recipient_tokens (recipient_id) VALUES (${recipient1.id}) RETURNING token`;
+  await owner`INSERT INTO booking_recipient_tokens (recipient_id) VALUES (${recipient2.id})`;
+  const [token3] = await owner`
+    INSERT INTO booking_recipient_tokens (recipient_id, expires_at) VALUES (${recipient3.id}, now() - interval '1 day') RETURNING token
+  `;
+
   // B's own legitimate resources, for the injection/reattachment tests
   const [placeB] = await sqlB`INSERT INTO places (account_id, name) VALUES (auth.uid(), 'B place') RETURNING id`;
   const [applianceB] = await sqlB`INSERT INTO appliances (place_id, category, name) VALUES (${placeB.id}, 'kitchen', 'B appliance') RETURNING id`;
@@ -175,6 +212,10 @@ async function main() {
     { table: "maintenance_completions", id: completion.id, col: "maintenance_task_id" },
     { table: "maintenance_deferrals", id: deferral.id, col: "deferred_to_month" },
     { table: "account_requests", id: request.id, col: "message" },
+    { table: "booking_requests", id: bookingRequest.id, col: "phone" },
+    { table: "booking_request_items", id: bookingItem.id, col: "task_title" },
+    { table: "booking_request_recipients", id: recipient1.id, col: "provider_name" },
+    { table: "professionals", id: professional.id, col: "name" },
   ];
   for (const t of targets) {
     const sel = await refused(() => sqlB.query(`SELECT * FROM ${t.table} WHERE id = $1`, [t.id]));
@@ -293,7 +334,7 @@ async function main() {
   record("SELECT A's document after injection attempt", stillHidden.ok);
 
   // --- 3. No session at all ------------------------------------------------
-  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "account_requests", "account_preferences", "product_events", "reminder_logs", "reminder_schedule_sent"]) {
+  for (const table of ["places", "appliances", "appliance_obligations", "obligation_completions", "obligation_appointments", "place_checks", "documents", "document_appliances", "maintenance_completions", "maintenance_deferrals", "account_requests", "account_preferences", "product_events", "reminder_logs", "reminder_schedule_sent", "professionals", "professional_prices", "booking_requests", "booking_request_items", "booking_request_recipients", "booking_recipient_tokens"]) {
     const res = await refused(() => sqlAs(undefined).query(`SELECT * FROM ${table}`));
     record(`SELECT ${table} with no session token`, res.ok, res.code);
   }
@@ -329,6 +370,14 @@ async function main() {
     ["admin_log_action(...)", () => sqlB`SELECT admin_log_action('suspend', ${a.accountId})`],
     ["admin_list_requests()", () => sqlB`SELECT * FROM admin_list_requests()`],
     ["admin_mark_request_handled(...)", () => sqlB`SELECT admin_mark_request_handled(${request.id})`],
+    ["admin_list_professionals()", () => sqlB`SELECT admin_list_professionals()`],
+    ["admin_save_professional(...)", () => sqlB`SELECT admin_save_professional('{"name":"PIRATE"}'::jsonb)`],
+    ["admin_set_professional_active(...)", () => sqlB`SELECT admin_set_professional_active(${professional.id}, false)`],
+    ["admin_list_booking_requests()", () => sqlB`SELECT admin_list_booking_requests()`],
+    ["admin_booking_recipient_link(...)", () => sqlB`SELECT admin_booking_recipient_link(${recipient1.id})`],
+    ["admin_record_booking_answer(...)", () => sqlB`SELECT admin_record_booking_answer(${recipient1.id}, 'decline', '{}'::jsonb)`],
+    ["admin_add_booking_recipient(...)", () => sqlB`SELECT admin_add_booking_recipient(${bookingRequest.id}, ${professional.id}, NULL)`],
+    ["admin_close_booking_request(...)", () => sqlB`SELECT admin_close_booking_request(${bookingRequest.id})`],
   ];
   for (const [label, fn] of adminFunctionCalls) {
     const res = await refused(fn);
@@ -359,11 +408,53 @@ async function main() {
     ["get_reminder_log_payload(...)", () => sqlB`SELECT get_reminder_log_payload(${reminderLog.id}, 0)`],
     ["log_reminder_link_click(...)", () => sqlB`SELECT log_reminder_link_click(${reminderLog.id}, 0, 'fiche')`],
     ["unsubscribe_by_token(...)", () => sqlB`SELECT unsubscribe_by_token(${preferences.unsubscribe_token})`],
+    ["pro_get_booking(...)", () => sqlB`SELECT pro_get_booking(${token1.token})`],
+    ["pro_answer_booking(...)", () => sqlB`SELECT pro_answer_booking(${token1.token}, 'decline', '{}'::jsonb)`],
+    ["cron_purge_closed_booking_requests()", () => sqlB`SELECT cron_purge_closed_booking_requests()`],
   ];
   for (const [label, fn] of cronFunctionCalls) {
     const res = await refused(fn);
     record(`${label} (B, not cron)`, res.ok, res.rows !== undefined ? `${res.rows} row(s)` : res.code);
   }
+
+  // --- 6c. Booking functions scoped to the caller's own account, called as B on A's rows.
+  // A row count of 0 is not enough here: these are void functions, so "ok" means the
+  // call raised (42501) and nothing moved — checked by reading the row back as owner.
+  const bookingCalls = [
+    ["choose_booking_answer(A's recipient)", () => sqlB`SELECT choose_booking_answer(${recipient1.id})`],
+    ["cancel_booking_request(A's request)", () => sqlB`SELECT cancel_booking_request(${bookingRequest.id})`],
+    [
+      "create_booking_request(on A's place)",
+      () => sqlB`SELECT create_booking_request(${JSON.stringify({
+        place_id: place.id, kind: "appointment", trade: "chauffagiste", phone: "06", consent: true,
+        slots: [{ date: "2099-01-04", period: "morning" }, { date: "2099-01-05", period: "morning" }],
+        items: [{ appliance_id: appliance.id, maintenance_task_id: "T-001", task_title: "x", appliance_label: "x" }],
+        recipients: [{ professional_id: professional.id }],
+      })}::jsonb)`,
+    ],
+  ];
+  for (const [label, fn] of bookingCalls) {
+    let raised = false;
+    try {
+      await fn();
+    } catch (e) {
+      raised = e.code === "42501";
+    }
+    record(`${label} (B)`, raised, raised ? "42501" : "did not raise 42501");
+  }
+  const [stillSent] = await owner`SELECT status FROM booking_requests WHERE id = ${bookingRequest.id}`;
+  record("A's booking request untouched by B", stillSent.status === "sent", stillSent.status);
+  const [bRequests] = await owner`SELECT COUNT(*)::int AS n FROM booking_requests WHERE account_id = ${b.accountId}`;
+  record("No booking request created for B on A's place", bRequests.n === 0, `${bRequests.n} row(s)`);
+
+  // The directory as a user sees it: exactly name, city and prices — never the rating,
+  // the status or the notes (spec "Professionals directory").
+  const listed = await sqlB`SELECT * FROM list_bookable_professionals('chauffagiste', '33000', ARRAY['T-001'])`;
+  const entry = listed.find((p) => p.id === professional.id);
+  const columns = entry ? Object.keys(entry).sort().join(",") : "";
+  record("list_bookable_professionals: public columns only", columns === "city,id,name,prices", columns || "entry not listed");
+  const anon = await refused(() => sqlAs(undefined)`SELECT * FROM list_bookable_professionals('chauffagiste', '33000', ARRAY['T-001'])`);
+  record("list_bookable_professionals with no session token", anon.ok, anon.code);
 
   // --- 7. /admin and its actions over real HTTP, for a non-admin session and for no
   // session at all — both must answer 404, indistinguishable from a route that doesn't
@@ -376,6 +467,20 @@ async function main() {
       const httpChecks = [
         ["GET /admin, no session", () => fetch(`${app.base}/admin`)],
         ["GET /admin, B (not admin)", () => fetch(`${app.base}/admin`, { headers: { Cookie: bCookie } })],
+        ["GET /admin/professionals, no session", () => fetch(`${app.base}/admin/professionals`)],
+        ["GET /admin/professionals, B (not admin)", () => fetch(`${app.base}/admin/professionals`, { headers: { Cookie: bCookie } })],
+        ["GET /admin/bookings, no session", () => fetch(`${app.base}/admin/bookings`)],
+        ["GET /admin/bookings, B (not admin)", () => fetch(`${app.base}/admin/bookings`, { headers: { Cookie: bCookie } })],
+        ["GET /requests/<A's request>, B", () => fetch(`${app.base}/requests/${bookingRequest.id}`, { headers: { Cookie: bCookie } })],
+        [
+          "POST /admin/actions (booking-link), B (not admin)",
+          () =>
+            fetch(`${app.base}/admin/actions`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json", Origin: app.base, Cookie: bCookie },
+              body: JSON.stringify({ action: "booking-link", recipientId: recipient1.id }),
+            }),
+        ],
         [
           "POST /admin/actions, no session",
           () =>
@@ -399,6 +504,23 @@ async function main() {
         const res = await fn();
         record(label, res.status === 404, `HTTP ${res.status}`);
       }
+
+      // --- 8. The professional's personal link (/pro/<token>): only its own request,
+      // never another recipient; 404 for an unknown or expired token. Needs the cron
+      // account's credentials (src/lib/cron-auth.ts) in the environment, like the app.
+      if (process.env.CRON_ACCOUNT_EMAIL && process.env.CRON_ACCOUNT_PASSWORD) {
+        const own = await fetch(`${app.base}/pro/${token1.token}`);
+        const html = await own.text();
+        record("GET /pro/<valid token>", own.status === 200, `HTTP ${own.status}`);
+        record("/pro page shows the request", html.includes("1 rue Test") && html.includes("0600000000"), undefined);
+        record("/pro page never shows another recipient", !html.includes("SECOND-RECIPIENT-SECRET"), undefined);
+        const unknown = await fetch(`${app.base}/pro/00000000-0000-4000-8000-000000000000`);
+        record("GET /pro/<unknown token>", unknown.status === 404, `HTTP ${unknown.status}`);
+        const expired = await fetch(`${app.base}/pro/${token3.token}`);
+        record("GET /pro/<expired token>", expired.status === 404, `HTTP ${expired.status}`);
+      } else {
+        console.log("CRON_ACCOUNT_EMAIL/CRON_ACCOUNT_PASSWORD not set — skipping /pro/<token> HTTP checks");
+      }
     } finally {
       app.stop();
     }
@@ -406,7 +528,10 @@ async function main() {
     console.log("SKIP_HTTP_ISOLATION=1 — skipping /admin HTTP checks");
   }
 
-  // --- Cleanup: delete both throwaway accounts, cascades everything -------
+  // --- Cleanup: the directory entry first (no account owns it, so nothing cascades
+  // it away), then both throwaway accounts, which cascade everything else -------
+  await owner`DELETE FROM professionals WHERE id = ${professional.id}`;
+
   // stdio was "ignore" — a failed delete here used to pass silently. Now each is
   // wrapped so a failure is printed loudly (with the id to delete by hand) instead of
   // disappearing, and one failing doesn't stop the other from being attempted.

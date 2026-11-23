@@ -12,6 +12,7 @@ import { getPlace } from "@/lib/places";
 import { getObligationRecordsForAppliance } from "@/lib/appliance-obligations";
 import { getObligationCompletionsForAppliance } from "@/lib/obligation-completions";
 import { getAppointmentsForAppliance } from "@/lib/obligation-appointments";
+import { getBookingRequestsForAppliance, summarizeOpenRequests } from "@/lib/booking-requests";
 import { getMaintenanceCompletionsForPlace, getLatestMaintenanceCompletionsForAppliance } from "@/lib/maintenance-completions";
 import { getMaintenanceDeferralsForPlace } from "@/lib/maintenance-deferrals";
 import {
@@ -51,7 +52,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
   }
 
   const month = currentMonthKey();
-  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions] =
+  const [obligationRecords, obligationCompletions, appointments, placeCompletions, placeDeferrals, latestCompletions, bookingRequests] =
     await Promise.all([
       getObligationRecordsForAppliance(id),
       getObligationCompletionsForAppliance(id),
@@ -59,6 +60,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
       getMaintenanceCompletionsForPlace(appliance.placeId, month),
       getMaintenanceDeferralsForPlace(appliance.placeId),
       getLatestMaintenanceCompletionsForAppliance(id),
+      getBookingRequestsForAppliance(id),
     ]);
   const completions = placeCompletions.filter((c) => c.applianceId === id);
   const deferrals = placeDeferrals.filter((d) => d.applianceId === id);
@@ -138,6 +140,7 @@ export default async function AppliancePage({ params }: { params: Promise<{ id: 
         appliances={[appliance]}
         obligationRecords={obligationRecords}
         appointments={appointments}
+        bookingRequests={summarizeOpenRequests(bookingRequests)}
         placeChecks={[]}
         completionsByTaskId={obligationCompletionsByTaskId}
       />

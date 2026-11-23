@@ -143,6 +143,7 @@ export async function GET(request: Request) {
   }
 
   await sql`SELECT cron_purge_old_reminder_logs()`;
+  await sql`SELECT cron_purge_closed_booking_requests()`;
 
   return Response.json({ accountsNotified: byAccount.size, sendingEnabled });
 }

@@ -1,18 +1,20 @@
 # Electro Care – One-Page Spec (B2C MVP)
 
-> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-09-22 (doc rev 62). The doc is the source of truth: edit it there, then re-export this file.
+> Snapshot of the Claude Doc [Electro Care – One-Page Spec (B2C MVP)](https://claude.ai/artifact/QVsDz6zhy97VVDTLB4Cj2v), exported 2026-11-23 (doc rev 99). The doc is the source of truth: edit it there, then re-export this file.
 
 ## Problem & Vision
 
-Home appliances and equipment (boiler, washing machine, pool pump, HVAC, etc.) lose years of useful life because owners don't know when maintenance is due or how to perform it. Electro Care centralizes every appliance a household owns, sends timely reminders for periodic upkeep, and gives clear step-by-step instructions for each task — extending equipment lifespan and preventing costly failures.
+French households must have a professional service their boiler, flues, stove, heat pump or septic tank at set intervals, and most only find out when an insurer or a buyer asks for the proof. Electro Care tracks each legal obligation of a home, reminds the user in time and books the professional. Lifespan maintenance of the other appliances stays in the app as a simpler, generic second track.
 
-The ambition is a "Doctolib of the home": the home's health record (legal obligations, maintenance, documents), files ready to send to an insurer or for a sale, and later the booking of the professionals who keep it compliant. Unlike the French home logbook apps (CLÉA, Mon Suivi Logement, Homekonect), which send generic reminders, Electro Care tracks each legal obligation with a status, its risks and a ready-to-send request.
+The ambition is a "Doctolib of the home": the home's health record (legal obligations, maintenance, documents), files ready to send to an insurer or for a sale, and, since the recentring of 18 November 2026, the booking of the professionals who keep it compliant as the core of the product. Unlike the French home logbook apps (CLÉA, Mon Suivi Logement, Homekonect), which send generic reminders, Electro Care tracks each legal obligation with a status, its risks and a ready-to-send request.
 
 ## Target User & Market
 
 Homeowners in France (v1 market: France only) who want to extend the life of their appliances and equipment, stay compliant with mandatory maintenance obligations (e.g. annual boiler servicing), and manage it all from a single place. The interface itself is in French, matching the target market — no multi-language support needed for v1.
 
 ## MVP Feature Set (v1)
+
+Recentred on 18 November 2026: the core of the MVP is the legal obligation, its reminder and the booking of the professional (Booking Requests). Lifespan maintenance stays, generic and secondary. Invoice import and model-specific guides are frozen.
 
 - Personal account: sign in to see your own places and appliances; a signed-out visitor sees a demo dashboard ([Accounts and Privacy](#accounts-and-privacy))
 - Organize everything by place, then by category ([Places and Categories](#places-and-categories))
@@ -31,7 +33,7 @@ Homeowners in France (v1 market: France only) who want to extend the life of the
 The app is organized by place first, then by category, then by appliance. A place is more than a folder:
 
 - **Commune**: legal reminders are computed per place, because local rules vary. Example: the SPANC inspection is due at least every 10 years, but a commune can set a shorter interval ([source](https://www.ethnasystem.eu/2026/04/12/controle-spanc-est-il-obligatoire-pour-lassainissement-non-collectif/)).
-- **Postal address, optional**: street and number, with an optional second line, entered once on the place so that intervention requests carry it without retyping. Like the rest of the place, never visible to the admin.
+- **Postal address, optional**: street and number, with an optional second line, entered once on the place so that intervention requests carry it without retyping. Never visible to the admin, except inside a booking request the user sends, with explicit consent.
 - **Property type**: main home, second home or rental. It sets who is liable for upkeep and which seasonal tasks apply, such as winterizing a second home.
 - **Sharing scope**: a place is the natural unit for inviting a tenant or a technician later, without exposing the other places.
 - **Room**: optional tag, not a navigation level. Mainly used to tell two identical units apart, such as two splits in two bedrooms.
@@ -79,7 +81,7 @@ Legal obligations and lifespan maintenance are shown as two separate tracks, bui
 - **One date question per obligation**: each names the appliance and the intervention ("When was the boiler last serviced?"), with answers graded on the real legal interval: month and year; "less than a year ago" without a precise date (orange); "more than a year ago" (red); and last, a single "never or I don't know" button (red, shown as a priority). The interval follows the obligation: one year for a boiler, two for a heat pump, ten for the SPANC inspection.
 - **Dates in French**: picked from two lists (month in words, year) and shown as "septembre 2026", never with a day.
 - **Actions and colours**: green shows no button; red shows "C'est fait"; orange shows "Mettre à jour", which opens a window aimed at what is missing, never the generic appliance form. For a power threshold, it asks "Quelle est la puissance du groupe extérieur ?" (read on its nameplate; for a multisplit, the outdoor unit's power is what counts), with "Moins de 4 kW", "4 kW ou plus", a figure, or "Je ne sais pas". For a date, it asks the obligation's own date question. Below the threshold, the obligation becomes "Non concerné", shown in grey and left out of the compliance count; entering the power in the appliance card has the same effect. Status badges use the three status colours, "À confirmer" in orange like its status. Buttons keep one colour everywhere: "C'est fait" in green, "Mettre à jour" in orange like the status it resolves, and "Reporter" in orange; the two orange buttons never appear side by side, one in obligations, the other in the monthly maintenance.
-- **Bridge to professionals**: most obligations need a professional, so an obligation coming due offers the ready-to-send request today, and booking a listed professional once the professional side exists.
+- **Bridge to professionals**: most obligations need a professional, so each of them offers "Prendre rendez-vous", described in Booking Requests; the ready-to-send request remains for places outside the covered zone.
 
 ## Onboarding Questionnaire
 
@@ -92,12 +94,12 @@ Asked at first use and for each new place. Afterwards, appliances are added one 
 - **Questions name the appliance**: every question and every date request states which appliance and which intervention it is about.
 - **Never blocking**: every obligation question offers "Je ne sais pas", as a regular button in last position. It adds a "to check" item on the home screen, with a tip to find the answer, such as the water bill for the sewer connection.
 - **Smoke detector**: always created, since it is mandatory in every home. Four answers: "Oui, un détecteur autonome", "Oui, relié à mon alarme", "Non" (overdue) and "Je ne sais pas". A standalone detector: the date printed on its back and what it means, a manufacturing date, replaced 10 years later, or a replacement deadline ("à remplacer avant 2034"), used as is; future years are offered for the deadline; recent models have a sealed 10-year battery, so no yearly battery reminder. A detector linked to an alarm: the app asks whether the alarm is monitored by a provider. Monitored: the obligation shows "Suivi par votre télésurveillance" in green, a one-time check asks whether the detector bears the CE EN 14604 marking ("Je ne sais pas" keeps it to confirm, with a tip to check its label or the provider's contract), and the provider's visits are recorded like any intervention. Not monitored: a monthly reminder to test it from the alarm's app, and the replacement date asked as for a standalone detector. Existing detectors stay standalone; a user changes the type from the detector's card ("Type": "Détecteur autonome" or "Relié à mon alarme", followed by the same two questions), or from the "Mettre à jour" window when the detector is to confirm, which offers "Il est relié à mon alarme" next to the date.
-- **Printed dates can be in the future**: the expiry date of a gas hose and a detector's replacement deadline are future dates, so their year lists extend ahead; intervention dates never do.
+- **Printed dates can be in the future**: the expiry date of a gas hose and a detector's replacement deadline are future dates, so their year lists extend ahead; intervention dates never do. A gas hose can also be answered "Flexible métallique, sans date limite", up to date with no next deadline, or "Raccordement rigide, pas de flexible", not concerned.
 - **Pool**: the answer names the safety device (barrier, alarm, cover or shelter); "no device" shows as overdue.
 - **Dates**: asked through each obligation's own question, described in Obligations and Maintenance.
 - **One date for an appliance and its flue**: a stove, insert or boiler and its flue get a single date question, since servicing and sweeping are done in the same visit. A "done separately?" link allows two dates, or marking only one of the two as done.
 - **Appliance upkeep, optional**: a gate question separates it from the legal part; if the user opts in, the appliance checklist and the maintenance level follow, as described in Maintenance Levels.
-- **Then improve**: brand, model and purchase date are added later from the appliance card.
+- **Then improve**: brand, model and purchase date are added later from the appliance card. For the boiler, stove, insert and heat pump, the recap already offers brand and model, optional with "Je ne sais pas", because they travel with the booking request.
 
 ## Accounts and Privacy
 
@@ -115,7 +117,7 @@ Each person has an account, and sees only their own places and appliances. This 
 
 ## Administration
 
-An admin page, reserved to the owner's account, gives a global view without access to users' content.
+An admin page, reserved to the owner's account, gives a global view without access to users' content, except the booking requests users choose to send (Booking Requests).
 
 - **Figures without personal data**: accounts (total, new in the last 7 days, active in the last 30), places, appliances, completed questionnaires, obligations by status.
 - **Account list**: email, creation date, last sign-in, number of places and appliances. Not their content, no addresses and no appliances, following the GDPR need-to-know principle.
@@ -128,7 +130,7 @@ An admin page, reserved to the owner's account, gives a global view without acce
 
 ## Dashboard
 
-What a signed-in user sees first.
+What a signed-in user sees first. Since 18 November 2026, legal obligations and their booking lead on the home screen and on each place page; lifespan maintenance sits below, in a secondary section collapsed by default.
 
 - **Global status first**: across all places, "2 overdue · 1 to confirm · 12 up to date", and "3 maintenance tasks this month".
 - **"À faire maintenant"**: only overdue (red) obligations, grouped under each place's name so it stays readable, each with its "C'est fait" button. The urgent stays actionable from the home screen.
@@ -152,7 +154,34 @@ Tapping an appliance opens its card.
 - **Delete an appliance**: with a confirmation; its obligations and reminders are removed with it.
 - **Delete a place**: with a warning that names what goes with it ("also deletes 4 appliances and their reminders"), then a cascade delete.
 
-## Import from Invoices (planned)
+## Booking Requests
+
+Decided on 18 November 2026: the product recentres on booking the professional for each legal obligation. The end goal is direct booking in the professional's agenda, as on Doctolib, so that a tradesperson no longer needs someone to answer the phone. Step 1, described here, is a concierge version: the request is real, the dispatch is done by hand.
+
+Two options in one form, decided on 23 November 2026, both for a legally required maintenance service: boiler service, chimney sweeping, stove or insert service, heat pump or air conditioning service, septic tank emptying. "Prendre rendez-vous" sends the request to one professional. "Demander un devis" sends it to several professionals, three at most, so that the user compares prices and dates before choosing one. The entry button is "Prendre rendez-vous", on each legal obligation done by a professional and in the reminder email. Quotes for breakdowns, replacements or installations are left out for now.
+
+The price is shown in the list when the professional has given a price list; otherwise it comes with the professional's answer. A request sent to a professional with no listed price is therefore handled as a quote, even when it goes to a single professional.
+
+- **Bookable obligations**: the legal tasks done by a professional, each flagged in the reference data with its trade. Heating engineer: boiler and gas water heater. Chimney sweep: flue sweeping, stove and insert service. Refrigeration technician: heat pump, air conditioning and thermodynamic water heater from 4 kW. Sanitation: septic tank emptying and micro-station maintenance. Not bookable in step 1: the SPANC inspection (the public service convenes it), the vehicle inspection, landlord diagnostics, the lift and the propane tank.
+- **The form**: the appliance, its brand, model, year and last service date, prefilled from the appliance card; the fuel for a boiler; the appliance type and the number of flues for sweeping; an optional nameplate photo, a mock until document storage exists; two or three preferred half-days; a phone number; the place's address; a free comment. Every appliance field is optional, with "Je ne sais pas".
+- **Grouping**: one request can cover several obligations of the same place in one visit, such as the boiler and its flue.
+- **Consent, on every request**: a required checkbox, "J'accepte que mon adresse, mon téléphone et les informations de cet appareil soient transmis aux professionnels que j'ai choisis et visibles par l'équipe Electro Care pour traiter ma demande."
+- **Choosing the professional**: the form lists the professionals of the right trade who cover the place's postal code, each with the price of the service when known. For an appointment the user picks one, or "Le premier disponible"; for a quote, up to three. A provider the user has already named in a "C'est fait" appears first, already ticked. Listed professionals cover Bordeaux Métropole and part of the Médoc at first; elsewhere, only the user's own provider and the ready-to-send request are offered.
+- **The professional's answer**: each professional gets the request with a personal link, with no account to create. The link lets them confirm one of the proposed half-days with a time, propose another date, or decline; for a quote, they give their price and their first available dates. A professional never sees who else received the request. The link is single-purpose and expires after 30 days, like reminder links.
+- **Statuses**: "Demande envoyée"; for a quote, "Devis reçus" with their count ("2 sur 3"), where the user compares price and date and picks one; then "Rendez-vous confirmé" with its date and provider; then "Réalisé". The professionals not chosen are told so. A confirmed appointment reuses "Rendez-vous pris" (blue badge, the question once the date has passed), and "Réalisé" is the usual "C'est fait" entry in the history. A decline, or no answer within three working days, is shown to the user and flagged in the admin queue. The user can cancel at any time.
+- **Professionals directory, in the admin page**: name, trade, contact, postal codes covered, services with their price, a status (Non contacté, Contacté, Partenaire, Refus), Google rating and review count at entry, notes. Seeded on 23 November 2026 with thirteen companies found on Google Maps, eight heating engineers and five chimney sweeps, none contacted yet. Users see the name, the town and the price; the Google rating stays in the admin page. A company that refuses is switched off and no longer offered.
+- **Request queue, in the admin page**: each request with its status, its age and its professionals. For each professional, the owner copies the personal link to send it himself, or records by hand the answer received by phone: price, date or decline. He can also add a professional to a request or close it. This is the one place where the admin sees an address, a phone number and an appliance, because the user sent them; each viewing is written to the admin log.
+- **Emails**: the request to the professional and the confirmations to the user are sent through the same service as the reminders, so they wait for the domain and the Brevo account. Until then the queue works with in-app statuses, and the owner contacts each professional himself, by phone or by sending the personal link.
+
+| Step | What it adds | What it validates |
+| --- | --- | --- |
+| 1. Concierge | The appointment and quote requests, the directory and the queue, with manual dispatch | Users ask for an appointment from the app |
+| 2. Light agenda | The professional opens half-days per zone; the user picks one; confirmation is automatic | Professionals agree to publish their availability |
+| 3. Client portfolio | The professional imports the clients under contract; the app runs the yearly campaigns | Professionals pay a subscription |
+
+## Import from Invoices (frozen)
+
+Frozen on 18 November 2026: the import button is hidden and the code stays in place, with no connection to an AI service and no cost. What follows describes the feature as designed.
 
 An invoice or a photo of it fills in appliances automatically, instead of entering them one by one.
 
@@ -177,10 +206,10 @@ An invoice or a photo of it fills in appliances automatically, instead of enteri
 ## Maintenance Guidance
 
 - **General procedure**: every maintenance task shows the general recommended steps from the reference data, with tools and what goes wrong if skipped.
-- **Model-specific step-by-step**: when brand and model are known, a precise procedure is generated on demand from the manufacturer's manual, stored and reused for everyone with the same model. It complements the general procedure, labelled "from the manufacturer's manual" with a link and a "report an error" button. The manual is summarised, never copied. Free, like everything for individuals.
+- **Model-specific step-by-step**: dropped on 18 November 2026. Generating a precise procedure per model from the manufacturer's manual costs too much in AI reading for what it adds; the general procedure of the reference data is the guidance, for every model.
 - **Product links**: each task that lists consumables (filters, descaler, batteries) offers a link to buy them, with the exact reference once the model is known. Links are marked as affiliate links and never presented as neutral advice.
-- **Never for risky interventions**: model-specific steps only cover tasks users do themselves (filters, descaling); gas and combustion work stays with a professional.
-- **In the MVP**: a single demonstration on one precise product, written once, with no generation.
+- **Never for risky interventions**: the guidance only covers tasks users do themselves (filters, descaling); gas and combustion work stays with a professional.
+- **In the MVP**: generic guidance only. A generic task can name a part some models lack, such as a washing machine without an accessible drain filter, so each maintenance task offers "Mon appareil n'a pas cet élément": the task becomes "Non concerné" for that appliance, leaves the lists and the time estimate, and can be restored from the appliance card.
 
 ## Maintenance Levels
 
@@ -199,7 +228,7 @@ Lifespan maintenance comes in levels, so users are not overwhelmed by every reco
 The first step of the MVP's validation: the reminders are the core promise and the reason users come back.
 
 - **Schedule**: for each legal obligation, three months before the due date, one month before if neither done nor booked, and at the due date. Reminders stop as soon as "C'est fait" or "Rendez-vous pris" is recorded. One email per user per day at most, grouping obligations due around the same date.
-- **The request inside**: the two ready-to-send versions, quote and intervention, addressed to the provider when their email is known.
+- **The request inside**: the main button is "Prendre rendez-vous", which opens the booking request for that obligation (Booking Requests). The two ready-to-send versions, quote and intervention, stay below it for users who prefer to write to their provider themselves.
 - **Brand and model missing**: the email says why to add them, with a link to the appliance card: "Ajoutez la marque et le modèle : votre demande sera plus précise, et le professionnel pourra prévoir les bonnes pièces."
 - **Sending**: through Brevo, a French email service, from the app's own domain, with SPF, DKIM and DMARC set up. Sign-up and password emails move to the same service. Until the domain and the account exist, everything is built but sending stays switched off.
 - **Opt-out**: a "Rappels par e-mail" switch in Paramètres, on by default, and a link at the bottom of each email.
@@ -207,10 +236,10 @@ The first step of the MVP's validation: the reminders are the core promise and t
 
 ## Measuring the MVP
 
-- **When**: around mid-December 2026, after eight to ten weeks of real use by 50 to 100 accounts.
-- **Seven indicators**, thresholds to treat as hypotheses: activation, at least 60 % of accounts finish the questionnaire; engagement, at least 40 % of them record a "C'est fait" or an appointment within 30 days; retention, at least 30 % come back in the second month; reminder effect, at least 20 % of reminder emails followed by an action within 30 days; promise kept, at least 30 % of red obligations turn green within 60 days; attachment, at least 40 % "très déçu" in the Sean Ellis survey; business model, at least three property professionals ready to pay 5 € per home per month, tracked by hand.
+- **When**: eight to ten weeks after reminders and booking requests go live, with 50 to 100 accounts. The mid-December 2026 date no longer holds: sending is still switched off.
+- **Seven indicators**, thresholds to treat as hypotheses, recentred on the booking funnel on 18 November 2026: activation, at least 60 % of accounts finish the questionnaire; reminder effect, at least 20 % of reminder emails followed by a booking request, an appointment or a "C'est fait" within 30 days; demand, at least 30 % of overdue obligations done by a professional get a booking request; confirmation, at least 70 % of requests confirmed by a professional within five working days; promise kept, at least 30 % of red obligations turn green within 60 days; attachment, at least 40 % "très déçu" in the Sean Ellis survey; business model, at least three tradespeople of Bordeaux Métropole ready to pay a monthly subscription, tracked by hand.
 - **Reading rule**: indicators 1 to 3 met but not 7, the product works and monetization needs rework; indicators 1 to 3 missed, fix the product before anything else.
-- **Instrumentation**: product events recorded in the app's own database, with no cookie and no third-party tool: account created, questionnaire completed, "C'est fait", appointment booked, reminder sent, reminder link clicked, obligation status change. A KPI panel in the admin page computes the indicators, aggregated, without personal data.
+- **Instrumentation**: product events recorded in the app's own database, with no cookie and no third-party tool: account created, questionnaire completed, "C'est fait", appointment booked, reminder sent, reminder link clicked, obligation status change, appointment or quote request sent, quote received, quote chosen, request confirmed, declined or cancelled. A KPI panel in the admin page computes the indicators, aggregated, without personal data.
 - **Monthly activity, aggregated**: a 12-month bar chart with three series: legal interventions recorded, maintenance tasks done, and overdue obligations brought up to date. Counted on the date the user records it in the app, not the intervention month they declare; entries from the questionnaire and from the history migration are left out. Status changes are recorded since 5 October 2026, so the third series starts then.
 - **Compliance and activity per account, for support**: in the admin page, one line per account with its email, sign-up date, number of places, its counts of overdue, to-confirm and up-to-date obligations with a mini gauge, and this month's three activity counts; a line expands to its last twelve months. Sorted by overdue count. Never the appliances, places or addresses behind the counts. The privacy policy states it, and each viewing is written to the admin log.
 - **Sean Ellis survey**: shown once in the app after 30 days of use: "Comment vous sentiriez-vous si vous ne pouviez plus utiliser Electro Care ?" with "Très déçu", "Un peu déçu", "Pas déçu", and an optional comment.
@@ -221,7 +250,7 @@ Validated on 6 October 2026, on the design canvas ([Electro Care, nouveau design
 
 - **Fresh and modern**: a light blue-grey ground, slate ink instead of black, and an electric blue for the brand, distinct from the green of "À jour".
 - **Light by default, dark on request**: Paramètres offers "Affichage" with three choices, "Clair" (default), "Sombre" and "Selon le téléphone". The choice is kept in a first-party cookie on the device and applied when the page is built, so the page never flashes the wrong theme; signed-out pages follow the same cookie, light when there is none. One set of tokens per theme.
-- **Compliance gauge on every level**: on the home screen for all places together, and at the top of each place page for that place alone, with the same card: "13 sur 28 obligations à jour", the segmented bar, its legend, and the month's maintenance with its duration.
+- **Compliance gauge on every level**: on the home screen for all places together, and at the top of each place page for that place alone, with the same card: "13 sur 28 obligations à jour", the segmented bar and its legend. The gauge counts legal obligations only (confirmed on 18 November 2026): maintenance tasks never enter it, and "Non concerné" obligations are left out. The month's maintenance, with its duration, moves to the maintenance section below.
 - **Durations readable**: under an hour in minutes ("environ 45 min"), from an hour in hours and minutes rounded to five minutes ("environ 4 h 45").
 - **Softer statuses**: red, orange and green appear as pale pills with dark text; only the compliance bar uses full colours.
 - **Typography**: Bricolage Grotesque for titles and figures, Figtree for text, both self-hosted by the app so no visitor's IP address is sent to Google.
@@ -248,6 +277,13 @@ Short, separate work sessions, each with the isolation test and the production p
 
 The calendar subscription link follows step 7.
 
+Recentring of 18 November 2026. Steps 8 to 11 above wait; the next work sessions are:
+
+1. Reference data corrections, after step 2: washing machine, gas hose, "Mon appareil n'a pas cet élément".
+2. Appointment and quote requests, with the trade flag on each bookable legal task, the professionals directory and the request queue in the admin page. Started first, on 23 November 2026.
+3. Legal obligations first: home screen, place page, questionnaire and public home page; gauge on legal obligations only; invoice import hidden.
+4. Emails switched on, once the name, the domain and the Brevo account exist.
+
 ## Tenants (planned)
 
 In a long-term rental, several obligations fall on the tenant (boiler service, chimney sweeping, smoke detector upkeep, gas hose), while the owner bears the consequences with the insurer. Landlords chase these certificates by hand today. The feature is free for individual landlords; property managers handling many homes are part of the professional offer.
@@ -264,8 +300,10 @@ In a long-term rental, several obligations fall on the tenant (boiler service, c
 Decided on 28 September 2026: individuals never pay. Revenue comes from professionals, as with Doctolib, where practitioners pay and patients don't.
 
 - **Individuals, free**: every feature, from obligations and reminders to documents, guides and tenant follow-up for an individual landlord.
-- **Tradespeople, paying**: later, heating engineers, chimney sweeps and other trades get an agenda and appointments from the app's users. Launched city by city, starting with one, since a professional only pays where the demand is.
+- **Tradespeople, paying**: the core of the model since 18 November 2026. Heating engineers, chimney sweeps and other trades pay a monthly subscription for online booking and the yearly follow-up of their clients, which replaces the phone and the secretarial work. Free for them during step 1 of Booking Requests; the price is set after interviews with tradespeople. Launched city by city, starting with Bordeaux Métropole, since a professional only pays where the demand is.
 - **Property professionals, paying**: property managers, short-term rental concierges and agencies managing many homes, for multi-place management and tenant follow-up at scale.
+- **Breakdowns, paying** (added 13 October 2026): when an appliance breaks down, the app first gives neutral advice, repair or replace, from the appliance's age, price and repairability; then sends a qualified request to a labelled repairer (QualiRépar, so the bonus réparation applies): brand, model, age, maintenance history and the error code shown. The repairer pays a fee per confirmed repair; when the advice is to replace, the product link takes over. Neutrality is the rule: the app never steers towards repair or replacement for its own revenue. Context: about 10 million repairs a year in France; the bonus réparation has supported 1.9 million repairs through about 8 900 labelled points.
+- **Later, a maintenance and breakdown subscription**: the British model (British Gas HomeCare, Hometree) and Darty Max in France, yearly servicing plus breakdown cover for a monthly fee. Covering breakdowns is insurance under French law, so the app distributes an insurer's or an assistance provider's offer for a commission, and differentiates by transparency and by the app's follow-up. After the MVP validation and the company's creation.
 - **Product links**: affiliate commissions on the consumables of each maintenance task. A complement, not a business model on its own: Centriq, which also sold replacement parts through its app, closed its consumer product.
 - **Later, partnerships**: insurers, for prevention and the insurer file, and home builders, for the logbook of new homes.
 
@@ -274,3 +312,5 @@ Decided on 28 September 2026: individuals never pay. Revenue comes from professi
 - B2B version for company equipment/machinery — a strong future opportunity (different buyer, multi-site/multi-user needs, likely per-machine pricing), deliberately excluded from v1 to keep the first build focused on B2C
 - Native iOS/Android apps — v1 ships as a responsive web app
 - Markets outside France
+
+Frozen on 18 November 2026: invoice import by AI, model-specific guides from manufacturer manuals, the full vehicle module (only the technical inspection remains, as one obligation among others), landlord diagnostics as bookable services, accounts for professionals and, since 23 November 2026, quote requests for breakdowns, replacements and installations.

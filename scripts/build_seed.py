@@ -57,6 +57,10 @@ ENUMS = {
     "source_status": [("verified", "Vérifié"), ("partial", "Partiellement vérifié"),
                       ("secondary", "Source secondaire"), ("to_document", "À documenter")],
     "plan": [("free", "Gratuit"), ("paid", "Abonnement")],
+    # Trade booked through "Prendre rendez-vous" (spec "Booking Requests"); set on the
+    # legal, professional tasks only (column « Metier (prise de RDV) »).
+    "booking_trade": [("chauffagiste", "Chauffagiste"), ("ramoneur", "Ramoneur"),
+                      ("frigoriste", "Frigoriste"), ("assainissement", "Assainissement")],
     "mvp_priority": [(1, "Indispensable au lancement"), (2, "Deuxième vague"), (3, "Confort")],
     "maintenance_level": [("none", "Aucun"), ("essential", "Essentiel"), ("recommended", "Recommandé")],
 }
@@ -252,6 +256,7 @@ def main():
             "active_minutes": r["Temps actif (min)"],
             # Replaces the legal obligation's risks on this task's row when set.
             "risk": r.get("Risque affiche"),
+            "booking_trade": r.get("Metier (prise de RDV)") or None,
         }
         if task["id"] in THRESHOLD_TASKS:
             task["frequency"]["threshold"] = THRESHOLD_TASKS[task["id"]]
@@ -349,6 +354,10 @@ def main():
     no_level = [t["id"] for t in tasks if t["legal"] != "yes" and not t["level"]]
     assert not no_level, f"Maintenance tasks without a level: {no_level}"
     no_months = [t["id"] for t in tasks if t["frequency"]["rule"] == "season_anchor" and not t["season_months"]]
+    trades = {k for k, _ in ENUMS["booking_trade"]}
+    bad_trade = [t["id"] for t in tasks if t["booking_trade"]
+                 and (t["booking_trade"] not in trades or t["performer"] != "pro" or t["legal"] != "yes")]
+    assert not bad_trade, f"booking_trade must be a known trade on a legal task done by a pro: {bad_trade}"
     assert not no_months, f"season_anchor tasks without parsable months: {no_months}"
     bad_dq = sorted({i for d in date_questions for i in d["tasks"]} - task_ids)
     assert not bad_dq, f"Date questions point to unknown tasks: {bad_dq}"

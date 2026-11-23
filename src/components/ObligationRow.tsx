@@ -7,6 +7,8 @@ import { MarkDoneButton } from "@/components/MarkDoneButton";
 import { ModifyObligationButton } from "@/components/ModifyObligationButton";
 import { ObligationHistoryList } from "@/components/ObligationHistoryList";
 import { AppointmentButton } from "@/components/AppointmentButton";
+import { BookingRequestButton } from "@/components/BookingRequestButton";
+import type { BookingRequestSummary } from "@/lib/booking-types";
 import { ApplianceIconTile, Icon, ROW_CLASS, StatusPill, statusTone } from "@/components/ui";
 import { formatFrenchMonthYear } from "@/lib/french-dates";
 import type { ObligationAppointment } from "@/lib/obligation-appointments";
@@ -24,15 +26,22 @@ import { getDateQuestionForTask } from "@/lib/date-questions";
 // appears only on the appliance card, never in the dashboard or place page lists".
 // On the fiche the appliance is already the page's subject: the row leads with the
 // task instead (docs/design.md, fiche appareil).
+// `bookingRequest` (an open "Prendre rendez-vous" request covering this obligation) and
+// `bookable` are passed by ObligationsBlock on the place page and the fiche — the
+// dashboard's UrgentActions leaves them out, so the booking button stays off it.
 export function ObligationRow({
   appliance,
   history,
   appointment = null,
+  bookable = false,
+  bookingRequest = null,
   ...row
 }: {
   appliance: Appliance;
   history?: ObligationCompletion[] | null;
   appointment?: ObligationAppointment | null;
+  bookable?: boolean;
+  bookingRequest?: BookingRequestSummary | null;
 } & ObligationView) {
   const latest = history?.[0];
   const olderEntries = history?.slice(1) ?? [];
@@ -102,6 +111,14 @@ export function ObligationRow({
       )}
 
       <div className="flex flex-wrap items-center justify-end gap-2 empty:hidden">
+        {bookable && !appointment && (
+          <BookingRequestButton
+            placeId={appliance.placeId}
+            applianceId={appliance.id}
+            maintenanceTaskId={row.task.id}
+            summary={bookingRequest}
+          />
+        )}
         <AppointmentButton
           applianceId={appliance.id}
           maintenanceTaskId={row.task.id}
